@@ -1,10 +1,10 @@
 import React from 'react';
-import LoginScreen from './screens/LoginScreen';
+import { StackNavigator } from 'react-navigation';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <LoginScreen />
-    );
-  }
-}
+import LoginScreen from './screens/LoginScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
+
+export default StackNavigator({
+  Login: { screen: LoginScreen },
+  ResetPassword: { screen: ResetPasswordScreen }
+});
