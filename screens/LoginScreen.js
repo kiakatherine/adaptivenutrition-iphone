@@ -31,9 +31,9 @@ export default class LoginScreen extends React.Component {
 
   async login() {
     const { navigate } = this.props.navigation;
-    const successful = await AuthService.login(this.state.email, this.state.password);
+    await AuthService.login(this.state.email, this.state.password);
 
-    if (successful) navigate('Home');
+    if (AuthService.isSignedIn()) navigate('Home');
     else this.setState({ unauthorized: true });
   }
 

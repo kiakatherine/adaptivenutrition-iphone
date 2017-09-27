@@ -1,12 +1,7 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
 
 import * as firebase from 'firebase';
-
-import LoginScreen from './screens/LoginScreen';
-import ResetPasswordScreen from './screens/ResetPasswordScreen';
-
-import HomeScreen from './screens/HomeScreen';
+import { router } from './router';
 
 import {
   FIREBASE_API_KEY,
@@ -26,10 +21,9 @@ firebase.initializeApp({
   messagingSenderId: FIREBASE_MESSAGING_SENDER_ID
 });
 
-export default StackNavigator({
-  // Unauthenticated screens
-  Login: { screen: LoginScreen },
-  ResetPassword: { screen: ResetPasswordScreen },
-  // Authenticated screens
-  Home: { screen: HomeScreen }
-});
+export default class App extends React.Component {
+  render () {
+    const Layout = router();
+    return <Layout />;
+  }
+}
