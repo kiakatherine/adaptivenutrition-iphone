@@ -33,7 +33,7 @@ export default class LoginScreen extends React.Component {
     const { navigate } = this.props.navigation;
     await AuthService.login(this.state.email, this.state.password);
 
-    if (AuthService.isSignedIn()) navigate('Home');
+    if (AuthService.isSignedIn()) navigate('Authenticated');
     else this.setState({ unauthorized: true });
   }
 

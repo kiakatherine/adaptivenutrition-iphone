@@ -3,6 +3,8 @@ import React from 'react';
 import * as firebase from 'firebase';
 import { router } from './router';
 
+import AuthService from './services/AuthService';
+
 import {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
@@ -22,8 +24,18 @@ firebase.initializeApp({
 });
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { authenticated: false };
+  }
+
+  componentWillMount() {
+    return AuthService.isSignedIn()
+      .then(res => this.setState({ authenticated: res }));
+  }
   render () {
-    const Layout = router();
+    const Layout = router(this.state.authenticated);
     return <Layout />;
   }
 }

@@ -1,19 +1,39 @@
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
-import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/secure/HomeScreen';
+import NutritionScreen from './screens/secure/NutritionScreen';
+
+export const AuthenticatedScreen = TabNavigator({
+  Home: {
+    screen: HomeScreen,
+    headerLeft: null
+  },
+  Nutrition: { screen: NutritionScreen }
+});
 
 export const router = (signedIn = false) => {
-  console.log('We get here...');
   return StackNavigator({
     // Unauthenticated screens
-    Login: { screen: LoginScreen },
-    ResetPassword: { screen: ResetPasswordScreen },
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: {
+        headerLeft: null
+      }
+    },
+    ResetPassword: {
+      screen: ResetPasswordScreen
+    },
     // Authenticated screens
-    Home: { screen: HomeScreen }
+    Authenticated: {
+      screen: AuthenticatedScreen,
+      navigationOptions: {
+        headerLeft: null
+      }
+    }
   }, {
-    initialRouteName: signedIn ? "Home" : "Login"
+    initialRouteName: signedIn ? "Authenticated" : "Login"
   });
 };

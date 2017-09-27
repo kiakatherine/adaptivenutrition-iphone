@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
 
-import Colors from '../constants/Colors';
-import Styles from '../constants/Styles';
+import Colors from '../../constants/Colors';
+import Styles from '../../constants/Styles';
 
 import {
   Button,
