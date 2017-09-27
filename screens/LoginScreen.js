@@ -1,6 +1,9 @@
 import React from 'react';
+
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
+
+import AuthService from '../services/AuthService';
 
 import {
   Button,
@@ -19,14 +22,19 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      unauthorized: false
     };
 
     this.login = this.login.bind(this);
   }
 
-  login() {
-    console.log("Send API request here...");
+  async login() {
+    const { navigate } = this.props.navigation;
+    const successful = await AuthService.login(this.state.email, this.state.password);
+
+    if (successful) navigate('Home');
+    else this.setState({ unauthorized: true });
   }
 
   render() {
@@ -38,8 +46,10 @@ export default class LoginScreen extends React.Component {
           <Text style={Styles.titleText}>Adaptive Nutrition</Text>
         </View>
         <View style={Styles.content}>
+          {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
           <TextInput
             style={Styles.forms.textInput}
+            autoCapitalize= { 'none' }
             placeholder={"Email Address"}
             autoFocus
             onChangeText={email => this.setState({ email })}

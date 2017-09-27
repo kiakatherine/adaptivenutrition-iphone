@@ -14,6 +14,12 @@ export default {
     color: "#FFFFFF",
     fontSize: 24
   },
+  center: {
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#FF4444'
+  },
   content: {
     flex: 1,
     padding: 20
