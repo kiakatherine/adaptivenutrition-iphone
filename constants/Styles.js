@@ -26,7 +26,8 @@ export default {
   },
   contentHeading: {
     padding: 5,
-    fontSize: 18
+    fontSize: 18,
+    textAlign: 'center'
   },
   forms: {
     textInput: {

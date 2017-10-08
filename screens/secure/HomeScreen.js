@@ -1,7 +1,5 @@
 import React from 'react';
 
-import AuthService from '../../services/AuthService';
-
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
@@ -37,7 +35,6 @@ export default class LoginScreen extends React.Component {
     this._showDatepicker = this._showDatepicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
     this._submitWeight = this._submitWeight.bind(this);
-    this._logout = this._logout.bind(this);
   }
 
   _showDatepicker () {
@@ -52,12 +49,6 @@ export default class LoginScreen extends React.Component {
 
   _submitWeight () {
     this.setState({ showDatepicker: false, date: new Date(), weight: "" });
-  }
-
-  async _logout() {
-    const { navigate } = this.props.navigation;
-    await AuthService.logout();
-    navigate('Login');
   }
 
   render() {

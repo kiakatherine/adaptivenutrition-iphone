@@ -8,6 +8,7 @@ import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 import HomeScreen from './screens/secure/HomeScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
+import LogoutScreen from './screens/secure/LogoutScreen';
 
 import Colors from './constants/Colors';
 
@@ -19,6 +20,9 @@ export const AuthenticatedScreen = TabNavigator(
     },
     Nutrition: {
       screen: NutritionScreen
+    },
+    Logout: {
+      screen: LogoutScreen
     }
   },
   {
@@ -41,6 +45,17 @@ export const AuthenticatedScreen = TabNavigator(
           return (
             <MaterialCommunityIcons
               name={'food-apple'}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Logout') {
+          return (
+            <Ionicons
+              name={`ios-exit${focused ? '' : '-outline'}`}
               size={28}
               style={{ marginBottom: -3 }}
               color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
