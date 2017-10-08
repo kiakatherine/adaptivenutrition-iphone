@@ -64,8 +64,8 @@ export default class LoginScreen extends React.Component {
             <Button
               title={format(this.state.date, "MMMM D, YYYY")}
               onPress={this._showDatepicker}/>
-            {this.state.showDatepicker &&
 
+            {this.state.showDatepicker &&
             <DatePickerIOS
               mode={'date'}
               date={this.state.date}
