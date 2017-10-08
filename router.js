@@ -1,4 +1,7 @@
+import React from 'react';
+
 import { StackNavigator, TabNavigator } from 'react-navigation';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
@@ -6,13 +9,48 @@ import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import HomeScreen from './screens/secure/HomeScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 
-export const AuthenticatedScreen = TabNavigator({
-  Home: {
-    screen: HomeScreen,
-    headerLeft: null
+import Colors from './constants/Colors';
+
+export const AuthenticatedScreen = TabNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+      headerLeft: null
+    },
+    Nutrition: {
+      screen: NutritionScreen
+    }
   },
-  Nutrition: { screen: NutritionScreen }
-});
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused }) => {
+        const { routeName } = navigation.state;
+
+        if (routeName === 'Home') {
+          return (
+            <Ionicons
+              name={`ios-home${focused ? '' : '-outline'}`}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Nutrition') {
+          return (
+            <MaterialCommunityIcons
+              name={'food-apple'}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+      }
+    })
+  }
+);
 
 export const router = (signedIn = false) => {
   return StackNavigator({
