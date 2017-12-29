@@ -1,0 +1,33 @@
+import React from 'react';
+
+// import ModalWrapper from '../ModalWrapper.jsx';
+
+import {
+  Button,
+  Keyboard,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View
+} from 'react-native';
+
+const ContactModal = props => {
+  return (
+    <Text>ContactModal</Text>
+    // <ModalWrapper
+    //   {...props}
+    //   title="Sign in"
+    //   width={400}
+    //   showOk={false}
+    // >
+    //   <p>Choose your flavor</p>
+    //   <button onClick={() => signIn('facebook')}>Facebook</button>
+    //   <button onClick={() => signIn('google')}>Google</button>
+    //   <button onClick={() => signIn('twitter')}>Twitter</button>
+    // </ModalWrapper>
+  );
+};
+
+export default ContactModal;

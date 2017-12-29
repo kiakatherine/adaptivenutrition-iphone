@@ -31,11 +31,11 @@ export default class LoginScreen extends React.Component {
           <Text style={Styles.titleText}>Adaptive Nutrition</Text>
         </View>
 
-        <ModalWindow label="Biometric Settings" />
-        <ModalWindow label="Biometric Settings" />
-        <ModalWindow label="Biometric Settings" />
-        <ModalWindow label="Biometric Settings" />
-        <ModalWindow label="Biometric Settings" />
+        <ModalWindow label="Biometric Settings" currentModal="BIOMETRIC_SETTINGS" />
+        <ModalWindow label="Foods to Avoid" currentModal="FOODS_TO_AVOID" />
+        <ModalWindow label="Educational Resources" currentModal="EDUCATIONAL_RESOURCES" />
+        <ModalWindow label="Contact" currentModal="CONTACT" />
+        <ModalWindow label="About" currentModal="ABOUT" />
       </View>
     );
   }

@@ -14,6 +14,9 @@ export default {
     color: "#FFFFFF",
     fontSize: 24
   },
+  paragraphText: {
+    fontSize: 16
+  },
   center: {
     alignItems: 'center',
   },
@@ -37,5 +40,21 @@ export default {
       borderColor: 'gray',
       borderWidth: 1
     }
+  },
+  listItem: {
+    marginBottom: 20
+  },
+  modalContent: {
+    margin: 10
+  },
+  modalH1: {
+    textAlign: 'center',
+    fontSize: 24,
+    marginBottom: 30
+  },
+  h3: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5
   }
 }
