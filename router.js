@@ -1,13 +1,14 @@
 import React from 'react';
 
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 import HomeScreen from './screens/secure/HomeScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
+import HelpScreen from './screens/secure/HelpScreen';
 import LogoutScreen from './screens/secure/LogoutScreen';
 
 import Colors from './constants/Colors';
@@ -20,6 +21,9 @@ export const AuthenticatedScreen = TabNavigator(
     },
     Nutrition: {
       screen: NutritionScreen
+    },
+    Help: {
+      screen: HelpScreen
     },
     Logout: {
       screen: LogoutScreen
@@ -45,6 +49,17 @@ export const AuthenticatedScreen = TabNavigator(
           return (
             <MaterialCommunityIcons
               name={'food-apple'}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Help') {
+          return (
+            <MaterialCommunityIcons
+              name={'help'}
               size={28}
               style={{ marginBottom: -3 }}
               color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}

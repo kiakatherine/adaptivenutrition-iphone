@@ -89,6 +89,10 @@ export default class LoginScreen extends React.Component {
               disabled={this.state.weight.trim().length < 1}
             />
           </View>
+
+          <View>
+            <Text style={Styles.titleText}>Graph goes here</Text>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     );

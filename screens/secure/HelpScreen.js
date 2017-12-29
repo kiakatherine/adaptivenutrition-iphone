@@ -15,7 +15,7 @@ import {
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Nutrition',
+    title: 'Help',
   };
 
   render() {
@@ -27,7 +27,7 @@ export default class LoginScreen extends React.Component {
           <Text style={Styles.titleText}>Adaptive Nutrition</Text>
         </View>
         <View>
-          <Text style={Styles.titleText}>Meal plan goes here</Text>
+          <Text style={Styles.titleText}>Menu goes here</Text>
         </View>
       </View>
     );
