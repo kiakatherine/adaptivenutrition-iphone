@@ -13,9 +13,10 @@ import {
   View
 } from 'react-native';
 
+import Styles from '../constants/Styles';
+
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
-import ContactModal from './modals/ContactModal';
 import AboutModal from './modals/AboutModal';
 
 class ModalWindow extends React.Component {
@@ -36,8 +37,6 @@ class ModalWindow extends React.Component {
        modal = <BiometricSettingsModal />;
      } else if(this.props.currentModal === 'FOODS_TO_AVOID') {
        modal = <FoodsToAvoidModal />;
-     } else if(this.props.currentModal === 'CONTACT') {
-       modal = <ContactModal />;
      } else if(this.props.currentModal === 'ABOUT') {
        modal = <AboutModal />;
      }
@@ -49,22 +48,22 @@ class ModalWindow extends React.Component {
             transparent={false}
             visible={this.state.modalVisible}
             onRequestClose={() => { console.log("Modal has been closed.") } }>
+
             <ScrollView>
               <View style={styles.modal}>
                 <TouchableHighlight style={styles.closeButton} onPress={() => {
                    this.toggleModal(!this.state.modalVisible)}}>
-
                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>x</Text>
                 </TouchableHighlight>
-
                  {modal}
                </View>
             </ScrollView>
+
            </Modal>
          </View>
 
          <TouchableHighlight onPress={() => {this.toggleModal(true)}}>
-            <Text style={styles.text}>{this.props.label}</Text>
+            <Text style={Styles.menuItem}>{this.props.label}</Text>
          </TouchableHighlight>
        </View>
      );
@@ -85,12 +84,6 @@ const styles = StyleSheet.create ({
       alignItems: 'center',
       backgroundColor: '#FFF',
       padding: 40
-   },
-   text: {
-     backgroundColor: '#F5F7FD',
-     borderBottomWidth: 1,
-     borderBottomColor: '#FFF',
-     padding: 20
    },
    closeButton: {
      padding: 20

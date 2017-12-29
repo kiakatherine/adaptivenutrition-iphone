@@ -10,6 +10,7 @@ import MenuRow from '../../components/MenuRow';
 
 import {
   Button,
+  Linking,
   StyleSheet,
   Text,
   TextInput,
@@ -33,8 +34,8 @@ export default class LoginScreen extends React.Component {
 
         <ModalWindow label="Biometric Settings" currentModal="BIOMETRIC_SETTINGS" />
         <ModalWindow label="Foods to Avoid" currentModal="FOODS_TO_AVOID" />
-        <ModalWindow label="Educational Resources" currentModal="EDUCATIONAL_RESOURCES" />
-        <ModalWindow label="Contact" currentModal="CONTACT" />
+        <Text style={Styles.menuItem} onPress={() => Linking.openURL('http://adaptivenutrition.us')}>Educational Resources</Text>
+        <Text style={Styles.menuItem} onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>Contact</Text>
         <ModalWindow label="About" currentModal="ABOUT" />
       </View>
     );

@@ -2,7 +2,6 @@ import React from 'react';
 
 // import ModalWrapper from '../ModalWrapper.jsx';
 
-import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
 import {

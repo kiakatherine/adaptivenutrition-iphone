@@ -15,7 +15,8 @@ export default {
     fontSize: 24
   },
   paragraphText: {
-    fontSize: 16
+    fontSize: 16,
+    marginBottom: 20
   },
   center: {
     alignItems: 'center',
@@ -52,9 +53,39 @@ export default {
     fontSize: 24,
     marginBottom: 30
   },
+  modalButton: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 50,
+    padding: 20,
+    backgroundColor: Colors.primaryColor
+  },
+  modalButtonText: {
+    color: Colors.white,
+    letterSpacing: 1,
+    fontWeight: 'bold'
+  },
   h3: {
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 5
+  },
+  menuItem: {
+    backgroundColor: Colors.paleBlue,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.white,
+    padding: 20
+  },
+  biometricRow: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.lightGray
+  },
+  finePrint: {
+    fontSize: 14,
+    color: Colors.gray,
+    marginTop: 20
   }
 }
