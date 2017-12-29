@@ -5,11 +5,15 @@ import AuthService from '../../services/AuthService';
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
+import ModalWindow from '../../components/ModalWindow';
+import MenuRow from '../../components/MenuRow';
+
 import {
   Button,
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   View
 } from 'react-native';
 
@@ -26,9 +30,12 @@ export default class LoginScreen extends React.Component {
         <View style={Styles.title}>
           <Text style={Styles.titleText}>Adaptive Nutrition</Text>
         </View>
-        <View>
-          <Text style={Styles.titleText}>Menu goes here</Text>
-        </View>
+
+        <ModalWindow label="Biometric Settings" />
+        <ModalWindow label="Biometric Settings" />
+        <ModalWindow label="Biometric Settings" />
+        <ModalWindow label="Biometric Settings" />
+        <ModalWindow label="Biometric Settings" />
       </View>
     );
   }
