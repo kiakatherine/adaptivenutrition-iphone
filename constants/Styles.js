@@ -2,7 +2,8 @@ import Colors from './Colors';
 
 export default {
   body: {
-    flex: 1
+    flex: 1,
+    backgroundColor: Colors.white
   },
   title: {
     paddingTop: 10,
@@ -39,11 +40,10 @@ export default {
   },
   forms: {
     textInput: {
-      height: 40,
       margin: 5,
-      padding: 5,
-      borderColor: 'gray',
-      borderWidth: 1
+      padding: 15,
+      backgroundColor: Colors.lightGray,
+      borderRadius: 1
     }
   },
   listItem: {
@@ -76,6 +76,11 @@ export default {
     fontWeight: 'bold',
     fontSize: 24,
     marginBottom: 20
+  },
+  h2: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10
   },
   h3: {
     fontWeight: 'bold',

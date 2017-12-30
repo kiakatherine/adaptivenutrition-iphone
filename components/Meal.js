@@ -34,22 +34,62 @@ class Meal extends React.Component {
 
         <View style={styles.mealRow}>
           <Text style={styles.mealRowCol}>Protein</Text>
-          <FoodOptions style={styles.mealRowColLong} />
+          <FoodOptions style={styles.mealRowColLong}
+            trainingIntensity={this.props.trainingIntensity}
+            trainingTime={this.props.trainingTime}
+            template={this.props.template}
+            selectedMeal={this.props.selectedMeal}
+            age={this.props.age}
+            gender={this.props.gender}
+            height={this.props.height}
+            bodyweight={this.props.bodyweight}
+            bodyfat={this.props.bodyfat}
+            showMacros={this.state.showMacros} />
         </View>
 
         <View style={styles.mealRow}>
           <Text style={styles.mealRowCol}>Starches</Text>
-          <FoodOptions style={styles.mealRowColLong} />
+          <FoodOptions style={styles.mealRowColLong}
+            trainingIntensity={this.props.trainingIntensity}
+            trainingTime={this.props.trainingTime}
+            template={this.props.template}
+            selectedMeal={this.props.selectedMeal}
+            age={this.props.age}
+            gender={this.props.gender}
+            height={this.props.height}
+            bodyweight={this.props.bodyweight}
+            bodyfat={this.props.bodyfat}
+            showMacros={this.state.showMacros} />
         </View>
 
         <View style={styles.mealRow}>
           <Text style={styles.mealRowCol}>Fats</Text>
-          <FoodOptions style={styles.mealRowColLong} />
+          <FoodOptions style={styles.mealRowColLong}
+            trainingIntensity={this.props.trainingIntensity}
+            trainingTime={this.props.trainingTime}
+            template={this.props.template}
+            selectedMeal={this.props.selectedMeal}
+            age={this.props.age}
+            gender={this.props.gender}
+            height={this.props.height}
+            bodyweight={this.props.bodyweight}
+            bodyfat={this.props.bodyfat}
+            showMacros={this.state.showMacros} />
         </View>
 
         <View style={styles.mealRow}>
           <Text style={styles.mealRowCol}>Veggies</Text>
-          <FoodOptions style={styles.mealRowColLong} />
+          <FoodOptions style={styles.mealRowColLong}
+            trainingIntensity={this.props.trainingIntensity}
+            trainingTime={this.props.trainingTime}
+            template={this.props.template}
+            selectedMeal={this.props.selectedMeal}
+            age={this.props.age}
+            gender={this.props.gender}
+            height={this.props.height}
+            bodyweight={this.props.bodyweight}
+            bodyfat={this.props.bodyfat}
+            showMacros={this.state.showMacros} />
         </View>
        </View>
      );

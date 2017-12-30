@@ -33,16 +33,6 @@ class FoodOptions extends React.Component {
    }
 
    render() {
-     // let modal = null;
-     //
-     // if(this.props.currentModal === 'BIOMETRIC_SETTINGS') {
-     //   modal = <BiometricSettingsModal />;
-     // } else if(this.props.currentModal === 'FOODS_TO_AVOID') {
-     //   modal = <FoodsToAvoidModal />;
-     // } else if(this.props.currentModal === 'ABOUT') {
-     //   modal = <AboutModal />;
-     // }
-
      return (
        <View style={styles.foodOptionsWrapper}>
          <TouchableHighlight onPress={() => {this.clickPrevious()}}>

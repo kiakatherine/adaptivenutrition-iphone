@@ -9,5 +9,7 @@ export default {
   black: '#363636',
   paleBlue: '#F5F7FD',
   lightGray: '#F2F2F2',
-  gray: '#CCC'
+  gray: '#CCC',
+  paleGreen: '#9dde73',
+  paleRed: '#ff7373'
 }
