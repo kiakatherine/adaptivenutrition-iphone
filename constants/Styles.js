@@ -99,35 +99,12 @@ export default {
     color: Colors.gray,
     marginTop: 20
   },
-  optionWrapper: {
+  flexRow: {
     alignSelf: 'stretch',
-    alignItems: 'center'
-  },
-  optionSection: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row'
   },
-  optionTitle: {
-    color: Colors.black,
-    fontSize: 18,
-    paddingTop: 20,
-    paddingBottom: 10
-  },
-  optionButton: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: Colors.paleBlue
-  },
-  mealPlanSection: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    marginTop: 50
-  },
-  mealsMenu: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 20
+  flexRowCol: {
+    width: '50%'
   }
 }
