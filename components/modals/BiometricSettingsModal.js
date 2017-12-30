@@ -95,7 +95,7 @@ class BiometricSettingsModal extends React.Component {
           <TextInput/>
         </View>
 
-        <Text style={Styles.finePrint}>*As your bodyweight should not change during your 8-10 week cut/bulk cycle, please email us at <Text onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>support@adaptivenutrition.us</Text> to update this setting.</Text>
+        <Text style={Styles.finePrint}>*As your bodyweight should not change during your 8-10 week cut/bulk cycle, please email us at <Text style={Styles.link} onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>support@adaptivenutrition.us</Text> to update this setting.</Text>
 
         <TouchableHighlight style={Styles.modalButton} onPress={() => {this.saveSettings}}>
            <Text style={Styles.modalButtonText}>Save</Text>

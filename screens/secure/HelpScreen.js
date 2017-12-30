@@ -34,7 +34,7 @@ export default class LoginScreen extends React.Component {
 
         <ModalWindow label="Biometric Settings" currentModal="BIOMETRIC_SETTINGS" />
         <ModalWindow label="Foods to Avoid" currentModal="FOODS_TO_AVOID" />
-        <Text style={Styles.menuItem} onPress={() => Linking.openURL('http://adaptivenutrition.us')}>Educational Resources</Text>
+        <Text style={Styles.menuItem} onPress={() => Linking.openURL('http://adaptivenutrition.us/resources')}>Educational Resources</Text>
         <Text style={Styles.menuItem} onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>Contact</Text>
         <ModalWindow label="About" currentModal="ABOUT" />
       </View>

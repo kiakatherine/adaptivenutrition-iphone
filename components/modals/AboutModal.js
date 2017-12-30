@@ -6,10 +6,8 @@ import Styles from '../../constants/Styles';
 
 import {
   Button,
-  Keyboard,
   Linking,
   Modal,
-  StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
@@ -27,7 +25,7 @@ const AboutModal = props => {
 
       <Text style={Styles.paragraphText}>Eventually, we realized it’s not rocket science…but it is science. We have found what’s been proven to work for people from all different health backgrounds and fitness levels, and we are hoping to share them with you in order to help you find your success. We meet you where you are and build you up to your goals and beyond.</Text>
 
-      <Text style={Styles.paragraphText}>Learn more at <Text onPress={() => Linking.openURL('http://adaptivenutrition.us')}>adaptivenutrition.us</Text>.</Text>
+      <Text style={Styles.paragraphText}>Learn more at <Text style={Styles.link} onPress={() => Linking.openURL('http://adaptivenutrition.us')}>adaptivenutrition.us</Text>.</Text>
     </View>
 
     // <ModalWrapper

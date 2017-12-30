@@ -13,6 +13,8 @@ import {
   View
 } from 'react-native';
 
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
+
 import Styles from '../constants/Styles';
 
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
@@ -53,7 +55,12 @@ class ModalWindow extends React.Component {
               <View style={styles.modal}>
                 <TouchableHighlight style={styles.closeButton} onPress={() => {
                    this.toggleModal(!this.state.modalVisible)}}>
-                   <Text style={{ fontSize: 24, fontWeight: 'bold' }}>x</Text>
+                   <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                     <FontAwesome
+                       name='remove'
+                       size={28}
+                     />
+                   </Text>
                 </TouchableHighlight>
                  {modal}
                </View>

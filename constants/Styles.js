@@ -15,14 +15,19 @@ export default {
     fontSize: 24
   },
   paragraphText: {
-    fontSize: 16,
-    marginBottom: 20
+    fontSize: 18,
+    lineHeight: 26,
+    marginBottom: 25
   },
   center: {
     alignItems: 'center',
   },
   errorText: {
     color: '#FF4444'
+  },
+  link: {
+    color: Colors.primaryColor,
+    fontWeight: 'bold'
   },
   content: {
     flex: 1,
@@ -50,7 +55,9 @@ export default {
   },
   modalH1: {
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: Colors.primaryColor,
     marginBottom: 30
   },
   modalButton: {

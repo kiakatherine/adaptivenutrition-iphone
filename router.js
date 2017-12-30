@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import { Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
+import { FontAwesomeIcons, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
