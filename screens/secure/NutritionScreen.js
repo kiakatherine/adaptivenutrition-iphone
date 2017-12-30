@@ -7,6 +7,7 @@ import Styles from '../../constants/Styles';
 
 import {
   Button,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -24,7 +25,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <View style={Styles.title}>
-          <Text style={Styles.titleText}>Adaptive Nutrition</Text>
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
         </View>
         <View>
           <Text style={Styles.titleText}>Meal plan goes here</Text>

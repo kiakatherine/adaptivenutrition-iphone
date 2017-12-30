@@ -6,6 +6,7 @@ import Styles from '../../constants/Styles';
 import {
   Button,
   DatePickerIOS,
+  Image,
   Keyboard,
   StyleSheet,
   Text,
@@ -58,7 +59,7 @@ export default class LoginScreen extends React.Component {
       <TouchableWithoutFeedback onPress={this._hideAll}>
         <View style={Styles.body}>
           <View style={Styles.title}>
-            <Text style={Styles.titleText}>Adaptive Nutrition</Text>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
           <View style={Styles.content}>
             <Button
@@ -88,10 +89,6 @@ export default class LoginScreen extends React.Component {
               onPress={this._submitWeight}
               disabled={this.state.weight.trim().length < 1}
             />
-          </View>
-
-          <View>
-            <Text style={Styles.titleText}>Graph goes here</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>

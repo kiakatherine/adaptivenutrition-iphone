@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Button,
+  Image,
   Text,
   View
 } from 'react-native';
@@ -32,7 +33,7 @@ export default class LogoutScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <View style={Styles.title}>
-          <Text style={Styles.titleText}>Adaptive Nutrition</Text>
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
         </View>
         <View style={Styles.content}>
           <Text style={Styles.contentHeading}>Are you sure you want to logout?</Text>

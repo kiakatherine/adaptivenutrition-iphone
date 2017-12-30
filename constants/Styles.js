@@ -5,8 +5,7 @@ export default {
     flex: 1
   },
   title: {
-    paddingTop: 30,
-    paddingBottom: 20,
+    paddingTop: 10,
     alignItems: 'center',
     backgroundColor: Colors.primaryColor
   },

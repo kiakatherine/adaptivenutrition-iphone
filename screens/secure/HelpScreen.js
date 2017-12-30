@@ -10,6 +10,7 @@ import MenuRow from '../../components/MenuRow';
 
 import {
   Button,
+  Image,
   Linking,
   StyleSheet,
   Text,
@@ -29,7 +30,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <View style={Styles.title}>
-          <Text style={Styles.titleText}>Adaptive Nutrition</Text>
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
         </View>
 
         <ModalWindow label="Biometric Settings" currentModal="BIOMETRIC_SETTINGS" />

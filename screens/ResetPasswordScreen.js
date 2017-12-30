@@ -34,7 +34,7 @@ export default class ResetPasswordScreen extends React.Component {
         </View>
         <View style={Styles.content}>
           <Text style={Styles.contentHeading}>
-            Enter your email address below and we'll send you a new password.
+            Enter your email address below and we will send you a new password.
           </Text>
           <TextInput
             style={Styles.forms.textInput}

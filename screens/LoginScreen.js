@@ -7,6 +7,7 @@ import AuthService from '../services/AuthService';
 
 import {
   Button,
+  Image,
   Keyboard,
   StyleSheet,
   Text,
@@ -47,7 +48,7 @@ export default class LoginScreen extends React.Component {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={Styles.body}>
           <View style={Styles.title}>
-            <Text style={Styles.titleText}>Adaptive Nutrition</Text>
+            <Image source={require('../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
           <View style={Styles.content}>
             {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
