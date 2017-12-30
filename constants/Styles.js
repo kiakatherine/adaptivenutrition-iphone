@@ -72,6 +72,11 @@ export default {
     letterSpacing: 1,
     fontWeight: 'bold'
   },
+  h1: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginBottom: 20
+  },
   h3: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -92,6 +97,37 @@ export default {
   finePrint: {
     fontSize: 14,
     color: Colors.gray,
+    marginTop: 20
+  },
+  optionWrapper: {
+    alignSelf: 'stretch',
+    alignItems: 'center'
+  },
+  optionSection: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  optionTitle: {
+    color: Colors.black,
+    fontSize: 18,
+    paddingTop: 20,
+    paddingBottom: 10
+  },
+  optionButton: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: Colors.paleBlue
+  },
+  mealPlanSection: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    marginTop: 50
+  },
+  mealsMenu: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    flexDirection: 'row',
     marginTop: 20
   }
 }
