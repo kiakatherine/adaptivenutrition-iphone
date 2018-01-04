@@ -1,5 +1,7 @@
 import React from 'react';
 
+import * as firebase from 'firebase';
+
 import AuthService from '../../services/AuthService';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
@@ -10,6 +12,7 @@ import Styles from '../../constants/Styles';
 import { changeUnit } from '../../utils/helpers';
 
 import {
+  Alert,
   Button,
   Image,
   ScrollView,
@@ -27,8 +30,43 @@ export default class LoginScreen extends React.Component {
     title: 'Nutrition',
   };
 
-  state = {
-    showInGrams: false
+  constructor(props) {
+    super(props);
+    this.clientsRef = firebase.database().ref().child('clients');
+    this.state = {
+      showInGrams: false,
+      wakeTime: '8 a.m.',
+      intensity: 0,
+      mealsBeforeWorkout: 3,
+      currentMeal: 1,
+      template: 0,
+      trainingTime: 3,
+      trainingIntensity: 1
+    };
+  }
+
+  listenForItems(clientsRef) {
+    // Alert.alert('in listenForItems');
+    clientsRef.on('value', (snap) => {
+      Alert.alert('in listenForItems value');
+
+      // get children as an array
+      var clients = [];
+      snap.forEach((child) => {
+        clients.push({
+          name: child.val().name,
+          timestamp: child.timestamp
+        });
+      });
+
+      this.setState({
+        dataSource: clients
+      });
+    })
+  }
+
+  componentDidMount() {
+    this.listenForItems(this.clientsRef);
   }
 
   render() {
@@ -49,10 +87,10 @@ export default class LoginScreen extends React.Component {
 
     const proteinDelta = bodyweight > 150 ? 25 : 20;
 
-    const template = null;
-    const selectedMeal = 1;
-    const trainingTime = 3;
-    const trainingIntensity = 1;
+    const template = this.state.template;
+    const currentMeal = this.state.currentMeal;
+    const trainingTime = this.state.trainingTime;
+    const trainingIntensity = this.state.trainingIntensity;
 
     let label1 = null;
     let label2 = null;
@@ -455,6 +493,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <ScrollView style={Styles.body}>
+        <View>{this.state.dataSource}</View>
         <View style={Styles.title}>
           <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
         </View>
@@ -466,7 +505,7 @@ export default class LoginScreen extends React.Component {
 
           <View style={styles.optionSection}>
             <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text style={styles.optionTitle}>8:00 a.m.</Text>
+               <Text style={styles.optionButtonText}>8:00 a.m.</Text>
             </TouchableHighlight>
           </View>
 
@@ -475,16 +514,16 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>Rest or low-intensity exercise</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 0}) }}>
+              <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>&#60; 90 min of high-intensity exercise</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 1}) }}>
+               <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>&#62; 90 min of high-intensity exercise</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 2}) }}>
+               <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
           </View>
 
@@ -493,24 +532,24 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>None</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
+               <Text style={styles.optionButtonText}>0</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>1</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
+               <Text style={styles.optionButtonText}>1</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>2</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
+               <Text style={styles.optionButtonText}>2</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>3</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
+               <Text style={styles.optionButtonText}>3</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text>4</Text>
+            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
+               <Text style={styles.optionButtonText}>4</Text>
             </TouchableHighlight>
           </View>
 
@@ -519,32 +558,32 @@ export default class LoginScreen extends React.Component {
             <Text>Phase 3</Text>
 
             <View style={styles.mealsMenu}>
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text>1</Text>
+              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 1}) }}>
+                 <Text style={styles.optionButtonText}>1</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text>2</Text>
+              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 2}) }}>
+                 <Text style={styles.optionButtonText}>2</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text>3</Text>
+              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 3}) }}>
+                 <Text style={styles.optionButtonText}>3</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text>4</Text>
+              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 4}) }}>
+                 <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text>5</Text>
+              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 5}) }}>
+                 <Text style={styles.optionButtonText}>5</Text>
               </TouchableHighlight>
             </View>
 
             <Meal
-              trainingIntensity={trainingIntensity}
-              trainingTime={trainingTime}
-              template={template}
-              selectedMeal={selectedMeal}
+              trainingIntensity={this.state.trainingIntensity}
+              trainingTime={this.state.trainingTime}
+              template={this.state.template}
+              currentMeal={this.state.currentMeal}
               age={age}
               gender={gender}
               height={height}
@@ -608,14 +647,21 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     color: Colors.black,
-    fontSize: 18,
+    fontWeight: 'bold',
+    fontSize: 16,
     paddingTop: 20,
     paddingBottom: 10
   },
   optionButton: {
     flex: 1,
-    padding: 20,
+    padding: 5,
+    paddingTop: 20,
+    paddingBottom: 20,
+    marginBottom: 5,
     backgroundColor: Colors.paleBlue
+  },
+  optionButtonText: {
+    textAlign: 'center'
   },
   mealPlanSection: {
     alignSelf: 'stretch',
@@ -632,8 +678,9 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
+    marginRight: 20,
+    marginLeft: 20
   },
   progressButtonText: {
     textAlign: 'center'
@@ -645,7 +692,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderWidth: 3,
     borderColor: Colors.paleGreen,
-    borderRadius: 1
+    borderRadius: 1,
+    marginRight: 5
   },
   progressButtonBad: {
     flex: 1,
@@ -654,7 +702,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderWidth: 3,
     borderColor: Colors.paleRed,
-    borderRadius: 1
+    borderRadius: 1,
+    marginLeft: 5
   },
   mealSettingsSection: {
     alignSelf: 'stretch',
