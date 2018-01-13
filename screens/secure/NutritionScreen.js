@@ -86,57 +86,58 @@ export default class LoginScreen extends React.Component {
     // break out into json file
     // in constants folder
     // labels[trainingIntensity][mealsBeforeWorkout]
-    if(trainingIntensity === 0) {
-      label1 = 'Breakfast';
-      label2 = 'Early lunch';
-      label3 = 'Late lunch';
-      label4 = 'Dinner';
-      label5 = 'Bedtime shake';
-    } else {
-      if(mealsBeforeWorkout === 0) {
-        label1 = 'PWO Shake';
-        label2 = 'Breakfast';
-        label3 = 'Early lunch';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime shake';
-      } else if(mealsBeforeWorkout === 1) {
-        label1 = 'Breakfast';
-        label2 = 'PWO Shake';
-        label3 = 'Early lunch';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime shake';
-      } else if(mealsBeforeWorkout === 2) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'PWO Shake';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime shake';
-      } else if(mealsBeforeWorkout === 3) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'Late lunch';
-        label4 = 'PWO Shake';
-        label5 = 'Dinner';
-        label6 = 'Bedtime shake';
-      } else if(mealsBeforeWorkout === 4) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'Late lunch';
-        label4 = 'Dinner';
-        label5 = 'PWO Shake';
-        label6 = 'Bedtime shake';
-      }
-    }
+
+    // if(trainingIntensity === 0) {
+    //   label1 = 'Breakfast';
+    //   label2 = 'Early lunch';
+    //   label3 = 'Late lunch';
+    //   label4 = 'Dinner';
+    //   label5 = 'Bedtime shake';
+    // } else {
+    //   if(mealsBeforeWorkout === 0) {
+    //     label1 = 'PWO Shake';
+    //     label2 = 'Breakfast';
+    //     label3 = 'Early lunch';
+    //     label4 = 'Late lunch';
+    //     label5 = 'Dinner';
+    //     label6 = 'Bedtime shake';
+    //   } else if(mealsBeforeWorkout === 1) {
+    //     label1 = 'Breakfast';
+    //     label2 = 'PWO Shake';
+    //     label3 = 'Early lunch';
+    //     label4 = 'Late lunch';
+    //     label5 = 'Dinner';
+    //     label6 = 'Bedtime shake';
+    //   } else if(mealsBeforeWorkout === 2) {
+    //     label1 = 'Breakfast';
+    //     label2 = 'Early lunch';
+    //     label3 = 'PWO Shake';
+    //     label4 = 'Late lunch';
+    //     label5 = 'Dinner';
+    //     label6 = 'Bedtime shake';
+    //   } else if(mealsBeforeWorkout === 3) {
+    //     label1 = 'Breakfast';
+    //     label2 = 'Early lunch';
+    //     label3 = 'Late lunch';
+    //     label4 = 'PWO Shake';
+    //     label5 = 'Dinner';
+    //     label6 = 'Bedtime shake';
+    //   } else if(mealsBeforeWorkout === 4) {
+    //     label1 = 'Breakfast';
+    //     label2 = 'Early lunch';
+    //     label3 = 'Late lunch';
+    //     label4 = 'Dinner';
+    //     label5 = 'PWO Shake';
+    //     label6 = 'Bedtime shake';
+    //   }
+    // }
 
     if(trainingIntensity === 0) {
-      label1 = 'Breakfast';
-      label2 = 'Early lunch';
-      label3 = 'Late lunch';
-      label4 = 'Dinner';
-      label5 = 'Bedtime';
+      // label1 = 'Breakfast';
+      // label2 = 'Early lunch';
+      // label3 = 'Late lunch';
+      // label4 = 'Dinner';
+      // label5 = 'Bedtime';
 
       protein1 = (totalProtein - proteinDelta) * 0.25;
       protein2 = (totalProtein - proteinDelta) * 0.25;
@@ -165,12 +166,12 @@ export default class LoginScreen extends React.Component {
       veggies5 = '---';
     } else if(trainingIntensity === 1 || trainingIntensity === 2) {
       if(mealsBeforeWorkout === 0) {
-        label1 = 'PWO shake';
-        label2 = 'Breakfast';
-        label3 = 'Early lunch';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime';
+        // label1 = 'PWO shake';
+        // label2 = 'Breakfast';
+        // label3 = 'Early lunch';
+        // label4 = 'Late lunch';
+        // label5 = 'Dinner';
+        // label6 = 'Bedtime';
 
         protein1 = proteinDelta;
         protein2 = (totalProtein - proteinDelta) * 0.25;
@@ -200,12 +201,12 @@ export default class LoginScreen extends React.Component {
         veggies5 = '1+ cups';
         veggies6 = '---';
       } else if(mealsBeforeWorkout === 1) {
-        label1 = 'Breakfast';
-        label2 = 'PWO shake';
-        label3 = 'Early lunch';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime';
+        // label1 = 'Breakfast';
+        // label2 = 'PWO shake';
+        // label3 = 'Early lunch';
+        // label4 = 'Late lunch';
+        // label5 = 'Dinner';
+        // label6 = 'Bedtime';
 
         protein1 = (totalProtein - proteinDelta) * 0.25;
         protein2 = proteinDelta;
@@ -235,12 +236,12 @@ export default class LoginScreen extends React.Component {
         veggies5 = '1+ cups';
         veggies6 = '---';
       } else if(mealsBeforeWorkout === 2) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'PWO shake';
-        label4 = 'Late lunch';
-        label5 = 'Dinner';
-        label6 = 'Bedtime';
+        // label1 = 'Breakfast';
+        // label2 = 'Early lunch';
+        // label3 = 'PWO shake';
+        // label4 = 'Late lunch';
+        // label5 = 'Dinner';
+        // label6 = 'Bedtime';
 
         protein1 = (totalProtein - proteinDelta) * 0.25;
         protein2 = (totalProtein - proteinDelta) * 0.25;
@@ -270,12 +271,12 @@ export default class LoginScreen extends React.Component {
         veggies5 = '1+ cups';
         veggies6 = '---';
       } else if(mealsBeforeWorkout === 3) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'Late lunch';
-        label4 = 'PWO shake';
-        label5 = 'Dinner';
-        label6 = 'Bedtime';
+        // label1 = 'Breakfast';
+        // label2 = 'Early lunch';
+        // label3 = 'Late lunch';
+        // label4 = 'PWO shake';
+        // label5 = 'Dinner';
+        // label6 = 'Bedtime';
 
         protein1 = (totalProtein - proteinDelta) * 0.25;
         protein2 = (totalProtein - proteinDelta) * 0.25;
@@ -305,12 +306,12 @@ export default class LoginScreen extends React.Component {
         veggies5 = '1+ cups';
         veggies6 = '---';
       } else if(mealsBeforeWorkout === 4) {
-        label1 = 'Breakfast';
-        label2 = 'Early lunch';
-        label3 = 'Late lunch';
-        label4 = 'Dinner';
-        label5 = 'PWO shake';
-        label6 = 'Bedtime';
+        // label1 = 'Breakfast';
+        // label2 = 'Early lunch';
+        // label3 = 'Late lunch';
+        // label4 = 'Dinner';
+        // label5 = 'PWO shake';
+        // label6 = 'Bedtime';
 
         protein1 = (totalProtein - proteinDelta) * 0.25;
         protein2 = (totalProtein - proteinDelta) * 0.25;
@@ -342,12 +343,12 @@ export default class LoginScreen extends React.Component {
       }
     }
 
-    label1 = label1;
-    label2 = label2;
-    label3 = label3;
-    label4 = label4;
-    label5 = label5;
-    label6 = label6;
+    // label1 = label1;
+    // label2 = label2;
+    // label3 = label3;
+    // label4 = label4;
+    // label5 = label5;
+    // label6 = label6;
 
     protein1 = changeUnit(showInGrams, 'protein', protein1);
     protein2 = changeUnit(showInGrams, 'protein', protein2);
