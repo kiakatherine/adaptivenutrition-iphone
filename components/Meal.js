@@ -17,6 +17,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
+import * as labels from '../constants/MealLabels';
 
 import FoodOptions from './FoodOptions';
 
@@ -26,10 +27,20 @@ class Meal extends React.Component {
    }
 
    render() {
+     let label;
+
+     if(this.props.trainingIntensity === 0) {
+       label = labels.x.low[this.props.currentMeal];
+     } else if(this.props.trainingIntensity === 1) {
+       label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
+     } else if(this.props.trainingIntensity === 2) {
+       label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
+     }
+
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
-          <Text style={styles.mealRowHeaderCol}>{this.props.label}{'Meal'.toUpperCase()} #{this.props.currentMeal}</Text>
+          <Text style={styles.mealRowHeaderCol}>{label.toUpperCase()}</Text>
           <Text style={styles.mealRowHeaderColTime}>{this.props.timing}{'Timing'.toUpperCase()}</Text>
         </View>
 
@@ -37,7 +48,7 @@ class Meal extends React.Component {
           <Text style={styles.mealRowCol}>Protein</Text>
           <FoodOptions style={styles.mealRowColLong}
             trainingIntensity={this.props.trainingIntensity}
-            trainingTime={this.props.trainingTime}
+            mealsBeforeWorkout={this.props.mealsBeforeWorkout}
             template={this.props.template}
             currentMeal={this.props.currentMeal}
             age={this.props.age}
@@ -52,7 +63,7 @@ class Meal extends React.Component {
           <Text style={styles.mealRowCol}>Starches</Text>
           <FoodOptions style={styles.mealRowColLong}
             trainingIntensity={this.props.trainingIntensity}
-            trainingTime={this.props.trainingTime}
+            mealsBeforeWorkout={this.props.mealsBeforeWorkout}
             template={this.props.template}
             currentMeal={this.props.currentMeal}
             age={this.props.age}
@@ -67,7 +78,7 @@ class Meal extends React.Component {
           <Text style={styles.mealRowCol}>Fats</Text>
           <FoodOptions style={styles.mealRowColLong}
             trainingIntensity={this.props.trainingIntensity}
-            trainingTime={this.props.trainingTime}
+            mealsBeforeWorkout={this.props.mealsBeforeWorkout}
             template={this.props.template}
             currentMeal={this.props.currentMeal}
             age={this.props.age}
@@ -82,7 +93,7 @@ class Meal extends React.Component {
           <Text style={styles.mealRowCol}>Veggies</Text>
           <FoodOptions style={styles.mealRowColLong}
             trainingIntensity={this.props.trainingIntensity}
-            trainingTime={this.props.trainingTime}
+            mealsBeforeWorkout={this.props.mealsBeforeWorkout}
             template={this.props.template}
             currentMeal={this.props.currentMeal}
             age={this.props.age}
@@ -101,7 +112,7 @@ export default Meal;
 
 Meal.propTypes = {
   trainingIntensity: PropTypes.number,
-  trainingTime: PropTypes.number,
+  mealsBeforeWorkout: PropTypes.number,
   template: PropTypes.number,
   currentMeal: PropTypes.number,
   age: PropTypes.number,

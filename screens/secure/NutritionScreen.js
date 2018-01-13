@@ -8,6 +8,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
+import * as labels from '../../constants/MealLabels';
 
 import { changeUnit } from '../../utils/helpers';
 
@@ -35,11 +36,10 @@ export default class LoginScreen extends React.Component {
     this.state = {
       showInGrams: false,
       wakeTime: '8 a.m.',
-      intensity: 0,
+      trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
       template: 0,
-      trainingTime: 3,
       trainingIntensity: 1
     };
   }
@@ -51,6 +51,8 @@ export default class LoginScreen extends React.Component {
       this.setState({ client: snapshot.val() });
       console.log('client', this.state.client.name);
     });
+
+    console.log('MEAL LABEL', labels.x.low[0]);
   }
 
   render() {
@@ -71,7 +73,7 @@ export default class LoginScreen extends React.Component {
 
     const template = this.state.template;
     const currentMeal = this.state.currentMeal;
-    const trainingTime = this.state.trainingTime;
+    const mealsBeforeWorkout = this.state.mealsBeforeWorkout;
     const trainingIntensity = this.state.trainingIntensity;
     const showInGrams = this.state.showInGrams;
 
@@ -83,7 +85,7 @@ export default class LoginScreen extends React.Component {
 
     // break out into json file
     // in constants folder
-    // labels[trainingIntensity][trainingTime]
+    // labels[trainingIntensity][mealsBeforeWorkout]
     if(trainingIntensity === 0) {
       label1 = 'Breakfast';
       label2 = 'Early lunch';
@@ -91,35 +93,35 @@ export default class LoginScreen extends React.Component {
       label4 = 'Dinner';
       label5 = 'Bedtime shake';
     } else {
-      if(trainingTime === 0) {
+      if(mealsBeforeWorkout === 0) {
         label1 = 'PWO Shake';
         label2 = 'Breakfast';
         label3 = 'Early lunch';
         label4 = 'Late lunch';
         label5 = 'Dinner';
         label6 = 'Bedtime shake';
-      } else if(trainingTime === 1) {
+      } else if(mealsBeforeWorkout === 1) {
         label1 = 'Breakfast';
         label2 = 'PWO Shake';
         label3 = 'Early lunch';
         label4 = 'Late lunch';
         label5 = 'Dinner';
         label6 = 'Bedtime shake';
-      } else if(trainingTime === 2) {
+      } else if(mealsBeforeWorkout === 2) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'PWO Shake';
         label4 = 'Late lunch';
         label5 = 'Dinner';
         label6 = 'Bedtime shake';
-      } else if(trainingTime === 3) {
+      } else if(mealsBeforeWorkout === 3) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'Late lunch';
         label4 = 'PWO Shake';
         label5 = 'Dinner';
         label6 = 'Bedtime shake';
-      } else if(trainingTime === 4) {
+      } else if(mealsBeforeWorkout === 4) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'Late lunch';
@@ -162,7 +164,7 @@ export default class LoginScreen extends React.Component {
       veggies4 = '1+ cups';
       veggies5 = '---';
     } else if(trainingIntensity === 1 || trainingIntensity === 2) {
-      if(trainingTime === 0) {
+      if(mealsBeforeWorkout === 0) {
         label1 = 'PWO shake';
         label2 = 'Breakfast';
         label3 = 'Early lunch';
@@ -197,7 +199,7 @@ export default class LoginScreen extends React.Component {
         veggies4 = '1+ cups';
         veggies5 = '1+ cups';
         veggies6 = '---';
-      } else if(trainingTime === 1) {
+      } else if(mealsBeforeWorkout === 1) {
         label1 = 'Breakfast';
         label2 = 'PWO shake';
         label3 = 'Early lunch';
@@ -232,7 +234,7 @@ export default class LoginScreen extends React.Component {
         veggies4 = '1+ cups';
         veggies5 = '1+ cups';
         veggies6 = '---';
-      } else if(trainingTime === 2) {
+      } else if(mealsBeforeWorkout === 2) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'PWO shake';
@@ -267,7 +269,7 @@ export default class LoginScreen extends React.Component {
         veggies4 = '1+ cups';
         veggies5 = '1+ cups';
         veggies6 = '---';
-      } else if(trainingTime === 3) {
+      } else if(mealsBeforeWorkout === 3) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'Late lunch';
@@ -302,7 +304,7 @@ export default class LoginScreen extends React.Component {
         veggies4 = '---';
         veggies5 = '1+ cups';
         veggies6 = '---';
-      } else if(trainingTime === 4) {
+      } else if(mealsBeforeWorkout === 4) {
         label1 = 'Breakfast';
         label2 = 'Early lunch';
         label3 = 'Late lunch';
@@ -479,20 +481,20 @@ export default class LoginScreen extends React.Component {
 
           <View style={styles.optionSection}>
           <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.intensity === 0 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({ intensity: 0 }) }}>
+              { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
               <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.intensity === 1 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({intensity: 1}) }}>
+              { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({trainingIntensity: 1}) }}>
                <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.intensity === 2 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({ intensity: 2 }) }}>
+              { borderColor: this.state.trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
                <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
           </View>
@@ -539,39 +541,47 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.mealsMenu}>
             <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({currentMeal: 1}) }}>
+                { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({currentMeal: 0}) }}>
                  <Text style={styles.optionButtonText}>1</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({ currentMeal: 1 }) }}>
+                 <Text style={styles.optionButtonText}>2</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({ currentMeal: 2 }) }}>
-                 <Text style={styles.optionButtonText}>2</Text>
+                 <Text style={styles.optionButtonText}>3</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({ currentMeal: 3 }) }}>
-                 <Text style={styles.optionButtonText}>3</Text>
+                onPress={() => { this.setState({currentMeal: 3}) }}>
+                 <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({currentMeal: 4}) }}>
-                 <Text style={styles.optionButtonText}>4</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({currentMeal: 5}) }}>
                  <Text style={styles.optionButtonText}>5</Text>
               </TouchableHighlight>
+
+              {this.state.trainingIntensity !== 0 &&
+                <TouchableHighlight style={[styles.optionButton,
+                  { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({currentMeal: 5}) }}>
+                   <Text style={styles.optionButtonText}>6</Text>
+                </TouchableHighlight>
+              }
             </View>
 
             <Meal
               trainingIntensity={this.state.trainingIntensity}
-              trainingTime={this.state.trainingTime}
+              mealsBeforeWorkout={this.state.mealsBeforeWorkout}
               template={this.state.template}
               currentMeal={this.state.currentMeal}
               age={age}

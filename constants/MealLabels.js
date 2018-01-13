@@ -1,23 +1,98 @@
-{
-  trainingIntensity: [
-    trainingTime: [
-      {
-        label1: ""
-      }
+export const x = {
+  "low": [
+    "Breakfast",
+    "Early lunch",
+    "Late lunch",
+    "Dinner",
+    "Bedtime"
+  ],
+  "moderate": [
+    [
+      "PWO Shake",
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "PWO Shake",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "PWO Shake",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "PWO Shake",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "PWO Shake",
+      "Bedtime"
     ]
   ],
-  trainingIntensity: [
-    trainingTime: [
-      {
-        label1: ""
-      }
+  "high": [
+    [
+      "PWO Shake",
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "PWO Shake",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "PWO Shake",
+      "Late lunch",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "PWO Shake",
+      "Dinner",
+      "Bedtime"
+    ],
+    [
+      "Breakfast",
+      "Early lunch",
+      "Late lunch",
+      "Dinner",
+      "PWO Shake",
+      "Bedtime"
     ]
+    // 'trainingTime': [
+    //   {
+    //     label1: ""
+    //   }
+    // ]
   ],
-  trainingIntensity: [
-    trainingTime: [
-      {
-        label1: ""
-      }
-    ]
-  ],
-}
+};
