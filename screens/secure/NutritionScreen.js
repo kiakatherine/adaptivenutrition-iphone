@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as firebase from 'firebase';
+import firebase from '../../services/FirebaseService';
 
 import AuthService from '../../services/AuthService';
 
@@ -32,7 +32,6 @@ export default class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.clientsRef = firebase.database().ref().child('clients');
     this.state = {
       showInGrams: false,
       wakeTime: '8 a.m.',
@@ -45,88 +44,46 @@ export default class LoginScreen extends React.Component {
     };
   }
 
-  listenForItems(clientsRef) {
-    // Alert.alert('in listenForItems');
-    clientsRef.on('value', (snap) => {
-      Alert.alert('in listenForItems value');
-
-      // get children as an array
-      var clients = [];
-      snap.forEach((child) => {
-        clients.push({
-          name: child.val().name,
-          timestamp: child.timestamp
-        });
-      });
-
-      this.setState({
-        dataSource: clients
-      });
-    })
-  }
-
   componentDidMount() {
-    this.listenForItems(this.clientsRef);
+    var client = firebase.database().ref('clients/-L21NK77TJ6Cb-P2BDrv');
+
+    client.on('value', snapshot => {
+      this.setState({ client: snapshot.val() });
+      console.log('client', this.state.client.name);
+    });
   }
 
   render() {
     const { navigate } = this.props.navigation;
 
-    const showInGrams = this.state.showInGrams;
+    const bodyweight = 128; // get from firebase
+    const bodyfat = 17; // get from firebase
+    const age = 28; // get from firebase
+    const gender = 'female'; // get from firebase
+    const height = 62; // get from firebase
 
-    const bodyweight = 128;
-    const bodyfat = 17;
-    const age = 28;
-    const gender = 'female';
-    const height = 62;
+    const totalProtein = 200; // get from firebase
+    const totalCarbs = 150; // get from firebase
+    const totalFat = 70; // get from firebase
+    const totalCalories = 2200; // get from firebase
 
-    const totalProtein = 200;
-    const totalCarbs = 150;
-    const totalFat = 70;
-    const totalCalories = 2200;
-
-    const proteinDelta = bodyweight > 150 ? 25 : 20;
+    const proteinDelta = bodyweight > 150 ? 25 : 20; // get from firebase
 
     const template = this.state.template;
     const currentMeal = this.state.currentMeal;
     const trainingTime = this.state.trainingTime;
     const trainingIntensity = this.state.trainingIntensity;
+    const showInGrams = this.state.showInGrams;
 
-    let label1 = null;
-    let label2 = null;
-    let label3 = null;
-    let label4 = null;
-    let label5 = null;
-    let label6 = null;
+    let labels = [];
+    let protein = [];
+    let carbs = [];
+    let fats = [];
+    let veggies = [];
 
-    let protein1 = null;
-    let protein2 = null;
-    let protein3 = null;
-    let protein4 = null;
-    let protein5 = null;
-    let protein6 = null;
-
-    let carbs1 = null;
-    let carbs2 = null;
-    let carbs3 = null;
-    let carbs4 = null;
-    let carbs5 = null;
-    let carbs6 = null;
-
-    let fat1 = null;
-    let fat2 = null;
-    let fat3 = null;
-    let fat4 = null;
-    let fat5 = null;
-    let fat6 = null;
-
-    let veggies1 = null;
-    let veggies2 = null;
-    let veggies3 = null;
-    let veggies4 = null;
-    let veggies5 = null;
-    let veggies6 = null;
-
+    // break out into json file
+    // in constants folder
+    // labels[trainingIntensity][trainingTime]
     if(trainingIntensity === 0) {
       label1 = 'Breakfast';
       label2 = 'Early lunch';
@@ -185,6 +142,8 @@ export default class LoginScreen extends React.Component {
       protein4 = (totalProtein - proteinDelta) * 0.25;
       protein5 = proteinDelta;
 
+      // calc carbs func - pass in training intensity and time and totalCarbs - to return array
+      // import { calcCarbs... } from 'my-calculator';
       carbs1 = Math.round(totalCarbs * 0.25);
       carbs2 = Math.round(totalCarbs * 0.25);
       carbs3 = Math.round(totalCarbs * 0.25);
@@ -491,9 +450,14 @@ export default class LoginScreen extends React.Component {
     veggies5 = veggies5;
     veggies6 = veggies6;
 
+    // style based on state:
+    // style={[styles.container, { borderRadius: !value ? Colors.gray : Colors.primaryColor }]}
+
+    // passing new values from component actions:
+    // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
+
     return (
       <ScrollView style={Styles.body}>
-        <View>{this.state.dataSource}</View>
         <View style={Styles.title}>
           <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
         </View>
@@ -514,15 +478,21 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 0}) }}>
+          <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.intensity === 0 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({ intensity: 0 }) }}>
               <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 1}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.intensity === 1 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({intensity: 1}) }}>
                <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({intensity: 2}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.intensity === 2 ? Colors.primaryColor : 0 }]}
+              onPress={() => { this.setState({ intensity: 2 }) }}>
                <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
             </TouchableHighlight>
           </View>
@@ -532,23 +502,33 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
                <Text style={styles.optionButtonText}>0</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
                <Text style={styles.optionButtonText}>1</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
                <Text style={styles.optionButtonText}>2</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
                <Text style={styles.optionButtonText}>3</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
                <Text style={styles.optionButtonText}>4</Text>
             </TouchableHighlight>
           </View>
@@ -558,23 +538,33 @@ export default class LoginScreen extends React.Component {
             <Text>Phase 3</Text>
 
             <View style={styles.mealsMenu}>
-              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 1}) }}>
+            <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({currentMeal: 1}) }}>
                  <Text style={styles.optionButtonText}>1</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 2}) }}>
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({ currentMeal: 2 }) }}>
                  <Text style={styles.optionButtonText}>2</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 3}) }}>
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({ currentMeal: 3 }) }}>
                  <Text style={styles.optionButtonText}>3</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 4}) }}>
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({currentMeal: 4}) }}>
                  <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.optionButton} onPress={() => { this.setState({currentMeal: 5}) }}>
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({currentMeal: 5}) }}>
                  <Text style={styles.optionButtonText}>5</Text>
               </TouchableHighlight>
             </View>
@@ -658,6 +648,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     marginBottom: 5,
+    borderBottomWidth: 3,
+    borderColor: 0,
     backgroundColor: Colors.paleBlue
   },
   optionButtonText: {
