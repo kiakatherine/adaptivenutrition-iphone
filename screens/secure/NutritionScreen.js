@@ -10,7 +10,8 @@ import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 import * as labels from '../../constants/MealLabels';
 
-import { changeUnit } from '../../utils/helpers';
+import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
+import { changeUnit, calculateTotals } from '../../utils/helpers';
 
 import {
   Alert,
@@ -39,419 +40,300 @@ export default class LoginScreen extends React.Component {
       trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
-      template: 0,
+      template: 0, //make dynamic
+      phase: 3, //make dynamic
       trainingIntensity: 1
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     var client = firebase.database().ref('clients/-L21NK77TJ6Cb-P2BDrv');
 
+    this.setState({ showLoading: true });
+
     client.on('value', snapshot => {
-      this.setState({ client: snapshot.val() });
-      console.log('client', this.state.client.name);
+      this.setState({ client: snapshot.val() }, function() {
+        this.setState({
+          showLoading: false
+        });
+      });
     });
 
-    console.log('MEAL LABEL', labels.x.low[0]);
+    // console.log('MEAL LABEL', labels.x.low[0]);
   }
 
   render() {
     const { navigate } = this.props.navigation;
 
-    const bodyweight = 128; // get from firebase
-    const bodyfat = 17; // get from firebase
-    const age = 28; // get from firebase
-    const gender = 'female'; // get from firebase
-    const height = 62; // get from firebase
+    let bodyweight;
+    let bodyfat;
+    let age;
+    let gender;
+    let height;
+    let leanMass;
+    let proteinDelta;
 
-    const totalProtein = 200; // get from firebase
-    const totalCarbs = 150; // get from firebase
-    const totalFat = 70; // get from firebase
-    const totalCalories = 2200; // get from firebase
+    let template;
+    let currentMeal;
+    let mealsBeforeWorkout;
+    let trainingIntensity;
+    let showInGrams;
 
-    const proteinDelta = bodyweight > 150 ? 25 : 20; // get from firebase
-
-    const template = this.state.template;
-    const currentMeal = this.state.currentMeal;
-    const mealsBeforeWorkout = this.state.mealsBeforeWorkout;
-    const trainingIntensity = this.state.trainingIntensity;
-    const showInGrams = this.state.showInGrams;
+    let customMacros;
+    let customRestDayProtein;
+    let customRestDayCarbs;
+    let customRestDayFat;
+    let customModerateDayProtein;
+    let customModerateDayCarbs;
+    let customModerateDayFat;
+    let customHeavyDayProtein;
+    let customHeavyDayCarbs;
+    let customHeavyDayFat;
 
     let labels = [];
-    let protein = [];
+    let proteins = [];
     let carbs = [];
     let fats = [];
     let veggies = [];
 
-    // break out into json file
-    // in constants folder
-    // labels[trainingIntensity][mealsBeforeWorkout]
+    if(this.state.showLoading === false) {
+      const client = this.state.client;
 
-    // if(trainingIntensity === 0) {
-    //   label1 = 'Breakfast';
-    //   label2 = 'Early lunch';
-    //   label3 = 'Late lunch';
-    //   label4 = 'Dinner';
-    //   label5 = 'Bedtime shake';
-    // } else {
-    //   if(mealsBeforeWorkout === 0) {
-    //     label1 = 'PWO Shake';
-    //     label2 = 'Breakfast';
-    //     label3 = 'Early lunch';
-    //     label4 = 'Late lunch';
-    //     label5 = 'Dinner';
-    //     label6 = 'Bedtime shake';
-    //   } else if(mealsBeforeWorkout === 1) {
-    //     label1 = 'Breakfast';
-    //     label2 = 'PWO Shake';
-    //     label3 = 'Early lunch';
-    //     label4 = 'Late lunch';
-    //     label5 = 'Dinner';
-    //     label6 = 'Bedtime shake';
-    //   } else if(mealsBeforeWorkout === 2) {
-    //     label1 = 'Breakfast';
-    //     label2 = 'Early lunch';
-    //     label3 = 'PWO Shake';
-    //     label4 = 'Late lunch';
-    //     label5 = 'Dinner';
-    //     label6 = 'Bedtime shake';
-    //   } else if(mealsBeforeWorkout === 3) {
-    //     label1 = 'Breakfast';
-    //     label2 = 'Early lunch';
-    //     label3 = 'Late lunch';
-    //     label4 = 'PWO Shake';
-    //     label5 = 'Dinner';
-    //     label6 = 'Bedtime shake';
-    //   } else if(mealsBeforeWorkout === 4) {
-    //     label1 = 'Breakfast';
-    //     label2 = 'Early lunch';
-    //     label3 = 'Late lunch';
-    //     label4 = 'Dinner';
-    //     label5 = 'PWO Shake';
-    //     label6 = 'Bedtime shake';
-    //   }
-    // }
+      bodyweight = client.bodyweight;
+      bodyfat = client.bodyfat;
+      age = client.age;
+      gender = client.gender;
+      height = client.height;
+      leanMass = client.leanMass;
+      proteinDelta = bodyweight > 150 ? 25 : 20;
 
-    if(trainingIntensity === 0) {
-      // label1 = 'Breakfast';
-      // label2 = 'Early lunch';
-      // label3 = 'Late lunch';
-      // label4 = 'Dinner';
-      // label5 = 'Bedtime';
+      template = this.state.template;
+      currentMeal = this.state.currentMeal;
+      mealsBeforeWorkout = this.state.mealsBeforeWorkout;
+      trainingIntensity = this.state.trainingIntensity;
+      showInGrams = this.state.showInGrams;
 
-      protein1 = (totalProtein - proteinDelta) * 0.25;
-      protein2 = (totalProtein - proteinDelta) * 0.25;
-      protein3 = (totalProtein - proteinDelta) * 0.25;
-      protein4 = (totalProtein - proteinDelta) * 0.25;
-      protein5 = proteinDelta;
+      customMacros = client.customMacros;
+      customRestDayProtein = client.customRestDayProtein;
+      customRestDayCarbs = client.customRestDayCarbs;
+      customRestDayFat = client.customRestDayFat;
+      customModerateDayProtein = client.customModerateDayProtein;
+      customModerateDayCarbs = client.customModerateDayCarbs;
+      customModerateDayFat = client.customModerateDayFat;
+      customHeavyDayProtein = client.customHeavyDayProtein;
+      customHeavyDayCarbs = client.customHeavyDayCarbs;
+      customHeavyDayFat = client.customHeavyDayFat;
 
-      // calc carbs func - pass in training intensity and time and totalCarbs - to return array
-      // import { calcCarbs... } from 'my-calculator';
-      carbs1 = Math.round(totalCarbs * 0.25);
-      carbs2 = Math.round(totalCarbs * 0.25);
-      carbs3 = Math.round(totalCarbs * 0.25);
-      carbs4 = Math.round(totalCarbs * 0.25);
-      carbs5 = '---';
+      const totals = calculateTotals(age, gender, height, bodyfat, bodyweight, leanMass,
+        template, trainingIntensity, customMacros,
+        customRestDayProtein, customRestDayCarbs, customRestDayFat,
+        customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
+        customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat);
+      const totalProtein = totals['totalProtein'];
+      const totalCarbs = totals['totalCarbs'];
+      const totalFat = totals['totalFat'];
+      const totalCalories = totals['totalCalories'];
 
-      fat1 = Math.round(totalFat * 0.3);
-      fat2 = Math.round(totalFat * 0.2);
-      fat3 = Math.round(totalFat * 0.2);
-      fat4 = Math.round(totalFat * 0.3);
-      fat5 = '---';
+      protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
+      carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
+      fat = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
+      veggies = calcVeggies(trainingIntensity, mealsBeforeWorkout);
 
-      veggies1 = '1+ cups';
-      veggies2 = '1+ cups';
-      veggies3 = '1+ cups';
-      veggies4 = '1+ cups';
-      veggies5 = '---';
-    } else if(trainingIntensity === 1 || trainingIntensity === 2) {
-      if(mealsBeforeWorkout === 0) {
-        // label1 = 'PWO shake';
-        // label2 = 'Breakfast';
-        // label3 = 'Early lunch';
-        // label4 = 'Late lunch';
-        // label5 = 'Dinner';
-        // label6 = 'Bedtime';
+      protein1 = changeUnit(showInGrams, 'protein', protein[0]);
+      protein2 = changeUnit(showInGrams, 'protein', protein[1]);
+      protein3 = changeUnit(showInGrams, 'protein', protein[2]);
+      protein4 = changeUnit(showInGrams, 'protein', protein[3]);
+      protein5 = changeUnit(showInGrams, 'protein', protein[4]);
+      protein6 = changeUnit(showInGrams, 'protein', protein[5]);
 
-        protein1 = proteinDelta;
-        protein2 = (totalProtein - proteinDelta) * 0.25;
-        protein3 = (totalProtein - proteinDelta) * 0.25;
-        protein4 = (totalProtein - proteinDelta) * 0.25;
-        protein5 = (totalProtein - proteinDelta) * 0.25;
-        protein6 = proteinDelta;
+      protein5casein = changeUnit(true, 'protein', protein[4]);
+      protein6casein = changeUnit(true, 'protein', protein[5]);
 
-        carbs1 = Math.round(totalCarbs * 0.2);
-        carbs2 = Math.round(totalCarbs * 0.3);
-        carbs3 = Math.round(totalCarbs * 0.2);
-        carbs4 = Math.round(totalCarbs * 0.1);
-        carbs5 = Math.round(totalCarbs * 0.1);
-        carbs6 = Math.round(totalCarbs * 0.1);
+      protein1Grams = changeUnit(true, 'protein', protein[0]);
+      protein2Grams = changeUnit(true, 'protein', protein[1]);
+      protein3Grams = changeUnit(true, 'protein', protein[2]);
+      protein4Grams = changeUnit(true, 'protein', protein[3]);
+      protein5Grams = changeUnit(true, 'protein', protein[4]);
+      protein6Grams = changeUnit(true, 'protein', protein[5]);
 
-        fat1 = '---';
-        fat2 = '---';
-        fat3 = Math.round(totalFat * 0.1);
-        fat4 = Math.round(totalFat * 0.3);
-        fat5 = Math.round(totalFat * 0.3);
-        fat6 = Math.round(totalFat * 0.3);
+      proteins = {
+        protein1: protein1,
+        protein2: protein2,
+        protein3: protein3,
+        protein4: protein4,
+        protein5: protein5,
+        protein6: protein6,
+        protein5casein: protein5casein,
+        protein6casein: protein6casein,
+        protein1Grams: protein1Grams,
+        protein2Grams: protein2Grams,
+        protein3Grams: protein3Grams,
+        protein4Grams: protein4Grams,
+        protein5Grams: protein5Grams,
+        protein6Grams: protein6Grams
+      };
 
-        veggies1 = '---';
-        veggies2 = '1+ cups';
-        veggies3 = '1+ cups';
-        veggies4 = '1+ cups';
-        veggies5 = '1+ cups';
-        veggies6 = '---';
-      } else if(mealsBeforeWorkout === 1) {
-        // label1 = 'Breakfast';
-        // label2 = 'PWO shake';
-        // label3 = 'Early lunch';
-        // label4 = 'Late lunch';
-        // label5 = 'Dinner';
-        // label6 = 'Bedtime';
+      carbs1 = changeUnit(showInGrams, 'carbs', carbs[0]);
+      carbs2 = changeUnit(showInGrams, 'carbs', carbs[1]);
+      carbs3 = changeUnit(showInGrams, 'carbs', carbs[2]);
+      carbs4 = changeUnit(showInGrams, 'carbs', carbs[3]);
+      carbs5 = changeUnit(showInGrams, 'carbs', carbs[4]);
+      carbs6 = changeUnit(showInGrams, 'carbs', carbs[5]);
 
-        protein1 = (totalProtein - proteinDelta) * 0.25;
-        protein2 = proteinDelta;
-        protein3 = (totalProtein - proteinDelta) * 0.25;
-        protein4 = (totalProtein - proteinDelta) * 0.25;
-        protein5 = (totalProtein - proteinDelta) * 0.25;
-        protein6 = proteinDelta;
+      carbs1potatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'potatoes');
+      carbs2potatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'potatoes');
+      carbs3potatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'potatoes');
+      carbs4potatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'potatoes');
+      carbs5potatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'potatoes');
+      carbs6potatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'potatoes');
 
-        carbs1 = Math.round(totalCarbs * 0.15);
-        carbs2 = Math.round(totalCarbs * 0.15);
-        carbs3 = Math.round(totalCarbs * 0.3);
-        carbs4 = Math.round(totalCarbs * 0.2);
-        carbs5 = Math.round(totalCarbs * 0.1);
-        carbs6 = Math.round(totalCarbs * 0.1);
+      carbs1sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'sweetPotatoes');
+      carbs2sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'sweetPotatoes');
+      carbs3sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'sweetPotatoes');
+      carbs4sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'sweetPotatoes');
+      carbs5sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'sweetPotatoes');
+      carbs6sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'sweetPotatoes');
 
-        fat1 = Math.round(totalFat * 0.1);
-        fat2 = '---';
-        fat3 = '---';
-        fat4 = Math.round(totalFat * 0.3);
-        fat5 = Math.round(totalFat * 0.3);
-        fat6 = Math.round(totalFat * 0.3);
+      carbs1quinoa = changeUnit(showInGrams, 'carbs', carbs[0], 'quinoa');
+      carbs2quinoa = changeUnit(showInGrams, 'carbs', carbs[1], 'quinoa');
+      carbs3quinoa = changeUnit(showInGrams, 'carbs', carbs[2], 'quinoa');
+      carbs4quinoa = changeUnit(showInGrams, 'carbs', carbs[3], 'quinoa');
+      carbs5quinoa = changeUnit(showInGrams, 'carbs', carbs[4], 'quinoa');
+      carbs6quinoa = changeUnit(showInGrams, 'carbs', carbs[5], 'quinoa');
 
-        veggies1 = '1+ cups';
-        veggies2 = '---';
-        veggies3 = '1+ cups';
-        veggies4 = '1+ cups';
-        veggies5 = '1+ cups';
-        veggies6 = '---';
-      } else if(mealsBeforeWorkout === 2) {
-        // label1 = 'Breakfast';
-        // label2 = 'Early lunch';
-        // label3 = 'PWO shake';
-        // label4 = 'Late lunch';
-        // label5 = 'Dinner';
-        // label6 = 'Bedtime';
+      carbs1banana = changeUnit(showInGrams, 'carbs', carbs[0], 'banana');
+      carbs2banana = changeUnit(showInGrams, 'carbs', carbs[1], 'banana');
+      carbs3banana = changeUnit(showInGrams, 'carbs', carbs[2], 'banana');
+      carbs4banana = changeUnit(showInGrams, 'carbs', carbs[3], 'banana');
+      carbs5banana = changeUnit(showInGrams, 'carbs', carbs[4], 'banana');
+      carbs6banana = changeUnit(showInGrams, 'carbs', carbs[5], 'banana');
 
-        protein1 = (totalProtein - proteinDelta) * 0.25;
-        protein2 = (totalProtein - proteinDelta) * 0.25;
-        protein3 = proteinDelta;
-        protein4 = (totalProtein - proteinDelta) * 0.25;
-        protein5 = (totalProtein - proteinDelta) * 0.25;
-        protein6 = proteinDelta;
+      carbs1acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[0], 'acornButternutSquash');
+      carbs2acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[1], 'acornButternutSquash');
+      carbs3acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[2], 'acornButternutSquash');
+      carbs4acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[3], 'acornButternutSquash');
+      carbs5acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[4], 'acornButternutSquash');
+      carbs6acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[5], 'acornButternutSquash');
 
-        carbs1 = Math.round(totalCarbs * 0.1);
-        carbs2 = Math.round(totalCarbs * 0.15);
-        carbs3 = Math.round(totalCarbs * 0.15);
-        carbs4 = Math.round(totalCarbs * 0.3);
-        carbs5 = Math.round(totalCarbs * 0.2);
-        carbs6 = Math.round(totalCarbs * 0.1);
+      carbs1blueberries = changeUnit(showInGrams, 'carbs', carbs[0], 'blueberries');
 
-        fat1 = Math.round(totalFat * 0.3);
-        fat2 = Math.round(totalFat * 0.1);
-        fat3 = '---';
-        fat4 = '---';
-        fat5 = Math.round(totalFat * 0.3);
-        fat6 = Math.round(totalFat * 0.3);
+      carbs1pwo = changeUnit(showInGrams, 'carbs', carbs[0], 'pwo');
+      carbs2pwo = changeUnit(showInGrams, 'carbs', carbs[1], 'pwo');
+      carbs3pwo = changeUnit(showInGrams, 'carbs', carbs[2], 'pwo');
+      carbs4pwo = changeUnit(showInGrams, 'carbs', carbs[3], 'pwo');
+      carbs5pwo = changeUnit(showInGrams, 'carbs', carbs[4], 'pwo');
+      carbs6pwo = changeUnit(showInGrams, 'carbs', carbs[5], 'pwo');
 
-        veggies1 = '1+ cups';
-        veggies2 = '1+ cups';
-        veggies3 = '---';
-        veggies4 = '1+ cups';
-        veggies5 = '1+ cups';
-        veggies6 = '---';
-      } else if(mealsBeforeWorkout === 3) {
-        // label1 = 'Breakfast';
-        // label2 = 'Early lunch';
-        // label3 = 'Late lunch';
-        // label4 = 'PWO shake';
-        // label5 = 'Dinner';
-        // label6 = 'Bedtime';
+      carbs = {
+        carbs1: carbs1,
+        carbs2: carbs2,
+        carbs3: carbs3,
+        carbs4: carbs4,
+        carbs5: carbs5,
+        carbs6: carbs6,
+        carbs1potatoes: carbs1potatoes,
+        carbs2potatoes: carbs2potatoes,
+        carbs3potatoes: carbs3potatoes,
+        carbs4potatoes: carbs4potatoes,
+        carbs5potatoes: carbs5potatoes,
+        carbs6potatoes: carbs6potatoes,
+        carbs1sweetPotatoes: carbs1sweetPotatoes,
+        carbs2sweetPotatoes: carbs2sweetPotatoes,
+        carbs3sweetPotatoes: carbs3sweetPotatoes,
+        carbs4sweetPotatoes: carbs4sweetPotatoes,
+        carbs5sweetPotatoes: carbs5sweetPotatoes,
+        carbs6sweetPotatoes: carbs6sweetPotatoes,
+        carbs1quinoa: carbs1quinoa,
+        carbs2quinoa: carbs2quinoa,
+        carbs3quinoa: carbs3quinoa,
+        carbs4quinoa: carbs4quinoa,
+        carbs5quinoa: carbs5quinoa,
+        carbs6quinoa: carbs6quinoa,
+        carbs1banana: carbs1banana,
+        carbs2banana: carbs2banana,
+        carbs3banana: carbs3banana,
+        carbs4banana: carbs4banana,
+        carbs5banana: carbs5banana,
+        carbs6banana: carbs6banana,
+        carbs1acornButternutSquash: carbs1acornButternutSquash,
+        carbs2acornButternutSquash: carbs2acornButternutSquash,
+        carbs3acornButternutSquash: carbs3acornButternutSquash,
+        carbs4acornButternutSquash: carbs4acornButternutSquash,
+        carbs5acornButternutSquash: carbs5acornButternutSquash,
+        carbs6acornButternutSquash: carbs6acornButternutSquash,
+        carbs1blueberries: carbs1blueberries,
+        carbs1pwo: carbs1pwo,
+        carbs2pwo: carbs2pwo,
+        carbs3pwo: carbs3pwo,
+        carbs4pwo: carbs4pwo,
+        carbs5pwo: carbs5pwo,
+        carbs6pwo: carbs6pwo
+      };
 
-        protein1 = (totalProtein - proteinDelta) * 0.25;
-        protein2 = (totalProtein - proteinDelta) * 0.25;
-        protein3 = (totalProtein - proteinDelta) * 0.25;
-        protein4 = proteinDelta;
-        protein5 = (totalProtein - proteinDelta) * 0.25;
-        protein6 = proteinDelta;
+      fat1 = changeUnit(showInGrams, 'fat', fat[0], 'oil');
+      fat2 = changeUnit(showInGrams, 'fat', fat[1], 'oil');
+      fat3 = changeUnit(showInGrams, 'fat', fat[2], 'oil');
+      fat4 = changeUnit(showInGrams, 'fat', fat[3], 'oil');
+      fat5 = changeUnit(showInGrams, 'fat', fat[4], 'oil');
+      fat6 = changeUnit(showInGrams, 'fat', fat[5], 'oil');
 
-        carbs1 = Math.round(totalCarbs * 0.1);
-        carbs2 = Math.round(totalCarbs * 0.1);
-        carbs3 = Math.round(totalCarbs * 0.15);
-        carbs4 = Math.round(totalCarbs * 0.15);
-        carbs5 = Math.round(totalCarbs * 0.3);
-        carbs6 = Math.round(totalCarbs * 0.2);
+      fat1butter = changeUnit(showInGrams, 'fat', fat[0], 'butter');
+      fat2butter = changeUnit(showInGrams, 'fat', fat[1], 'butter');
+      fat3butter = changeUnit(showInGrams, 'fat', fat[2], 'butter');
+      fat4butter = changeUnit(showInGrams, 'fat', fat[3], 'butter');
+      fat5butter = changeUnit(showInGrams, 'fat', fat[4], 'butter');
+      fat6butter = changeUnit(showInGrams, 'fat', fat[5], 'butter');
 
-        fat1 = Math.round(totalFat * 0.3);
-        fat2 = Math.round(totalFat * 0.3);
-        fat3 = Math.round(totalFat * 0.1);
-        fat4 = '---';
-        fat5 = '---';
-        fat6 = Math.round(totalFat * 0.3);
+      fat1nutButter = changeUnit(showInGrams, 'fat', fat[0], 'nutButter');
+      fat2nutButter = changeUnit(showInGrams, 'fat', fat[1], 'nutButter');
+      fat3nutButter = changeUnit(showInGrams, 'fat', fat[2], 'nutButter');
+      fat4nutButter = changeUnit(showInGrams, 'fat', fat[3], 'nutButter');
+      fat5nutButter = changeUnit(showInGrams, 'fat', fat[4], 'nutButter');
+      fat6nutButter = changeUnit(showInGrams, 'fat', fat[5], 'nutButter');
 
-        veggies1 = '1+ cups';
-        veggies2 = '1+ cups';
-        veggies3 = '1+ cups';
-        veggies4 = '---';
-        veggies5 = '1+ cups';
-        veggies6 = '---';
-      } else if(mealsBeforeWorkout === 4) {
-        // label1 = 'Breakfast';
-        // label2 = 'Early lunch';
-        // label3 = 'Late lunch';
-        // label4 = 'Dinner';
-        // label5 = 'PWO shake';
-        // label6 = 'Bedtime';
+      fat1avocado = changeUnit(showInGrams, 'fat', fat[0], 'avocado');
+      fat2avocado = changeUnit(showInGrams, 'fat', fat[1], 'avocado');
+      fat3avocado = changeUnit(showInGrams, 'fat', fat[2], 'avocado');
+      fat4avocado = changeUnit(showInGrams, 'fat', fat[3], 'avocado');
+      fat5avocado = changeUnit(showInGrams, 'fat', fat[4], 'avocado');
+      fat6avocado = changeUnit(showInGrams, 'fat', fat[5], 'avocado');
 
-        protein1 = (totalProtein - proteinDelta) * 0.25;
-        protein2 = (totalProtein - proteinDelta) * 0.25;
-        protein3 = (totalProtein - proteinDelta) * 0.25;
-        protein4 = (totalProtein - proteinDelta) * 0.25;
-        protein5 = proteinDelta;
-        protein6 = proteinDelta;
+      fats = {
+        fat1: fat1,
+        fat2: fat2,
+        fat3: fat3,
+        fat4: fat4,
+        fat5: fat5,
+        fat6: fat6,
+        fat1butter: fat1butter,
+        fat2butter: fat2butter,
+        fat3butter: fat3butter,
+        fat4butter: fat4butter,
+        fat5butter: fat5butter,
+        fat6butter: fat6butter,
+        fat1nutButter: fat1nutButter,
+        fat2nutButter: fat2nutButter,
+        fat3nutButter: fat3nutButter,
+        fat4nutButter: fat4nutButter,
+        fat5nutButter: fat5nutButter,
+        fat6nutButter: fat6nutButter,
+        fat1avocado: fat1avocado,
+        fat2avocado: fat2avocado,
+        fat3avocado: fat3avocado,
+        fat4avocado: fat4avocado,
+        fat5avocado: fat5avocado,
+        fat6avocado: fat6avocado
+      };
 
-        carbs1 = Math.round(totalCarbs * 0.1);
-        carbs2 = Math.round(totalCarbs * 0.1);
-        carbs3 = Math.round(totalCarbs * 0.15);
-        carbs4 = Math.round(totalCarbs * 0.2);
-        carbs5 = Math.round(totalCarbs * 0.15);
-        carbs6 = Math.round(totalCarbs * 0.3);
-
-        fat1 = Math.round(totalFat * 0.3);
-        fat2 = Math.round(totalFat * 0.3);
-        fat3 = Math.round(totalFat * 0.3);
-        fat4 = Math.round(totalFat * 0.1);
-        fat5 = '---';
-        fat6 = '---';
-
-        veggies1 = '1+ cups';
-        veggies2 = '1+ cups';
-        veggies3 = '1+ cups';
-        veggies4 = '1+ cups';
-        veggies5 = '---';
-        veggies6 = '---';
-      }
+      veggies = {
+        veggies1: veggies[0],
+        veggies2: veggies[1],
+        veggies3: veggies[2],
+        veggies4: veggies[3],
+        veggies5: veggies[4],
+        veggies6: veggies[5]
+      };
     }
-
-    // label1 = label1;
-    // label2 = label2;
-    // label3 = label3;
-    // label4 = label4;
-    // label5 = label5;
-    // label6 = label6;
-
-    protein1 = changeUnit(showInGrams, 'protein', protein1);
-    protein2 = changeUnit(showInGrams, 'protein', protein2);
-    protein3 = changeUnit(showInGrams, 'protein', protein3);
-    protein4 = changeUnit(showInGrams, 'protein', protein4);
-    protein5 = changeUnit(showInGrams, 'protein', protein5);
-    protein6 = changeUnit(showInGrams, 'protein', protein6);
-
-    protein5casein = changeUnit(true, 'protein', protein5);
-    protein6casein = changeUnit(true, 'protein', protein6);
-
-    protein1Grams = changeUnit(true, 'protein', protein1);
-    protein2Grams = changeUnit(true, 'protein', protein2);
-    protein3Grams = changeUnit(true, 'protein', protein3);
-    protein4Grams = changeUnit(true, 'protein', protein4);
-    protein5Grams = changeUnit(true, 'protein', protein5);
-    protein6Grams = changeUnit(true, 'protein', protein6);
-
-    carbs1 = changeUnit(showInGrams, 'carbs', carbs1);
-    carbs2 = changeUnit(showInGrams, 'carbs', carbs2);
-    carbs3 = changeUnit(showInGrams, 'carbs', carbs3);
-    carbs4 = changeUnit(showInGrams, 'carbs', carbs4);
-    carbs5 = changeUnit(showInGrams, 'carbs', carbs5);
-    carbs6 = changeUnit(showInGrams, 'carbs', carbs6);
-
-    carbs1potatoes = changeUnit(showInGrams, 'carbs', carbs1, 'potatoes');
-    carbs2potatoes = changeUnit(showInGrams, 'carbs', carbs2, 'potatoes');
-    carbs3potatoes = changeUnit(showInGrams, 'carbs', carbs3, 'potatoes');
-    carbs4potatoes = changeUnit(showInGrams, 'carbs', carbs4, 'potatoes');
-    carbs5potatoes = changeUnit(showInGrams, 'carbs', carbs5, 'potatoes');
-    carbs6potatoes = changeUnit(showInGrams, 'carbs', carbs6, 'potatoes');
-
-    carbs1sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs1, 'sweetPotatoes');
-    carbs2sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs2, 'sweetPotatoes');
-    carbs3sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs3, 'sweetPotatoes');
-    carbs4sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs4, 'sweetPotatoes');
-    carbs5sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs5, 'sweetPotatoes');
-    carbs6sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs6, 'sweetPotatoes');
-
-    carbs1quinoa = changeUnit(showInGrams, 'carbs', carbs1, 'quinoa');
-    carbs2quinoa = changeUnit(showInGrams, 'carbs', carbs2, 'quinoa');
-    carbs3quinoa = changeUnit(showInGrams, 'carbs', carbs3, 'quinoa');
-    carbs4quinoa = changeUnit(showInGrams, 'carbs', carbs4, 'quinoa');
-    carbs5quinoa = changeUnit(showInGrams, 'carbs', carbs5, 'quinoa');
-    carbs6quinoa = changeUnit(showInGrams, 'carbs', carbs6, 'quinoa');
-
-    carbs1banana = changeUnit(showInGrams, 'carbs', carbs1, 'banana');
-    carbs2banana = changeUnit(showInGrams, 'carbs', carbs2, 'banana');
-    carbs3banana = changeUnit(showInGrams, 'carbs', carbs3, 'banana');
-    carbs4banana = changeUnit(showInGrams, 'carbs', carbs4, 'banana');
-    carbs5banana = changeUnit(showInGrams, 'carbs', carbs5, 'banana');
-    carbs6banana = changeUnit(showInGrams, 'carbs', carbs6, 'banana');
-
-    carbs1acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs1, 'acornButternutSquash');
-    carbs2acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs2, 'acornButternutSquash');
-    carbs3acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs3, 'acornButternutSquash');
-    carbs4acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs4, 'acornButternutSquash');
-    carbs5acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs5, 'acornButternutSquash');
-    carbs6acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs6, 'acornButternutSquash');
-
-    carbs1blueberries = changeUnit(showInGrams, 'carbs', carbs1, 'blueberries');
-
-    carbs1pwo = changeUnit(showInGrams, 'carbs', carbs1, 'pwo');
-    carbs2pwo = changeUnit(showInGrams, 'carbs', carbs2, 'pwo');
-    carbs3pwo = changeUnit(showInGrams, 'carbs', carbs3, 'pwo');
-    carbs4pwo = changeUnit(showInGrams, 'carbs', carbs4, 'pwo');
-    carbs5pwo = changeUnit(showInGrams, 'carbs', carbs5, 'pwo');
-    carbs6pwo = changeUnit(showInGrams, 'carbs', carbs6, 'pwo');
-
-    fat1 = changeUnit(showInGrams, 'fat', fat1, 'oil');
-    fat2 = changeUnit(showInGrams, 'fat', fat2, 'oil');
-    fat3 = changeUnit(showInGrams, 'fat', fat3, 'oil');
-    fat4 = changeUnit(showInGrams, 'fat', fat4, 'oil');
-    fat5 = changeUnit(showInGrams, 'fat', fat5, 'oil');
-    fat6 = changeUnit(showInGrams, 'fat', fat6, 'oil');
-
-    fat1butter = changeUnit(showInGrams, 'fat', fat1, 'butter');
-    fat2butter = changeUnit(showInGrams, 'fat', fat2, 'butter');
-    fat3butter = changeUnit(showInGrams, 'fat', fat3, 'butter');
-    fat4butter = changeUnit(showInGrams, 'fat', fat4, 'butter');
-    fat5butter = changeUnit(showInGrams, 'fat', fat5, 'butter');
-    fat6butter = changeUnit(showInGrams, 'fat', fat6, 'butter');
-
-    fat1nutButter = changeUnit(showInGrams, 'fat', fat1, 'nutButter');
-    fat2nutButter = changeUnit(showInGrams, 'fat', fat2, 'nutButter');
-    fat3nutButter = changeUnit(showInGrams, 'fat', fat3, 'nutButter');
-    fat4nutButter = changeUnit(showInGrams, 'fat', fat4, 'nutButter');
-    fat5nutButter = changeUnit(showInGrams, 'fat', fat5, 'nutButter');
-    fat6nutButter = changeUnit(showInGrams, 'fat', fat6, 'nutButter');
-
-    fat1avocado = changeUnit(showInGrams, 'fat', fat1, 'avocado');
-    fat2avocado = changeUnit(showInGrams, 'fat', fat2, 'avocado');
-    fat3avocado = changeUnit(showInGrams, 'fat', fat3, 'avocado');
-    fat4avocado = changeUnit(showInGrams, 'fat', fat4, 'avocado');
-    fat5avocado = changeUnit(showInGrams, 'fat', fat5, 'avocado');
-    fat6avocado = changeUnit(showInGrams, 'fat', fat6, 'avocado');
-
-    veggies1 = veggies1;
-    veggies2 = veggies2;
-    veggies3 = veggies3;
-    veggies4 = veggies4;
-    veggies5 = veggies5;
-    veggies6 = veggies6;
 
     // style based on state:
     // style={[styles.container, { borderRadius: !value ? Colors.gray : Colors.primaryColor }]}
@@ -481,7 +363,7 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionSection}>
-          <TouchableHighlight style={[styles.optionButton,
+            <TouchableHighlight style={[styles.optionButton,
               { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
               onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
               <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
@@ -538,7 +420,7 @@ export default class LoginScreen extends React.Component {
 
           <View style={styles.mealPlanSection}>
             <Text style={Styles.h1}>Todays Meal Plan</Text>
-            <Text>Phase 3</Text>
+            <Text>Phase {this.state.phase}</Text>
 
             <View style={styles.mealsMenu}>
             <TouchableHighlight style={[styles.optionButton,
@@ -584,12 +466,17 @@ export default class LoginScreen extends React.Component {
               trainingIntensity={this.state.trainingIntensity}
               mealsBeforeWorkout={this.state.mealsBeforeWorkout}
               template={this.state.template}
+              phase={this.state.phase}
               currentMeal={this.state.currentMeal}
               age={age}
               gender={gender}
               height={height}
               bodyweight={bodyweight}
               bodyfat={bodyfat}
+              proteins={proteins}
+              carbs={carbs}
+              fats={fats}
+              veggies={veggies}
               showMacros={this.state.showMacros} />
           </View>
 
