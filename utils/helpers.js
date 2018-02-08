@@ -150,7 +150,7 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
 
     if(phase === 3) {
       if(isPwoShake) {
-        return [proteinAmount + ' of whey protein'];
+        return [sources[proteinString + 'Grams'] + ' of whey protein'];
       } else {
         const arr = [
           proteinAmount + ' of chicken',
@@ -162,7 +162,7 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
         ];
 
         if(isBedtimeMeal) {
-          arr.push(proteinAmount + ' of casein');
+          arr.push(sources[proteinString + 'casein'] + ' of casein');
         }
 
         return arr;

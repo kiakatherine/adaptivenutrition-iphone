@@ -28,13 +28,28 @@ class Meal extends React.Component {
 
    render() {
      let label;
+     let bedtime = false;
+     let pwo = false;
 
+     // label
      if(this.props.trainingIntensity === 0) {
        label = labels.x.low[this.props.currentMeal];
      } else if(this.props.trainingIntensity === 1) {
        label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
      } else if(this.props.trainingIntensity === 2) {
        label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
+     }
+
+     // bedtime
+     if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
+       bedtime = true;
+     } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
+       bedtime = true;
+     }
+
+     // pwo
+     if(label.indexOf('PWO') > -1) {
+       pwo = true;
      }
 
      return (
@@ -54,6 +69,8 @@ class Meal extends React.Component {
             template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
+            pwo={pwo}
+            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -72,6 +89,8 @@ class Meal extends React.Component {
             template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
+            pwo={pwo}
+            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -90,6 +109,8 @@ class Meal extends React.Component {
             template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
+            pwo={pwo}
+            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -108,6 +129,8 @@ class Meal extends React.Component {
             template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
+            pwo={pwo}
+            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}

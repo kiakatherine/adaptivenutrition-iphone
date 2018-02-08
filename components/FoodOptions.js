@@ -21,7 +21,7 @@ import { createFoodMenu } from '../utils/helpers';
 
 class FoodOptions extends React.Component {
    state = {
-     selected: false
+     selection: this.props.selection || null
    }
 
    clickPrevious() {
@@ -29,30 +29,41 @@ class FoodOptions extends React.Component {
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
      const sources = this.props.sources;
-     const selection = this.props.selection; //need
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
      const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+     const selection = this.props.selection || this.state.selection || options[0]; //need
      const newSelection = options[options.indexOf(selection) - 1];
+     const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
 
      if(options.indexOf(selection) <= 0 || selection === null) {
-       this.setSelection(phase, macro, options[options.length-1], currentMeal);
+       // this.setState({ [string]: newSelection }); --- change to set to client, not state
+       this.setState({ selection: options[options.length-1] });
      } else if(newSelection) {
-       this.setState({
-         selection: options.indexOf(newSelection) === -1 ? options[0] : newSelection
-       });
-       this.setSelection(phase, macro, newSelection, currentMeal);
-     } else {
-       this.setSelection(phase, macro, options[options.length-1], currentMeal);
+       // this.setState({ [string]: newSelection }); --- change to set to client, not state
+       this.setState({ selection: options.indexOf(newSelection) === -1 ? options[0] : newSelection });
      }
    }
 
    clickNext() {
+     const macro = this.props.macro;
+     const currentMeal = this.props.currentMeal;
+     const phase = this.props.phase;
+     const sources = this.props.sources;
+     const isBedtimeMeal = this.props.bedtime;
+     const isPwoShake = this.props.pwo;
+     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+     const selection = this.props.selection || this.state.selection || options[0]; //need
+     const newSelection = options[options.indexOf(selection) + 1];
+     const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
 
-   }
-
-   setSelection() {
-     alert('set selection!');
+     if(newSelection) {
+       // this.setState({ [string]: newSelection }); --- change to set to client, not state
+       this.setState({ selection: newSelection });
+     } else {
+       // this.setState({ [string]: newSelection }); --- change to set to client, not state
+       this.setState({ selection: options[0] });
+     }
    }
 
    render() {
@@ -60,7 +71,7 @@ class FoodOptions extends React.Component {
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
      const sources = this.props.sources;
-     const selection = this.props.selection; //need
+     const selection = this.state.selection;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
      const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
