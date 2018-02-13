@@ -22,6 +22,9 @@ export default {
   center: {
     alignItems: 'center',
   },
+  textCenter: {
+    textAlign: 'center'
+  },
   errorText: {
     color: '#FF4444'
   },

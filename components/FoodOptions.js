@@ -75,10 +75,11 @@ class FoodOptions extends React.Component {
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
      const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+     const content = selection ? selection : options[0];
 
      return (
        <View style={styles.foodOptionsWrapper}>
-         <TouchableHighlight onPress={() => {this.clickPrevious()}}>
+         <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
            <FontAwesome
              name='chevron-left'
              size={16}
@@ -87,7 +88,7 @@ class FoodOptions extends React.Component {
 
          <Text style={styles.content}>{selection ? selection : options[0]}</Text>
 
-         <TouchableHighlight onPress={() => {this.clickNext()}}>
+         <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
            <FontAwesome
              name='chevron-right'
              size={16}
@@ -102,12 +103,20 @@ export default FoodOptions;
 
 const styles = StyleSheet.create ({
    foodOptionsWrapper: {
-     alignSelf: 'stretch',
-     alignItems: 'flex-start',
+     display: 'flex',
      flexDirection: 'row'
    },
    content: {
+     textAlign: 'center',
      paddingLeft: 20,
-     paddingRight: 20
+     paddingRight: 20,
+     paddingTop: 5,
+     paddingBottom: 5
+   },
+   foodOptionsButton: {
+     padding: 5
+   },
+   disabled: {
+     display: 'none'
    }
 });

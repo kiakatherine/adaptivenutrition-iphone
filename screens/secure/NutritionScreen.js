@@ -335,6 +335,28 @@ export default class LoginScreen extends React.Component {
       };
     }
 
+    const firstMealIcon = this.state.mealsBeforeWorkout === 0 ?
+      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
+      <Image source={require('../../assets/icons/breakfast.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
+    const secondMealIcon = this.state.mealsBeforeWorkout === 1 ?
+      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
+      <Image source={require('../../assets/icons/half-sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
+    const thirdMealIcon = this.state.mealsBeforeWorkout === 2 ?
+      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
+      <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
+    const fourthMealIcon = this.state.mealsBeforeWorkout === 3 ?
+      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
+      <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
+    const fifthMealIcon = this.state.mealsBeforeWorkout === 4 ?
+      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
+      <Image source={require('../../assets/icons/sunset.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
+    const sixthMealIcon = <Image source={require('../../assets/icons/moon.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
+
     // style based on state:
     // style={[styles.container, { borderRadius: !value ? Colors.gray : Colors.primaryColor }]}
 
@@ -423,22 +445,22 @@ export default class LoginScreen extends React.Component {
             <Text>Phase {this.state.phase}</Text>
 
             <View style={styles.mealsMenu}>
-            <TouchableHighlight style={[styles.optionButton,
+              <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({currentMeal: 0}) }}>
-                 <Text style={styles.optionButtonText}>1</Text>
+                  {firstMealIcon}
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({ currentMeal: 1 }) }}>
-                 <Text style={styles.optionButtonText}>2</Text>
+                 {secondMealIcon}
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({ currentMeal: 2 }) }}>
-                 <Text style={styles.optionButtonText}>3</Text>
+                 {thirdMealIcon}
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
@@ -450,14 +472,14 @@ export default class LoginScreen extends React.Component {
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
                 onPress={() => { this.setState({currentMeal: 4}) }}>
-                 <Text style={styles.optionButtonText}>5</Text>
+                 {fifthMealIcon}
               </TouchableHighlight>
 
               {this.state.trainingIntensity !== 0 &&
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
                   onPress={() => { this.setState({currentMeal: 5}) }}>
-                   <Text style={styles.optionButtonText}>6</Text>
+                   {sixthMealIcon}
                 </TouchableHighlight>
               }
             </View>
@@ -503,19 +525,21 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.mealSettingsSection}>
-            <Text style={Styles.h2}>Meal Plan Settings</Text>
+            <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
 
-            <TouchableHighlight onPress={() => {}}>
-               <Text style={Styles.link}>View by day</Text>
-            </TouchableHighlight>
+            <View style={styles.mealSettingsSectionList}>
+              <TouchableHighlight onPress={() => {}}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
+              </TouchableHighlight>
 
-            <TouchableHighlight onPress={() => {}}>
-               <Text style={Styles.link}>View in macros</Text>
-            </TouchableHighlight>
+              <TouchableHighlight onPress={() => {}}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
+              </TouchableHighlight>
 
-            <TouchableHighlight onPress={() => {}}>
-               <Text style={Styles.link}>Adjust energy balance</Text>
-            </TouchableHighlight>
+              <TouchableHighlight onPress={() => {}}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
+              </TouchableHighlight>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -596,8 +620,11 @@ const styles = StyleSheet.create({
     marginLeft: 5
   },
   mealSettingsSection: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    flexDirection: 'row'
+    marginTop: 20,
+    marginBottom: 20
+  },
+  mealSettingsLink: {
+    paddingTop: 10,
+    paddingBottom: 10
   }
 });
