@@ -17,6 +17,7 @@ import {
   Alert,
   Button,
   Image,
+  Picker,
   ScrollView,
   StyleSheet,
   Text,
@@ -42,7 +43,9 @@ export default class LoginScreen extends React.Component {
       currentMeal: 1,
       template: 0, //make dynamic
       phase: 3, //make dynamic
-      trainingIntensity: 1
+      trainingIntensity: 1,
+      showModal: false,
+      showEnergyBalancePicker: false
     };
   }
 
@@ -364,193 +367,230 @@ export default class LoginScreen extends React.Component {
     // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
 
     return (
-      <ScrollView style={Styles.body}>
-        <View style={Styles.title}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
-        </View>
-
-        <View>
-          <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>What time did you wake up?</Text>
+      <View style={Styles.body}>
+        <ScrollView>
+          <View style={Styles.title}>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
 
-          <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-               <Text style={styles.optionButtonText}>8:00 a.m.</Text>
-            </TouchableHighlight>
-          </View>
+          <View>
+            <View style={styles.optionWrapper}>
+              <Text style={styles.optionTitle}>What time did you wake up?</Text>
+              <TouchableHighlight style={styles.optionTooltip} onPress={() => {}}>
+                <FontAwesome
+                  style={styles.tooltipIcon}
+                  name='info-circle'
+                  size={16}
+                />
+              </TouchableHighlight>
+            </View>
 
-          <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>Are you training today?</Text>
-          </View>
+            <View style={styles.optionSection}>
+              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
+                 <Text style={styles.optionButtonText}>8:00 a.m.</Text>
+              </TouchableHighlight>
+            </View>
 
-          <View style={styles.optionSection}>
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
-              <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
-            </TouchableHighlight>
+            <View style={styles.optionWrapper}>
+              <Text style={styles.optionTitle}>Are you training today?</Text>
+              <FontAwesome
+                name='info-circle'
+                size={16}
+              />
+            </View>
 
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({trainingIntensity: 1}) }}>
-               <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
-              onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
-               <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>How many meals before your workout?</Text>
-          </View>
-
-          <View style={styles.optionSection}>
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
-               <Text style={styles.optionButtonText}>0</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
-               <Text style={styles.optionButtonText}>1</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
-               <Text style={styles.optionButtonText}>2</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
-               <Text style={styles.optionButtonText}>3</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
-               <Text style={styles.optionButtonText}>4</Text>
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.mealPlanSection}>
-            <Text style={Styles.h1}>Todays Meal Plan</Text>
-            <Text>Phase {this.state.phase}</Text>
-
-            <View style={styles.mealsMenu}>
+            <View style={styles.optionSection}>
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({currentMeal: 0}) }}>
-                  {firstMealIcon}
+                { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
+                <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({ currentMeal: 1 }) }}>
-                 {secondMealIcon}
+                { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({trainingIntensity: 1}) }}>
+                 <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({ currentMeal: 2 }) }}>
-                 {thirdMealIcon}
+                { borderColor: this.state.trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
+                onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
+                 <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.optionWrapper}>
+              <Text style={styles.optionTitle}>How many meals before your workout?</Text>
+              <FontAwesome
+                name='info-circle'
+                size={16}
+              />
+            </View>
+
+            <View style={styles.optionSection}>
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
+                 <Text style={styles.optionButtonText}>0</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({currentMeal: 3}) }}>
+                { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
+                 <Text style={styles.optionButtonText}>1</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
+                 <Text style={styles.optionButtonText}>2</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
+                 <Text style={styles.optionButtonText}>3</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={[styles.optionButton,
+                { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
                  <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
+            </View>
 
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({currentMeal: 4}) }}>
-                 {fifthMealIcon}
-              </TouchableHighlight>
+            <View style={styles.mealPlanSection}>
+              <Text style={Styles.h1}>Todays Meal Plan</Text>
+              <Text>Phase {this.state.phase}</Text>
 
-              {this.state.trainingIntensity !== 0 &&
+              <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({currentMeal: 5}) }}>
-                   {sixthMealIcon}
+                  { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({currentMeal: 0}) }}>
+                    {firstMealIcon}
                 </TouchableHighlight>
-              }
+
+                <TouchableHighlight style={[styles.optionButton,
+                  { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({ currentMeal: 1 }) }}>
+                   {secondMealIcon}
+                </TouchableHighlight>
+
+                <TouchableHighlight style={[styles.optionButton,
+                  { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({ currentMeal: 2 }) }}>
+                   {thirdMealIcon}
+                </TouchableHighlight>
+
+                <TouchableHighlight style={[styles.optionButton,
+                  { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({currentMeal: 3}) }}>
+                   <Text style={styles.optionButtonText}>4</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight style={[styles.optionButton,
+                  { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
+                  onPress={() => { this.setState({currentMeal: 4}) }}>
+                   {fifthMealIcon}
+                </TouchableHighlight>
+
+                {this.state.trainingIntensity !== 0 &&
+                  <TouchableHighlight style={[styles.optionButton,
+                    { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
+                    onPress={() => { this.setState({currentMeal: 5}) }}>
+                     {sixthMealIcon}
+                  </TouchableHighlight>
+                }
+              </View>
+
+              <Meal
+                trainingIntensity={this.state.trainingIntensity}
+                mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                template={this.state.template}
+                phase={this.state.phase}
+                currentMeal={this.state.currentMeal}
+                age={age}
+                gender={gender}
+                height={height}
+                bodyweight={bodyweight}
+                bodyfat={bodyfat}
+                proteins={proteins}
+                carbs={carbs}
+                fats={fats}
+                veggies={veggies}
+                showMacros={this.state.showMacros} />
             </View>
 
-            <Meal
-              trainingIntensity={this.state.trainingIntensity}
-              mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-              template={this.state.template}
-              phase={this.state.phase}
-              currentMeal={this.state.currentMeal}
-              age={age}
-              gender={gender}
-              height={height}
-              bodyweight={bodyweight}
-              bodyfat={bodyfat}
-              proteins={proteins}
-              carbs={carbs}
-              fats={fats}
-              veggies={veggies}
-              showMacros={this.state.showMacros} />
-          </View>
-
-          <View style={styles.progressSection}>
-            <TouchableHighlight style={styles.progressButtonGood} onPress={() => {}}>
-               <Text style={styles.progressButtonText}>
-                 <FontAwesome
-                   name='check'
-                   size={16}
-                 />
-                 Ate meal on plan!
-               </Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={styles.progressButtonBad} onPress={() => {}}>
-               <Text style={styles.progressButtonText}>
-                 <FontAwesome
-                   name='remove'
-                   size={16}
-                 />
-                 Ate off plan
-               </Text>
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.mealSettingsSection}>
-            <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
-
-            <View style={styles.mealSettingsSectionList}>
-              <TouchableHighlight onPress={() => {}}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
+            <View style={styles.progressSection}>
+              <TouchableHighlight style={styles.progressButtonGood} onPress={() => {}}>
+                 <Text style={styles.progressButtonText}>
+                   <FontAwesome
+                     name='check'
+                     size={16}
+                   />
+                   Ate meal on plan!
+                 </Text>
               </TouchableHighlight>
 
-              <TouchableHighlight onPress={() => {}}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight onPress={() => {}}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
+              <TouchableHighlight style={styles.progressButtonBad} onPress={() => {}}>
+                 <Text style={styles.progressButtonText}>
+                   <FontAwesome
+                     name='remove'
+                     size={16}
+                   />
+                   Ate off plan
+                 </Text>
               </TouchableHighlight>
             </View>
+
+            <View style={styles.mealSettingsSection}>
+              <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
+
+              <View style={styles.mealSettingsSectionList}>
+                <TouchableHighlight onPress={() => {}}>
+                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={() => {}}>
+                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
+                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
           </View>
+        </ScrollView>
+
+        {this.state.showModal &&
+          <View style={styles.showModal}></View>}
+
+        <View style={styles.energyBalancePickerWrapper}>
+          {this.state.showEnergyBalancePicker &&
+            <Picker
+              style={styles.picker}
+              selectedValue={this.state.template}
+              onValueChange={(itemValue, itemIndex) => this.setState({ template: itemValue, showEnergyBalancePicker: false, showModal: false })}>
+              <Picker.Item label="Surplus 3" value={6} />
+              <Picker.Item label="Surplus 2" value={5} />
+              <Picker.Item label="Surplus 1" value={4} />
+              <Picker.Item label="Base" value={0} />
+              <Picker.Item label="Deficit 1" value={1} />
+              <Picker.Item label="Deficit 2" value={2} />
+              <Picker.Item label="Deficit 3" value={3} />
+            </Picker>}
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   optionWrapper: {
+    flexDirection: 'row',
     alignSelf: 'stretch',
-    alignItems: 'center'
+    justifyContent: 'center'
   },
   optionSection: {
     alignSelf: 'stretch',
@@ -563,6 +603,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingTop: 20,
     paddingBottom: 10
+  },
+  optionTooltip: {
+    paddingTop: 10
   },
   optionButton: {
     flex: 1,
@@ -626,5 +669,28 @@ const styles = StyleSheet.create({
   mealSettingsLink: {
     paddingTop: 10,
     paddingBottom: 10
+  },
+  // energyBalancePickerWrapper: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   bottom: 0,
+  //   borderColor: Colors.lightGray,
+  //   borderWidth: 1,
+  //   margin: 10,
+  //   borderRadius: 2
+  // },
+  picker: {
+    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderColor: Colors.lightGray
+  },
+  showModal: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.lightGray,
+    opacity: 0.8
   }
 });
