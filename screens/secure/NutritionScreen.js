@@ -11,7 +11,7 @@ import Styles from '../../constants/Styles';
 import * as labels from '../../constants/MealLabels';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, calculateTotals } from '../../utils/helpers';
+import { changeUnit, calculateTotals, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -66,7 +66,7 @@ export default class LoginScreen extends React.Component {
   }
 
   saveTemplateType(template) {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     t = template === 0 ? 'Maintenance' :
       template === 1 ? 'Cut 1' :
@@ -86,12 +86,12 @@ export default class LoginScreen extends React.Component {
   }
 
   saveWakeTime(time) {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({ wakeTime: time });
     this.setState({
       showModal: false,
       showWakeTimePicker: false
-    })
+    });
   }
 
   render() {
@@ -111,6 +111,12 @@ export default class LoginScreen extends React.Component {
     let trainingIntensity;
     let showInGrams;
     let wakeTime;
+    let mealTimes = {
+      breakfastTime: null,
+      earlyLunchTime: null,
+      lateLunchTime: null,
+      dinnerTime: null
+    };
 
     let customMacros;
     let customRestDayProtein;
@@ -151,7 +157,12 @@ export default class LoginScreen extends React.Component {
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
       trainingIntensity = this.state.trainingIntensity;
       showInGrams = this.state.showInGrams;
+
       wakeTime = client.wakeTime;
+
+      if(wakeTime) {
+        mealTimes = setMealTimes(wakeTime, this.state.phase, trainingIntensity, mealsBeforeWorkout);
+      }
 
       customMacros = client.customMacros;
       customRestDayProtein = client.customRestDayProtein;
@@ -553,6 +564,10 @@ export default class LoginScreen extends React.Component {
                 template={this.state.template}
                 phase={this.state.phase}
                 currentMeal={this.state.currentMeal}
+                breakfastTime={mealTimes['breakfastTime']}
+                earlyLunchTime={mealTimes['earlyLunchTime']}
+                lateLunchTime={mealTimes['lateLunchTime']}
+                dinnerTime={mealTimes['dinnerTime']}
                 age={age}
                 gender={gender}
                 height={height}

@@ -28,6 +28,7 @@ class Meal extends React.Component {
 
    render() {
      let label;
+     let time;
      let bedtime = false;
      let pwo = false;
 
@@ -52,11 +53,26 @@ class Meal extends React.Component {
        pwo = true;
      }
 
+     // timing
+     if(bedtime) {
+       time = 'Before bed';
+     } else if (pwo) {
+       time = 'Post-workout';
+     } else if(label === 'Breakfast') {
+       time = this.props.breakfastTime;
+     } else if(label === 'Early lunch') {
+       time = this.props.earlyLunchTime;
+     } else if(label === 'Late lunch') {
+       time = this.props.lateLunchTime;
+     } else if(label === 'Dinner') {
+       time = this.props.dinnerTime;
+     }
+
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
           <Text style={styles.mealRowHeaderCol}>{label.toUpperCase()}</Text>
-          <Text style={styles.mealRowHeaderColTime}>{this.props.timing}{'Timing'.toUpperCase()}</Text>
+          <Text style={styles.mealRowHeaderColTime}>{this.props.timing}{time}</Text>
         </View>
 
         <View style={styles.mealRow}>

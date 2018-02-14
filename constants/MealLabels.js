@@ -89,10 +89,5 @@ export const x = {
       "PWO Shake",
       "Bedtime"
     ]
-    // 'trainingTime': [
-    //   {
-    //     label1: ""
-    //   }
-    // ]
   ],
 };

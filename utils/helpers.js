@@ -425,3 +425,202 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
 
   return totals;
 }
+
+// export function convertTrainingIntensity(string) {
+//   if(string.indexOf('light') > -1) {
+//     return 0;
+//   } else if(string.indexOf('moderate') > -1) {
+//     return 1;
+//   } else {
+//     return 2;
+//   }
+// }
+
+export function convertTrainingTime(string) {
+  if(string.indexOf('waking') > -1) {
+    return 0;
+  } else if(string.indexOf('One') > -1) {
+    return 1;
+  } else if(string.indexOf('Two') > -1) {
+    return 2;
+  } else if(string.indexOf('Three') > -1) {
+    return 3;
+  } else if(string.indexOf('Four') > -1) {
+    return 1;
+  } else {
+    return 5;
+  }
+}
+
+export function convertToTime(integer) {
+  let hour;
+  let minute;
+  let label;
+
+  hour = Number(integer.toString().split('.')[0]);
+  minute = integer.toString().split('.')[1];
+  label = integer < 11 ? ' am' : ' pm' ;
+
+  if(hour > 12) {
+    switch(hour) {
+      case 13:
+        hour = "1";
+        break;
+      case 14:
+        hour = "2";
+        break;
+      case 15:
+        hour = "3";
+        break;
+      case 16:
+        hour = "4";
+        break;
+      case 17:
+        hour = "5";
+        break;
+      case 18:
+        hour = "6";
+        break;
+      case 19:
+        hour = "7";
+        break;
+      case 20:
+        hour = "8";
+        break;
+      case 21:
+        hour = "9";
+        break;
+      case 22:
+        hour = "10";
+        break;
+      case 23:
+        hour = "11";
+        break;
+      case 24:
+        hour = "12";
+        break;
+    }
+  }
+
+  if(minute === "5") {
+    minute = ":30";
+  } else if(minute === undefined) {
+    minute = ":00";
+  }
+
+  if(minute) {
+    return hour + minute + label;
+  }
+
+  return hour + label;
+}
+
+export function cleanTimeLabel(params) {
+  let startTime = params.split('-')[0];
+  let endTime = params.split('-')[1];
+  let range;
+
+  if(startTime.indexOf('am') > -1 && endTime.indexOf('am') > -1) {
+    range = startTime.replace('am', '') + '- ' + endTime;
+    return range.indexOf('NaN') > -1 ? null : range;
+  } else if(startTime.indexOf('pm') > -1 && endTime.indexOf('pm') > -1) {
+    range = startTime.replace('pm', '') + '- ' + endTime;
+    return range.indexOf('NaN') > -1 ? null : range;
+  } else {
+    return params.indexOf('NaN') > -1 ? null : params;
+  }
+  return params.indexOf('NaN') > -1 ? null : params;
+}
+
+export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout) {
+  const wakeTimeInteger = Number(wakeTime.split(':')[0]);
+  const wakeTimeMinutesInteger = Number(wakeTime.split(':')[1]) === 30 ? true : false;
+  const trainingDuration = trainingIntensity;
+  const trainingAfter = mealsBeforeWorkout;
+
+  let breakfastTimeLower;
+  let breakfastTimeUpper;
+  let earlyLunchTimeLower;
+  let earlyLunchTimeUpper;
+  let lateLunchTimeLower;
+  let lateLunchTimeUpper;
+  let dinnerTimeLower;
+  let dinnerTimeUpper;
+
+  if(phase === 3) {
+    // meal 1
+    if(trainingAfter === 0) {
+      if(trainingDuration === 1) {
+        breakfastTimeLower = wakeTimeInteger + 2 + (wakeTimeMinutesInteger ? 0.5 : 0);
+      } else {
+        breakfastTimeLower = wakeTimeInteger + 3 + (wakeTimeMinutesInteger ? 0.5 : 0);
+      }
+    } else {
+      breakfastTimeLower = wakeTimeInteger + (wakeTimeMinutesInteger ? 0.5 : 0);
+    }
+
+    breakfastTimeUpper = breakfastTimeLower + 1;
+
+    // meal 2
+    if(trainingAfter === 1) {
+      if(trainingDuration === 1) {
+        earlyLunchTimeLower = ((breakfastTimeUpper - breakfastTimeLower)/2) + breakfastTimeLower + 4;
+      } else {
+        earlyLunchTimeLower = ((breakfastTimeUpper - breakfastTimeLower)/2) + breakfastTimeLower + 5;
+      }
+    } else {
+      earlyLunchTimeLower = ((breakfastTimeUpper - breakfastTimeLower)/2) + breakfastTimeLower + 3;
+    }
+
+    earlyLunchTimeUpper = earlyLunchTimeLower + 2;
+
+    // meal 3
+    if(trainingAfter === 2) {
+      if(trainingDuration === 1) {
+        lateLunchTimeLower = ((earlyLunchTimeUpper - earlyLunchTimeLower)/2) + earlyLunchTimeLower + 4;
+      } else {
+        lateLunchTimeLower = ((earlyLunchTimeUpper - earlyLunchTimeLower)/2) + earlyLunchTimeLower + 5;
+      }
+    } else {
+      lateLunchTimeLower = ((earlyLunchTimeUpper - earlyLunchTimeLower)/2) + earlyLunchTimeLower + 3;
+    }
+
+    lateLunchTimeUpper = lateLunchTimeLower + 2;
+
+    // meal 4
+    if(trainingAfter === 3) {
+      if(trainingDuration === 1) {
+        dinnerTimeLower = ((lateLunchTimeUpper - lateLunchTimeLower)/2) + lateLunchTimeLower + 4;
+      } else {
+        dinnerTimeLower = ((lateLunchTimeUpper - lateLunchTimeLower)/2) + lateLunchTimeLower + 5;
+      }
+    } else {
+      dinnerTimeLower = ((lateLunchTimeUpper - lateLunchTimeLower)/2) + lateLunchTimeLower + 3;
+    }
+
+    dinnerTimeUpper = dinnerTimeLower + 2;
+  } else {
+    // meal 1
+    breakfastTimeLower = wakeTimeInteger + (wakeTimeMinutesInteger ? 0.5 : 0);
+    breakfastTimeUpper = breakfastTimeLower + 1;
+
+    // meal 2
+    earlyLunchTimeLower = ((breakfastTimeUpper - breakfastTimeLower)/2) + breakfastTimeLower + 3;
+    earlyLunchTimeUpper = earlyLunchTimeLower + 2;
+
+    // meal 3
+    lateLunchTimeLower = ((earlyLunchTimeUpper - earlyLunchTimeLower)/2) + earlyLunchTimeLower + 3;
+    lateLunchTimeUpper = lateLunchTimeLower + 2;
+
+    // meal 4
+    dinnerTimeLower = ((lateLunchTimeUpper - lateLunchTimeLower)/2) + lateLunchTimeLower + 3;
+    dinnerTimeUpper = dinnerTimeLower + 2;
+  }
+
+  return {
+    breakfastTime: cleanTimeLabel(convertToTime(breakfastTimeLower) + '-' + convertToTime(breakfastTimeUpper)),
+    earlyLunchTime: cleanTimeLabel(convertToTime(earlyLunchTimeLower) + '-' + convertToTime(earlyLunchTimeUpper)),
+    lateLunchTime: cleanTimeLabel(convertToTime(lateLunchTimeLower) + '-' + convertToTime(lateLunchTimeUpper)),
+    dinnerTime: cleanTimeLabel(convertToTime(dinnerTimeLower) + '-' + convertToTime(dinnerTimeUpper))
+  };
+}
