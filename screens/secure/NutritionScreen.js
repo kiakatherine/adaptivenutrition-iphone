@@ -44,14 +44,16 @@ export default class LoginScreen extends React.Component {
       phase: 3, //make dynamic
       trainingIntensity: 1,
       showModal: false,
+
+      showTimeTooltip: false,
+      showTrainingTooltip: false,
+      showMealsTooltip: false,
       showEnergyBalancePicker: false
     };
   }
 
   componentWillMount() {
     var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-
-    // this.setState({ showLoading: true });
 
     client.on('value', snapshot => {
       const c = snapshot.val();
@@ -400,7 +402,7 @@ export default class LoginScreen extends React.Component {
           <View>
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>What time did you wake up?</Text>
-              <TouchableHighlight style={styles.optionTooltip} onPress={() => {}}>
+              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
                 <FontAwesome
                   style={styles.tooltipIcon}
                   name='info-circle'
@@ -417,10 +419,13 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>Are you training today?</Text>
-              <FontAwesome
-                name='info-circle'
-                size={16}
-              />
+              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
+                <FontAwesome
+                  style={styles.tooltipIcon}
+                  name='info-circle'
+                  size={16}
+                />
+              </TouchableHighlight>
             </View>
 
             <View style={styles.optionSection}>
@@ -445,10 +450,13 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>How many meals before your workout?</Text>
-              <FontAwesome
-                name='info-circle'
-                size={16}
-              />
+              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
+                <FontAwesome
+                  style={styles.tooltipIcon}
+                  name='info-circle'
+                  size={16}
+                />
+              </TouchableHighlight>
             </View>
 
             <View style={styles.optionSection}>
@@ -588,23 +596,76 @@ export default class LoginScreen extends React.Component {
         </ScrollView>
 
         {this.state.showModal &&
-          <View style={styles.showModal}></View>}
+          <View style={Styles.showModal}></View>}
 
-        <View style={styles.energyBalancePickerWrapper}>
-          {this.state.showEnergyBalancePicker &&
-            <Picker
-              style={styles.picker}
-              selectedValue={this.state.template}
-              onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
-              <Picker.Item label="Surplus 3" value={6} />
-              <Picker.Item label="Surplus 2" value={5} />
-              <Picker.Item label="Surplus 1" value={4} />
-              <Picker.Item label="Base" value={0} />
-              <Picker.Item label="Deficit 1" value={1} />
-              <Picker.Item label="Deficit 2" value={2} />
-              <Picker.Item label="Deficit 3" value={3} />
-            </Picker>}
-        </View>
+        {this.state.showEnergyBalancePicker && <View>
+          <Picker
+            style={styles.picker}
+            selectedValue={this.state.template}
+            onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
+            <Picker.Item label="Surplus 3" value={6} />
+            <Picker.Item label="Surplus 2" value={5} />
+            <Picker.Item label="Surplus 1" value={4} />
+            <Picker.Item label="Base" value={0} />
+            <Picker.Item label="Deficit 1" value={1} />
+            <Picker.Item label="Deficit 2" value={2} />
+            <Picker.Item label="Deficit 3" value={3} />
+          </Picker>
+        </View>}
+
+        {this.state.showTimeTooltip && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>Wake Time</Text>
+            <Text style={Styles.tooltipParagraph}>Enter the time you woke up today, and the times to eat each meal will be shown in your meal plan.</Text>
+            <Text style={Styles.tooltipParagraph}>The guidelines for meal timing are to have breakfast within an hour of waking up, and to have subsequent meals 3-5 hours apart.</Text>
+            <Text style={Styles.tooltipParagraph}>Why is meal timing important? Protein is not stored in your body like fat and carbs are, so a constant stream of amino acids (the building blocks of protein) is necessary to maintain lean muscle mass (more lean muscle mass = faster metabolism!). It is almost important to keep blood sugar levels steady throughout the day so you can maintain even energy and avoid the dreaded afternoon slump.</Text>
+          </View>
+        </ScrollView>}
+
+        {this.state.showTrainingTooltip && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight onPress={() => { this.setState({ showTrainingTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>Training</Text>
+            <Text style={Styles.tooltipParagraph}>Here, training is considered intense physical exercise, including weightlifting, HIIT, CrossFit, and endurance training.</Text>
+
+            <Text style={Styles.tooltipTerm}>Rest/light cardio</Text>
+            <Text style={Styles.tooltipParagraph}>Light cardio like walking, jogging, yoga, barre, etc is considered a rest day.</Text>
+
+            <Text style={Styles.tooltipTerm}>Less than 90 minutes</Text>
+            <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for less than an hour and a half.</Text>
+
+            <Text style={Styles.tooltipTerm}>More than 90 minutes</Text>
+            <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for more than an hour and a half.</Text>
+          </View>
+        </ScrollView>}
+
+        {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>Number of Meals Before Your Workout</Text>
+            <Text style={Styles.tooltipParagraph}>This option indicates how many meals you will have eaten before your workout of the day. Keep in mind that meals should be spaced 3-5 hours apart, with breakfast being within an hour of waking.</Text>
+            <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
+          </View>
+        </ScrollView>}
       </View>
     );
   }
@@ -694,27 +755,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10
   },
-  // energyBalancePickerWrapper: {
-  //   position: 'absolute',
-  //   top: 0,
-  //   bottom: 0,
-  //   borderColor: Colors.lightGray,
-  //   borderWidth: 1,
-  //   margin: 10,
-  //   borderRadius: 2
-  // },
   picker: {
     backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: Colors.lightGray
-  },
-  showModal: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: Colors.lightGray,
-    opacity: 0.8
   }
 });

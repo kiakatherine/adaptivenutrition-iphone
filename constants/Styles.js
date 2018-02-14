@@ -114,5 +114,43 @@ export default {
   },
   flexRowCol: {
     width: '50%'
+  },
+  showModal: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.gray,
+    opacity: 0.8
+  },
+  tooltip: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.white,
+    margin: 20,
+    padding: 30,
+    borderRadius: 2
+  },
+  tooltipHeader: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: Colors.primaryColor,
+    marginBottom: 16
+  },
+  tooltipParagraph: {
+    fontSize: 16,
+    lineHeight: 22,
+    marginBottom: 16
+  },
+  tooltipClose: {
+    marginBottom: 16
+  },
+  tooltipTerm: {
+    fontWeight: 'bold'
   }
 }
