@@ -37,7 +37,6 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       showInGrams: false,
-      wakeTime: '8 a.m.',
       trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
@@ -48,6 +47,7 @@ export default class LoginScreen extends React.Component {
       showTimeTooltip: false,
       showTrainingTooltip: false,
       showMealsTooltip: false,
+      showWakeTimePicker: false,
       showEnergyBalancePicker: false
     };
   }
@@ -85,6 +85,15 @@ export default class LoginScreen extends React.Component {
     });
   }
 
+  saveWakeTime(time) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ wakeTime: time });
+    this.setState({
+      showModal: false,
+      showWakeTimePicker: false
+    })
+  }
+
   render() {
     const { navigate } = this.props.navigation;
 
@@ -101,6 +110,7 @@ export default class LoginScreen extends React.Component {
     let mealsBeforeWorkout;
     let trainingIntensity;
     let showInGrams;
+    let wakeTime;
 
     let customMacros;
     let customRestDayProtein;
@@ -141,6 +151,7 @@ export default class LoginScreen extends React.Component {
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
       trainingIntensity = this.state.trainingIntensity;
       showInGrams = this.state.showInGrams;
+      wakeTime = client.wakeTime;
 
       customMacros = client.customMacros;
       customRestDayProtein = client.customRestDayProtein;
@@ -411,9 +422,10 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>
             </View>
 
-            <View style={styles.optionSection}>
-              <TouchableHighlight style={styles.optionButton} onPress={() => {}}>
-                 <Text style={styles.optionButtonText}>8:00 a.m.</Text>
+            <View>
+              <TouchableHighlight style={styles.optionButton}
+                onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
+                <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
               </TouchableHighlight>
             </View>
 
@@ -598,18 +610,59 @@ export default class LoginScreen extends React.Component {
         {this.state.showModal &&
           <View style={Styles.showModal}></View>}
 
-        {this.state.showEnergyBalancePicker && <View>
+        {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
           <Picker
-            style={styles.picker}
-            selectedValue={this.state.template}
-            onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
-            <Picker.Item label="Surplus 3" value={6} />
-            <Picker.Item label="Surplus 2" value={5} />
-            <Picker.Item label="Surplus 1" value={4} />
-            <Picker.Item label="Base" value={0} />
-            <Picker.Item label="Deficit 1" value={1} />
-            <Picker.Item label="Deficit 2" value={2} />
-            <Picker.Item label="Deficit 3" value={3} />
+            selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
+            onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
+            <Picker.Item label="12:00 a.m." value="12:00 a.m." />
+            <Picker.Item label="12:30 a.m." value="12:30 a.m." />
+            <Picker.Item label="1:00 a.m." value="1:00 a.m." />
+            <Picker.Item label="1:30 a.m." value="1:30 a.m." />
+            <Picker.Item label="2:00 a.m." value="2:00 a.m." />
+            <Picker.Item label="2:30 a.m." value="2:30 a.m." />
+            <Picker.Item label="3:00 a.m." value="3:00 a.m." />
+            <Picker.Item label="3:30 a.m." value="3:30 a.m." />
+            <Picker.Item label="4:00 a.m." value="4:00 a.m." />
+            <Picker.Item label="4:30 a.m." value="4:30 a.m." />
+            <Picker.Item label="5:00 a.m." value="5:00 a.m." />
+            <Picker.Item label="5:30 a.m." value="5:30 a.m." />
+            <Picker.Item label="6:00 a.m." value="6:00 a.m." />
+            <Picker.Item label="6:30 a.m." value="6:30 a.m." />
+            <Picker.Item label="7:00 a.m." value="7:00 a.m." />
+            <Picker.Item label="7:30 a.m." value="7:30 a.m." />
+            <Picker.Item label="8:00 a.m." value="8:00 a.m." />
+            <Picker.Item label="8:30 a.m." value="8:30 a.m." />
+            <Picker.Item label="9:00 a.m." value="9:00 a.m." />
+            <Picker.Item label="9:30 a.m." value="9:30 a.m." />
+            <Picker.Item label="10:00 a.m." value="10:00 a.m." />
+            <Picker.Item label="10:30 a.m." value="10:30 a.m." />
+            <Picker.Item label="11:00 a.m." value="11:00 a.m." />
+            <Picker.Item label="11:30 a.m." value="11:30 a.m." />
+
+            <Picker.Item label="12:00 p.m." value="12:00 p.m." />
+            <Picker.Item label="12:30 p.m." value="12:30 p.m." />
+            <Picker.Item label="1:00 p.m." value="1:00 p.m." />
+            <Picker.Item label="1:30 p.m." value="1:30 p.m." />
+            <Picker.Item label="2:00 p.m." value="2:00 p.m." />
+            <Picker.Item label="2:30 p.m." value="2:30 p.m." />
+            <Picker.Item label="3:00 p.m." value="3:00 p.m." />
+            <Picker.Item label="3:30 p.m." value="3:30 p.m." />
+            <Picker.Item label="4:00 p.m." value="4:00 p.m." />
+            <Picker.Item label="4:30 p.m." value="4:30 p.m." />
+            <Picker.Item label="5:00 p.m." value="5:00 p.m." />
+            <Picker.Item label="5:30 p.m." value="5:30 p.m." />
+            <Picker.Item label="6:00 p.m." value="6:00 p.m." />
+            <Picker.Item label="6:30 p.m." value="6:30 p.m." />
+            <Picker.Item label="7:00 p.m." value="7:00 p.m." />
+            <Picker.Item label="7:30 p.m." value="7:30 p.m." />
+            <Picker.Item label="8:00 p.m." value="8:00 p.m." />
+            <Picker.Item label="8:30 p.m." value="8:30 p.m." />
+            <Picker.Item label="9:00 p.m." value="9:00 p.m." />
+            <Picker.Item label="9:30 p.m." value="9:30 p.m." />
+            <Picker.Item label="10:00 p.m." value="10:00 p.m." />
+            <Picker.Item label="10:30 p.m." value="10:30 p.m." />
+            <Picker.Item label="11:00 p.m." value="11:00 p.m." />
+            <Picker.Item label="11:30 p.m." value="11:30 p.m." />
           </Picker>
         </View>}
 
@@ -666,6 +719,21 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
           </View>
         </ScrollView>}
+
+        {this.state.showEnergyBalancePicker && <View>
+          <Picker
+            style={styles.picker}
+            selectedValue={template}
+            onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
+            <Picker.Item label="Surplus 3" value={6} />
+            <Picker.Item label="Surplus 2" value={5} />
+            <Picker.Item label="Surplus 1" value={4} />
+            <Picker.Item label="Base" value={0} />
+            <Picker.Item label="Deficit 1" value={1} />
+            <Picker.Item label="Deficit 2" value={2} />
+            <Picker.Item label="Deficit 3" value={3} />
+          </Picker>
+        </View>}
       </View>
     );
   }
