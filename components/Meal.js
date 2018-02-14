@@ -66,7 +66,6 @@ class Meal extends React.Component {
             sources={this.props.proteins}
             trainingIntensity={this.props.trainingIntensity}
             mealsBeforeWorkout={this.props.mealsBeforeWorkout}
-            template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
             pwo={pwo}

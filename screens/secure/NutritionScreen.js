@@ -41,7 +41,6 @@ export default class LoginScreen extends React.Component {
       trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
-      template: 0, //make dynamic
       phase: 3, //make dynamic
       trainingIntensity: 1,
       showModal: false,
@@ -50,19 +49,38 @@ export default class LoginScreen extends React.Component {
   }
 
   componentWillMount() {
-    var client = firebase.database().ref('clients/-L21NK77TJ6Cb-P2BDrv');
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
-    this.setState({ showLoading: true });
+    // this.setState({ showLoading: true });
 
     client.on('value', snapshot => {
-      this.setState({ client: snapshot.val() }, function() {
-        this.setState({
-          showLoading: false
-        });
+      const c = snapshot.val();
+
+      this.setState({
+        client: c,
+        showLoading: false
       });
     });
+  }
 
-    // console.log('MEAL LABEL', labels.x.low[0]);
+  saveTemplateType(template) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    t = template === 0 ? 'Maintenance' :
+      template === 1 ? 'Cut 1' :
+      template === 2 ? 'Cut 2' :
+      template === 3 ? 'Cut 3' :
+      template === 4 ? 'Bulk 1' :
+      template === 5 ? 'Bulk 2' :
+      template === 6 ? 'Bulk 3' : null;
+
+    client.update({ templateType: t });
+
+    this.setState({
+      showEnergyBalancePicker: false,
+      showModal: false,
+      template: template
+    });
   }
 
   render() {
@@ -99,7 +117,7 @@ export default class LoginScreen extends React.Component {
     let fats = [];
     let veggies = [];
 
-    if(this.state.showLoading === false) {
+    if(this.state.client) {
       const client = this.state.client;
 
       bodyweight = client.bodyweight;
@@ -110,7 +128,13 @@ export default class LoginScreen extends React.Component {
       leanMass = client.leanMass;
       proteinDelta = bodyweight > 150 ? 25 : 20;
 
-      template = this.state.template;
+      template = client.templateType === 'Maintenance' ? 0 :
+        client.templateType === 'Cut 1' ? 1 :
+        client.templateType === 'Cut 2' ? 2 :
+        client.templateType === 'Cut 3' ? 3 :
+        client.templateType === 'Bulk 1' ? 4 :
+        client.templateType === 'Bulk 2' ? 5 :
+        client.templateType === 'Bulk 3' ? 6 : null;
       currentMeal = this.state.currentMeal;
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
       trainingIntensity = this.state.trainingIntensity;
@@ -571,7 +595,7 @@ export default class LoginScreen extends React.Component {
             <Picker
               style={styles.picker}
               selectedValue={this.state.template}
-              onValueChange={(itemValue, itemIndex) => this.setState({ template: itemValue, showEnergyBalancePicker: false, showModal: false })}>
+              onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
               <Picker.Item label="Surplus 3" value={6} />
               <Picker.Item label="Surplus 2" value={5} />
               <Picker.Item label="Surplus 1" value={4} />

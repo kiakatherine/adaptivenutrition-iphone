@@ -28,10 +28,11 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
+     const template = this.props.template;
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+     const options = createFoodMenu(macro, currentMeal, phase, template, sources, selection, isBedtimeMeal, isPwoShake);
      const selection = this.props.selection || this.state.selection || options[0]; //need
      const newSelection = options[options.indexOf(selection) - 1];
      const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
@@ -49,10 +50,11 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
+     const template = this.props.template;
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+     const options = createFoodMenu(macro, currentMeal, phase, template, sources, selection, isBedtimeMeal, isPwoShake);
      const selection = this.props.selection || this.state.selection || options[0]; //need
      const newSelection = options[options.indexOf(selection) + 1];
      const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
@@ -70,6 +72,7 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
+     const template = this.props.template;
      const sources = this.props.sources;
      const selection = this.state.selection;
      const isBedtimeMeal = this.props.bedtime;
@@ -100,6 +103,19 @@ class FoodOptions extends React.Component {
 }
 
 export default FoodOptions;
+
+FoodOptions.propTypes = {
+  trainingIntensity: PropTypes.number,
+  mealsBeforeWorkout: PropTypes.number,
+  template: PropTypes.number,
+  currentMeal: PropTypes.number,
+  age: PropTypes.number,
+  gender: PropTypes.string,
+  height: PropTypes.number,
+  bodyweight: PropTypes.number,
+  bodyfat: PropTypes.number,
+  showMacros: PropTypes.bool
+};
 
 const styles = StyleSheet.create ({
    foodOptionsWrapper: {
