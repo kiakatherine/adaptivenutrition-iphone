@@ -424,7 +424,7 @@ export default class LoginScreen extends React.Component {
           <View>
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>What time did you wake up?</Text>
-              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
+              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
                 <FontAwesome
                   style={styles.tooltipIcon}
                   name='info-circle'
@@ -434,7 +434,7 @@ export default class LoginScreen extends React.Component {
             </View>
 
             <View>
-              <TouchableHighlight style={styles.optionButton}
+              <TouchableHighlight style={styles.optionButton} underlayColor={Colors.paleBlue}
                 onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
                 <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
               </TouchableHighlight>
@@ -442,7 +442,7 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>Are you training today?</Text>
-              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
+              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
                 <FontAwesome
                   style={styles.tooltipIcon}
                   name='info-circle'
@@ -454,26 +454,29 @@ export default class LoginScreen extends React.Component {
             <View style={styles.optionSection}>
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
+                underlayColor={Colors.paleBlue}
                 onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
                 <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({trainingIntensity: 1}) }}>
+                 { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
+                 underlayColor={Colors.paleBlue}
+                 onPress={() => { this.setState({trainingIntensity: 1}) }}>
                  <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
-                onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
+                 underlayColor={Colors.paleBlue}
+                 onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
                  <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
               </TouchableHighlight>
             </View>
 
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>How many meals before your workout?</Text>
-              <TouchableHighlight style={styles.optionTooltip} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
+              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
                 <FontAwesome
                   style={styles.tooltipIcon}
                   name='info-circle'
@@ -485,31 +488,36 @@ export default class LoginScreen extends React.Component {
             <View style={styles.optionSection}>
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
                  <Text style={styles.optionButtonText}>0</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
                  <Text style={styles.optionButtonText}>1</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
                  <Text style={styles.optionButtonText}>2</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
                  <Text style={styles.optionButtonText}>3</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
                  <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
             </View>
@@ -521,38 +529,44 @@ export default class LoginScreen extends React.Component {
               <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({currentMeal: 0}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({currentMeal: 0}) }}>
                     {firstMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({ currentMeal: 1 }) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({ currentMeal: 1 }) }}>
                    {secondMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({ currentMeal: 2 }) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({ currentMeal: 2 }) }}>
                    {thirdMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({currentMeal: 3}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({currentMeal: 3}) }}>
                    <Text style={styles.optionButtonText}>4</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
-                  onPress={() => { this.setState({currentMeal: 4}) }}>
+                   underlayColor={Colors.paleBlue}
+                   onPress={() => { this.setState({currentMeal: 4}) }}>
                    {fifthMealIcon}
                 </TouchableHighlight>
 
                 {this.state.trainingIntensity !== 0 &&
                   <TouchableHighlight style={[styles.optionButton,
                     { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
-                    onPress={() => { this.setState({currentMeal: 5}) }}>
+                     underlayColor={Colors.paleBlue}
+                     onPress={() => { this.setState({currentMeal: 5}) }}>
                      {sixthMealIcon}
                   </TouchableHighlight>
                 }
@@ -581,23 +595,23 @@ export default class LoginScreen extends React.Component {
             </View>
 
             <View style={styles.progressSection}>
-              <TouchableHighlight style={styles.progressButtonGood} onPress={() => {}}>
-                 <Text style={styles.progressButtonText}>
+              <TouchableHighlight style={styles.progressButtonGood} underlayColor='white' onPress={() => {}}>
+                 <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
                    <FontAwesome
+                     style={styles.progressButtonGoodIcon}
                      name='check'
                      size={16}
-                   />
-                   Ate meal on plan!
+                   /> Ate meal on plan!
                  </Text>
               </TouchableHighlight>
 
-              <TouchableHighlight style={styles.progressButtonBad} onPress={() => {}}>
-                 <Text style={styles.progressButtonText}>
+              <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => {}}>
+                 <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
                    <FontAwesome
+                     style={styles.progressButtonBadIcon}
                      name='remove'
                      size={16}
-                   />
-                   Ate off plan
+                   /> Ate off plan
                  </Text>
               </TouchableHighlight>
             </View>
@@ -606,15 +620,15 @@ export default class LoginScreen extends React.Component {
               <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
 
               <View style={styles.mealSettingsSectionList}>
-                <TouchableHighlight onPress={() => {}}>
+                <TouchableHighlight underlayColor='white' onPress={() => {}}>
                    <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight onPress={() => {}}>
+                <TouchableHighlight underlayColor='white' onPress={() => {}}>
                    <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
+                <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
                    <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
                 </TouchableHighlight>
               </View>
@@ -683,7 +697,7 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showTimeTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -694,12 +708,14 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipParagraph}>Enter the time you woke up today, and the times to eat each meal will be shown in your meal plan.</Text>
             <Text style={Styles.tooltipParagraph}>The guidelines for meal timing are to have breakfast within an hour of waking up, and to have subsequent meals 3-5 hours apart.</Text>
             <Text style={Styles.tooltipParagraph}>Why is meal timing important? Protein is not stored in your body like fat and carbs are, so a constant stream of amino acids (the building blocks of protein) is necessary to maintain lean muscle mass (more lean muscle mass = faster metabolism!). It is almost important to keep blood sugar levels steady throughout the day so you can maintain even energy and avoid the dreaded afternoon slump.</Text>
+            <Text></Text>
+            <Text></Text>
           </View>
         </ScrollView>}
 
         {this.state.showTrainingTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight onPress={() => { this.setState({ showTrainingTooltip: false, showModal: false }) }}>
+            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTrainingTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -722,7 +738,7 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
+            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -812,6 +828,12 @@ const styles = StyleSheet.create({
   progressButtonText: {
     textAlign: 'center'
   },
+  progressButtonGoodText: {
+    color: Colors.primaryColor
+  },
+  progressButtonBadText: {
+    color: Colors.paleRed
+  },
   progressButtonGood: {
     flex: 1,
     paddingTop: 20,
@@ -821,6 +843,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.paleGreen,
     borderRadius: 1,
     marginRight: 5
+  },
+  progressButtonGoodIcon: {
+    color: Colors.primaryColor
+  },
+  progressButtonBadIcon: {
+    color: Colors.paleRed
   },
   progressButtonBad: {
     flex: 1,
