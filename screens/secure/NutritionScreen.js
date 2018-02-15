@@ -757,6 +757,7 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   optionWrapper: {
     flexDirection: 'row',
+    alignItems: 'center',
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -773,7 +774,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   optionTooltip: {
-    paddingTop: 10
+    paddingTop: 10,
+    marginLeft: 5
   },
   optionButton: {
     flex: 1,
