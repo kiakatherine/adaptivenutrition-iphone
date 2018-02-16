@@ -95,6 +95,11 @@ export default class LoginScreen extends React.Component {
     client.update({ trainingIntensity: intensity });
   }
 
+  saveCurrentMeal(meal) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ selectedMeal: meal });
+  }
+
   toggleView(viewAllMeals) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({ viewAllMeals: !viewAllMeals });
@@ -547,35 +552,35 @@ export default class LoginScreen extends React.Component {
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: currentMeal === 0 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
-                   onPress={() => { this.setState({currentMeal: 0}) }}>
+                   onPress={() => { this.saveCurrentMeal(0) }}>
                     {firstMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: currentMeal === 1 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
-                   onPress={() => { this.setState({ currentMeal: 1 }) }}>
+                   onPress={() => { this.saveCurrentMeal(1) }}>
                    {secondMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: currentMeal === 2 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
-                   onPress={() => { this.setState({ currentMeal: 2 }) }}>
+                   onPress={() => { this.saveCurrentMeal(2) }}>
                    {thirdMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: currentMeal === 3 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
-                   onPress={() => { this.setState({currentMeal: 3}) }}>
+                   onPress={() => { this.saveCurrentMeal(3) }}>
                    <Text style={styles.optionButtonText}>4</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
-                   onPress={() => { this.setState({currentMeal: 4}) }}>
+                   onPress={() => { this.saveCurrentMeal(4) }}>
                    {fifthMealIcon}
                 </TouchableHighlight>
 
@@ -583,7 +588,7 @@ export default class LoginScreen extends React.Component {
                   <TouchableHighlight style={[styles.optionButton,
                     { borderColor: currentMeal === 5 ? Colors.primaryColor : 0 }]}
                      underlayColor={Colors.paleBlue}
-                     onPress={() => { this.setState({currentMeal: 5}) }}>
+                     onPress={() => { this.saveCurrentMeal(5) }}>
                      {sixthMealIcon}
                   </TouchableHighlight>}
               </View>}

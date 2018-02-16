@@ -38,7 +38,6 @@ class Meal extends React.Component {
        label = labels.x.low[this.props.currentMeal];
      } else if(this.props.trainingIntensity === 1) {
        label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
-       alert(label)
      } else if(this.props.trainingIntensity === 2) {
        label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
      }
