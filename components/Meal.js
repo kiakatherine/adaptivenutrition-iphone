@@ -91,7 +91,7 @@ class Meal extends React.Component {
             height={this.props.height}
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
-            showMacros={this.state.showMacros} />
+            showInGrams={this.props.showInGrams} />
         </View>
 
         <View style={styles.mealRow}>
@@ -111,7 +111,7 @@ class Meal extends React.Component {
             height={this.props.height}
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
-            showMacros={this.state.showMacros} />
+            showInGrams={this.props.showInGrams} />
         </View>
 
         <View style={styles.mealRow}>
@@ -131,10 +131,10 @@ class Meal extends React.Component {
             height={this.props.height}
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
-            showMacros={this.state.showMacros} />
+            showInGrams={this.props.showInGrams} />
         </View>
 
-        <View style={styles.mealRow}>
+        {!this.props.showInGrams && <View style={styles.mealRow}>
           <Text style={styles.mealRowCol}>Veggies</Text>
           <FoodOptions style={styles.mealRowColLong}
             macro='veggies'
@@ -151,8 +151,8 @@ class Meal extends React.Component {
             height={this.props.height}
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
-            showMacros={this.state.showMacros} />
-        </View>
+            showInGrams={this.props.showInGrams} />
+        </View>}
        </View>
      );
    }
@@ -170,7 +170,7 @@ Meal.propTypes = {
   height: PropTypes.number,
   bodyweight: PropTypes.number,
   bodyfat: PropTypes.number,
-  showMacros: PropTypes.bool
+  showInGrams: PropTypes.bool
 };
 
 const styles = StyleSheet.create ({

@@ -73,30 +73,47 @@ class FoodOptions extends React.Component {
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
      const template = this.props.template;
+     const showInGrams = this.props.showInGrams;
      const sources = this.props.sources;
      const selection = this.state.selection;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
-     const content = selection ? selection : options[0];
+
+     let options;
+     options = !showInGrams ? createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) : null;
+
+     let content;
+     if(selection) {
+       content = selection;
+     } else if(options) {
+       content = options[0];
+     } else {
+       const currMeal = currentMeal + 1;
+       const string = macro + currMeal;
+       content = sources[string];
+     }
 
      return (
-       <View style={styles.foodOptionsWrapper}>
-         <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
-           <FontAwesome
-             name='chevron-left'
-             size={16}
-           />
-         </TouchableHighlight>
+       <View>
+         {!showInGrams && <View style={styles.foodOptionsWrapper}>
+           <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
+             <FontAwesome
+               name='chevron-left'
+               size={16}
+             />
+           </TouchableHighlight>
 
-         <Text style={styles.content}>{selection ? selection : options[0]}</Text>
+           <Text style={styles.content}>{selection ? selection : options[0]}</Text>
 
-         <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
-           <FontAwesome
-             name='chevron-right'
-             size={16}
-           />
-         </TouchableHighlight>
+           <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
+             <FontAwesome
+               name='chevron-right'
+               size={16}
+             />
+           </TouchableHighlight>
+         </View>}
+
+         {showInGrams && <Text>{content}</Text>}
        </View>
      );
    }

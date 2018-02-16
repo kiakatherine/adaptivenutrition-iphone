@@ -36,7 +36,6 @@ export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showInGrams: false,
       trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
@@ -92,6 +91,11 @@ export default class LoginScreen extends React.Component {
       showModal: false,
       showWakeTimePicker: false
     });
+  }
+
+  saveView(showInGrams) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ showInGrams: !showInGrams });
   }
 
   render() {
@@ -156,7 +160,7 @@ export default class LoginScreen extends React.Component {
       currentMeal = this.state.currentMeal;
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
       trainingIntensity = this.state.trainingIntensity;
-      showInGrams = this.state.showInGrams;
+      showInGrams = client.showInGrams;
 
       wakeTime = client.wakeTime;
 
@@ -591,7 +595,7 @@ export default class LoginScreen extends React.Component {
                 carbs={carbs}
                 fats={fats}
                 veggies={veggies}
-                showMacros={this.state.showMacros} />
+                showInGrams={showInGrams} />
             </View>
 
             <View style={styles.progressSection}>
@@ -624,7 +628,7 @@ export default class LoginScreen extends React.Component {
                    <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor='white' onPress={() => {}}>
+                <TouchableHighlight underlayColor='white' onPress={() => { this.saveView(showInGrams) }}>
                    <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
                 </TouchableHighlight>
 
