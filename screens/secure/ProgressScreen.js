@@ -21,7 +21,7 @@ import subDays from 'date-fns/sub_days';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home',
+    title: 'Progress',
   };
 
   constructor(props) {

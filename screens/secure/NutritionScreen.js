@@ -30,7 +30,7 @@ import Meal from '../../components/Meal';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Nutrition',
+    title: 'Meal Plan',
   };
 
   constructor(props) {

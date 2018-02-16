@@ -6,7 +6,7 @@ import { FontAwesomeIcons, Ionicons, MaterialCommunityIcons } from 'react-native
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
-import HomeScreen from './screens/secure/HomeScreen';
+import ProgressScreen from './screens/secure/ProgressScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 import HelpScreen from './screens/secure/HelpScreen';
 import LogoutScreen from './screens/secure/LogoutScreen';
@@ -15,12 +15,12 @@ import Colors from './constants/Colors';
 
 export const AuthenticatedScreen = TabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-      headerLeft: null
-    },
     Nutrition: {
       screen: NutritionScreen
+    },
+    Progress: {
+      screen: ProgressScreen,
+      headerLeft: null
     },
     Help: {
       screen: HelpScreen
@@ -34,10 +34,10 @@ export const AuthenticatedScreen = TabNavigator(
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
 
-        if (routeName === 'Home') {
+        if (routeName === 'Progress') {
           return (
             <Ionicons
-              name={`ios-home${focused ? '' : '-outline'}`}
+              name={`ios-podium${focused ? '' : '-outline'}`}
               size={28}
               style={{ marginBottom: -3 }}
               color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
