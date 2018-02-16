@@ -32,7 +32,7 @@ class FoodOptions extends React.Component {
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, template, sources, selection, isBedtimeMeal, isPwoShake);
+     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
      const selection = this.props.selection || this.state.selection || options[0]; //need
      const newSelection = options[options.indexOf(selection) - 1];
      const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
@@ -54,7 +54,7 @@ class FoodOptions extends React.Component {
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, template, sources, selection, isBedtimeMeal, isPwoShake);
+     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
      const selection = this.props.selection || this.state.selection || options[0]; //need
      const newSelection = options[options.indexOf(selection) + 1];
      const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
