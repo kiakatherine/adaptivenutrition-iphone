@@ -168,7 +168,7 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 2' ? 5 :
         client.templateType === 'Bulk 3' ? 6 : null;
       phase = client.phase;
-      currentMeal = this.state.currentMeal;
+      currentMeal = client.selectedMeal ? client.selectedMeal : 0;
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
       trainingIntensity = convertTrainingIntensity(client.trainingIntensity);
       showInGrams = client.showInGrams;
@@ -545,35 +545,35 @@ export default class LoginScreen extends React.Component {
 
               {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
+                  { borderColor: currentMeal === 0 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
                    onPress={() => { this.setState({currentMeal: 0}) }}>
                     {firstMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 1 ? Colors.primaryColor : 0 }]}
+                  { borderColor: currentMeal === 1 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
                    onPress={() => { this.setState({ currentMeal: 1 }) }}>
                    {secondMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 2 ? Colors.primaryColor : 0 }]}
+                  { borderColor: currentMeal === 2 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
                    onPress={() => { this.setState({ currentMeal: 2 }) }}>
                    {thirdMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 3 ? Colors.primaryColor : 0 }]}
+                  { borderColor: currentMeal === 3 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
                    onPress={() => { this.setState({currentMeal: 3}) }}>
                    <Text style={styles.optionButtonText}>4</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: this.state.currentMeal === 4 ? Colors.primaryColor : 0 }]}
+                  { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
                    onPress={() => { this.setState({currentMeal: 4}) }}>
                    {fifthMealIcon}
@@ -581,7 +581,7 @@ export default class LoginScreen extends React.Component {
 
                 {trainingIntensity !== 0 &&
                   <TouchableHighlight style={[styles.optionButton,
-                    { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
+                    { borderColor: currentMeal === 5 ? Colors.primaryColor : 0 }]}
                      underlayColor={Colors.paleBlue}
                      onPress={() => { this.setState({currentMeal: 5}) }}>
                      {sixthMealIcon}
@@ -591,9 +591,9 @@ export default class LoginScreen extends React.Component {
               {!viewAllMeals && <Meal
                 trainingIntensity={trainingIntensity}
                 mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                template={this.state.template}
+                template={template}
                 phase={phase}
-                currentMeal={this.state.currentMeal}
+                currentMeal={currentMeal}
                 breakfastTime={mealTimes['breakfastTime']}
                 earlyLunchTime={mealTimes['earlyLunchTime']}
                 lateLunchTime={mealTimes['lateLunchTime']}
@@ -613,7 +613,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={0}
                   breakfastTime={mealTimes['breakfastTime']}
@@ -634,7 +634,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={1}
                   breakfastTime={mealTimes['breakfastTime']}
@@ -655,7 +655,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={2}
                   breakfastTime={mealTimes['breakfastTime']}
@@ -676,7 +676,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={3}
                   breakfastTime={mealTimes['breakfastTime']}
@@ -697,7 +697,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={4}
                   breakfastTime={mealTimes['breakfastTime']}
@@ -718,7 +718,7 @@ export default class LoginScreen extends React.Component {
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
-                  template={this.state.template}
+                  template={template}
                   phase={phase}
                   currentMeal={5}
                   breakfastTime={mealTimes['breakfastTime']}

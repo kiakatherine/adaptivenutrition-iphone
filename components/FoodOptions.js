@@ -86,13 +86,11 @@ class FoodOptions extends React.Component {
      if(selection) {
        content = selection;
      } else if(isPwoShake) {
+       const currMeal = currentMeal + 1;
+       const string = macro + currMeal;
        content = sources[string + 'Grams'] + ' of whey protein';
      } else if(options) {
        content = options[0];
-     } else {
-       const currMeal = currentMeal + 1;
-       const string = macro + currMeal;
-       content = sources[string];
      }
 
      return (

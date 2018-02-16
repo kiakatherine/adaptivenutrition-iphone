@@ -38,22 +38,21 @@ class Meal extends React.Component {
        label = labels.x.low[this.props.currentMeal];
      } else if(this.props.trainingIntensity === 1) {
        label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
+       alert(label)
      } else if(this.props.trainingIntensity === 2) {
        label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
      }
 
-     if(viewAllMeals === false) {
-       // bedtime
-       if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
-         bedtime = true;
-       } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
-         bedtime = true;
-       }
+     // bedtime
+     if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
+       bedtime = true;
+     } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
+       bedtime = true;
+     }
 
-       // pwo
-       if(label.indexOf('PWO') > -1) {
-         pwo = true;
-       }
+     // pwo
+     if(this.props.pwo || label && label.indexOf('PWO') > -1) {
+       pwo = true;
      }
 
      // timing
