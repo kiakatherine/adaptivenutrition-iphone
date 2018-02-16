@@ -11,7 +11,7 @@ import Styles from '../../constants/Styles';
 import * as labels from '../../constants/MealLabels';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, calculateTotals, setMealTimes } from '../../utils/helpers';
+import { changeUnit, calculateTotals, convertTrainingIntensity, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -36,11 +36,8 @@ export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      trainingIntensity: 0,
       mealsBeforeWorkout: 3,
       currentMeal: 1,
-      phase: 3, //make dynamic
-      trainingIntensity: 1,
       showModal: false,
 
       showTimeTooltip: false,
@@ -93,7 +90,17 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  saveView(showInGrams) {
+  saveTrainingIntensity(intensity) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ trainingIntensity: intensity });
+  }
+
+  toggleView(viewAllMeals) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ viewAllMeals: !viewAllMeals });
+  }
+
+  toggleUnits(showInGrams) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({ showInGrams: !showInGrams });
   }
@@ -110,10 +117,13 @@ export default class LoginScreen extends React.Component {
     let proteinDelta;
 
     let template;
+    let phase;
     let currentMeal;
     let mealsBeforeWorkout;
     let trainingIntensity;
     let showInGrams;
+    let viewAllMeals;
+    let isPwoMeal;
     let wakeTime;
     let mealTimes = {
       breakfastTime: null,
@@ -157,15 +167,18 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 1' ? 4 :
         client.templateType === 'Bulk 2' ? 5 :
         client.templateType === 'Bulk 3' ? 6 : null;
+      phase = client.phase;
       currentMeal = this.state.currentMeal;
       mealsBeforeWorkout = this.state.mealsBeforeWorkout;
-      trainingIntensity = this.state.trainingIntensity;
+      trainingIntensity = convertTrainingIntensity(client.trainingIntensity);
       showInGrams = client.showInGrams;
+      viewAllMeals = client.viewAllMeals;
+      isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
 
       wakeTime = client.wakeTime;
 
       if(wakeTime) {
-        mealTimes = setMealTimes(wakeTime, this.state.phase, trainingIntensity, mealsBeforeWorkout);
+        mealTimes = setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout);
       }
 
       customMacros = client.customMacros;
@@ -457,23 +470,23 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.optionSection}>
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
+                { borderColor: trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
                 underlayColor={Colors.paleBlue}
-                onPress={() => { this.setState({ trainingIntensity: 0 }) }}>
+                onPress={() => { this.saveTrainingIntensity('rest') }}>
                 <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                 { borderColor: this.state.trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
+                 { borderColor: trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
                  underlayColor={Colors.paleBlue}
-                 onPress={() => { this.setState({trainingIntensity: 1}) }}>
+                 onPress={() => { this.saveTrainingIntensity('moderate') }}>
                  <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
+                { borderColor: trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
                  underlayColor={Colors.paleBlue}
-                 onPress={() => { this.setState({ trainingIntensity: 2 }) }}>
+                 onPress={() => { this.saveTrainingIntensity('hard') }}>
                  <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
               </TouchableHighlight>
             </View>
@@ -528,9 +541,9 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.mealPlanSection}>
               <Text style={Styles.h1}>Todays Meal Plan</Text>
-              <Text>Phase {this.state.phase}</Text>
+              <Text>Phase {phase}</Text>
 
-              <View style={styles.mealsMenu}>
+              {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
                   { borderColor: this.state.currentMeal === 0 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.paleBlue}
@@ -566,21 +579,20 @@ export default class LoginScreen extends React.Component {
                    {fifthMealIcon}
                 </TouchableHighlight>
 
-                {this.state.trainingIntensity !== 0 &&
+                {trainingIntensity !== 0 &&
                   <TouchableHighlight style={[styles.optionButton,
                     { borderColor: this.state.currentMeal === 5 ? Colors.primaryColor : 0 }]}
                      underlayColor={Colors.paleBlue}
                      onPress={() => { this.setState({currentMeal: 5}) }}>
                      {sixthMealIcon}
-                  </TouchableHighlight>
-                }
-              </View>
+                  </TouchableHighlight>}
+              </View>}
 
-              <Meal
-                trainingIntensity={this.state.trainingIntensity}
+              {!viewAllMeals && <Meal
+                trainingIntensity={trainingIntensity}
                 mealsBeforeWorkout={this.state.mealsBeforeWorkout}
                 template={this.state.template}
-                phase={this.state.phase}
+                phase={phase}
                 currentMeal={this.state.currentMeal}
                 breakfastTime={mealTimes['breakfastTime']}
                 earlyLunchTime={mealTimes['earlyLunchTime']}
@@ -595,11 +607,140 @@ export default class LoginScreen extends React.Component {
                 carbs={carbs}
                 fats={fats}
                 veggies={veggies}
-                showInGrams={showInGrams} />
+                showInGrams={showInGrams} />}
+
+              {viewAllMeals && <View>
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={0}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={1}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={2}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={3}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={4}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                <Meal
+                  trainingIntensity={trainingIntensity}
+                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  template={this.state.template}
+                  phase={phase}
+                  currentMeal={5}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  age={age}
+                  gender={gender}
+                  height={height}
+                  bodyweight={bodyweight}
+                  bodyfat={bodyfat}
+                  proteins={proteins}
+                  carbs={carbs}
+                  fats={fats}
+                  veggies={veggies}
+                  pwo={isPwoMeal}
+                  showInGrams={showInGrams} />
+                </View>}
             </View>
 
             <View style={styles.progressSection}>
-              <TouchableHighlight style={styles.progressButtonGood} underlayColor='white' onPress={() => {}}>
+              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonGood} underlayColor='white' onPress={() => {}}>
                  <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}
@@ -607,9 +748,9 @@ export default class LoginScreen extends React.Component {
                      size={16}
                    /> Ate meal on plan!
                  </Text>
-              </TouchableHighlight>
+              </TouchableHighlight>}
 
-              <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => {}}>
+              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => {}}>
                  <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
                    <FontAwesome
                      style={styles.progressButtonBadIcon}
@@ -617,19 +758,27 @@ export default class LoginScreen extends React.Component {
                      size={16}
                    /> Ate off plan
                  </Text>
-              </TouchableHighlight>
+              </TouchableHighlight>}
+
+              {viewAllMeals && <Text>View by meal to see meal completion buttons.</Text>}
             </View>
 
             <View style={styles.mealSettingsSection}>
               <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
 
               <View style={styles.mealSettingsSectionList}>
-                <TouchableHighlight underlayColor='white' onPress={() => {}}>
-                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View by day</Text>
+                <TouchableHighlight underlayColor='white' onPress={() => { this.toggleView(viewAllMeals) }}>
+                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+                   {viewAllMeals && 'View by meal'}
+                   {!viewAllMeals && 'View by day'}
+                   </Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight underlayColor='white' onPress={() => { this.saveView(showInGrams) }}>
-                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>View in macros</Text>
+                <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
+                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+                    {showInGrams && 'View in serving sizes'}
+                    {!showInGrams && 'View in macros'}
+                   </Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>

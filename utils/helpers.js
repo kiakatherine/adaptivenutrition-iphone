@@ -400,12 +400,12 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
 
   totals['customHeavyCaloriesFinal'] = (Number(customHeavyCaloriesFinalProtein) * 4) + (Number(customHeavyCaloriesFinalCarbs) * 4) + (Number(customHeavyCaloriesFinalFat) * 9);
 
-  if(trainingIntensity === 'rest') {
+  if(trainingIntensity === 0) {
     totals['totalProtein'] = customMacros && customRestDayProtein ? customRestDayProtein : totals['restDayProtein'];
     totals['totalCarbs'] = customMacros && customRestDayCarbs ? customRestDayCarbs : totals['restDayCarbs'];
     totals['totalFat'] = customMacros && customRestDayFat ? customRestDayFat : totals['restDayFat'];
     totals['totalCalories'] = customMacros && totals['customRestCaloriesFinal'] ? totals['customRestCaloriesFinal'] : totals['restCaloriesFinal'];
-  } else if(trainingIntensity === 'moderate') {
+  } else if(trainingIntensity === 1) {
     totals['totalProtein'] = customMacros && customModerateDayProtein ? customModerateDayProtein : totals['moderateDayProtein'];
     totals['totalCarbs'] = customMacros && customModerateDayCarbs ? customModerateDayCarbs : totals['moderateDayCarbs'];
     totals['totalFat'] = customMacros && customModerateDayFat ? customModerateDayFat : totals['moderateDayFat'];
@@ -426,15 +426,15 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
   return totals;
 }
 
-// export function convertTrainingIntensity(string) {
-//   if(string.indexOf('light') > -1) {
-//     return 0;
-//   } else if(string.indexOf('moderate') > -1) {
-//     return 1;
-//   } else {
-//     return 2;
-//   }
-// }
+export function convertTrainingIntensity(string) {
+  if(string.indexOf('rest') > -1) {
+    return 0;
+  } else if(string.indexOf('moderate') > -1) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
 
 export function convertTrainingTime(string) {
   if(string.indexOf('waking') > -1) {

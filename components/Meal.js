@@ -31,6 +31,7 @@ class Meal extends React.Component {
      let time;
      let bedtime = false;
      let pwo = false;
+     let viewAllMeals = this.props.viewAllMeals;
 
      // label
      if(this.props.trainingIntensity === 0) {
@@ -41,16 +42,18 @@ class Meal extends React.Component {
        label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
      }
 
-     // bedtime
-     if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
-       bedtime = true;
-     } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
-       bedtime = true;
-     }
+     if(viewAllMeals === false) {
+       // bedtime
+       if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
+         bedtime = true;
+       } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
+         bedtime = true;
+       }
 
-     // pwo
-     if(label.indexOf('PWO') > -1) {
-       pwo = true;
+       // pwo
+       if(label.indexOf('PWO') > -1) {
+         pwo = true;
+       }
      }
 
      // timing
@@ -71,7 +74,7 @@ class Meal extends React.Component {
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
-          <Text style={styles.mealRowHeaderCol}>{label.toUpperCase()}</Text>
+          <Text style={styles.mealRowHeaderCol}>{label ? label.toUpperCase(): ''}</Text>
           <Text style={styles.mealRowHeaderColTime}>{this.props.timing}{time}</Text>
         </View>
 

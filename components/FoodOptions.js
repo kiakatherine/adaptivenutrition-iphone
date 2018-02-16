@@ -79,12 +79,14 @@ class FoodOptions extends React.Component {
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
 
-     let options;
-     options = !showInGrams ? createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) : null;
+     let options = !showInGrams ? createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) : null;
 
      let content;
+
      if(selection) {
        content = selection;
+     } else if(isPwoShake) {
+       content = sources[string + 'Grams'] + ' of whey protein';
      } else if(options) {
        content = options[0];
      } else {
@@ -113,7 +115,7 @@ class FoodOptions extends React.Component {
            </TouchableHighlight>
          </View>}
 
-         {showInGrams && <Text>{content}</Text>}
+         {showInGrams && <Text style={styles.content}>{content}</Text>}
        </View>
      );
    }
@@ -140,7 +142,6 @@ const styles = StyleSheet.create ({
      flexDirection: 'row'
    },
    content: {
-     textAlign: 'center',
      paddingLeft: 20,
      paddingRight: 20,
      paddingTop: 5,
