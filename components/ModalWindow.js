@@ -36,7 +36,7 @@ class ModalWindow extends React.Component {
      let modal = null;
 
      if(this.props.currentModal === 'BIOMETRIC_SETTINGS') {
-       modal = <BiometricSettingsModal />;
+       modal = <BiometricSettingsModal client={this.props.data} />;
      } else if(this.props.currentModal === 'FOODS_TO_AVOID') {
        modal = <FoodsToAvoidModal />;
      } else if(this.props.currentModal === 'ABOUT') {

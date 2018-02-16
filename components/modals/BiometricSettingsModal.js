@@ -1,5 +1,7 @@
 import React from 'react';
 
+import firebase from '../../services/FirebaseService';
+
 import Styles from '../../constants/Styles';
 
 import {
@@ -7,6 +9,7 @@ import {
   DatePickerIOS,
   Keyboard,
   Modal,
+  Picker,
   StyleSheet,
   Text,
   TextInput,
@@ -23,21 +26,61 @@ class BiometricSettingsModal extends React.Component {
 
     this.state = {
       date: new Date(),
-      showDatepicker: false
+      birthdate: this.props.client.birthdate ? this.props.client.birthdate : new Date(),
+      showDatePicker: false,
+      showGenderPicker: false
     }
 
-    this._showDatepicker = this._showDatepicker.bind(this);
+    this._showDatePicker = this._showDatePicker.bind(this);
+    this._showGenderPicker = this._showGenderPicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
   }
 
-  _showDatepicker () {
+  _showDatePicker () {
     Keyboard.dismiss();
-    this.setState({ showDatepicker: !this.state.showDatepicker });
+    this.setState({ showDatePicker: !this.state.showDatePicker });
+  }
+
+  _showGenderPicker () {
+    Keyboard.dismiss();
+    this.setState({ showGenderPicker: !this.state.showGenderPicker });
   }
 
   _hideAll () {
     Keyboard.dismiss();
-    this.setState({ showDatepicker: false });
+    this.setState({ showDatePicker: false, showGenderPicker: false });
+  }
+
+  onChangeGender(g) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ gender: g });
+    this._showGenderPicker();
+  }
+
+  onChangeBodyweight(text) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ bodyweight: Number(text) });
+  }
+
+  onChangeHeight(text) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ height: Number(text) });
+  }
+
+  onChangeBodyfat(text) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ bodyfat: Number(text) });
+  }
+
+  onChangeBirthdate(text) {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ birthdate: format(text, "MMMM D, YYYY") });
+    this.setState({ birthdate: format(text, "MMMM D, YYYY") });
+    this._showDatePicker();
+  }
+
+  clickSave() {
+    alert('Saved!');
   }
 
   render() {
@@ -49,12 +92,28 @@ class BiometricSettingsModal extends React.Component {
 
         <View style={Styles.biometricRow}>
           <Text style={Styles.h3}>Gender</Text>
-          <Text>Female</Text>
+          <View>
+            <Button
+              title={this.props.client.gender}
+              onPress={this._showGenderPicker}/>
+
+            {this.state.showGenderPicker &&
+              <Picker
+                selectedValue={this.props.client.gender}
+                onValueChange={(g) => this.onChangeGender(g)}>
+                <Picker.Item label="Female" value="Female" />
+                <Picker.Item label="Male" value="Male" />
+              </Picker>}
+          </View>
         </View>
 
         <View style={Styles.biometricRow}>
-          <Text style={Styles.h3}>Bodyweight*</Text>
-          <Text>128</Text>
+          <Text style={Styles.h3}>Bodyweight</Text>
+          <TextInput
+            style={Styles.forms.textInput}
+            keyboardType='numeric'
+            onChangeText={(text) => this.onChangeBodyweight(text)}
+            value={this.props.client.bodyweight.toString()} />
         </View>
 
         <View style={Styles.biometricRow}>
@@ -62,42 +121,37 @@ class BiometricSettingsModal extends React.Component {
 
           <View>
             <Button
-              title={format(this.state.date, "MMMM D, YYYY")}
-              onPress={this._showDatepicker}/>
+              title={format(this.state.birthdate, 'MMMM DD, YYYY')}
+              onPress={this._showDatePicker}/>
 
-            {this.state.showDatepicker &&
-            <DatePickerIOS
-              mode={'date'}
-              date={this.state.date}
-              minimumDate={subDays(new Date(), 30)}
-              maximumDate={new Date()}
-              onDateChange={date => this.setState({ date })}
-            />}
-
-            <TextInput
-              style={Styles.forms.textInput}
-              keyboardType={'numeric'}
-              placeholder={"Enter Your Birthday"}
-              onFocus={() => this.setState({ showDatepicker: false })}
-              onChangeText={birthday => this.setState({ birthday })}
-              value={this.state.birthday}
-            />
+            {this.state.showDatePicker &&
+              <DatePickerIOS
+                mode={'date'}
+                date={new Date(this.state.birthdate)}
+                onDateChange={date => this.onChangeBirthdate(date)}
+              />}
           </View>
         </View>
 
         <View style={Styles.biometricRow}>
           <Text style={Styles.h3}>Height (in inches)</Text>
-          <TextInput/>
+          <TextInput
+            style={Styles.forms.textInput}
+            value={this.props.client.height.toString()}
+            onChangeText={(text) => this.onChangeHeight(text)}
+            keyboardType='numeric' />
         </View>
 
         <View style={Styles.biometricRow}>
           <Text style={Styles.h3}>Body fat percentage</Text>
-          <TextInput/>
+          <TextInput
+            style={Styles.forms.textInput}
+            value={this.props.client.bodyfat.toString()}
+            onChangeText={(text) => this.onChangeBodyfat(text)}
+            keyboardType='numeric' />
         </View>
 
-        <Text style={Styles.finePrint}>*As your bodyweight should not change during your 8-10 week cut/bulk cycle, please email us at <Text style={Styles.link} onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>support@adaptivenutrition.us</Text> to update this setting.</Text>
-
-        <TouchableHighlight style={Styles.modalButton} onPress={() => {this.saveSettings}}>
+        <TouchableHighlight style={Styles.modalButton} onPress={ () => { this.clickSave() } }>
            <Text style={Styles.modalButtonText}>Save</Text>
         </TouchableHighlight>
       </View>
