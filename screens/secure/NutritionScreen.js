@@ -9,6 +9,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 import * as labels from '../../constants/MealLabels';
+import moment from 'moment';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
 import { changeUnit, calculateTotals, convertTrainingIntensity, setMealTimes } from '../../utils/helpers';
@@ -27,6 +28,7 @@ import {
 } from 'react-native';
 
 import Meal from '../../components/Meal';
+import ProgressBar from '../../components/ProgressBar';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -50,14 +52,14 @@ export default class LoginScreen extends React.Component {
 
   componentWillMount() {
     var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    var dayStatuses = firebase.database().ref('dayStatuses');
 
     client.on('value', snapshot => {
-      const c = snapshot.val();
+      this.setState({ client: snapshot.val() });
+    });
 
-      this.setState({
-        client: c,
-        showLoading: false
-      });
+    dayStatuses.on('value', snapshot => {
+      this.setState({ dayStatuses: snapshot.val() });
     });
   }
 
@@ -110,6 +112,120 @@ export default class LoginScreen extends React.Component {
     client.update({ showInGrams: !showInGrams });
   }
 
+  completeMeal(phase, currentMeal) {
+    // const dayStatuses = this.state.dayStatuses;
+    // const date = new Date();
+    // const today = dayStatuses[forEach((day) => {
+    //   if(moment(day).format('MM-DD-YY') === date) {
+    //     return day;
+    //   }
+    // });
+    //
+    // alert(today)
+    // const mealToSave = 'meal' + currentMeal;
+    //
+    // if(today) {
+    //   // set meal completed boolean
+    //   if(today.get(mealToSave) === completion) {
+    //     today.set(mealToSave, 3);
+    //   } else {
+    //     today.set(mealToSave, completion);
+    //   }
+    //   today.save().then(resp => {
+    //     Ember.Logger.log('saved meal completion', mealToSave, ':', resp.get(mealToSave));
+    //     const team = this.get('client.challengeGroupTeam');
+    //
+    //     if(team) {
+    //       const meal1 = today.get('meal1') === 1 ? true : false;
+    //       const meal2 = today.get('meal2') === 1 ? true : false;
+    //       const meal3 = today.get('meal3') === 1 ? true : false;
+    //       const meal4 = today.get('meal4') === 1 ? true : false;
+    //       const meal5 = today.get('meal5') === 1 ? true : false;
+    //       const meal6 = today.get('meal6') === 1 ? true : false;
+    //       let numberOfMealsToComplete = 4;
+    //       let mealsCompleted = false;
+    //
+    //       if(this.get('phase') === 3) {
+    //         if(this.get('showRestDay')) {
+    //           numberOfMealsToComplete = numberOfMealsToComplete + 1;
+    //         } else {
+    //           numberOfMealsToComplete = numberOfMealsToComplete + 2;
+    //         }
+    //       }
+    //
+    //       if(numberOfMealsToComplete === 4 && meal1 && meal2 && meal3 && meal4) {
+    //         mealsCompleted = true;
+    //       } else if(numberOfMealsToComplete === 5 && meal1 && meal2 && meal3 && meal4 && meal5) {
+    //         mealsCompleted = true;
+    //       } else if(numberOfMealsToComplete === 6 && meal1 && meal2 && meal3 && meal4 && meal5 && meal6) {
+    //         mealsCompleted = true;
+    //       }
+    //
+    //       const todayMealsCompleted = today.get('allMealsCompleted');
+    //
+    //       if(todayMealsCompleted && today.get('meal1') !== 1 ||
+    //        todayMealsCompleted && today.get('meal2') !== 1 ||
+    //        todayMealsCompleted && today.get('meal3') !== 1 ||
+    //        todayMealsCompleted && today.get('meal4') !== 1 ||
+    //        todayMealsCompleted && today.get('meal5') !== 1 ||
+    //        todayMealsCompleted && today.get('meal6') !== 1) {
+    //         return this.store.findAll('challenge-group-team').then(resp => {
+    //           const teamObj = resp.filterBy('name', team)[0];
+    //           teamObj.set('points', teamObj.get('points') - 1);
+    //           teamObj.save().then(resp => {
+    //             Ember.Logger.log('subtracted points from team ' + team + ' score');
+    //             today.set('allMealsCompleted', false);
+    //           }, reason => {
+    //             Ember.Logger.error('could not subtract points to team ' + team + ' score');
+    //           })
+    //         });
+    //       }
+    //
+    //       if(mealsCompleted) {
+    //         this.store.findAll('challenge-group-team').then(resp => {
+    //           const teamObj = resp.filterBy('name', team)[0];
+    //           teamObj.set('points', teamObj.get('points') + 1);
+    //           teamObj.save().then(resp => {
+    //             Ember.Logger.log('added points to team ' + team + ' score');
+    //             today.set('allMealsCompleted', true);
+    //           }, reason => {
+    //             Ember.Logger.error('could not add points to team ' + team + ' score');
+    //           })
+    //         });
+    //       }
+    //     }
+    //   }, reason => {
+    //     Ember.Logger.error('could not save meal completion', reason);
+    //   });
+    // } else {
+    //   // save date and selected meal and whether completed or not
+    //   this.store.createRecord('day-status', {
+    //     date: moment(date).format('MM-DD-YY'),
+    //     fullDate: date,
+    //     timestamp: this.get('timestamp'),
+    //     phase: phase,
+    //     meal1: 3,
+    //     meal2: 3,
+    //     meal3: 3,
+    //     meal4: 3,
+    //     meal5: 3,
+    //     meal6: 3
+    //   }).save().then(resp => {
+    //     Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
+    //
+    //     resp.set(mealToSave, completion);
+    //
+    //     resp.save().then(resp => {
+    //       Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
+    //     }, reason => {
+    //       Ember.Logger.error('could not save meal completion', reason);
+    //     });
+    //   }, reason => {
+    //     Ember.Logger.error('could not save meal completion', reason);
+    //   });
+    // }
+  }
+
   render() {
     const { navigate } = this.props.navigation;
 
@@ -136,6 +252,16 @@ export default class LoginScreen extends React.Component {
       lateLunchTime: null,
       dinnerTime: null
     };
+
+    let complete1;
+    let complete2;
+    let complete3;
+    let complete4;
+    let complete5;
+    let complete6;
+    let enablePhase2;
+    let enablePhase3;
+    let showRestDay;
 
     let customMacros;
     let customRestDayProtein;
@@ -185,6 +311,15 @@ export default class LoginScreen extends React.Component {
       if(wakeTime) {
         mealTimes = setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout);
       }
+
+      phase3meal1 = client.phase3meal1;
+      phase3meal2 = client.phase3meal2;
+      phase3meal3 = client.phase3meal3;
+      phase3meal4 = client.phase3meal4;
+      phase3meal5 = client.phase3meal5;
+      phase3meal6 = client.phase3meal6;
+      enablePhase2 = client.enablePhase2;
+      enablePhase3 = client.enablePhase3;
 
       customMacros = client.customMacros;
       customRestDayProtein = client.customRestDayProtein;
@@ -745,7 +880,7 @@ export default class LoginScreen extends React.Component {
             </View>
 
             <View style={styles.progressSection}>
-              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonGood} underlayColor='white' onPress={() => {}}>
+              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonGood} underlayColor='white' onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
                  <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}
@@ -755,7 +890,7 @@ export default class LoginScreen extends React.Component {
                  </Text>
               </TouchableHighlight>}
 
-              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => {}}>
+              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
                  <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
                    <FontAwesome
                      style={styles.progressButtonBadIcon}
@@ -764,7 +899,17 @@ export default class LoginScreen extends React.Component {
                    /> Ate off plan
                  </Text>
               </TouchableHighlight>}
+            </View>
 
+            {!viewAllMeals && <View>
+              <ProgressBar
+                phase={phase}
+                enablePhase2={enablePhase2}
+                enablePhase3={enablePhase3}
+                trainingIntensity={trainingIntensity} />
+            </View>}
+
+            <View>
               {viewAllMeals && <Text>View by meal to see meal completion buttons.</Text>}
             </View>
 
