@@ -1,7 +1,10 @@
 import React from 'react';
 
+import firebase from '../../services/FirebaseService';
+
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
+import moment from 'moment';
 
 import {
   Button,
@@ -48,8 +51,28 @@ export default class LoginScreen extends React.Component {
     this.setState({ showDatepicker: false });
   }
 
-  _submitWeight () {
+  _submitWeight (w) {
+    var bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
+
+    // check first that not already an entry for today - check timestamp and date
+
+    bodyweightRecords.push({
+      date: moment(new Date).format('MM-DD-YY'),
+      timestamp: Number(this.state.clientTimestamp),
+      weight: Number(this.state.weight)
+    }).then(resp => {}, reason => {
+      alert('Could not save bodyweight');
+    });
+
     this.setState({ showDatepicker: false, date: new Date(), weight: "" });
+  }
+
+  componentWillMount() {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    client.on('value', snapshot => {
+      this.setState({ clientTimestamp: snapshot.val().timestamp });
+    });
   }
 
   render() {
