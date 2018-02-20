@@ -22,6 +22,8 @@ import {
 import format from 'date-fns/format';
 import subDays from 'date-fns/sub_days';
 
+import BodyweightGraph from '../../components/BodyweightGraph';
+
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
     title: 'Progress',
@@ -68,10 +70,15 @@ export default class LoginScreen extends React.Component {
   }
 
   componentWillMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
 
     client.on('value', snapshot => {
       this.setState({ clientTimestamp: snapshot.val().timestamp });
+    });
+
+    bodyweightRecords.on('value', snapshot => {
+      this.setState({ bodyweightData: snapshot.val() });
     });
   }
 
@@ -101,7 +108,7 @@ export default class LoginScreen extends React.Component {
             <TextInput
               style={Styles.forms.textInput}
               keyboardType={'numeric'}
-              placeholder={"Enter Your Weight"}
+              placeholder={"Enter your weight"}
               onFocus={() => this.setState({ showDatepicker: false })}
               onChangeText={weight => this.setState({ weight })}
               value={this.state.weight}
@@ -112,6 +119,10 @@ export default class LoginScreen extends React.Component {
               onPress={this._submitWeight}
               disabled={this.state.weight.trim().length < 1}
             />
+
+            <BodyweightGraph
+              data={this.state.bodyweightData}
+              clientTimestamp={this.state.clientTimestamp} />
           </View>
         </View>
       </TouchableWithoutFeedback>
