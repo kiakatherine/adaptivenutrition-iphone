@@ -29,8 +29,23 @@ import { calculateSevenDayAverageBodyweight } from '../utils/helpers';
 // https://github.com/FormidableLabs/victory-native/issues/25
 
 class BodyweightGraph extends React.Component {
-   test(x, y, value, index) {
-     alert(x)
+   constructor(props) {
+    super(props);
+
+    this.state = {
+      showTooltip: false
+    }
+   }
+
+   clickDataPoint(value, x, y, index, dates) {
+     // alert(index)
+     this.setState({
+       showTooltip: true,
+       tooltipWeight: value,
+       tooltipDate: dates[index],
+       tooltipX: x(index),
+       tooltipY: y(index)
+     });
    }
 
    onPressIn({nativeEvent:{locationX,locationY, target}}) {
@@ -157,46 +172,46 @@ class BodyweightGraph extends React.Component {
         //     />
         // ))
 
-        const Tooltip = ({ x, y }) => (
-          <G
-            x={ x(5) - (75 / 2) }
-            key={'tooltip'}
-            onPress={() => alert('tooltip clicked')}>
-            <G y={ 50 }>
-              <Rect
-                height={ 40 }
-                width={ 75 }
-                stroke={ 'grey' }
-                fill={ 'white' }
-                ry={ 2 }
-                rx={ 2 }
-              />
-              <Text
-                x={ 75 / 2 }
-                dy={20}
-                alignmentBaseline={'middle'}
-                textAnchor={ 'middle' }
-                stroke={ 'rgb(134, 65, 244)' }>
-                { `${data[5]}ºC` }
-              </Text>
-            </G>
-            <G x={ 75 / 2 }>
-              <Line
-                  y1={ 50 + 40 }
-                  y2={ y(data[ 5 ]) }
-                  stroke={ 'grey' }
-                  strokeWidth={ 2 }
-              />
-              <Circle
-                cy={ y(data[ 5 ]) }
-                r={ 6 }
-                stroke={ 'rgb(134, 65, 244)' }
-                strokeWidth={2}
-                fill={ 'white' }
-              />
-            </G>
-          </G>
-        );
+        // const Tooltip = ({ x, y }) => (
+        //   <G
+        //     x={ x(5) - (75 / 2) }
+        //     key={'tooltip'}
+        //     onPress={() => alert('tooltip clicked')}>
+        //     <G y={ 50 }>
+        //       <Rect
+        //         height={ 40 }
+        //         width={ 75 }
+        //         stroke={ 'grey' }
+        //         fill={ 'white' }
+        //         ry={ 2 }
+        //         rx={ 2 }
+        //       />
+        //       <Text
+        //         x={ 75 / 2 }
+        //         dy={20}
+        //         alignmentBaseline={'middle'}
+        //         textAnchor={ 'middle' }
+        //         stroke={ 'rgb(134, 65, 244)' }>
+        //         { `${data[5]}ºC` }
+        //       </Text>
+        //     </G>
+        //     <G x={ 75 / 2 }>
+        //       <Line
+        //           y1={ 50 + 40 }
+        //           y2={ y(data[ 5 ]) }
+        //           stroke={ 'grey' }
+        //           strokeWidth={ 2 }
+        //       />
+        //       <Circle
+        //         cy={ y(data[ 5 ]) }
+        //         r={ 6 }
+        //         stroke={ 'rgb(134, 65, 244)' }
+        //         strokeWidth={2}
+        //         fill={ 'white' }
+        //       />
+        //     </G>
+        //   </G>
+        // );
 
         return (
           <View>
@@ -212,7 +227,7 @@ class BodyweightGraph extends React.Component {
               curve={shape.curveLinear}
               showGrid={false}
               renderDecorator={({ x, y, index, value }) => (
-                <Circle onPress={() => {this.test(value)}}
+                <Circle onPress={() => {this.clickDataPoint(value, x, y, index, dates)}}
                   key={index}
                   cx={x(index)}
                   cy={y(value)}
@@ -225,6 +240,7 @@ class BodyweightGraph extends React.Component {
                 />
               )}
             />
+            {this.state.showTooltip && <Text>{this.state.tooltipDate} : {this.state.tooltipWeight}</Text>}
           </View>
         );
    }
