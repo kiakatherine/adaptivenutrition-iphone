@@ -1,3 +1,14 @@
+import moment from 'moment';
+
+Date.prototype.subtractDays = function(date, days) {
+  date.setDate(date.getDate() - days);
+  return date;
+};
+
+function hasVal(val) {
+  return val !== null;
+}
+
 export function changeUnit(showInGrams, macroType, value, altSource) {
   // value is grams
 
@@ -623,4 +634,64 @@ export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWork
     lateLunchTime: cleanTimeLabel(convertToTime(lateLunchTimeLower) + '-' + convertToTime(lateLunchTimeUpper)),
     dinnerTime: cleanTimeLabel(convertToTime(dinnerTimeLower) + '-' + convertToTime(dinnerTimeUpper))
   };
+}
+
+export function calculateSevenDayAverageBodyweight(filteredBodyweightRecords) {
+  const mappedByDate = Object.keys(filteredBodyweightRecords).map(key => {
+    return filteredBodyweightRecords[key].date;
+  });
+
+  if(filteredBodyweightRecords.length > 7) {
+    range = [filteredBodyweightRecords[filteredBodyweightRecords.length - 8].date, filteredBodyweightRecords[filteredBodyweightRecords.length - 1].date];
+  } else if(filteredBodyweightRecords.length > 0) {
+    range = [filteredBodyweightRecords[0].date, filteredBodyweightRecords[filteredBodyweightRecords.length - 1].date];
+  } else {
+    range = [];
+  }
+
+  const dates = [];
+  let date;
+
+  if(range.length > 0) {
+    // alert(range[1])
+    date = new Date(range[1].replace(/-/g, "/"));
+  } else {
+    date = new Date();
+  }
+
+  dates.push(moment(date).format('MM-DD-YY'));
+
+  for(let i = 0; i <= 5; i++) {
+    date = date.subtractDays(date, 1);
+    dates.push(moment(date).format('MM-DD-YY'));
+  }
+
+  const values = [];
+
+  dates.forEach(d => {
+    if(mappedByDate.indexOf(d) > -1) {
+      Object.keys(filteredBodyweightRecords).map(key => {
+        if(filteredBodyweightRecords[key].date === d) {
+          values.push(filteredBodyweightRecords[key].weight);
+        }
+      });
+    } else {
+      values.push(null);
+    }
+  });
+
+  if(filteredBodyweightRecords.length > 0) {
+    const weightSum = values.reduce((a, b) => a + b, 0);
+    const notNullValues = [];
+
+    values.forEach(v => {
+      if(hasVal(v)) {
+        notNullValues.push(v);
+      }
+    });
+
+    return (weightSum/notNullValues.length).toFixed(1);
+  } else {
+    return '--';
+  }
 }

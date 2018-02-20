@@ -2,6 +2,7 @@ import React from 'react';
 
 import firebase from '../../services/FirebaseService';
 
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 import moment from 'moment';
@@ -66,7 +67,7 @@ export default class LoginScreen extends React.Component {
       alert('Could not save bodyweight');
     });
 
-    this.setState({ showDatepicker: false, date: new Date(), weight: "" });
+    this.setState({ showDatepicker: false, date: new Date(), weight: "" }, this._hideAll());
   }
 
   componentWillMount() {
@@ -91,41 +92,76 @@ export default class LoginScreen extends React.Component {
           <View style={Styles.title}>
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
+
           <View style={Styles.content}>
-            <Button
-              title={format(this.state.date, "MMMM D, YYYY")}
-              onPress={this._showDatepicker}/>
-
-            {this.state.showDatepicker &&
-            <DatePickerIOS
-              mode={'date'}
-              date={this.state.date}
-              minimumDate={subDays(new Date(), 30)}
-              maximumDate={new Date()}
-              onDateChange={date => this.setState({ date })}
-            />}
-
-            <TextInput
-              style={Styles.forms.textInput}
-              keyboardType={'numeric'}
-              placeholder={"Enter your weight"}
-              onFocus={() => this.setState({ showDatepicker: false })}
-              onChangeText={weight => this.setState({ weight })}
-              value={this.state.weight}
-            />
-
-            <Button
-              title="Submit"
-              onPress={this._submitWeight}
-              disabled={this.state.weight.trim().length < 1}
-            />
+            <Text style={Styles.h3}>Your Progress</Text>
 
             <BodyweightGraph
               data={this.state.bodyweightData}
               clientTimestamp={this.state.clientTimestamp} />
+
+            <View style={[Styles.flexRow, styles.todaysBodyweight]}>
+              <TouchableHighlight
+                style={styles.bodyweightDateButton}
+                onPress={this._showDatepicker}>
+                <FontAwesome
+                  name='calendar'
+                  size={24}
+                />
+              </TouchableHighlight>
+
+              <TextInput
+                style={[Styles.forms.textInput, styles.bodyweightInput]}
+                keyboardType={'numeric'}
+                placeholder={'Enter your weight'}
+                onFocus={() => this.setState({ showDatepicker: false })}
+                onChangeText={weight => this.setState({ weight })}
+                value={this.state.weight}
+              />
+
+              <TouchableHighlight
+                style={styles.bodyweightSaveButton}
+                onPress={this._submitWeight}
+                disabled={this.state.weight.trim().length < 1}>
+                <FontAwesome
+                  name='check'
+                  size={24}
+                />
+              </TouchableHighlight>
+            </View>
+
+            {this.state.showDatepicker &&
+              <DatePickerIOS
+                mode={'date'}
+                date={this.state.date}
+                maximumDate={new Date()}
+                onDateChange={date => this.setState({ date })}
+              />}
           </View>
         </View>
       </TouchableWithoutFeedback>
     );
   }
 }
+
+const styles = StyleSheet.create ({
+  todaysBodyweight: {
+    marginTop: 20,
+    marginBottom: 20
+  },
+  bodyweightDateButton: {
+    width: 40,
+    paddingTop: 15
+  },
+  bodyweightInput: {
+    flex: 1
+  },
+  bodyweightSaveButton: {
+    width: 40,
+    paddingTop: 15,
+    paddingLeft: 10
+  },
+  bodyweight: {
+    fontSize: 36
+  }
+});
