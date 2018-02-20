@@ -29,8 +29,8 @@ import { calculateSevenDayAverageBodyweight } from '../utils/helpers';
 // https://github.com/FormidableLabs/victory-native/issues/25
 
 class BodyweightGraph extends React.Component {
-   test(x, y, index, value) {
-     alert(value)
+   test(x, y, value, index) {
+     alert(x)
    }
 
    onPressIn({nativeEvent:{locationX,locationY, target}}) {
@@ -100,14 +100,14 @@ class BodyweightGraph extends React.Component {
 
       // order data by date
       data = data.sort((a,b) => {
-        return new Date(a.date) - new Date(b.date);
+        a = a.date.split('-').reverse().join('');
+        b = b.date.split('-').reverse().join('');
+        return a > b ? 1 : a < b ? -1 : 0;
       });
 
       const dates = Object.keys(data).map(key => {
         return data[key].date;
       });
-
-      alert(dates)
 
       const weights = Object.keys(data).map(key => {
         return data[key].weight;
@@ -212,7 +212,7 @@ class BodyweightGraph extends React.Component {
               curve={shape.curveLinear}
               showGrid={false}
               renderDecorator={({ x, y, index, value }) => (
-                <Circle onPress={(x, y, index, value) => {this.test(x, y, index, value)}}
+                <Circle onPress={() => {this.test(value)}}
                   key={index}
                   cx={x(index)}
                   cy={y(value)}

@@ -94,40 +94,50 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={Styles.content}>
-            <Text style={Styles.h3}>Your Progress</Text>
+            <View>
+              <Text style={Styles.h3}>Your Progress</Text>
 
-            <BodyweightGraph
-              data={this.state.bodyweightData}
-              clientTimestamp={this.state.clientTimestamp} />
+              <BodyweightGraph
+                data={this.state.bodyweightData}
+                clientTimestamp={this.state.clientTimestamp} />
 
-            <View style={[Styles.flexRow, styles.todaysBodyweight]}>
-              <TouchableHighlight
-                style={styles.bodyweightDateButton}
-                onPress={this._showDatepicker}>
-                <FontAwesome
-                  name='calendar'
-                  size={24}
+              <View style={[Styles.flexRow, styles.todaysBodyweight]}>
+                <TouchableHighlight
+                  style={styles.bodyweightDateButton}
+                  onPress={this._showDatepicker}>
+                  <FontAwesome
+                    name='calendar'
+                    size={24}
+                  />
+                </TouchableHighlight>
+
+                <TextInput
+                  style={[Styles.forms.textInput, styles.bodyweightInput]}
+                  keyboardType={'numeric'}
+                  placeholder={'Enter your weight'}
+                  onFocus={() => this.setState({ showDatepicker: false })}
+                  onChangeText={weight => this.setState({ weight })}
+                  value={this.state.weight}
                 />
-              </TouchableHighlight>
 
-              <TextInput
-                style={[Styles.forms.textInput, styles.bodyweightInput]}
-                keyboardType={'numeric'}
-                placeholder={'Enter your weight'}
-                onFocus={() => this.setState({ showDatepicker: false })}
-                onChangeText={weight => this.setState({ weight })}
-                value={this.state.weight}
-              />
+                <TouchableHighlight
+                  style={styles.bodyweightSaveButton}
+                  onPress={this._submitWeight}
+                  disabled={this.state.weight.trim().length < 1}>
+                  <FontAwesome
+                    name='check'
+                    size={24}
+                  />
+                </TouchableHighlight>
+              </View>
 
-              <TouchableHighlight
-                style={styles.bodyweightSaveButton}
-                onPress={this._submitWeight}
-                disabled={this.state.weight.trim().length < 1}>
-                <FontAwesome
-                  name='check'
-                  size={24}
-                />
-              </TouchableHighlight>
+              <View>
+                <Text style={Styles.h3}>Meal Consistency</Text>
+
+                <View><Text>Phase 1</Text></View>
+                <View><Text>Phase 2</Text></View>
+                <View><Text>Phase 3</Text></View>
+              </View>
             </View>
 
             {this.state.showDatepicker &&
