@@ -19,10 +19,6 @@ import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
 class ProgressBar extends React.Component {
-   // state = {
-   //   selection: this.props.selection || null
-   // }
-
    render() {
      return (
        <View style={styles.progressBar}>
