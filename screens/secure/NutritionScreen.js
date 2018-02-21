@@ -63,12 +63,19 @@ export default class LoginScreen extends React.Component {
 
   componentWillMount() {
     var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    client.on('value', snapshot => {
+      this.setState({ client: snapshot.val() });
+    });
+  }
+
+  componentDidMount() {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     var dayStatuses = firebase.database().ref('dayStatuses');
     let clientResponse = null;
 
     client.on('value', snapshot => {
       clientResponse = snapshot.val();
-      this.setState({ client: snapshot.val() });
     });
 
     dayStatuses.on('value', snapshot => {
@@ -86,7 +93,6 @@ export default class LoginScreen extends React.Component {
           today = day;
         }
       });
-      const phase = today.phase;
 
       let phase1meal1 = null;
       let phase1meal2 = null;
@@ -100,6 +106,8 @@ export default class LoginScreen extends React.Component {
       let phase3meal6 = null;
 
       if(today) {
+        const phase = today.phase;
+
         phase1meal1 = (phase === 1 ? today.meal1 : null);
         phase1meal2 = (phase === 1 ? today.meal2 : null);
         phase1meal3 = (phase === 1 ? today.meal3 : null);
