@@ -184,10 +184,13 @@ export default class LoginScreen extends React.Component {
     const date = new Date();
     let todayKey;
     let todayRef;
-    const today = Object.keys(dayStatuses).map(key => {
-      if(dayStatuses[key].date === moment(date).format('MM-DD-YY')) {
-        todayKey = key;
-        return dayStatuses[key];
+    let today;
+    Object.keys(dayStatuses).map(key => {
+      if(dayStatuses[key].timestamp === client.timestamp) {
+        if(dayStatuses[key].date === moment(date).format('MM-DD-YY')) {
+          todayKey = key;
+          today = dayStatuses[key];
+        }
       }
     });
 
@@ -234,18 +237,27 @@ export default class LoginScreen extends React.Component {
             mealsCompleted = true;
           }
 
-          // alert(today.meal4)
-
-          const todayMealsCompleted = today.allMealsCompleted ? today.allMealsCompleted : false;
-
+          const todayMealsCompleted = today.allMealsCompleted;
           if(todayMealsCompleted && today.meal1 !== 1 ||
            todayMealsCompleted && today.meal2 !== 1 ||
            todayMealsCompleted && today.meal3 !== 1 ||
            todayMealsCompleted && today.meal4 !== 1 ||
            todayMealsCompleted && today.meal5 !== 1 ||
            todayMealsCompleted && today.meal6 !== 1) {
-             alert('to do!')
-             const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeam/' + todayKey);
+             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeam');
+             let teamKey;
+
+             Object.keys(challengeGroupTeamsRef).map(key => {
+               if(challengeGroupTeamsRef[key].date === team) {
+                 teamKey = key;
+                 return challengeGroupTeamsRef[key];
+               }
+             });
+
+             const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeam/' + teamKey);
+             challengeGroupTeamRef.update({ points: (Number(challengeGroupTeamRef.points) - 1)});
+             today.update({ allMealsCompleted: false });
+
             // return this.store.findAll('challenge-group-team').then(resp => {
             //   const teamObj = resp.filterBy('name', team)[0];
             //   teamObj.set('points', teamObj.get('points') - 1);
