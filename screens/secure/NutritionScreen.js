@@ -181,10 +181,12 @@ export default class LoginScreen extends React.Component {
   completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
     const dayStatuses = this.state.dayStatuses;
+    const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
     let todayKey;
     let todayRef;
     let today;
+
     Object.keys(dayStatuses).map(key => {
       if(dayStatuses[key].timestamp === client.timestamp) {
         if(dayStatuses[key].date === moment(date).format('MM-DD-YY')) {
@@ -194,9 +196,7 @@ export default class LoginScreen extends React.Component {
       }
     });
 
-    const mealToSave = 'meal' + (Number(currentMeal) + 1);
-
-    if(today) {
+    if(today && todayKey) {
       // set meal completed boolean
       if(today[mealToSave] === completion) {
         today[mealToSave] = 3;
@@ -212,12 +212,12 @@ export default class LoginScreen extends React.Component {
         const team = client.challengeGroupTeam;
 
         if(team) {
-          const meal1 = today.meal1 === 1 ? true : false;
-          const meal2 = today.meal2 === 1 ? true : false;
-          const meal3 = today.meal3 === 1 ? true : false;
-          const meal4 = today.meal4 === 1 ? true : false;
-          const meal5 = today.meal5 === 1 ? true : false;
-          const meal6 = today.meal6 === 1 ? true : false;
+          const meal1 = today.meal1 < 3 ? true : false;
+          const meal2 = today.meal2 < 3 ? true : false;
+          const meal3 = today.meal3 < 3 ? true : false;
+          const meal4 = today.meal4 < 3 ? true : false;
+          const meal5 = today.meal5 < 3 ? true : false;
+          const meal6 = today.meal6 < 3 ? true : false;
           let numberOfMealsToComplete = 4;
           let mealsCompleted = false;
 
@@ -238,50 +238,60 @@ export default class LoginScreen extends React.Component {
           }
 
           const todayMealsCompleted = today.allMealsCompleted;
-          if(todayMealsCompleted && today.meal1 !== 1 ||
-           todayMealsCompleted && today.meal2 !== 1 ||
-           todayMealsCompleted && today.meal3 !== 1 ||
-           todayMealsCompleted && today.meal4 !== 1 ||
-           todayMealsCompleted && today.meal5 !== 1 ||
-           todayMealsCompleted && today.meal6 !== 1) {
-             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeam');
+          if(todayMealsCompleted && today.meal1 === 3 ||
+           todayMealsCompleted && today.meal2 === 3 ||
+           todayMealsCompleted && today.meal3 === 3 ||
+           todayMealsCompleted && today.meal4 === 3 ||
+           todayMealsCompleted && today.meal5 === 3 ||
+           todayMealsCompleted && today.meal6 === 3) {
+             // clean up code
+             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
              let teamKey;
 
-             Object.keys(challengeGroupTeamsRef).map(key => {
-               if(challengeGroupTeamsRef[key].date === team) {
-                 teamKey = key;
-                 return challengeGroupTeamsRef[key];
+             challengeGroupTeamsRef.on('value', snapshot => {
+               const teams = snapshot.val();
+
+               Object.keys(teams).map(key => {
+                 if(teams[key].name === team) {
+                   teamKey = key;
+                   return teams[key];
+                 }
+               });
+
+               if(teamKey) {
+                 const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
+                 const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
+                 challengeGroupTeamRef.update({ points: (points - 1) > -1 ? (points - 1) : 0 });
+                 todayRef.update({ allMealsCompleted: false });
                }
              });
 
-             const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeam/' + teamKey);
-             challengeGroupTeamRef.update({ points: (Number(challengeGroupTeamRef.points) - 1)});
-             today.update({ allMealsCompleted: false });
-
-            // return this.store.findAll('challenge-group-team').then(resp => {
-            //   const teamObj = resp.filterBy('name', team)[0];
-            //   teamObj.set('points', teamObj.get('points') - 1);
-            //   teamObj.save().then(resp => {
-            //     Ember.Logger.log('subtracted points from team ' + team + ' score');
-            //     today.set('allMealsCompleted', false);
-            //   }, reason => {
-            //     Ember.Logger.error('could not subtract points to team ' + team + ' score');
-            //   })
-            // });
+             return;
           }
 
           if(mealsCompleted) {
-            alert('another to do!')
-            // this.store.findAll('challenge-group-team').then(resp => {
-            //   const teamObj = resp.filterBy('name', team)[0];
-            //   teamObj.set('points', teamObj.get('points') + 1);
-            //   teamObj.save().then(resp => {
-            //     Ember.Logger.log('added points to team ' + team + ' score');
-            //     today.set('allMealsCompleted', true);
-            //   }, reason => {
-            //     Ember.Logger.error('could not add points to team ' + team + ' score');
-            //   })
-            // });
+            // clean up code
+            const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
+            let teamKey;
+
+            challengeGroupTeamsRef.on('value', snapshot => {
+              const teams = snapshot.val();
+
+              Object.keys(teams).map(key => {
+                if(teams[key].name === team) {
+                  teamKey = key;
+                  return teams[key];
+                }
+              });
+
+              if(teamKey) {
+                const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
+                const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
+                challengeGroupTeamRef.update({ points: (points + 1) });
+                todayRef.update({ allMealsCompleted: true });
+              }
+            });
+            return;
           }
         }
       }, reason => {
