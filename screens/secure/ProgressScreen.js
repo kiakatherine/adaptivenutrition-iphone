@@ -12,6 +12,7 @@ import {
   DatePickerIOS,
   Image,
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -24,6 +25,7 @@ import format from 'date-fns/format';
 import subDays from 'date-fns/sub_days';
 
 import BodyweightGraph from '../../components/BodyweightGraph';
+import DayStatus from '../../components/DayStatus';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -36,12 +38,37 @@ export default class LoginScreen extends React.Component {
     this.state = {
       date: new Date(),
       showDatepicker: false,
-      weight: ""
+      weight: ''
     }
 
     this._showDatepicker = this._showDatepicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
     this._submitWeight = this._submitWeight.bind(this);
+  }
+
+  componentDidMount() {
+    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    var dayStatuses = firebase.database().ref('dayStatuses');
+    let clientResponse = null;
+
+    client.on('value', snapshot => {
+      clientResponse = snapshot.val();
+    });
+
+    dayStatuses.on('value', snapshot => {
+      const date = new Date();
+      const dayStatuses = snapshot.val();
+      let filteredDayStatuses = [];
+      Object.keys(dayStatuses).map(key => {
+        if(dayStatuses[key].timestamp === clientResponse.timestamp) {
+          filteredDayStatuses.push(dayStatuses[key]);
+        }
+      });
+
+      this.setState({
+        filteredDayStatuses: filteredDayStatuses
+      });
+    });
   }
 
   _showDatepicker () {
@@ -85,10 +112,18 @@ export default class LoginScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+    const filteredDayStatuses = this.state.filteredDayStatuses;
+    let dayStatuses = [];
+
+    if(filteredDayStatuses) {
+      Object.keys(filteredDayStatuses).map((key, index) => {
+        dayStatuses.push(<DayStatus key={index} day={filteredDayStatuses[key]} />);
+      });
+    }
 
     return (
       <TouchableWithoutFeedback onPress={this._hideAll}>
-        <View style={Styles.body}>
+        <ScrollView style={Styles.body}>
           <View style={Styles.title}>
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
@@ -136,7 +171,10 @@ export default class LoginScreen extends React.Component {
 
                 <View><Text>Phase 1</Text></View>
                 <View><Text>Phase 2</Text></View>
-                <View><Text>Phase 3</Text></View>
+                <View>
+                  <Text>Phase 3</Text>
+                  {dayStatuses}
+                </View>
               </View>
             </View>
 
@@ -148,7 +186,7 @@ export default class LoginScreen extends React.Component {
                 onDateChange={date => this.setState({ date })}
               />}
           </View>
-        </View>
+        </ScrollView>
       </TouchableWithoutFeedback>
     );
   }
