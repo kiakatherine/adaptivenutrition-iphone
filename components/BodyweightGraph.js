@@ -80,8 +80,9 @@ class BodyweightGraph extends React.Component {
     //        we will filter onResponderMove events for the target used during
     //        the onPressIn event and ignore the one for onPressOut
 
-    if (locationX == undefined || !this.pressInfo)
-      return
+    if (locationX == undefined || !this.pressInfo) {
+      return;
+    }
 
     // adjust move distance as required, 3 seems to work, anything larger is
     // likely a pan/scroll type situation, or a very fat thumb
@@ -90,8 +91,9 @@ class BodyweightGraph extends React.Component {
             Math.pow((this.pressInfo.lastX - this.pressInfo.startX), 2) +
             Math.pow((this.pressInfo.lastY - this.pressInfo.startY), 2)
           )
-        ) > 3)
-      return
+        ) > 3) {
+      return;
+    }
 
      // emulated onPress happened - DO YOUR ONPRESS WORK HERE
   }
@@ -129,7 +131,7 @@ class BodyweightGraph extends React.Component {
       });
 
       const sevenDayAverage = calculateSevenDayAverageBodyweight(data);
-      //
+
       // return (
       //     <ScrollView>
       //       <StackedAreaChart
@@ -152,66 +154,6 @@ class BodyweightGraph extends React.Component {
       //       <Text>{x}</Text>
       //     </ScrollView>
       // );
-
-      // const data = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
-
-        /**
-         * Both below functions should preferably be their own React Components
-         */
-
-        // const HorizontalLine = (({ y }) => (
-        //     <Line
-        //         key={ 'zero-axis' }
-        //         x1={ '0%' }
-        //         x2={ '100%' }
-        //         y1={ y(50) }
-        //         y2={ y(50) }
-        //         stroke={ 'grey' }
-        //         strokeDasharray={ [ 4, 8 ] }
-        //         strokeWidth={ 2 }
-        //     />
-        // ))
-
-        // const Tooltip = ({ x, y }) => (
-        //   <G
-        //     x={ x(5) - (75 / 2) }
-        //     key={'tooltip'}
-        //     onPress={() => alert('tooltip clicked')}>
-        //     <G y={ 50 }>
-        //       <Rect
-        //         height={ 40 }
-        //         width={ 75 }
-        //         stroke={ 'grey' }
-        //         fill={ 'white' }
-        //         ry={ 2 }
-        //         rx={ 2 }
-        //       />
-        //       <Text
-        //         x={ 75 / 2 }
-        //         dy={20}
-        //         alignmentBaseline={'middle'}
-        //         textAnchor={ 'middle' }
-        //         stroke={ 'rgb(134, 65, 244)' }>
-        //         { `${data[5]}ºC` }
-        //       </Text>
-        //     </G>
-        //     <G x={ 75 / 2 }>
-        //       <Line
-        //           y1={ 50 + 40 }
-        //           y2={ y(data[ 5 ]) }
-        //           stroke={ 'grey' }
-        //           strokeWidth={ 2 }
-        //       />
-        //       <Circle
-        //         cy={ y(data[ 5 ]) }
-        //         r={ 6 }
-        //         stroke={ 'rgb(134, 65, 244)' }
-        //         strokeWidth={2}
-        //         fill={ 'white' }
-        //       />
-        //     </G>
-        //   </G>
-        // );
 
         return (
           <View>
@@ -240,7 +182,8 @@ class BodyweightGraph extends React.Component {
                 />
               )}
             />
-            {this.state.showTooltip && <Text>{this.state.tooltipDate} : {this.state.tooltipWeight}</Text>}
+            {this.state.showTooltip &&
+              <Text key={'tooltip'}>{this.state.locationX} {this.state.locationY} {this.state.tooltipX} {this.state.tooltipY} {this.state.tooltipDate} : {this.state.tooltipWeight}</Text>}
           </View>
         );
    }
