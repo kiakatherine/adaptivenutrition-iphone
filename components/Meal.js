@@ -191,7 +191,8 @@ const styles = StyleSheet.create ({
     paddingBottom: 10
   },
   mealRowCol: {
-    flex: 1
+    // flex: 1
+    width: 100
   },
   mealRowColLong: {
     flex: 2

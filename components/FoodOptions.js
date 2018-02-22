@@ -97,22 +97,32 @@ class FoodOptions extends React.Component {
 
      return (
        <View>
-         {!showInGrams && <View style={styles.foodOptionsWrapper}>
-           {!hidePwoShakeArrows && <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
-             <FontAwesome
-               name='chevron-left'
-               size={16}
-             />
-           </TouchableHighlight>}
+         {!showInGrams &&
+           <View style={styles.foodOptionsWrapper}>
+             {!hidePwoShakeArrows &&
+               <TouchableHighlight style={[
+                 styles.foodOptionsButton,
+                 styles.prevButton, content === '---' ? styles.disabled : '']}
+                 onPress={() => {this.clickPrevious()}}>
+                 <FontAwesome
+                   name='chevron-left'
+                   size={16}
+                 />
+               </TouchableHighlight>}
 
-           <Text style={styles.content}>{selection ? selection : options[0]}</Text>
+             <Text style={styles.content}>{selection ? selection : options[0]}</Text>
 
-           {!hidePwoShakeArrows && <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
-             <FontAwesome
-               name='chevron-right'
-               size={16}
-             />
-           </TouchableHighlight>}
+             {!hidePwoShakeArrows &&
+               <TouchableHighlight style={[
+                 styles.foodOptionsButton,
+                 styles.nextButton,
+                 content === '---' ? styles.disabled : '']}
+                 onPress={() => {this.clickNext()}}>
+                 <FontAwesome
+                   name='chevron-right'
+                   size={16}
+                 />
+               </TouchableHighlight>}
          </View>}
 
          {showInGrams && <Text style={styles.content}>{content}</Text>}
@@ -142,13 +152,16 @@ const styles = StyleSheet.create ({
      flexDirection: 'row'
    },
    content: {
+     textAlign: 'center',
+     width: 200,
      paddingLeft: 20,
      paddingRight: 20,
      paddingTop: 5,
      paddingBottom: 5
    },
    foodOptionsButton: {
-     padding: 5
+     width: 20,
+     height: 20
    },
    disabled: {
      display: 'none'

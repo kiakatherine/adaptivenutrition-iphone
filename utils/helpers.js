@@ -179,7 +179,6 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
         return arr;
       }
     } else {
-      alert(sources)
       return sources;
     }
   } else if(macro === 'carbs') {
