@@ -51,8 +51,9 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    var dayStatuses = firebase.database().ref('dayStatuses');
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const dayStatuses = firebase.database().ref('dayStatuses');
+    const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
     client.on('value', snapshot => {
@@ -72,9 +73,9 @@ export default class LoginScreen extends React.Component {
 
       Object.keys(dayStatuses).map(key => {
         if(dayStatuses[key].timestamp === clientResponse.timestamp) {
-          if(dayStatuses[key].phase === clientResponse.phase === 1) {
+          if(dayStatuses[key].phase === 1) {
             filteredDayStatusesPhase1.push(dayStatuses[key]);
-          } else if(dayStatuses[key].phase === clientResponse.phase && clientResponse.phase === 3) {
+          } else if(dayStatuses[key].phase === 3) {
             filteredDayStatusesPhase3.push(dayStatuses[key]);
           }
         }
@@ -83,6 +84,24 @@ export default class LoginScreen extends React.Component {
       this.setState({
         filteredDayStatusesPhase1: filteredDayStatusesPhase1,
         filteredDayStatusesPhase3: filteredDayStatusesPhase3
+      });
+    });
+
+    phaseTwoDayStatuses.on('value', snapshot => {
+      const date = new Date();
+      const phaseTwoDayStatuses = snapshot.val();
+      let filteredDayStatusesPhase2 = [];
+
+      Object.keys(phaseTwoDayStatuses).map(key => {
+        if(phaseTwoDayStatuses[key].timestamp === clientResponse.timestamp) {
+          if(phaseTwoDayStatuses[key].phase === 2) {
+            filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
+          }
+        }
+      });
+
+      this.setState({
+        filteredDayStatusesPhase2: filteredDayStatusesPhase2
       });
     });
   }
@@ -177,6 +196,7 @@ export default class LoginScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
+    const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
     const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
     let dayStatusesPhase1 = [];
     let dayStatusesPhase2 = [];
@@ -189,6 +209,16 @@ export default class LoginScreen extends React.Component {
         });
       } else {
         dayStatusesPhase1 = <Text>No progress for this phase yet</Text>;
+      }
+    }
+
+    if(this.state.showProgressPhase2) {
+      if(filteredDayStatusesPhase2.length) {
+        Object.keys(filteredDayStatusesPhase2).map((key, index) => {
+          dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
+        });
+      } else {
+        dayStatusesPhase2 = <Text>No progress for this phase yet</Text>;
       }
     }
 
