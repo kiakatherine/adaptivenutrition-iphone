@@ -122,6 +122,10 @@ class BodyweightGraph extends React.Component {
         return a > b ? 1 : a < b ? -1 : 0;
       });
 
+      data = data.sort((a, b) => {
+        return a - b;
+      });
+
       const dates = Object.keys(data).map(key => {
         return data[key].date;
       });
