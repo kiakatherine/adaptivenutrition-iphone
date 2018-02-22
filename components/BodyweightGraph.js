@@ -196,8 +196,11 @@ class BodyweightGraph extends React.Component {
                 </G>
               )}
             />
+            <Text>{dates[0]}</Text>
+            <Text>{dates[dates.length - 1]}</Text>
+
             {this.state.showTooltip &&
-              <Text key={'tooltip'}>{this.state.locationX} {this.state.locationY} {this.state.tooltipX} {this.state.tooltipY} {this.state.tooltipDate} : {this.state.tooltipWeight}</Text>}
+              <Text key={'tooltip'}>{this.state.tooltipDate} : {this.state.tooltipWeight}</Text>}
           </View>
         );
    }
