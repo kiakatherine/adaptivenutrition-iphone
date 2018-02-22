@@ -38,7 +38,8 @@ export default class LoginScreen extends React.Component {
     this.state = {
       date: new Date(),
       showDatepicker: false,
-      weight: ''
+      weight: '',
+      clientTimestamp: null
     }
 
     this._showDatepicker = this._showDatepicker.bind(this);
@@ -53,6 +54,10 @@ export default class LoginScreen extends React.Component {
 
     client.on('value', snapshot => {
       clientResponse = snapshot.val();
+
+      this.setState({
+        clientTimestamp: clientResponse.timestamp
+      });
     });
 
     dayStatuses.on('value', snapshot => {
@@ -82,19 +87,52 @@ export default class LoginScreen extends React.Component {
   }
 
   _submitWeight (w) {
-    var bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
+    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const date = new Date();
+    const clientTimestamp = this.state.clientTimestamp;
 
-    // check first that not already an entry for today - check timestamp and date
-
-    bodyweightRecords.push({
-      date: moment(new Date).format('MM-DD-YY'),
-      timestamp: Number(this.state.clientTimestamp),
-      weight: Number(this.state.weight)
-    }).then(resp => {}, reason => {
-      alert('Could not save bodyweight');
+    this.setState({
+      weight: w
     });
 
-    this.setState({ showDatepicker: false, date: new Date(), weight: "" }, this._hideAll());
+    bodyweightRecords.on('value', snapshot => {
+      const records = snapshot.val();
+      let duplicateEntry = false;
+      let filteredBodyweightRecords = [];
+
+      // check first that there is not already an entry for today - check timestamp and date
+      if(this.state.clientTimestamp) {
+        Object.keys(records).map(function(key) {
+          if(records[key].timestamp === clientTimestamp) {
+            filteredBodyweightRecords.push(records[key]);
+          }
+        });
+
+        filteredBodyweightRecords.forEach(rec => {
+          if(rec.date === moment(date).format('MM-DD-YY')) {
+            duplicateEntry = true;
+          }
+        });
+      }
+
+      if(!duplicateEntry) {
+        bodyweightRecords.push({
+          date: moment(new Date).format('MM-DD-YY'),
+          timestamp: Number(this.state.clientTimestamp),
+          weight: Number(this.state.weight)
+        }).then(resp => {}, reason => {
+          alert('Could not save bodyweight');
+        });
+      } else {
+        alert('Oops! Looks like there is already an entry for that day.')
+      }
+
+      this.setState({
+        showDatepicker: false,
+        date: new Date(),
+        weight: ''
+      }, this._hideAll());
+    });
   }
 
   componentWillMount() {

@@ -132,6 +132,9 @@ class BodyweightGraph extends React.Component {
 
       const sevenDayAverage = calculateSevenDayAverageBodyweight(data);
 
+      // const keys = ['weight'];
+      // const colors = [Colors.paleGreen];
+      //
       // return (
       //     <ScrollView>
       //       <StackedAreaChart
@@ -141,17 +144,21 @@ class BodyweightGraph extends React.Component {
       //         colors={colors}
       //         showGrid={false}
       //         renderDecorator={({ x, y, index, value }) => (
+      //           <G
+      //             onResponderMove={this.onMove}
+      //             onPressIn={this.onPressIn}
+      //             onPressOut={this.onPressOut.bind(this, index)}
+      //             onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
       //           <Circle
-      //               key={index}
-      //               cx={x(index)}
-      //               cy={y(value)}
-      //               r={4}
-      //               stroke={Colors.paleGreen}
-      //               fill={Colors.white}
+      //             cx={x(index)}
+      //             cy={y(value)}
+      //             r={6}
+      //             stroke={Colors.paleGreen}
+      //             fill={Colors.paleGreen}
       //           />
-      //           )}
+      //           <Text x={x(index)} y={y(value)} font-family="Verdana" font-size="35">hi</Text>
+      //           </G>)}
       //       />
-      //       <Text>{x}</Text>
       //     </ScrollView>
       // );
 
@@ -169,17 +176,20 @@ class BodyweightGraph extends React.Component {
               curve={shape.curveLinear}
               showGrid={false}
               renderDecorator={({ x, y, index, value }) => (
-                <Circle onPress={() => {this.clickDataPoint(value, x, y, index, dates)}}
-                  key={index}
+                <G
+                  onResponderMove={this.onMove}
+                  onPressIn={this.onPressIn}
+                  onPressOut={this.onPressOut.bind(this, index)}
+                  onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
+                <Circle
                   cx={x(index)}
                   cy={y(value)}
                   r={6}
                   stroke={Colors.paleGreen}
                   fill={Colors.paleGreen}
-                  onResponderMove={this.onMove}
-                  onPressIn={this.onPressIn}
-                  onPressOut={this.onPressOut.bind(this, index)}
                 />
+                <Text x={x(index)} y={y(value)} font-family="Verdana" font-size="35">hi</Text>
+                </G>
               )}
             />
             {this.state.showTooltip &&
