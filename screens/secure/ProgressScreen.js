@@ -94,9 +94,7 @@ export default class LoginScreen extends React.Component {
 
       Object.keys(phaseTwoDayStatuses).map(key => {
         if(phaseTwoDayStatuses[key].timestamp === clientResponse.timestamp) {
-          if(phaseTwoDayStatuses[key].phase === 2) {
-            filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
-          }
+          filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
         }
       });
 

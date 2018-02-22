@@ -26,45 +26,81 @@ import moment from 'moment';
 class Meal extends React.Component {
    render() {
      const day = this.props.day;
+     const phase = this.props.phase;
 
      return (
        <View style={styles.dayStatusWrapper}>
-        <View style={styles.dayStatusDate}>
-          <Text>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
-        </View>
 
-        <View style={styles.dayStatusMeals}>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal1 === 1 ? styles.dayStatusMealGood :
-            day.meal1 === 2 ? styles.dayStatusMealBad : '']}>
+        {phase !== 2 && <View>
+          <View style={styles.dayStatusDate}>
+            <Text>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
           </View>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal2 === 1 ? styles.dayStatusMealGood :
-            day.meal2 === 2 ? styles.dayStatusMealBad : '']}>
+
+          <View style={styles.dayStatusMeals}>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal1 === 1 ? styles.dayStatusMealGood :
+              day.meal1 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal2 === 1 ? styles.dayStatusMealGood :
+              day.meal2 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal3 === 1 ? styles.dayStatusMealGood :
+              day.meal3 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal4 === 1 ? styles.dayStatusMealGood :
+              day.meal4 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal5 === 1 ? styles.dayStatusMealGood :
+              day.meal5 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal6 === 1 ? styles.dayStatusMealGood :
+              day.meal6 === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
           </View>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal3 === 1 ? styles.dayStatusMealGood :
-            day.meal3 === 2 ? styles.dayStatusMealBad : '']}>
+        </View>}
+
+        {phase === 2 && <View>
+          <View style={styles.dayStatusDate}>
+            <Text>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
           </View>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal4 === 1 ? styles.dayStatusMealGood :
-            day.meal4 === 2 ? styles.dayStatusMealBad : '']}>
+
+          <View style={styles.dayStatusMeals}>
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal1measurementsCompleted === 1 ? styles.dayStatusMealGood :
+              day.meal1measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal2measurementsCompleted === 1 ? styles.dayStatusMealGood :
+              day.meal2measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal3measurementsCompleted === 1 ? styles.dayStatusMealGood :
+              day.meal3measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
+
+            <View style={[
+              styles.dayStatusMeal,
+              day.meal4measurementsCompleted === 1 ? styles.dayStatusMealGood :
+              day.meal4measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
+            </View>
           </View>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal5 === 1 ? styles.dayStatusMealGood :
-            day.meal5 === 2 ? styles.dayStatusMealBad : '']}>
-          </View>
-          <View style={[
-            styles.dayStatusMeal,
-            day.meal6 === 1 ? styles.dayStatusMealGood :
-            day.meal6 === 2 ? styles.dayStatusMealBad : '']}>
-          </View>
-        </View>
+        </View>}
        </View>
      );
    }
