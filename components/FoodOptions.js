@@ -78,6 +78,7 @@ class FoodOptions extends React.Component {
      const selection = this.state.selection;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
+     let hidePwoShakeArrows = false;
 
      let options = !showInGrams ? createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) : null;
 
@@ -88,6 +89,7 @@ class FoodOptions extends React.Component {
      } else if(isPwoShake) {
        const currMeal = currentMeal + 1;
        const string = macro + currMeal;
+       hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
        content = sources[string + 'Grams'] + ' of whey protein';
      } else if(options) {
        content = options[0];
@@ -96,21 +98,21 @@ class FoodOptions extends React.Component {
      return (
        <View>
          {!showInGrams && <View style={styles.foodOptionsWrapper}>
-           <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
+           {!hidePwoShakeArrows && <TouchableHighlight style={[styles.foodOptionsButton, styles.prevButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickPrevious()}}>
              <FontAwesome
                name='chevron-left'
                size={16}
              />
-           </TouchableHighlight>
+           </TouchableHighlight>}
 
            <Text style={styles.content}>{selection ? selection : options[0]}</Text>
 
-           <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
+           {!hidePwoShakeArrows && <TouchableHighlight style={[styles.foodOptionsButton, styles.nextButton, content === '---' ? styles.disabled : '']} onPress={() => {this.clickNext()}}>
              <FontAwesome
                name='chevron-right'
                size={16}
              />
-           </TouchableHighlight>
+           </TouchableHighlight>}
          </View>}
 
          {showInGrams && <Text style={styles.content}>{content}</Text>}
