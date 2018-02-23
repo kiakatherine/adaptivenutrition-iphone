@@ -40,13 +40,15 @@ export default class LoginScreen extends React.Component {
     this.state = {
       mealsBeforeWorkout: 3,
       currentMeal: 1,
-      showModal: false,
 
+      showModal: false,
       showTimeTooltip: false,
       showTrainingTooltip: false,
       showMealsTooltip: false,
       showWakeTimePicker: false,
       showEnergyBalancePicker: false,
+
+      phase: null,
 
       phase1meal1: null,
       phase1meal2: null,
@@ -65,7 +67,10 @@ export default class LoginScreen extends React.Component {
     var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     client.on('value', snapshot => {
-      this.setState({ client: snapshot.val() });
+      this.setState({
+        client: snapshot.val(),
+        phase: snapshot.val().phase
+      });
     });
   }
 
@@ -333,6 +338,10 @@ export default class LoginScreen extends React.Component {
         Ember.Logger.error('could not save meal completion', reason);
       });
     }
+  }
+
+  clickNavPhase(phase) {
+    this.setState({ phase: phase });
   }
 
   render() {
@@ -687,7 +696,16 @@ export default class LoginScreen extends React.Component {
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
 
-          <View>
+          {(this.state.phase === null) &&
+            <Text style={Styles.centerText}>Loading...</Text>}
+
+          {(this.state.phase === 1) &&
+            <Text style={Styles.centerText}>Phase 1</Text>}
+
+          {(this.state.phase === 2) &&
+            <Text style={Styles.centerText}>Phase 2</Text>}
+
+          {(this.state.phase === 3) && <View>
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>What time did you wake up?</Text>
               <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
@@ -987,75 +1005,134 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 </View>}
             </View>
+          </View>}
 
-            <View style={styles.progressSection}>
-              {!viewAllMeals &&
-                <TouchableHighlight
-                  style={styles.progressButtonGood}
-                  underlayColor='white'
-                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                   <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
-                     <FontAwesome
-                       style={styles.progressButtonGoodIcon}
-                       name='check'
-                       size={16}
-                     /> Ate meal on plan!
-                   </Text>
-              </TouchableHighlight>}
-
-              {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                 <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
+          <View style={styles.progressSection}>
+            {!viewAllMeals &&
+              <TouchableHighlight
+                style={styles.progressButtonGood}
+                underlayColor='white'
+                onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
+                 <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
                    <FontAwesome
-                     style={styles.progressButtonBadIcon}
-                     name='remove'
+                     style={styles.progressButtonGoodIcon}
+                     name='check'
                      size={16}
-                   /> Ate off plan
+                   /> Ate meal on plan!
                  </Text>
-              </TouchableHighlight>}
-            </View>
+            </TouchableHighlight>}
 
-            {!viewAllMeals && <View>
-              <ProgressBar
-                complete1={this.state.phase3meal1}
-                complete2={this.state.phase3meal2}
-                complete3={this.state.phase3meal3}
-                complete4={this.state.phase3meal4}
-                complete5={this.state.phase3meal5}
-                complete6={this.state.phase3meal6}
-                phase={phase}
-                enablePhase2={enablePhase2}
-                enablePhase3={enablePhase3}
-                trainingIntensity={trainingIntensity} />
-            </View>}
-
-            <View>
-              {viewAllMeals && <Text>View by meal to see meal completion buttons.</Text>}
-            </View>
-
-            <View style={styles.mealSettingsSection}>
-              <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
-
-              <View style={styles.mealSettingsSectionList}>
-                <TouchableHighlight underlayColor='white' onPress={() => { this.toggleView(viewAllMeals) }}>
-                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                   {viewAllMeals && 'View by meal'}
-                   {!viewAllMeals && 'View by day'}
-                   </Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
-                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                    {showInGrams && 'View in serving sizes'}
-                    {!showInGrams && 'View in macros'}
-                   </Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
-                   <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
+            {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
+               <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
+                 <FontAwesome
+                   style={styles.progressButtonBadIcon}
+                   name='remove'
+                   size={16}
+                 /> Ate off plan
+               </Text>
+            </TouchableHighlight>}
           </View>
+
+          <View>
+            {viewAllMeals &&
+              <Text>View by meal to see meal completion buttons.</Text>}
+          </View>
+
+          <View>
+            <ProgressBar
+              complete1={this.state.phase3meal1}
+              complete2={this.state.phase3meal2}
+              complete3={this.state.phase3meal3}
+              complete4={this.state.phase3meal4}
+              complete5={this.state.phase3meal5}
+              complete6={this.state.phase3meal6}
+              phase={phase}
+              enablePhase2={enablePhase2}
+              enablePhase3={enablePhase3}
+              trainingIntensity={trainingIntensity} />
+          </View>
+
+          <View style={styles.phaseNavButtons}>
+            {(this.state.phase === 2) &&
+              <TouchableHighlight style={styles.phaseNavButton}
+                onPress={() => { this.clickNavPhase(1) }}>
+                <Text style={styles.phaseNavButtonText}>
+                  <FontAwesome
+                    style={styles.phaseNavButtonIconLeft}
+                    name='arrow-left'
+                    size={24}
+                  />
+                  Phase 1
+                </Text>
+              </TouchableHighlight>}
+
+            {(this.state.phase > 2) &&
+              <TouchableHighlight style={styles.phaseNavButton}
+                onPress={() => { this.clickNavPhase(2) }}>
+                <Text style={styles.phaseNavButtonText}>
+                  <FontAwesome
+                    style={styles.phaseNavButtonIconLeft}
+                    name='arrow-left'
+                    size={24}
+                  />
+                  Phase 2
+                </Text>
+              </TouchableHighlight>}
+
+            {(this.state.phase === 2) &&
+              <TouchableHighlight style={styles.phaseNavButton}
+                onPress={() => { this.clickNavPhase(3) }}>
+                <Text style={styles.phaseNavButtonText}>
+                Phase 3
+                <FontAwesome
+                  style={styles.phaseNavButtonIconRight}
+                  name='arrow-right'
+                  size={24}
+                />
+                </Text>
+              </TouchableHighlight>}
+
+            {(this.state.phase === 1) &&
+              <View style={styles.phaseNavButton}>
+              </View>}
+
+            {(this.state.phase === 1) &&
+              <TouchableHighlight style={styles.phaseNavButton}
+                onPress={() => { this.clickNavPhase(2) }}>
+                <Text style={styles.phaseNavButtonText}>
+                  Phase 2
+                  <FontAwesome
+                    style={styles.phaseNavButtonIconRight}
+                    name='arrow-right'
+                    size={24}
+                  />
+                </Text>
+              </TouchableHighlight>}
+          </View>
+
+          {this.state.phase === 3 && <View style={styles.mealSettingsSection}>
+            <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
+
+            <View style={styles.mealSettingsSectionList}>
+              <TouchableHighlight underlayColor='white' onPress={() => { this.toggleView(viewAllMeals) }}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+                 {viewAllMeals && 'View by meal'}
+                 {!viewAllMeals && 'View by day'}
+                 </Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+                  {showInGrams && 'View in serving sizes'}
+                  {!showInGrams && 'View in macros'}
+                 </Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
+              </TouchableHighlight>
+            </View>
+          </View>}
         </ScrollView>
 
         {this.state.showModal &&
@@ -1281,6 +1358,19 @@ const styles = StyleSheet.create({
     borderColor: Colors.paleRed,
     borderRadius: 1,
     marginLeft: 5
+  },
+  phaseNavButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 20,
+    marginBottom: 20
+  },
+  phaseNavButton: {
+    flex: 1,
+    padding: 20
+  },
+  phaseNavButtonText: {
+    fontSize: 18
   },
   mealSettingsSection: {
     marginTop: 20,
