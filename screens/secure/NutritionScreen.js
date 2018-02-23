@@ -1261,16 +1261,27 @@ export default class LoginScreen extends React.Component {
               />
             </TouchableHighlight>
             <Text style={Styles.tooltipHeader}>Training</Text>
-            <Text style={Styles.tooltipParagraph}>Here, training is considered intense physical exercise, including weightlifting, HIIT, CrossFit, and endurance training.</Text>
 
-            <Text style={Styles.tooltipTerm}>Rest/light cardio</Text>
-            <Text style={Styles.tooltipParagraph}>Light cardio like walking, jogging, yoga, barre, etc is considered a rest day.</Text>
+            {this.state.phase < 3 && <View>
+              <Text style={Styles.tooltipParagraph}>Here, training is considered intense physical exercise, including weightlifting, HIIT, CrossFit, and endurance training.</Text>
 
-            <Text style={Styles.tooltipTerm}>Less than 90 minutes</Text>
-            <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for less than an hour and a half.</Text>
+              <Text style={Styles.tooltipParagraph}>On days you are training, you will notice the amount of carbs for each meal increases, since carbs help fuel high-intensity exercise.</Text>
 
-            <Text style={Styles.tooltipTerm}>More than 90 minutes</Text>
-            <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for more than an hour and a half.</Text>
+              <Text style={Styles.tooltipParagraph}>Activities such as steady-state cardio, walking, jogging, yoga, barre, etc are considered a rest day, and do not require eating more carbs.</Text>
+            </View>}
+
+            {this.state.phase === 3 && <View>
+              <Text style={Styles.tooltipParagraph}>Here, training is considered intense physical exercise, including weightlifting, HIIT, CrossFit, and endurance training.</Text>
+
+              <Text style={Styles.tooltipTerm}>Rest/light cardio</Text>
+              <Text style={Styles.tooltipParagraph}>Light cardio like walking, jogging, yoga, barre, etc is considered a rest day.</Text>
+
+              <Text style={Styles.tooltipTerm}>Less than 90 minutes</Text>
+              <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for less than an hour and a half.</Text>
+
+              <Text style={Styles.tooltipTerm}>More than 90 minutes</Text>
+              <Text style={Styles.tooltipParagraph}>If high-intensity training lasts for more than an hour and a half.</Text>
+            </View>}
           </View>
         </ScrollView>}
 
