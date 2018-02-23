@@ -173,7 +173,12 @@ export default class LoginScreen extends React.Component {
 
   saveTrainingIntensity(intensity) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ trainingIntensity: intensity });
+
+    if(this.state.phase === 3) {
+      client.update({ trainingIntensity: intensity });
+    } else {
+      client.update({ phase1training: intensity });
+    }
   }
 
   saveCurrentMeal(meal) {
@@ -341,6 +346,8 @@ export default class LoginScreen extends React.Component {
   }
 
   clickNavPhase(phase) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({ phase: phase });
     this.setState({ phase: phase });
   }
 
@@ -418,11 +425,16 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 3' ? 6 : null;
       phase = client.phase;
       currentMeal = client.selectedMeal ? client.selectedMeal : 0;
-      mealsBeforeWorkout = this.state.mealsBeforeWorkout;
-      trainingIntensity = convertTrainingIntensity(client.trainingIntensity);
-      showInGrams = client.showInGrams;
-      viewAllMeals = client.viewAllMeals;
-      isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
+      trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
+      enablePhase2 = client.enablePhase2;
+      enablePhase3 = client.enablePhase3;
+
+      if(phase === 3) {
+        mealsBeforeWorkout = this.state.mealsBeforeWorkout;
+        showInGrams = client.showInGrams;
+        viewAllMeals = client.viewAllMeals;
+        isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
+      }
 
       wakeTime = client.wakeTime;
 
@@ -430,228 +442,227 @@ export default class LoginScreen extends React.Component {
         mealTimes = setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout);
       }
 
-      phase3meal1 = client.phase3meal1;
-      phase3meal2 = client.phase3meal2;
-      phase3meal3 = client.phase3meal3;
-      phase3meal4 = client.phase3meal4;
-      phase3meal5 = client.phase3meal5;
-      phase3meal6 = client.phase3meal6;
-      enablePhase2 = client.enablePhase2;
-      enablePhase3 = client.enablePhase3;
+      if(phase === 3) {
+        phase3meal1 = client.phase3meal1;
+        phase3meal2 = client.phase3meal2;
+        phase3meal3 = client.phase3meal3;
+        phase3meal4 = client.phase3meal4;
+        phase3meal5 = client.phase3meal5;
+        phase3meal6 = client.phase3meal6;
 
-      customMacros = client.customMacros;
-      customRestDayProtein = client.customRestDayProtein;
-      customRestDayCarbs = client.customRestDayCarbs;
-      customRestDayFat = client.customRestDayFat;
-      customModerateDayProtein = client.customModerateDayProtein;
-      customModerateDayCarbs = client.customModerateDayCarbs;
-      customModerateDayFat = client.customModerateDayFat;
-      customHeavyDayProtein = client.customHeavyDayProtein;
-      customHeavyDayCarbs = client.customHeavyDayCarbs;
-      customHeavyDayFat = client.customHeavyDayFat;
+        customMacros = client.customMacros;
+        customRestDayProtein = client.customRestDayProtein;
+        customRestDayCarbs = client.customRestDayCarbs;
+        customRestDayFat = client.customRestDayFat;
+        customModerateDayProtein = client.customModerateDayProtein;
+        customModerateDayCarbs = client.customModerateDayCarbs;
+        customModerateDayFat = client.customModerateDayFat;
+        customHeavyDayProtein = client.customHeavyDayProtein;
+        customHeavyDayCarbs = client.customHeavyDayCarbs;
+        customHeavyDayFat = client.customHeavyDayFat;
 
-      const totals = calculateTotals(age, gender, height, bodyfat, bodyweight, leanMass,
-        template, trainingIntensity, customMacros,
-        customRestDayProtein, customRestDayCarbs, customRestDayFat,
-        customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
-        customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat);
-      const totalProtein = totals['totalProtein'];
-      const totalCarbs = totals['totalCarbs'];
-      const totalFat = totals['totalFat'];
-      const totalCalories = totals['totalCalories'];
+        const totals = calculateTotals(age, gender, height, bodyfat, bodyweight, leanMass,
+          template, trainingIntensity, customMacros,
+          customRestDayProtein, customRestDayCarbs, customRestDayFat,
+          customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
+          customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat);
+        const totalProtein = totals['totalProtein'];
+        const totalCarbs = totals['totalCarbs'];
+        const totalFat = totals['totalFat'];
+        const totalCalories = totals['totalCalories'];
 
-      protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
-      carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
-      fat = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
-      veggies = calcVeggies(trainingIntensity, mealsBeforeWorkout);
+        protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
+        carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
+        fat = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
+        veggies = calcVeggies(trainingIntensity, mealsBeforeWorkout);
 
-      protein1 = changeUnit(showInGrams, 'protein', protein[0]);
-      protein2 = changeUnit(showInGrams, 'protein', protein[1]);
-      protein3 = changeUnit(showInGrams, 'protein', protein[2]);
-      protein4 = changeUnit(showInGrams, 'protein', protein[3]);
-      protein5 = changeUnit(showInGrams, 'protein', protein[4]);
-      protein6 = changeUnit(showInGrams, 'protein', protein[5]);
+        protein1 = changeUnit(showInGrams, 'protein', protein[0]);
+        protein2 = changeUnit(showInGrams, 'protein', protein[1]);
+        protein3 = changeUnit(showInGrams, 'protein', protein[2]);
+        protein4 = changeUnit(showInGrams, 'protein', protein[3]);
+        protein5 = changeUnit(showInGrams, 'protein', protein[4]);
+        protein6 = changeUnit(showInGrams, 'protein', protein[5]);
 
-      protein5casein = changeUnit(true, 'protein', protein[4]);
-      protein6casein = changeUnit(true, 'protein', protein[5]);
+        protein5casein = changeUnit(true, 'protein', protein[4]);
+        protein6casein = changeUnit(true, 'protein', protein[5]);
 
-      protein1Grams = changeUnit(true, 'protein', protein[0]);
-      protein2Grams = changeUnit(true, 'protein', protein[1]);
-      protein3Grams = changeUnit(true, 'protein', protein[2]);
-      protein4Grams = changeUnit(true, 'protein', protein[3]);
-      protein5Grams = changeUnit(true, 'protein', protein[4]);
-      protein6Grams = changeUnit(true, 'protein', protein[5]);
+        protein1Grams = changeUnit(true, 'protein', protein[0]);
+        protein2Grams = changeUnit(true, 'protein', protein[1]);
+        protein3Grams = changeUnit(true, 'protein', protein[2]);
+        protein4Grams = changeUnit(true, 'protein', protein[3]);
+        protein5Grams = changeUnit(true, 'protein', protein[4]);
+        protein6Grams = changeUnit(true, 'protein', protein[5]);
 
-      proteins = {
-        protein1: protein1,
-        protein2: protein2,
-        protein3: protein3,
-        protein4: protein4,
-        protein5: protein5,
-        protein6: protein6,
-        protein5casein: protein5casein,
-        protein6casein: protein6casein,
-        protein1Grams: protein1Grams,
-        protein2Grams: protein2Grams,
-        protein3Grams: protein3Grams,
-        protein4Grams: protein4Grams,
-        protein5Grams: protein5Grams,
-        protein6Grams: protein6Grams
-      };
+        proteins = {
+          protein1: protein1,
+          protein2: protein2,
+          protein3: protein3,
+          protein4: protein4,
+          protein5: protein5,
+          protein6: protein6,
+          protein5casein: protein5casein,
+          protein6casein: protein6casein,
+          protein1Grams: protein1Grams,
+          protein2Grams: protein2Grams,
+          protein3Grams: protein3Grams,
+          protein4Grams: protein4Grams,
+          protein5Grams: protein5Grams,
+          protein6Grams: protein6Grams
+        };
 
-      carbs1 = changeUnit(showInGrams, 'carbs', carbs[0]);
-      carbs2 = changeUnit(showInGrams, 'carbs', carbs[1]);
-      carbs3 = changeUnit(showInGrams, 'carbs', carbs[2]);
-      carbs4 = changeUnit(showInGrams, 'carbs', carbs[3]);
-      carbs5 = changeUnit(showInGrams, 'carbs', carbs[4]);
-      carbs6 = changeUnit(showInGrams, 'carbs', carbs[5]);
+        carbs1 = changeUnit(showInGrams, 'carbs', carbs[0]);
+        carbs2 = changeUnit(showInGrams, 'carbs', carbs[1]);
+        carbs3 = changeUnit(showInGrams, 'carbs', carbs[2]);
+        carbs4 = changeUnit(showInGrams, 'carbs', carbs[3]);
+        carbs5 = changeUnit(showInGrams, 'carbs', carbs[4]);
+        carbs6 = changeUnit(showInGrams, 'carbs', carbs[5]);
 
-      carbs1potatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'potatoes');
-      carbs2potatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'potatoes');
-      carbs3potatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'potatoes');
-      carbs4potatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'potatoes');
-      carbs5potatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'potatoes');
-      carbs6potatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'potatoes');
+        carbs1potatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'potatoes');
+        carbs2potatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'potatoes');
+        carbs3potatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'potatoes');
+        carbs4potatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'potatoes');
+        carbs5potatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'potatoes');
+        carbs6potatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'potatoes');
 
-      carbs1sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'sweetPotatoes');
-      carbs2sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'sweetPotatoes');
-      carbs3sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'sweetPotatoes');
-      carbs4sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'sweetPotatoes');
-      carbs5sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'sweetPotatoes');
-      carbs6sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'sweetPotatoes');
+        carbs1sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[0], 'sweetPotatoes');
+        carbs2sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[1], 'sweetPotatoes');
+        carbs3sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[2], 'sweetPotatoes');
+        carbs4sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[3], 'sweetPotatoes');
+        carbs5sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[4], 'sweetPotatoes');
+        carbs6sweetPotatoes = changeUnit(showInGrams, 'carbs', carbs[5], 'sweetPotatoes');
 
-      carbs1quinoa = changeUnit(showInGrams, 'carbs', carbs[0], 'quinoa');
-      carbs2quinoa = changeUnit(showInGrams, 'carbs', carbs[1], 'quinoa');
-      carbs3quinoa = changeUnit(showInGrams, 'carbs', carbs[2], 'quinoa');
-      carbs4quinoa = changeUnit(showInGrams, 'carbs', carbs[3], 'quinoa');
-      carbs5quinoa = changeUnit(showInGrams, 'carbs', carbs[4], 'quinoa');
-      carbs6quinoa = changeUnit(showInGrams, 'carbs', carbs[5], 'quinoa');
+        carbs1quinoa = changeUnit(showInGrams, 'carbs', carbs[0], 'quinoa');
+        carbs2quinoa = changeUnit(showInGrams, 'carbs', carbs[1], 'quinoa');
+        carbs3quinoa = changeUnit(showInGrams, 'carbs', carbs[2], 'quinoa');
+        carbs4quinoa = changeUnit(showInGrams, 'carbs', carbs[3], 'quinoa');
+        carbs5quinoa = changeUnit(showInGrams, 'carbs', carbs[4], 'quinoa');
+        carbs6quinoa = changeUnit(showInGrams, 'carbs', carbs[5], 'quinoa');
 
-      carbs1banana = changeUnit(showInGrams, 'carbs', carbs[0], 'banana');
-      carbs2banana = changeUnit(showInGrams, 'carbs', carbs[1], 'banana');
-      carbs3banana = changeUnit(showInGrams, 'carbs', carbs[2], 'banana');
-      carbs4banana = changeUnit(showInGrams, 'carbs', carbs[3], 'banana');
-      carbs5banana = changeUnit(showInGrams, 'carbs', carbs[4], 'banana');
-      carbs6banana = changeUnit(showInGrams, 'carbs', carbs[5], 'banana');
+        carbs1banana = changeUnit(showInGrams, 'carbs', carbs[0], 'banana');
+        carbs2banana = changeUnit(showInGrams, 'carbs', carbs[1], 'banana');
+        carbs3banana = changeUnit(showInGrams, 'carbs', carbs[2], 'banana');
+        carbs4banana = changeUnit(showInGrams, 'carbs', carbs[3], 'banana');
+        carbs5banana = changeUnit(showInGrams, 'carbs', carbs[4], 'banana');
+        carbs6banana = changeUnit(showInGrams, 'carbs', carbs[5], 'banana');
 
-      carbs1acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[0], 'acornButternutSquash');
-      carbs2acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[1], 'acornButternutSquash');
-      carbs3acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[2], 'acornButternutSquash');
-      carbs4acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[3], 'acornButternutSquash');
-      carbs5acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[4], 'acornButternutSquash');
-      carbs6acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[5], 'acornButternutSquash');
+        carbs1acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[0], 'acornButternutSquash');
+        carbs2acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[1], 'acornButternutSquash');
+        carbs3acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[2], 'acornButternutSquash');
+        carbs4acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[3], 'acornButternutSquash');
+        carbs5acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[4], 'acornButternutSquash');
+        carbs6acornButternutSquash = changeUnit(showInGrams, 'carbs', carbs[5], 'acornButternutSquash');
 
-      carbs1blueberries = changeUnit(showInGrams, 'carbs', carbs[0], 'blueberries');
+        carbs1blueberries = changeUnit(showInGrams, 'carbs', carbs[0], 'blueberries');
 
-      carbs1pwo = changeUnit(showInGrams, 'carbs', carbs[0], 'pwo');
-      carbs2pwo = changeUnit(showInGrams, 'carbs', carbs[1], 'pwo');
-      carbs3pwo = changeUnit(showInGrams, 'carbs', carbs[2], 'pwo');
-      carbs4pwo = changeUnit(showInGrams, 'carbs', carbs[3], 'pwo');
-      carbs5pwo = changeUnit(showInGrams, 'carbs', carbs[4], 'pwo');
-      carbs6pwo = changeUnit(showInGrams, 'carbs', carbs[5], 'pwo');
+        carbs1pwo = changeUnit(showInGrams, 'carbs', carbs[0], 'pwo');
+        carbs2pwo = changeUnit(showInGrams, 'carbs', carbs[1], 'pwo');
+        carbs3pwo = changeUnit(showInGrams, 'carbs', carbs[2], 'pwo');
+        carbs4pwo = changeUnit(showInGrams, 'carbs', carbs[3], 'pwo');
+        carbs5pwo = changeUnit(showInGrams, 'carbs', carbs[4], 'pwo');
+        carbs6pwo = changeUnit(showInGrams, 'carbs', carbs[5], 'pwo');
 
-      carbs = {
-        carbs1: carbs1,
-        carbs2: carbs2,
-        carbs3: carbs3,
-        carbs4: carbs4,
-        carbs5: carbs5,
-        carbs6: carbs6,
-        carbs1potatoes: carbs1potatoes,
-        carbs2potatoes: carbs2potatoes,
-        carbs3potatoes: carbs3potatoes,
-        carbs4potatoes: carbs4potatoes,
-        carbs5potatoes: carbs5potatoes,
-        carbs6potatoes: carbs6potatoes,
-        carbs1sweetPotatoes: carbs1sweetPotatoes,
-        carbs2sweetPotatoes: carbs2sweetPotatoes,
-        carbs3sweetPotatoes: carbs3sweetPotatoes,
-        carbs4sweetPotatoes: carbs4sweetPotatoes,
-        carbs5sweetPotatoes: carbs5sweetPotatoes,
-        carbs6sweetPotatoes: carbs6sweetPotatoes,
-        carbs1quinoa: carbs1quinoa,
-        carbs2quinoa: carbs2quinoa,
-        carbs3quinoa: carbs3quinoa,
-        carbs4quinoa: carbs4quinoa,
-        carbs5quinoa: carbs5quinoa,
-        carbs6quinoa: carbs6quinoa,
-        carbs1banana: carbs1banana,
-        carbs2banana: carbs2banana,
-        carbs3banana: carbs3banana,
-        carbs4banana: carbs4banana,
-        carbs5banana: carbs5banana,
-        carbs6banana: carbs6banana,
-        carbs1acornButternutSquash: carbs1acornButternutSquash,
-        carbs2acornButternutSquash: carbs2acornButternutSquash,
-        carbs3acornButternutSquash: carbs3acornButternutSquash,
-        carbs4acornButternutSquash: carbs4acornButternutSquash,
-        carbs5acornButternutSquash: carbs5acornButternutSquash,
-        carbs6acornButternutSquash: carbs6acornButternutSquash,
-        carbs1blueberries: carbs1blueberries,
-        carbs1pwo: carbs1pwo,
-        carbs2pwo: carbs2pwo,
-        carbs3pwo: carbs3pwo,
-        carbs4pwo: carbs4pwo,
-        carbs5pwo: carbs5pwo,
-        carbs6pwo: carbs6pwo
-      };
+        carbs = {
+          carbs1: carbs1,
+          carbs2: carbs2,
+          carbs3: carbs3,
+          carbs4: carbs4,
+          carbs5: carbs5,
+          carbs6: carbs6,
+          carbs1potatoes: carbs1potatoes,
+          carbs2potatoes: carbs2potatoes,
+          carbs3potatoes: carbs3potatoes,
+          carbs4potatoes: carbs4potatoes,
+          carbs5potatoes: carbs5potatoes,
+          carbs6potatoes: carbs6potatoes,
+          carbs1sweetPotatoes: carbs1sweetPotatoes,
+          carbs2sweetPotatoes: carbs2sweetPotatoes,
+          carbs3sweetPotatoes: carbs3sweetPotatoes,
+          carbs4sweetPotatoes: carbs4sweetPotatoes,
+          carbs5sweetPotatoes: carbs5sweetPotatoes,
+          carbs6sweetPotatoes: carbs6sweetPotatoes,
+          carbs1quinoa: carbs1quinoa,
+          carbs2quinoa: carbs2quinoa,
+          carbs3quinoa: carbs3quinoa,
+          carbs4quinoa: carbs4quinoa,
+          carbs5quinoa: carbs5quinoa,
+          carbs6quinoa: carbs6quinoa,
+          carbs1banana: carbs1banana,
+          carbs2banana: carbs2banana,
+          carbs3banana: carbs3banana,
+          carbs4banana: carbs4banana,
+          carbs5banana: carbs5banana,
+          carbs6banana: carbs6banana,
+          carbs1acornButternutSquash: carbs1acornButternutSquash,
+          carbs2acornButternutSquash: carbs2acornButternutSquash,
+          carbs3acornButternutSquash: carbs3acornButternutSquash,
+          carbs4acornButternutSquash: carbs4acornButternutSquash,
+          carbs5acornButternutSquash: carbs5acornButternutSquash,
+          carbs6acornButternutSquash: carbs6acornButternutSquash,
+          carbs1blueberries: carbs1blueberries,
+          carbs1pwo: carbs1pwo,
+          carbs2pwo: carbs2pwo,
+          carbs3pwo: carbs3pwo,
+          carbs4pwo: carbs4pwo,
+          carbs5pwo: carbs5pwo,
+          carbs6pwo: carbs6pwo
+        };
 
-      fat1 = changeUnit(showInGrams, 'fat', fat[0], 'oil');
-      fat2 = changeUnit(showInGrams, 'fat', fat[1], 'oil');
-      fat3 = changeUnit(showInGrams, 'fat', fat[2], 'oil');
-      fat4 = changeUnit(showInGrams, 'fat', fat[3], 'oil');
-      fat5 = changeUnit(showInGrams, 'fat', fat[4], 'oil');
-      fat6 = changeUnit(showInGrams, 'fat', fat[5], 'oil');
+        fat1 = changeUnit(showInGrams, 'fat', fat[0], 'oil');
+        fat2 = changeUnit(showInGrams, 'fat', fat[1], 'oil');
+        fat3 = changeUnit(showInGrams, 'fat', fat[2], 'oil');
+        fat4 = changeUnit(showInGrams, 'fat', fat[3], 'oil');
+        fat5 = changeUnit(showInGrams, 'fat', fat[4], 'oil');
+        fat6 = changeUnit(showInGrams, 'fat', fat[5], 'oil');
 
-      fat1butter = changeUnit(showInGrams, 'fat', fat[0], 'butter');
-      fat2butter = changeUnit(showInGrams, 'fat', fat[1], 'butter');
-      fat3butter = changeUnit(showInGrams, 'fat', fat[2], 'butter');
-      fat4butter = changeUnit(showInGrams, 'fat', fat[3], 'butter');
-      fat5butter = changeUnit(showInGrams, 'fat', fat[4], 'butter');
-      fat6butter = changeUnit(showInGrams, 'fat', fat[5], 'butter');
+        fat1butter = changeUnit(showInGrams, 'fat', fat[0], 'butter');
+        fat2butter = changeUnit(showInGrams, 'fat', fat[1], 'butter');
+        fat3butter = changeUnit(showInGrams, 'fat', fat[2], 'butter');
+        fat4butter = changeUnit(showInGrams, 'fat', fat[3], 'butter');
+        fat5butter = changeUnit(showInGrams, 'fat', fat[4], 'butter');
+        fat6butter = changeUnit(showInGrams, 'fat', fat[5], 'butter');
 
-      fat1nutButter = changeUnit(showInGrams, 'fat', fat[0], 'nutButter');
-      fat2nutButter = changeUnit(showInGrams, 'fat', fat[1], 'nutButter');
-      fat3nutButter = changeUnit(showInGrams, 'fat', fat[2], 'nutButter');
-      fat4nutButter = changeUnit(showInGrams, 'fat', fat[3], 'nutButter');
-      fat5nutButter = changeUnit(showInGrams, 'fat', fat[4], 'nutButter');
-      fat6nutButter = changeUnit(showInGrams, 'fat', fat[5], 'nutButter');
+        fat1nutButter = changeUnit(showInGrams, 'fat', fat[0], 'nutButter');
+        fat2nutButter = changeUnit(showInGrams, 'fat', fat[1], 'nutButter');
+        fat3nutButter = changeUnit(showInGrams, 'fat', fat[2], 'nutButter');
+        fat4nutButter = changeUnit(showInGrams, 'fat', fat[3], 'nutButter');
+        fat5nutButter = changeUnit(showInGrams, 'fat', fat[4], 'nutButter');
+        fat6nutButter = changeUnit(showInGrams, 'fat', fat[5], 'nutButter');
 
-      fat1avocado = changeUnit(showInGrams, 'fat', fat[0], 'avocado');
-      fat2avocado = changeUnit(showInGrams, 'fat', fat[1], 'avocado');
-      fat3avocado = changeUnit(showInGrams, 'fat', fat[2], 'avocado');
-      fat4avocado = changeUnit(showInGrams, 'fat', fat[3], 'avocado');
-      fat5avocado = changeUnit(showInGrams, 'fat', fat[4], 'avocado');
-      fat6avocado = changeUnit(showInGrams, 'fat', fat[5], 'avocado');
+        fat1avocado = changeUnit(showInGrams, 'fat', fat[0], 'avocado');
+        fat2avocado = changeUnit(showInGrams, 'fat', fat[1], 'avocado');
+        fat3avocado = changeUnit(showInGrams, 'fat', fat[2], 'avocado');
+        fat4avocado = changeUnit(showInGrams, 'fat', fat[3], 'avocado');
+        fat5avocado = changeUnit(showInGrams, 'fat', fat[4], 'avocado');
+        fat6avocado = changeUnit(showInGrams, 'fat', fat[5], 'avocado');
 
-      fats = {
-        fat1: fat1,
-        fat2: fat2,
-        fat3: fat3,
-        fat4: fat4,
-        fat5: fat5,
-        fat6: fat6,
-        fat1butter: fat1butter,
-        fat2butter: fat2butter,
-        fat3butter: fat3butter,
-        fat4butter: fat4butter,
-        fat5butter: fat5butter,
-        fat6butter: fat6butter,
-        fat1nutButter: fat1nutButter,
-        fat2nutButter: fat2nutButter,
-        fat3nutButter: fat3nutButter,
-        fat4nutButter: fat4nutButter,
-        fat5nutButter: fat5nutButter,
-        fat6nutButter: fat6nutButter,
-        fat1avocado: fat1avocado,
-        fat2avocado: fat2avocado,
-        fat3avocado: fat3avocado,
-        fat4avocado: fat4avocado,
-        fat5avocado: fat5avocado,
-        fat6avocado: fat6avocado
-      };
+        fats = {
+          fat1: fat1,
+          fat2: fat2,
+          fat3: fat3,
+          fat4: fat4,
+          fat5: fat5,
+          fat6: fat6,
+          fat1butter: fat1butter,
+          fat2butter: fat2butter,
+          fat3butter: fat3butter,
+          fat4butter: fat4butter,
+          fat5butter: fat5butter,
+          fat6butter: fat6butter,
+          fat1nutButter: fat1nutButter,
+          fat2nutButter: fat2nutButter,
+          fat3nutButter: fat3nutButter,
+          fat4nutButter: fat4nutButter,
+          fat5nutButter: fat5nutButter,
+          fat6nutButter: fat6nutButter,
+          fat1avocado: fat1avocado,
+          fat2avocado: fat2avocado,
+          fat3avocado: fat3avocado,
+          fat4avocado: fat4avocado,
+          fat5avocado: fat5avocado,
+          fat6avocado: fat6avocado
+        };
 
-      veggies = {
+        veggies = {
         veggies1: veggies[0],
         veggies2: veggies[1],
         veggies3: veggies[2],
@@ -659,6 +670,7 @@ export default class LoginScreen extends React.Component {
         veggies5: veggies[4],
         veggies6: veggies[5]
       };
+      }
     }
 
     const firstMealIcon = this.state.mealsBeforeWorkout === 0 ?
@@ -696,6 +708,82 @@ export default class LoginScreen extends React.Component {
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
 
+          <View style={styles.optionWrapper}>
+            <Text style={styles.optionTitle}>What time did you wake up?</Text>
+            <TouchableHighlight
+              style={styles.optionTooltip}
+              underlayColor={Colors.paleBlue}
+              onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
+              <FontAwesome
+                style={styles.tooltipIcon}
+                name='info-circle'
+                size={16}
+              />
+            </TouchableHighlight>
+          </View>
+
+          <View>
+            <TouchableHighlight
+              style={styles.optionButton}
+              underlayColor={Colors.paleBlue}
+              onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
+              <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
+            </TouchableHighlight>
+          </View>
+
+          <View style={styles.optionWrapper}>
+            <Text style={styles.optionTitle}>Are you training today?</Text>
+            <TouchableHighlight
+              style={styles.optionTooltip}
+              underlayColor={Colors.paleBlue}
+              onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
+              <FontAwesome
+                style={styles.tooltipIcon}
+                name='info-circle'
+                size={16}
+              />
+            </TouchableHighlight>
+          </View>
+
+          {this.state.phase < 3 && <View style={styles.optionSection}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: trainingIntensity === true ? Colors.primaryColor : 0 }]}
+              underlayColor={Colors.paleBlue}
+              onPress={() => { this.saveTrainingIntensity(true) }}>
+              <Text style={styles.optionButtonText}>Yes</Text>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: trainingIntensity === false ? Colors.primaryColor : 0 }]}
+               underlayColor={Colors.paleBlue}
+               onPress={() => { this.saveTrainingIntensity(false) }}>
+               <Text style={styles.optionButtonText}>No</Text>
+            </TouchableHighlight>
+          </View>}
+
+          {this.state.phase === 3 && <View style={styles.optionSection}>
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
+              underlayColor={Colors.paleBlue}
+              onPress={() => { this.saveTrainingIntensity('rest') }}>
+              <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={[styles.optionButton,
+               { borderColor: trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
+               underlayColor={Colors.paleBlue}
+               onPress={() => { this.saveTrainingIntensity('moderate') }}>
+               <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={[styles.optionButton,
+              { borderColor: trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
+               underlayColor={Colors.paleBlue}
+               onPress={() => { this.saveTrainingIntensity('hard') }}>
+               <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
+            </TouchableHighlight>
+          </View>}
+
           {(this.state.phase === null) &&
             <Text style={Styles.centerText}>Loading...</Text>}
 
@@ -706,58 +794,6 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.centerText}>Phase 2</Text>}
 
           {(this.state.phase === 3) && <View>
-            <View style={styles.optionWrapper}>
-              <Text style={styles.optionTitle}>What time did you wake up?</Text>
-              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
-                <FontAwesome
-                  style={styles.tooltipIcon}
-                  name='info-circle'
-                  size={16}
-                />
-              </TouchableHighlight>
-            </View>
-
-            <View>
-              <TouchableHighlight style={styles.optionButton} underlayColor={Colors.paleBlue}
-                onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
-                <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.optionWrapper}>
-              <Text style={styles.optionTitle}>Are you training today?</Text>
-              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
-                <FontAwesome
-                  style={styles.tooltipIcon}
-                  name='info-circle'
-                  size={16}
-                />
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.optionSection}>
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
-                underlayColor={Colors.paleBlue}
-                onPress={() => { this.saveTrainingIntensity('rest') }}>
-                <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                 { borderColor: trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
-                 underlayColor={Colors.paleBlue}
-                 onPress={() => { this.saveTrainingIntensity('moderate') }}>
-                 <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
-                 underlayColor={Colors.paleBlue}
-                 onPress={() => { this.saveTrainingIntensity('hard') }}>
-                 <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
-              </TouchableHighlight>
-            </View>
-
             <View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>How many meals before your workout?</Text>
               <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
