@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   Button,
+  Image,
   Keyboard,
   Modal,
   ScrollView,
@@ -77,7 +78,12 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowCol}>Protein</Text>
+          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Protein</Text>}
+          {this.props.phase < 3 && <View style={styles.mealRowCol}>
+              <Image source={require('../assets/icons/protein.jpg')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
+              <Text style={styles.macroLabelsWithIcon}>Protein</Text>
+            </View>}
           <FoodOptions style={styles.mealRowColLong}
             macro='protein'
             sources={this.props.proteins}
@@ -96,7 +102,17 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowCol}>Starches</Text>
+          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Starches</Text>}
+          {(this.props.phase < 3 && this.props.trainingIntensity === true) && <View style={styles.mealRowCol}>
+              <Image source={require('../assets/icons/carbs-training.jpg')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
+              <Text style={styles.macroLabelsWithIcon}>Starches</Text>
+            </View>}
+          {(this.props.phase < 3 && this.props.trainingIntensity === false) && <View style={styles.mealRowCol}>
+              <Image source={require('../assets/icons/carbs-rest.jpg')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
+              <Text style={styles.macroLabelsWithIcon}>Starches</Text>
+            </View>}
           <FoodOptions style={styles.mealRowColLong}
             macro='carbs'
             sources={this.props.carbs}
@@ -116,7 +132,12 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowCol}>Fats</Text>
+          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Fats</Text>}
+          {this.props.phase < 3 && <View style={styles.mealRowCol}>
+              <Image source={require('../assets/icons/fats.jpg')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
+              <Text style={styles.macroLabelsWithIcon}>Fats</Text>
+            </View>}
           <FoodOptions style={styles.mealRowColLong}
             macro='fats'
             sources={this.props.fats}
@@ -136,7 +157,12 @@ class Meal extends React.Component {
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
-          <Text style={styles.mealRowCol}>Veggies</Text>
+          {this.props.phase ===3 && <Text style={styles.mealRowCol}>Veggies</Text>}
+          {this.props.phase < 3 && <View style={styles.mealRowCol}>
+              <Image source={require('../assets/icons/veggies.jpg')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
+              <Text style={styles.macroLabelsWithIcon}>Veggies</Text>
+            </View>}
           <FoodOptions style={styles.mealRowColLong}
             macro='veggies'
             sources={this.props.veggies}
@@ -192,7 +218,8 @@ const styles = StyleSheet.create ({
   },
   mealRowCol: {
     // flex: 1
-    width: 100
+    width: 100,
+    height: 75
   },
   mealRowColLong: {
     flex: 2
@@ -214,5 +241,10 @@ const styles = StyleSheet.create ({
     width: '50%',
     textAlign: 'right',
     letterSpacing: 1
+  },
+  macroLabelsWithIcon: {
+    textAlign: 'center',
+    fontSize: 12,
+    marginTop: 10
   }
 });

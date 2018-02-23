@@ -672,9 +672,12 @@ export default class LoginScreen extends React.Component {
         };
       } else {
         proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Lean pork', 'Game meats'];
-        carbs = ['White rice', 'Brown rice', 'White potatoes', 'Sweet potatoes', 'Rolled oats', 'Quinoa', 'Acorn squash', 'Butternut squash'];
+        carbs = ['White rice', 'Brown rice', 'White potatoes', 'Sweet potatoes',
+          'Rolled oats', 'Quinoa', 'Acorn squash', 'Butternut squash'];
         fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nut butter'];
-        veggies = ['Spinach', 'Broccoli', 'Lettuce', 'Onions', 'Asparagus', 'Kale', 'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms', 'Yellow squash', 'Zucchini', 'Mixed veggies'];
+        veggies = ['Spinach', 'Broccoli', 'Lettuce', 'Onions', 'Asparagus', 'Kale',
+          'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms',
+          'Yellow squash', 'Zucchini', 'Mixed veggies', 'Brussels sprouts', 'Swiss chard'];
       }
     }
 
@@ -791,12 +794,6 @@ export default class LoginScreen extends React.Component {
 
           {(this.state.phase === null) &&
             <Text style={Styles.centerText}>Loading...</Text>}
-
-          {(this.state.phase === 1) &&
-            <Text style={Styles.centerText}>Phase 1</Text>}
-
-          {(this.state.phase === 2) &&
-            <Text style={Styles.centerText}>Phase 2</Text>}
 
           <View>
             {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
