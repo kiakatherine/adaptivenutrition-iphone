@@ -153,6 +153,8 @@ export function changeUnit(showInGrams, macroType, value, altSource) {
 export function createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) {
   // this.set('selection', null);
 
+  // return 'sources' if not phase 3
+
   const currMeal = currentMeal + 1;
 
   if(macro === 'protein') {
@@ -185,39 +187,47 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
     let carbString = 'carbs' + currMeal;
     const carbAmount = sources[carbString];
 
-    if(carbAmount === '---') {
-      return ['---'];
-    }
+    if(phase === 3) {
+      if(carbAmount === '---') {
+        return ['---'];
+      }
 
-    if(isPwoShake) {
-      return [
-        sources[carbString + 'banana'],
-        sources[carbString + 'pwo'] + ' of karbolyn',
-        sources[carbString + 'pwo'] + ' of Gatorade',
-        sources[carbString + 'pwo'] + ' of Glycofuse',
-        sources[carbString + 'pwo'] + ' of Vitargo'
-      ];
+      if(isPwoShake) {
+        return [
+          sources[carbString + 'banana'],
+          sources[carbString + 'pwo'] + ' of karbolyn',
+          sources[carbString + 'pwo'] + ' of Gatorade',
+          sources[carbString + 'pwo'] + ' of Glycofuse',
+          sources[carbString + 'pwo'] + ' of Vitargo'
+        ];
+      } else {
+        return [
+          carbAmount + ' of rice',
+          carbAmount + ' of rolled oats',
+          sources[carbString + 'potatoes'] + ' of potatoes',
+          sources[carbString + 'quinoa'] + ' of quinoa',
+          sources[carbString + 'sweetPotatoes'] + ' of sweet potatoes',
+          sources[carbString + 'acornButternutSquash'] + ' of acorn squash',
+          sources[carbString + 'acornButternutSquash'] + ' of butternut squash'
+        ];
+      }
     } else {
-      return [
-        carbAmount + ' of rice',
-        carbAmount + ' of rolled oats',
-        sources[carbString + 'potatoes'] + ' of potatoes',
-        sources[carbString + 'quinoa'] + ' of quinoa',
-        sources[carbString + 'sweetPotatoes'] + ' of sweet potatoes',
-        sources[carbString + 'acornButternutSquash'] + ' of acorn squash',
-        sources[carbString + 'acornButternutSquash'] + ' of butternut squash'
-      ];
+      return sources;
     }
   } else if(macro === 'fats') {
     let fatString = 'fat' + currMeal;
     const fatAmount = sources[fatString];
 
-    return [
-      fatAmount,
-      sources[fatString + 'butter'],
-      sources[fatString + 'nutButter'],
-      sources[fatString + 'avocado']
-    ];
+    if(phase === 3) {
+      return [
+        fatAmount,
+        sources[fatString + 'butter'],
+        sources[fatString + 'nutButter'],
+        sources[fatString + 'avocado']
+      ];
+    } else {
+      return sources;
+    }
   } else if(macro === 'veggies') {
     let veggieString = 'veggies' + currMeal;
     const veggieAmount = sources[veggieString];
@@ -225,17 +235,21 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
       'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms',
       'Yellow squash', 'Zucchini', 'Mixed veggies'];
 
-    if(veggieAmount === '---') {
-      return ['---'];
+    if(phase === 3) {
+      if(veggieAmount === '---') {
+        return ['---'];
+      }
+
+      let arr = [];
+
+      veggieMenu.forEach(v => {
+        arr.push(veggieAmount + ' of ' + v.toLowerCase());
+      });
+
+      return arr;
+    } else {
+      return sources;
     }
-
-    let arr = [];
-
-    veggieMenu.forEach(v => {
-      arr.push(veggieAmount + ' of ' + v.toLowerCase());
-    });
-
-    return arr;
   }
 }
 

@@ -134,7 +134,7 @@ class FoodOptions extends React.Component {
 export default FoodOptions;
 
 FoodOptions.propTypes = {
-  trainingIntensity: PropTypes.number,
+  // trainingIntensity: PropTypes.number,
   mealsBeforeWorkout: PropTypes.number,
   template: PropTypes.number,
   currentMeal: PropTypes.number,

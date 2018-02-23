@@ -663,13 +663,18 @@ export default class LoginScreen extends React.Component {
         };
 
         veggies = {
-        veggies1: veggies[0],
-        veggies2: veggies[1],
-        veggies3: veggies[2],
-        veggies4: veggies[3],
-        veggies5: veggies[4],
-        veggies6: veggies[5]
-      };
+          veggies1: veggies[0],
+          veggies2: veggies[1],
+          veggies3: veggies[2],
+          veggies4: veggies[3],
+          veggies5: veggies[4],
+          veggies6: veggies[5]
+        };
+      } else {
+        proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Lean pork', 'Game meats'];
+        carbs = ['White rice', 'Brown rice', 'White potatoes', 'Sweet potatoes', 'Rolled oats', 'Quinoa', 'Acorn squash', 'Butternut squash'];
+        fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nut butter'];
+        veggies = ['Spinach', 'Broccoli', 'Lettuce', 'Onions', 'Asparagus', 'Kale', 'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms', 'Yellow squash', 'Zucchini', 'Mixed veggies'];
       }
     }
 
@@ -793,8 +798,8 @@ export default class LoginScreen extends React.Component {
           {(this.state.phase === 2) &&
             <Text style={Styles.centerText}>Phase 2</Text>}
 
-          {(this.state.phase === 3) && <View>
-            <View style={styles.optionWrapper}>
+          <View>
+            {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>How many meals before your workout?</Text>
               <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
                 <FontAwesome
@@ -840,7 +845,7 @@ export default class LoginScreen extends React.Component {
                    onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
                  <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
-            </View>
+            </View></View>}
 
             <View style={styles.mealPlanSection}>
               <Text style={Styles.h1}>Todays Meal Plan</Text>
@@ -875,14 +880,15 @@ export default class LoginScreen extends React.Component {
                    <Text style={styles.optionButtonText}>4</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={[styles.optionButton,
-                  { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
-                   onPress={() => { this.saveCurrentMeal(4) }}>
-                   {fifthMealIcon}
-                </TouchableHighlight>
+                {this.state.phase === 3 &&
+                  <TouchableHighlight style={[styles.optionButton,
+                    { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
+                     underlayColor={Colors.paleBlue}
+                     onPress={() => { this.saveCurrentMeal(4) }}>
+                     {fifthMealIcon}
+                  </TouchableHighlight>}
 
-                {trainingIntensity !== 0 &&
+                {(this.state.phase === 3 && trainingIntensity !== 0) &&
                   <TouchableHighlight style={[styles.optionButton,
                     { borderColor: currentMeal === 5 ? Colors.primaryColor : 0 }]}
                      underlayColor={Colors.paleBlue}
@@ -912,7 +918,7 @@ export default class LoginScreen extends React.Component {
                 veggies={veggies}
                 showInGrams={showInGrams} />}
 
-              {viewAllMeals && <View>
+              {(this.state.phase === 3 && viewAllMeals) && <View>
                 <Meal
                   trainingIntensity={trainingIntensity}
                   mealsBeforeWorkout={this.state.mealsBeforeWorkout}
@@ -1041,7 +1047,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 </View>}
             </View>
-          </View>}
+          </View>
 
           <View style={styles.progressSection}>
             {!viewAllMeals &&

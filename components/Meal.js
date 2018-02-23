@@ -162,7 +162,7 @@ class Meal extends React.Component {
 export default Meal;
 
 Meal.propTypes = {
-  trainingIntensity: PropTypes.number,
+  // trainingIntensity: PropTypes.number,
   mealsBeforeWorkout: PropTypes.number,
   template: PropTypes.number,
   currentMeal: PropTypes.number,
