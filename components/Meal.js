@@ -21,6 +21,7 @@ import Styles from '../constants/Styles';
 import * as labels from '../constants/MealLabels';
 
 import FoodOptions from './FoodOptions';
+import MeasurementInput from './MeasurementInput';
 
 class Meal extends React.Component {
    state = {
@@ -99,6 +100,16 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+          {this.props.phase === 2 &&
+            <MeasurementInput
+              unit={'oz'}
+              currentMeal={this.props.currentMeal}
+              macro={'protein'}
+              value={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
+                this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
+                this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
+                this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
+              updateMeasurement={this.props.updateMeasurement} />}
         </View>
 
         <View style={styles.mealRow}>
@@ -129,6 +140,16 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+          {this.props.phase === 2 &&
+            <MeasurementInput
+              unit={'cups'}
+              currentMeal={this.props.currentMeal}
+              macro={'carbs'}
+              value={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
+                this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
+                this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
+                this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
+              updateMeasurement={this.props.updateMeasurement} />}
         </View>
 
         <View style={styles.mealRow}>
@@ -154,6 +175,16 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+          {this.props.phase === 2 &&
+            <MeasurementInput
+              unit={'tsp'}
+              currentMeal={this.props.currentMeal}
+              macro={'fats'}
+              value={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
+                this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
+                this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
+                this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
+              updateMeasurement={this.props.updateMeasurement} />}
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
@@ -179,6 +210,16 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+          {this.props.phase === 2 &&
+            <MeasurementInput
+              unit={'cups'}
+              currentMeal={this.props.currentMeal}
+              macro={'veggies'}
+              value={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
+                this.props.currentMeal === 1 ? this.props.meal2veggiesMeasurement :
+                this.props.currentMeal === 2 ? this.props.meal3veggiesMeasurement :
+                this.props.currentMeal === 3 ? this.props.meal4veggiesMeasurement : null}
+              updateMeasurement={this.props.updateMeasurement} />}
         </View>}
        </View>
      );

@@ -75,8 +75,9 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    var dayStatuses = firebase.database().ref('dayStatuses');
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const dayStatuses = firebase.database().ref('dayStatuses');
+    const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
     client.on('value', snapshot => {
@@ -139,6 +140,51 @@ export default class LoginScreen extends React.Component {
         phase3meal5: phase3meal5,
         phase3meal6: phase3meal6
       });
+    });
+
+    phaseTwoDayStatuses.on('value', snapshot => {
+      const phaseTwoDayStatusesRef = snapshot.val();
+      const date = new Date;
+      let today;
+
+      if(clientResponse && clientResponse.phase === 2) {
+        if(clientResponse.timestamp) {
+          Object.keys(phaseTwoDayStatusesRef).map(key => {
+            if(phaseTwoDayStatusesRef[key].timestamp === clientResponse.timestamp) {
+              if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
+                today = phaseTwoDayStatusesRef[key];
+              }
+            }
+          });
+
+          this.setState({
+            meal1measurementsCompleted: today.meal1measurementsCompleted,
+            meal2measurementsCompleted: today.meal2measurementsCompleted,
+            meal3measurementsCompleted: today.meal3measurementsCompleted,
+            meal4measurementsCompleted: today.meal4measurementsCompleted,
+
+            meal1proteinMeasurement: today.meal1proteinMeasurement,
+            meal2proteinMeasurement: today.meal2proteinMeasurement,
+            meal3proteinMeasurement: today.meal3proteinMeasurement,
+            meal4proteinMeasurement: today.meal4proteinMeasurement,
+
+            meal1carbsMeasurement: today.meal1carbsMeasurement,
+            meal2carbsMeasurement: today.meal2carbsMeasurement,
+            meal3carbsMeasurement: today.meal3carbsMeasurement,
+            meal4carbsMeasurement: today.meal4carbsMeasurement,
+
+            meal1fatsMeasurement: today.meal1fatsMeasurement,
+            meal2fatsMeasurement: today.meal2fatsMeasurement,
+            meal3fatsMeasurement: today.meal3fatsMeasurement,
+            meal4fatsMeasurement: today.meal4fatsMeasurement,
+
+            meal1veggiesMeasurement: today.meal1veggiesMeasurement,
+            meal2veggiesMeasurement: today.meal2veggiesMeasurement,
+            meal3veggiesMeasurement: today.meal3veggiesMeasurement,
+            meal4veggiesMeasurement: today.meal4veggiesMeasurement
+          });
+        }
+      }
     });
   }
 
@@ -318,30 +364,30 @@ export default class LoginScreen extends React.Component {
     } else {
       alert('new today');
       // save date and selected meal and whether completed or not
-      this.store.createRecord('day-status', {
-        date: moment(date).format('MM-DD-YY'),
-        fullDate: date,
-        timestamp: this.get('timestamp'),
-        phase: phase,
-        meal1: 3,
-        meal2: 3,
-        meal3: 3,
-        meal4: 3,
-        meal5: 3,
-        meal6: 3
-      }).save().then(resp => {
-        Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
-
-        resp.set(mealToSave, completion);
-
-        resp.save().then(resp => {
-          Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
-        }, reason => {
-          Ember.Logger.error('could not save meal completion', reason);
-        });
-      }, reason => {
-        Ember.Logger.error('could not save meal completion', reason);
-      });
+      // this.store.createRecord('day-status', {
+      //   date: moment(date).format('MM-DD-YY'),
+      //   fullDate: date,
+      //   timestamp: this.get('timestamp'),
+      //   phase: phase,
+      //   meal1: 3,
+      //   meal2: 3,
+      //   meal3: 3,
+      //   meal4: 3,
+      //   meal5: 3,
+      //   meal6: 3
+      // }).save().then(resp => {
+      //   Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
+      //
+      //   resp.set(mealToSave, completion);
+      //
+      //   resp.save().then(resp => {
+      //     Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
+      //   }, reason => {
+      //     Ember.Logger.error('could not save meal completion', reason);
+      //   });
+      // }, reason => {
+      //   Ember.Logger.error('could not save meal completion', reason);
+      // });
     }
   }
 
@@ -349,6 +395,321 @@ export default class LoginScreen extends React.Component {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({ phase: phase });
     this.setState({ phase: phase });
+  }
+
+  updatePhase2ProgressBar(today, key) {
+    const todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
+    let mealNumber;
+
+    if(key.indexOf('1') > -1) {
+      mealNumber = 1;
+      p = today.meal1proteinMeasurement;
+      c = today.meal1carbsMeasurement;
+      f = today.meal1fatMeasurement;
+      v = today.meal1veggiesMeasurement;
+    } else if(key.indexOf('2') > -1) {
+      mealNumber = 2;
+      p = today.meal2proteinMeasurement;
+      c = today.meal2carbsMeasurement;
+      f = today.meal2fatMeasurement;
+      v = today.meal2veggiesMeasurement;
+    } else if(key.indexOf('3') > -1) {
+      mealNumber = 3;
+      p = today.meal3proteinMeasurement;
+      c = today.meal3carbsMeasurement;
+      f = today.meal3fatMeasurement;
+      v = today.meal3veggiesMeasurement;
+    } else if(key.indexOf('4') > -1) {
+      mealNumber = 4;
+      p = today.meal4proteinMeasurement;
+      c = today.meal4carbsMeasurement;
+      f = today.meal4fatMeasurement;
+      v = today.meal4veggiesMeasurement;
+    }
+
+    if(p && c && f && v) {
+        // today.set('meal' + mealNumber + 'measurementsCompleted', 1);
+        todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
+        // today.save().then(resp => {
+          // Ember.Logger.info('saved phase 2 meal completion', 'meal' + mealNumber + 'measurementsCompleted', resp.get('meal' + mealNumber + 'measurementsCompleted'));
+
+          if(today.meal1proteinMeasurement &&
+            today.meal1carbsMeasurement &&
+            today.meal1fatMeasurement &&
+            today.meal1veggiesMeasurement &&
+            today.meal2proteinMeasurement &&
+            today.meal2carbsMeasurement &&
+            today.meal2fatMeasurement &&
+            today.meal2veggiesMeasurement &&
+            today.meal3proteinMeasurement &&
+            today.meal3carbsMeasurement &&
+            today.meal3fatMeasurement &&
+            today.meal3veggiesMeasurement &&
+            today.meal4proteinMeasurement &&
+            today.meal4carbsMeasurement &&
+            today.meal4fatMeasurement &&
+            today.meal4veggiesMeasurement) {
+
+            // today.set('allMealsCompleted', true);
+            todayRef.update({ allMealsCompleted: true });
+
+            // this.store.findAll('challenge-group-team').then(resp => {
+            //   const team = this.get('client.challengeGroupTeam');
+            //   const teamObj = resp.filterBy('name', team)[0];
+            //
+            //   teamObj.set('points', teamObj.get('points') + 1);
+            //   teamObj.save().then(resp => {
+            //     Ember.Logger.log('added points to team ' + team + ' score');
+            //     today.set('allMealsCompleted', true);
+            //   }, reason => {
+            //     Ember.Logger.error('could not add points to team ' + team + ' score');
+            //   })
+            // });
+          }
+
+          // streaks - WIP
+          // const client = this.get('client');
+          // // add 1 to bestStreak and currentStreak
+          // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
+          // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
+          // this.get('client').save().then(resp => {
+          //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
+          // }, reason => {
+          //   Ember.Logger.error('could not save phase 2 streak', reason);
+          // });
+        }, reason => {
+          alert('error')
+          // Ember.Logger.error('could not save phase 2 meal completion', reason);
+        });
+    } else {
+      // today.set('meal' + mealNumber + 'measurementsCompleted', 3);
+      todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 3 })
+
+      if(today.allMealsCompleted) {
+        // return this.store.findAll('challenge-group-team').then(resp => {
+        //   const team = this.get('client.challengeGroupTeam');
+        //   const teamObj = resp.filterBy('name', team)[0];
+        //
+        //   teamObj.set('points', teamObj.get('points') - 1);
+        //   teamObj.save().then(resp => {
+        //     Ember.Logger.log('subtracted points from team ' + team + ' score');
+        //     today.set('allMealsCompleted', false);
+        //   }, reason => {
+        //     Ember.Logger.error('could not subtract points to team ' + team + ' score');
+        //   })
+        // });
+      }
+
+      // today.save().then(resp => {
+      //   Ember.Logger.info('saved phase 2 measurements completed', resp.get('meal' + mealNumber + 'measurementsCompleted'));
+      // }, reason => {
+      //   Ember.Logger.error('could not save phase 2 measurements completed', reason);
+      // });
+    }
+  }
+
+  saveMeasurement(currentMeal, macro, value) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const key = 'meal' + (Number(currentMeal) + 1) + macro + 'Measurement';
+
+    client.on('value', snapshot => {
+      clientRef = snapshot.val();
+
+      if(key) {
+        const date = new Date();
+        const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
+        let today;
+        let todayKey;
+
+        phaseTwoDayStatuses.on('value', snapshot => {
+          const phaseTwoDayStatusesRef = snapshot.val();
+
+          if(clientRef.timestamp) {
+            Object.keys(phaseTwoDayStatusesRef).map(key => {
+              if(phaseTwoDayStatusesRef[key].timestamp === clientRef.timestamp) {
+                if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
+                  todayKey = key;
+                  today = phaseTwoDayStatusesRef[key];
+                  // todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
+                  // todayRef.remove();
+                }
+              }
+            });
+          }
+
+          if(todayKey) {
+            // set meal completed boolean
+            todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
+            todayRef.update({ [key]: value });
+
+            // update phase 2 progress bar
+            // this.updatePhase2ProgressBar(today, todayKey);
+            // const todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
+            let mealNumber;
+            let p;
+            let c;
+            let f;
+            let v;
+
+            if(key.indexOf('1') > -1) {
+              mealNumber = 1;
+              p = today.meal1proteinMeasurement;
+              c = today.meal1carbsMeasurement;
+              f = today.meal1fatsMeasurement;
+              v = today.meal1veggiesMeasurement;
+            } else if(key.indexOf('2') > -1) {
+              mealNumber = 2;
+              p = today.meal2proteinMeasurement;
+              c = today.meal2carbsMeasurement;
+              f = today.meal2fatsMeasurement;
+              v = today.meal2veggiesMeasurement;
+            } else if(key.indexOf('3') > -1) {
+              mealNumber = 3;
+              p = today.meal3proteinMeasurement;
+              c = today.meal3carbsMeasurement;
+              f = today.meal3fatsMeasurement;
+              v = today.meal3veggiesMeasurement;
+            } else if(key.indexOf('4') > -1) {
+              mealNumber = 4;
+              p = today.meal4proteinMeasurement;
+              c = today.meal4carbsMeasurement;
+              f = today.meal4fatsMeasurement;
+              v = today.meal4veggiesMeasurement;
+            }
+
+            if(p && c && f && v) {
+                // today.set('meal' + mealNumber + 'measurementsCompleted', 1);
+                todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
+                // today.save().then(resp => {
+                  // Ember.Logger.info('saved phase 2 meal completion', 'meal' + mealNumber + 'measurementsCompleted', resp.get('meal' + mealNumber + 'measurementsCompleted'));
+
+                  // if(today.meal1proteinMeasurement &&
+                  //   today.meal1carbsMeasurement &&
+                  //   today.meal1fatMeasurement &&
+                  //   today.meal1veggiesMeasurement &&
+                  //   today.meal2proteinMeasurement &&
+                  //   today.meal2carbsMeasurement &&
+                  //   today.meal2fatMeasurement &&
+                  //   today.meal2veggiesMeasurement &&
+                  //   today.meal3proteinMeasurement &&
+                  //   today.meal3carbsMeasurement &&
+                  //   today.meal3fatMeasurement &&
+                  //   today.meal3veggiesMeasurement &&
+                  //   today.meal4proteinMeasurement &&
+                  //   today.meal4carbsMeasurement &&
+                  //   today.meal4fatMeasurement &&
+                  //   today.meal4veggiesMeasurement) {
+                  //
+                  //   // today.set('allMealsCompleted', true);
+                  //   todayRef.update({ allMealsCompleted: true });
+                  //
+                  //   // this.store.findAll('challenge-group-team').then(resp => {
+                  //   //   const team = this.get('client.challengeGroupTeam');
+                  //   //   const teamObj = resp.filterBy('name', team)[0];
+                  //   //
+                  //   //   teamObj.set('points', teamObj.get('points') + 1);
+                  //   //   teamObj.save().then(resp => {
+                  //   //     Ember.Logger.log('added points to team ' + team + ' score');
+                  //   //     today.set('allMealsCompleted', true);
+                  //   //   }, reason => {
+                  //   //     Ember.Logger.error('could not add points to team ' + team + ' score');
+                  //   //   })
+                  //   // });
+                  // }
+
+                  // streaks - WIP
+                  // const client = this.get('client');
+                  // // add 1 to bestStreak and currentStreak
+                  // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
+                  // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
+                  // this.get('client').save().then(resp => {
+                  //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
+                  // }, reason => {
+                  //   Ember.Logger.error('could not save phase 2 streak', reason);
+                  // });
+                }, reason => {
+                  alert('error')
+                  // Ember.Logger.error('could not save phase 2 meal completion', reason);
+                });
+            } else {
+              // today.set('meal' + mealNumber + 'measurementsCompleted', 3);
+              todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 3 })
+
+              if(today.allMealsCompleted) {
+                // return this.store.findAll('challenge-group-team').then(resp => {
+                //   const team = this.get('client.challengeGroupTeam');
+                //   const teamObj = resp.filterBy('name', team)[0];
+                //
+                //   teamObj.set('points', teamObj.get('points') - 1);
+                //   teamObj.save().then(resp => {
+                //     Ember.Logger.log('subtracted points from team ' + team + ' score');
+                //     today.set('allMealsCompleted', false);
+                //   }, reason => {
+                //     Ember.Logger.error('could not subtract points to team ' + team + ' score');
+                //   })
+                // });
+              }
+
+              // today.save().then(resp => {
+              //   Ember.Logger.info('saved phase 2 measurements completed', resp.get('meal' + mealNumber + 'measurementsCompleted'));
+              // }, reason => {
+              //   Ember.Logger.error('could not save phase 2 measurements completed', reason);
+              // });
+            }
+
+            // // set meal completed boolean
+            // today.set(key, value);
+            // today.save().then(resp => {
+            //   this.send('updatePhase2progressBar', resp, key);
+            //   Ember.Logger.log('saved measurement', key, ':', resp.get(key));
+            // }, reason => {
+            //   Ember.Logger.error('could not save measurement', reason);
+            // });
+          } else {
+            // save date and selected meal and whether completed or not
+            if(!today) {
+              phaseTwoDayStatuses.push({
+                date: moment(new Date).format('MM-DD-YY'),
+                fullDate: new Date,
+                timestamp: Number(clientRef.timestamp),
+                [key]: value,
+                meal1measurementsCompleted: 3,
+                meal2measurementsCompleted: 3,
+                meal3measurementsCompleted: 3,
+                meal4measurementsCompleted: 3
+              }).then(resp => {}, reason => {
+                alert('Could not save measurement');
+              });
+            }
+
+            // TO DO: update phase 2 progress bar
+
+            // this.store.createRecord('phase-two-day', {
+            //   date: moment(date).format('MM-DD-YY'),
+            //   fullDate: date,
+            //   timestamp: this.get('timestamp')
+            // }).save().then(resp => {
+            //   resp.set(key, value);
+            //   resp.setProperties({
+            //     [key]: value,
+            //     meal1measurementsCompleted: 3,
+            //     meal2measurementsCompleted: 3,
+            //     meal3measurementsCompleted: 3,
+            //     meal4measurementsCompleted: 3
+            //   });
+            //   resp.save().then(resp => {
+            //     Ember.Logger.log('saved measurement', key, ' value:', resp.get(key));
+            //   }, reason => {
+            //     Ember.Logger.error('could not save measurement', reason);
+            //   });
+            //   this.send('updatePhase2progressBar', resp, key);
+            // }, reason => {
+            //   Ember.Logger.error('could not save measurement', reason);
+            // });
+          }
+        });
+      }
+    });
   }
 
   render() {
@@ -904,6 +1265,22 @@ export default class LoginScreen extends React.Component {
                 earlyLunchTime={mealTimes['earlyLunchTime']}
                 lateLunchTime={mealTimes['lateLunchTime']}
                 dinnerTime={mealTimes['dinnerTime']}
+                meal1proteinMeasurement={this.state.meal1proteinMeasurement}
+                meal2proteinMeasurement={this.state.meal2proteinMeasurement}
+                meal3proteinMeasurement={this.state.meal3proteinMeasurement}
+                meal4proteinMeasurement={this.state.meal4proteinMeasurement}
+                meal1carbsMeasurement={this.state.meal1carbsMeasurement}
+                meal2carbsMeasurement={this.state.meal2carbsMeasurement}
+                meal3carbsMeasurement={this.state.meal3carbsMeasurement}
+                meal4carbsMeasurement={this.state.meal4carbsMeasurement}
+                meal1fatsMeasurement={this.state.meal1fatsMeasurement}
+                meal2fatsMeasurement={this.state.meal2fatsMeasurement}
+                meal3fatsMeasurement={this.state.meal3fatsMeasurement}
+                meal4fatsMeasurement={this.state.meal4fatsMeasurement}
+                meal1veggiesMeasurement={this.state.meal1veggiesMeasurement}
+                meal2veggiesMeasurement={this.state.meal2veggiesMeasurement}
+                meal3veggiesMeasurement={this.state.meal3veggiesMeasurement}
+                meal4veggiesMeasurement={this.state.meal4veggiesMeasurement}
                 age={age}
                 gender={gender}
                 height={height}
@@ -913,7 +1290,8 @@ export default class LoginScreen extends React.Component {
                 carbs={carbs}
                 fats={fats}
                 veggies={veggies}
-                showInGrams={showInGrams} />}
+                showInGrams={showInGrams}
+                updateMeasurement={this.saveMeasurement} />}
 
               {(this.state.phase === 3 && viewAllMeals) && <View>
                 <Meal
@@ -1047,7 +1425,7 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.progressSection}>
-            {!viewAllMeals &&
+            {!viewAllMeals && phase !== 2 &&
               <TouchableHighlight
                 style={styles.progressButtonGood}
                 underlayColor='white'
@@ -1061,13 +1439,29 @@ export default class LoginScreen extends React.Component {
                  </Text>
             </TouchableHighlight>}
 
-            {!viewAllMeals && <TouchableHighlight style={styles.progressButtonBad} underlayColor='white' onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
+            {!viewAllMeals && phase !== 2 &&
+              <TouchableHighlight style={styles.progressButtonBad}
+                underlayColor='white'
+                onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
                <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
                  <FontAwesome
                    style={styles.progressButtonBadIcon}
                    name='remove'
                    size={16}
                  /> Ate off plan
+               </Text>
+            </TouchableHighlight>}
+
+            {!viewAllMeals && phase !== 1 && phase !== 3 &&
+              <TouchableHighlight style={styles.progressButtonGood}
+                underlayColor='white'
+                onPress={() => {}}>
+               <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
+                 <FontAwesome
+                   style={styles.progressButtonGoodIcon}
+                   name='check'
+                   size={16}
+                 /> Measured portions for this meal
                </Text>
             </TouchableHighlight>}
           </View>
