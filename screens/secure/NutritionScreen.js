@@ -1107,6 +1107,8 @@ export default class LoginScreen extends React.Component {
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
 
+          <Text style={styles.clientName}>Hi {this.state.client ? this.state.client.name : ''}!</Text>
+
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
             <TouchableHighlight
@@ -1755,6 +1757,12 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  clientName: {
+    width: '100%',
+    textAlign: 'center',
+    marginTop: 10,
+    fontWeight: 'bold'
+  },
   optionWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
