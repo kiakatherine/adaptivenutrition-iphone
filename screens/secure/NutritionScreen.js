@@ -367,32 +367,25 @@ export default class LoginScreen extends React.Component {
         alert('uh oh...');
       });
     } else {
-      alert('new today');
       // save date and selected meal and whether completed or not
-      // this.store.createRecord('day-status', {
-      //   date: moment(date).format('MM-DD-YY'),
-      //   fullDate: date,
-      //   timestamp: this.get('timestamp'),
-      //   phase: phase,
-      //   meal1: 3,
-      //   meal2: 3,
-      //   meal3: 3,
-      //   meal4: 3,
-      //   meal5: 3,
-      //   meal6: 3
-      // }).save().then(resp => {
-      //   Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
-      //
-      //   resp.set(mealToSave, completion);
-      //
-      //   resp.save().then(resp => {
-      //     Ember.Logger.log('saved meal completion', 'meal:', resp.get(mealToSave));
-      //   }, reason => {
-      //     Ember.Logger.error('could not save meal completion', reason);
-      //   });
-      // }, reason => {
-      //   Ember.Logger.error('could not save meal completion', reason);
-      // });
+      if(!today) {
+        const dayStatuses = firebase.database().ref('dayStatuses');
+        dayStatuses.push({
+          date: moment(new Date).format('MM-DD-YY'),
+          fullDate: new Date,
+          timestamp: Number(client.timestamp),
+          meal1: 3,
+          meal2: 3,
+          meal3: 3,
+          meal4: 3,
+          meal5: 3,
+          meal6: 3,
+          [mealToSave]: completion,
+          phase: client.phase
+        }).then(resp => {}, reason => {
+          alert('Could not save meal completion');
+        });
+      }
     }
   }
 
@@ -400,117 +393,6 @@ export default class LoginScreen extends React.Component {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({ phase: phase });
     this.setState({ phase: phase });
-  }
-
-  updatePhase2ProgressBar(today, key) {
-    const todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
-    let mealNumber;
-
-    if(key.indexOf('1') > -1) {
-      mealNumber = 1;
-      p = today.meal1proteinMeasurement;
-      c = today.meal1carbsMeasurement;
-      f = today.meal1fatMeasurement;
-      v = today.meal1veggiesMeasurement;
-    } else if(key.indexOf('2') > -1) {
-      mealNumber = 2;
-      p = today.meal2proteinMeasurement;
-      c = today.meal2carbsMeasurement;
-      f = today.meal2fatMeasurement;
-      v = today.meal2veggiesMeasurement;
-    } else if(key.indexOf('3') > -1) {
-      mealNumber = 3;
-      p = today.meal3proteinMeasurement;
-      c = today.meal3carbsMeasurement;
-      f = today.meal3fatMeasurement;
-      v = today.meal3veggiesMeasurement;
-    } else if(key.indexOf('4') > -1) {
-      mealNumber = 4;
-      p = today.meal4proteinMeasurement;
-      c = today.meal4carbsMeasurement;
-      f = today.meal4fatMeasurement;
-      v = today.meal4veggiesMeasurement;
-    }
-
-    if(p && c && f && v) {
-        // today.set('meal' + mealNumber + 'measurementsCompleted', 1);
-        todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
-        // today.save().then(resp => {
-          // Ember.Logger.info('saved phase 2 meal completion', 'meal' + mealNumber + 'measurementsCompleted', resp.get('meal' + mealNumber + 'measurementsCompleted'));
-
-          if(today.meal1proteinMeasurement &&
-            today.meal1carbsMeasurement &&
-            today.meal1fatMeasurement &&
-            today.meal1veggiesMeasurement &&
-            today.meal2proteinMeasurement &&
-            today.meal2carbsMeasurement &&
-            today.meal2fatMeasurement &&
-            today.meal2veggiesMeasurement &&
-            today.meal3proteinMeasurement &&
-            today.meal3carbsMeasurement &&
-            today.meal3fatMeasurement &&
-            today.meal3veggiesMeasurement &&
-            today.meal4proteinMeasurement &&
-            today.meal4carbsMeasurement &&
-            today.meal4fatMeasurement &&
-            today.meal4veggiesMeasurement) {
-
-            // today.set('allMealsCompleted', true);
-            todayRef.update({ allMealsCompleted: true });
-
-            // this.store.findAll('challenge-group-team').then(resp => {
-            //   const team = this.get('client.challengeGroupTeam');
-            //   const teamObj = resp.filterBy('name', team)[0];
-            //
-            //   teamObj.set('points', teamObj.get('points') + 1);
-            //   teamObj.save().then(resp => {
-            //     Ember.Logger.log('added points to team ' + team + ' score');
-            //     today.set('allMealsCompleted', true);
-            //   }, reason => {
-            //     Ember.Logger.error('could not add points to team ' + team + ' score');
-            //   })
-            // });
-          }
-
-          // streaks - WIP
-          // const client = this.get('client');
-          // // add 1 to bestStreak and currentStreak
-          // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
-          // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
-          // this.get('client').save().then(resp => {
-          //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
-          // }, reason => {
-          //   Ember.Logger.error('could not save phase 2 streak', reason);
-          // });
-        }, reason => {
-          alert('error')
-          // Ember.Logger.error('could not save phase 2 meal completion', reason);
-        });
-    } else {
-      // today.set('meal' + mealNumber + 'measurementsCompleted', 3);
-      todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 3 })
-
-      if(today.allMealsCompleted) {
-        // return this.store.findAll('challenge-group-team').then(resp => {
-        //   const team = this.get('client.challengeGroupTeam');
-        //   const teamObj = resp.filterBy('name', team)[0];
-        //
-        //   teamObj.set('points', teamObj.get('points') - 1);
-        //   teamObj.save().then(resp => {
-        //     Ember.Logger.log('subtracted points from team ' + team + ' score');
-        //     today.set('allMealsCompleted', false);
-        //   }, reason => {
-        //     Ember.Logger.error('could not subtract points to team ' + team + ' score');
-        //   })
-        // });
-      }
-
-      // today.save().then(resp => {
-      //   Ember.Logger.info('saved phase 2 measurements completed', resp.get('meal' + mealNumber + 'measurementsCompleted'));
-      // }, reason => {
-      //   Ember.Logger.error('could not save phase 2 measurements completed', reason);
-      // });
-    }
   }
 
   saveMeasurement(currentMeal, macro, value) {
@@ -1504,16 +1386,26 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View>
-          {this.state.phase === 2 &&
-            <ProgressBar
-              complete1={this.state.meal1measurementsCompleted}
-              complete2={this.state.meal2measurementsCompleted}
-              complete3={this.state.meal3measurementsCompleted}
-              complete4={this.state.meal4measurementsCompleted}
-              phase={2}
-              enablePhase2={enablePhase2}
-              enablePhase3={enablePhase3}
-              trainingIntensity={trainingIntensity} />}
+            {this.state.phase === 1 &&
+              <ProgressBar
+                complete1={this.state.phase1meal1}
+                complete2={this.state.phase1meal2}
+                complete3={this.state.phase1meal3}
+                complete4={this.state.phase1meal4}
+                phase={1}
+                enablePhase2={enablePhase2}
+                enablePhase3={enablePhase3}
+                trainingIntensity={trainingIntensity} />}
+            {this.state.phase === 2 &&
+              <ProgressBar
+                complete1={this.state.meal1measurementsCompleted}
+                complete2={this.state.meal2measurementsCompleted}
+                complete3={this.state.meal3measurementsCompleted}
+                complete4={this.state.meal4measurementsCompleted}
+                phase={2}
+                enablePhase2={enablePhase2}
+                enablePhase3={enablePhase3}
+                trainingIntensity={trainingIntensity} />}
             {this.state.phase === 3 &&
               <ProgressBar
                 complete1={this.state.phase3meal1}
