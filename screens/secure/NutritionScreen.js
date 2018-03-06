@@ -265,7 +265,7 @@ export default class LoginScreen extends React.Component {
       }
     });
 
-    if(today && todayKey) {
+    if(today && todayKey && today.phase === this.state.phase) {
       // set meal completed boolean
       if(today[mealToSave] === completion) {
         today[mealToSave] = 3;
@@ -368,7 +368,7 @@ export default class LoginScreen extends React.Component {
       });
     } else {
       // save date and selected meal and whether completed or not
-      if(!today) {
+      if(!today || today.phase !== this.state.phase) {
         const dayStatuses = firebase.database().ref('dayStatuses');
         dayStatuses.push({
           date: moment(new Date).format('MM-DD-YY'),
