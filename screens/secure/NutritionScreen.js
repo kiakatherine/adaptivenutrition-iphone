@@ -147,7 +147,7 @@ export default class LoginScreen extends React.Component {
       const date = new Date;
       let today;
 
-      if(clientResponse && clientResponse.phase === 2) {
+      if(clientResponse) {
         if(clientResponse.timestamp) {
           Object.keys(phaseTwoDayStatusesRef).map(key => {
             if(phaseTwoDayStatusesRef[key].timestamp === clientResponse.timestamp) {
