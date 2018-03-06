@@ -181,7 +181,12 @@ export default class LoginScreen extends React.Component {
             meal1veggiesMeasurement: today.meal1veggiesMeasurement,
             meal2veggiesMeasurement: today.meal2veggiesMeasurement,
             meal3veggiesMeasurement: today.meal3veggiesMeasurement,
-            meal4veggiesMeasurement: today.meal4veggiesMeasurement
+            meal4veggiesMeasurement: today.meal4veggiesMeasurement,
+
+            meal1measurementsCompleted: today.meal1measurementsCompleted,
+            meal2measurementsCompleted: today.meal2measurementsCompleted,
+            meal3measurementsCompleted: today.meal3measurementsCompleted,
+            meal4measurementsCompleted: today.meal4measurementsCompleted
           });
         }
       }
@@ -1497,17 +1502,28 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View>
+          {this.state.phase === 2 &&
             <ProgressBar
-              complete1={this.state.phase3meal1}
-              complete2={this.state.phase3meal2}
-              complete3={this.state.phase3meal3}
-              complete4={this.state.phase3meal4}
-              complete5={this.state.phase3meal5}
-              complete6={this.state.phase3meal6}
-              phase={phase}
+              complete1={this.state.meal1measurementsCompleted}
+              complete2={this.state.meal2measurementsCompleted}
+              complete3={this.state.meal3measurementsCompleted}
+              complete4={this.state.meal4measurementsCompleted}
+              phase={2}
               enablePhase2={enablePhase2}
               enablePhase3={enablePhase3}
-              trainingIntensity={trainingIntensity} />
+              trainingIntensity={trainingIntensity} />}
+            {this.state.phase === 3 &&
+              <ProgressBar
+                complete1={this.state.phase3meal1}
+                complete2={this.state.phase3meal2}
+                complete3={this.state.phase3meal3}
+                complete4={this.state.phase3meal4}
+                complete5={this.state.phase3meal5}
+                complete6={this.state.phase3meal6}
+                phase={3}
+                enablePhase2={enablePhase2}
+                enablePhase3={enablePhase3}
+                trainingIntensity={trainingIntensity} />}
           </View>
 
           <View style={styles.phaseNavButtons}>
