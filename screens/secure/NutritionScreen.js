@@ -521,7 +521,7 @@ export default class LoginScreen extends React.Component {
         let today;
         let todayKey;
 
-        phaseTwoDayStatuses.on('value', snapshot => {
+        phaseTwoDayStatuses.once('value', snapshot => {
           const phaseTwoDayStatusesRef = snapshot.val();
 
           if(clientRef.timestamp) {
@@ -530,8 +530,6 @@ export default class LoginScreen extends React.Component {
                 if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
                   todayKey = key;
                   today = phaseTwoDayStatusesRef[key];
-                  // todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
-                  // todayRef.remove();
                 }
               }
             });
@@ -542,120 +540,147 @@ export default class LoginScreen extends React.Component {
             todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
             todayRef.update({ [key]: value });
 
-            // update phase 2 progress bar
-            // this.updatePhase2ProgressBar(today, todayKey);
-            // const todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
-            let mealNumber;
-            let p;
-            let c;
-            let f;
-            let v;
+            todayRef.on('value', snapshot => {
+              const today = snapshot.val();
+              // update progress bar
+              let mealNumber;
+              let p;
+              let c;
+              let f;
+              let v;
 
-            if(key.indexOf('1') > -1) {
-              mealNumber = 1;
-              p = today.meal1proteinMeasurement;
-              c = today.meal1carbsMeasurement;
-              f = today.meal1fatsMeasurement;
-              v = today.meal1veggiesMeasurement;
-            } else if(key.indexOf('2') > -1) {
-              mealNumber = 2;
-              p = today.meal2proteinMeasurement;
-              c = today.meal2carbsMeasurement;
-              f = today.meal2fatsMeasurement;
-              v = today.meal2veggiesMeasurement;
-            } else if(key.indexOf('3') > -1) {
-              mealNumber = 3;
-              p = today.meal3proteinMeasurement;
-              c = today.meal3carbsMeasurement;
-              f = today.meal3fatsMeasurement;
-              v = today.meal3veggiesMeasurement;
-            } else if(key.indexOf('4') > -1) {
-              mealNumber = 4;
-              p = today.meal4proteinMeasurement;
-              c = today.meal4carbsMeasurement;
-              f = today.meal4fatsMeasurement;
-              v = today.meal4veggiesMeasurement;
-            }
-
-            if(p && c && f && v) {
-                // today.set('meal' + mealNumber + 'measurementsCompleted', 1);
-                todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
-                // today.save().then(resp => {
-                  // Ember.Logger.info('saved phase 2 meal completion', 'meal' + mealNumber + 'measurementsCompleted', resp.get('meal' + mealNumber + 'measurementsCompleted'));
-
-                  // if(today.meal1proteinMeasurement &&
-                  //   today.meal1carbsMeasurement &&
-                  //   today.meal1fatMeasurement &&
-                  //   today.meal1veggiesMeasurement &&
-                  //   today.meal2proteinMeasurement &&
-                  //   today.meal2carbsMeasurement &&
-                  //   today.meal2fatMeasurement &&
-                  //   today.meal2veggiesMeasurement &&
-                  //   today.meal3proteinMeasurement &&
-                  //   today.meal3carbsMeasurement &&
-                  //   today.meal3fatMeasurement &&
-                  //   today.meal3veggiesMeasurement &&
-                  //   today.meal4proteinMeasurement &&
-                  //   today.meal4carbsMeasurement &&
-                  //   today.meal4fatMeasurement &&
-                  //   today.meal4veggiesMeasurement) {
-                  //
-                  //   // today.set('allMealsCompleted', true);
-                  //   todayRef.update({ allMealsCompleted: true });
-                  //
-                  //   // this.store.findAll('challenge-group-team').then(resp => {
-                  //   //   const team = this.get('client.challengeGroupTeam');
-                  //   //   const teamObj = resp.filterBy('name', team)[0];
-                  //   //
-                  //   //   teamObj.set('points', teamObj.get('points') + 1);
-                  //   //   teamObj.save().then(resp => {
-                  //   //     Ember.Logger.log('added points to team ' + team + ' score');
-                  //   //     today.set('allMealsCompleted', true);
-                  //   //   }, reason => {
-                  //   //     Ember.Logger.error('could not add points to team ' + team + ' score');
-                  //   //   })
-                  //   // });
-                  // }
-
-                  // streaks - WIP
-                  // const client = this.get('client');
-                  // // add 1 to bestStreak and currentStreak
-                  // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
-                  // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
-                  // this.get('client').save().then(resp => {
-                  //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
-                  // }, reason => {
-                  //   Ember.Logger.error('could not save phase 2 streak', reason);
-                  // });
-                }, reason => {
-                  alert('error')
-                  // Ember.Logger.error('could not save phase 2 meal completion', reason);
-                });
-            } else {
-              // today.set('meal' + mealNumber + 'measurementsCompleted', 3);
-              todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 3 })
-
-              if(today.allMealsCompleted) {
-                // return this.store.findAll('challenge-group-team').then(resp => {
-                //   const team = this.get('client.challengeGroupTeam');
-                //   const teamObj = resp.filterBy('name', team)[0];
-                //
-                //   teamObj.set('points', teamObj.get('points') - 1);
-                //   teamObj.save().then(resp => {
-                //     Ember.Logger.log('subtracted points from team ' + team + ' score');
-                //     today.set('allMealsCompleted', false);
-                //   }, reason => {
-                //     Ember.Logger.error('could not subtract points to team ' + team + ' score');
-                //   })
-                // });
+              if(key.indexOf('1') > -1) {
+                mealNumber = 1;
+                p = today.meal1proteinMeasurement !== '' ? today.meal1proteinMeasurement : null;
+                c = today.meal1carbsMeasurement !== '' ? today.meal1carbsMeasurement : null;
+                f = today.meal1fatsMeasurement !== '' ? today.meal1fatsMeasurement : null;
+                v = today.meal1veggiesMeasurement !== '' ? today.meal1veggiesMeasurement : null;
+              } else if(key.indexOf('2') > -1) {
+                mealNumber = 2;
+                p = today.meal2proteinMeasurement !== '' ? today.meal2proteinMeasurement : null;
+                c = today.meal2carbsMeasurement !== '' ? today.meal2carbsMeasurement : null;
+                f = today.meal2fatsMeasurement !== '' ? today.meal2fatsMeasurement : null;
+                v = today.meal2veggiesMeasurement !== '' ? today.meal2veggiesMeasurement : null;
+              } else if(key.indexOf('3') > -1) {
+                mealNumber = 3;
+                p = today.meal3proteinMeasurement !== '' ? today.meal3proteinMeasurement : null;
+                c = today.meal3carbsMeasurement !== '' ? today.meal3carbsMeasurement : null;
+                f = today.meal3fatsMeasurement !== '' ? today.meal3fatsMeasurement : null;
+                v = today.meal3veggiesMeasurement !== '' ? today.meal3veggiesMeasurement : null;
+              } else if(key.indexOf('4') > -1) {
+                mealNumber = 4;
+                p = today.meal4proteinMeasurement !== '' ? today.meal4proteinMeasurement : null;
+                c = today.meal4carbsMeasurement !== '' ? today.meal4carbsMeasurement : null;
+                f = today.meal4fatsMeasurement !== '' ? today.meal4fatsMeasurement : null;
+                v = today.meal4veggiesMeasurement !== '' ? today.meal4veggiesMeasurement : null;
               }
 
-              // today.save().then(resp => {
-              //   Ember.Logger.info('saved phase 2 measurements completed', resp.get('meal' + mealNumber + 'measurementsCompleted'));
-              // }, reason => {
-              //   Ember.Logger.error('could not save phase 2 measurements completed', reason);
-              // });
-            }
+              if(p && c && f && v) {
+                  todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
+                    // check if all measurements have been entered for each meal
+                    if(today.meal1proteinMeasurement &&
+                      today.meal1carbsMeasurement &&
+                      today.meal1fatsMeasurement &&
+                      today.meal1veggiesMeasurement &&
+                      today.meal2proteinMeasurement &&
+                      today.meal2carbsMeasurement &&
+                      today.meal2fatsMeasurement &&
+                      today.meal2veggiesMeasurement &&
+                      today.meal3proteinMeasurement &&
+                      today.meal3carbsMeasurement &&
+                      today.meal3fatsMeasurement &&
+                      today.meal3veggiesMeasurement &&
+                      today.meal4proteinMeasurement &&
+                      today.meal4carbsMeasurement &&
+                      today.meal4fatsMeasurement &&
+                      today.meal4veggiesMeasurement &&
+                      today.allMealsCompleted === false) {
+
+                      todayRef.update({ allMealsCompleted: true });
+
+                      const clientTeam = clientRef.challengeGroupTeam;
+
+                      // update team score
+                      if(clientTeam) {
+                        const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
+
+                        challengeGroupTeams.once('value', snapshot => {
+                          const challengeGroupTeamsRef = snapshot.val();
+                          let points;
+
+                          Object.keys(challengeGroupTeamsRef).map(key => {
+                            if(challengeGroupTeamsRef[key].name === clientTeam) {
+                              teamKey = key;
+                              points = challengeGroupTeamsRef[key].points;
+                            }
+                          });
+
+                          if(teamKey) {
+                            const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
+
+                            teamRef.update({ points: Number(points) + 1 });
+                            todayRef.update({ allMealsCompleted: true });
+                          }
+                        });
+                      }
+                    } else if(today.meal1measurementsCompleted === 1 &&
+                      today.meal2measurementsCompleted === 1 &&
+                      today.meal3measurementsCompleted === 1 &&
+                      today.meal4measurementsCompleted === 1 &&
+                      today.allMealsCompleted) {
+                        // if all meals already marked as completed and measurement
+                        // is simply changing value, don't add points to team score
+                        return;
+                    }
+
+                    // streaks - WIP
+                    // const client = this.get('client');
+                    // // add 1 to bestStreak and currentStreak
+                    // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
+                    // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
+                    // this.get('client').save().then(resp => {
+                    //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
+                    // }, reason => {
+                    //   Ember.Logger.error('could not save phase 2 streak', reason);
+                    // });
+                  }, reason => {
+                    alert('Could not save meal completion')
+                  });
+              } else {
+                // mark meal measurements as incomplete
+                todayRef.update({
+                  ['meal' + mealNumber + 'measurementsCompleted']: 3
+                })
+
+                if(today.allMealsCompleted) {
+                  const clientTeam = clientRef.challengeGroupTeam;
+
+                  // update team score
+                  if(clientTeam) {
+                    const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
+
+                    challengeGroupTeams.once('value', snapshot => {
+                      const challengeGroupTeamsRef = snapshot.val();
+                      let points;
+
+                      Object.keys(challengeGroupTeamsRef).map(key => {
+                        if(challengeGroupTeamsRef[key].name === clientTeam) {
+                          teamKey = key;
+                          points = challengeGroupTeamsRef[key].points;
+                        }
+                      });
+
+                      if(teamKey) {
+                        const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
+
+                        teamRef.update({ points: Number(points) - 1 });
+                        todayRef.update({ allMealsCompleted: false });
+                      }
+                    });
+                  }
+                }
+              }
+            });
 
             // // set meal completed boolean
             // today.set(key, value);
