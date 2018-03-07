@@ -245,7 +245,7 @@ export default class LoginScreen extends React.Component {
                 data={this.state.bodyweightData}
                 clientTimestamp={this.state.clientTimestamp} />
 
-              <View style={[Styles.flexRow, styles.todaysBodyweight]}>
+              <View style={[Styles.flexRow, styles.todaysBodyweight, styles.progressSection]}>
                 <TouchableHighlight
                   style={styles.bodyweightDateButton}
                   onPress={this._showDatepicker}>
@@ -275,13 +275,24 @@ export default class LoginScreen extends React.Component {
                 </TouchableHighlight>
               </View>
 
-              <View>
+              <View style={styles.progressSection}>
                 <Text style={styles.bigTitle}>Meal Consistency</Text>
 
                 <View>
                   <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>Phase 1</Text>
+                    <Text style={styles.phaseHeaderText}>
+                      {this.state.showProgressPhase1 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-down'
+                        size={20}
+                      />}
+                      {!this.state.showProgressPhase1 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-right'
+                        size={20}
+                      />} Phase 1
+                    </Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase1 &&
@@ -291,7 +302,18 @@ export default class LoginScreen extends React.Component {
                 <View>
                   <TouchableHighlight onPress={() => { this._clickProgressReportPhase2()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>Phase 2</Text>
+                    <Text style={styles.phaseHeaderText}>
+                      {this.state.showProgressPhase2 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-down'
+                        size={20}
+                      />}
+                      {!this.state.showProgressPhase2 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-right'
+                        size={20}
+                      />} Phase 2
+                    </Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase2 &&
@@ -301,7 +323,18 @@ export default class LoginScreen extends React.Component {
                 <View>
                   <TouchableHighlight onPress={() => { this._clickProgressReportPhase3()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>Phase 3</Text>
+                    <Text style={styles.phaseHeaderText}>
+                      {this.state.showProgressPhase3 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-down'
+                        size={20}
+                      />}
+                      {!this.state.showProgressPhase3 && <FontAwesome
+                        style={styles.phaseHeaderIcon}
+                        name='angle-right'
+                        size={20}
+                      />} Phase 3
+                    </Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase3 &&
@@ -352,10 +385,13 @@ const styles = StyleSheet.create ({
   phaseHeader: {
     padding: 15,
     marginBottom: 5,
-    backgroundColor: Colors.lightGray
+    backgroundColor: Colors.paleBlue
   },
   phaseHeaderText: {
     fontSize: 16,
     fontWeight: 'bold'
+  },
+  progressSection: {
+    marginBottom: 50
   }
 });

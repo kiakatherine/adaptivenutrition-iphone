@@ -50,7 +50,10 @@ class BodyweightGraph extends React.Component {
    }
 
    clickShowAllData() {
-     this.setState({ showAllData: !this.state.showAllData });
+     this.setState({
+       showAllData: !this.state.showAllData,
+       showTooltip: false
+     });
    }
 
    clickDeleteDataPoint() {
@@ -196,7 +199,11 @@ class BodyweightGraph extends React.Component {
 
         return (
           <View>
-            <ScrollView style={{width: '100%'}} horizontal={true} alwaysBounceHorizontal={true}>
+            <ScrollView
+              style={{ width: '100%' }}
+              horizontal={true}
+              alwaysBounceHorizontal={true}
+              showsHorizontalScrollIndicator={true}>
               <LineChart
                 style={{ width: (this.state.showAllData ? weights.length*40 : '100%'), minWidth: '100%', height: 200 }}
                 data={weights}
@@ -239,7 +246,7 @@ class BodyweightGraph extends React.Component {
               </View>}
 
             <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
-              <Text style={Styles.buttonText}>{this.state.showAllData ? 'Show all data' : 'Show past month'}</Text>
+              <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
             </TouchableHighlight>
           </View>
         );
