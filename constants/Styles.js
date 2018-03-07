@@ -5,14 +5,26 @@ export default {
     flex: 1,
     backgroundColor: Colors.white
   },
+  header: {
+    backgroundColor: Colors.primaryColor,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 75,
+    paddingLeft: 20
+  },
   title: {
     paddingTop: 10,
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: Colors.primaryColor
   },
   titleText: {
     color: "#FFFFFF",
     fontSize: 24
+  },
+  bigTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20
   },
   paragraphText: {
     fontSize: 18,
@@ -126,6 +138,9 @@ export default {
   },
   flexRowCol: {
     width: '50%'
+  },
+  flexCol: {
+    flex: 1
   },
   showModal: {
     position: 'absolute',

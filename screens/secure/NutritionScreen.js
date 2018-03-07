@@ -911,11 +911,10 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <ScrollView>
-          <View style={Styles.title}>
-            <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
+          <View style={Styles.header}>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
+            <Text style={[Styles.flexCol, styles.clientName]}>Hi {this.state.client ? this.state.client.name : ''}!</Text>
           </View>
-
-          <Text style={styles.clientName}>Hi {this.state.client ? this.state.client.name : ''}!</Text>
 
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
@@ -1046,8 +1045,8 @@ export default class LoginScreen extends React.Component {
             </View></View>}
 
             <View style={styles.mealPlanSection}>
-              <Text style={Styles.h1}>Todays Meal Plan</Text>
-              <Text>Phase {phase}</Text>
+              <Text style={[Styles.bigTitle, styles.bigTitle]}>Todays Meal Plan</Text>
+              <Text style={styles.phase}>Phase {phase}</Text>
 
               {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
@@ -1576,16 +1575,14 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
   clientName: {
-    width: '100%',
-    textAlign: 'center',
-    marginTop: 10,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: Colors.white
   },
   optionWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'stretch',
-    justifyContent: 'center'
+    // justifyContent: 'center'
   },
   optionSection: {
     alignSelf: 'stretch',
@@ -1597,7 +1594,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     paddingTop: 20,
-    paddingBottom: 10
+    paddingBottom: 10,
+    paddingLeft: 20
   },
   optionTooltip: {
     paddingTop: 10,
@@ -1616,9 +1614,15 @@ const styles = StyleSheet.create({
   optionButtonText: {
     textAlign: 'center'
   },
+  bigTitle: {
+    paddingLeft: 20
+  },
+  phase: {
+    paddingLeft: 20
+  },
   mealPlanSection: {
     alignSelf: 'stretch',
-    alignItems: 'center',
+    // alignItems: 'center',
     marginTop: 50
   },
   mealsMenu: {

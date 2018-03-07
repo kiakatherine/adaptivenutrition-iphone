@@ -239,7 +239,7 @@ export default class LoginScreen extends React.Component {
 
           <ScrollView style={Styles.content}>
             <View>
-              <Text style={styles.bigTitle}>Your Progress</Text>
+              <Text style={Styles.bigTitle}>Bodyweight</Text>
 
               <BodyweightGraph
                 data={this.state.bodyweightData}
@@ -276,7 +276,7 @@ export default class LoginScreen extends React.Component {
               </View>
 
               <View style={styles.progressSection}>
-                <Text style={styles.bigTitle}>Meal Consistency</Text>
+                <Text style={Styles.bigTitle}>Meal Consistency</Text>
 
                 <View>
                   <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
@@ -358,11 +358,6 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
-  bigTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 20
-  },
   todaysBodyweight: {
     marginTop: 20,
     marginBottom: 20

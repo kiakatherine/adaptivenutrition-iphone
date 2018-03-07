@@ -199,7 +199,7 @@ class BodyweightGraph extends React.Component {
 
         return (
           <View>
-            <ScrollView
+            {this.props.data && <ScrollView
               style={{ width: '100%' }}
               horizontal={true}
               alwaysBounceHorizontal={true}
@@ -229,7 +229,10 @@ class BodyweightGraph extends React.Component {
                   </G>
                 )}
               />
-            </ScrollView>
+            </ScrollView>}
+
+            {!this.props.data &&
+              <Text>Getting data...</Text>}
 
             {this.state.showTooltip &&
               <View style={styles.tooltip}>
