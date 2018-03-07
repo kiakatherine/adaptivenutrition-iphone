@@ -158,35 +158,35 @@ export default class LoginScreen extends React.Component {
           });
 
           this.setState({
-            meal1measurementsCompleted: today.meal1measurementsCompleted,
-            meal2measurementsCompleted: today.meal2measurementsCompleted,
-            meal3measurementsCompleted: today.meal3measurementsCompleted,
-            meal4measurementsCompleted: today.meal4measurementsCompleted,
+            meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
+            meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
+            meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
+            meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null,
 
-            meal1proteinMeasurement: today.meal1proteinMeasurement,
-            meal2proteinMeasurement: today.meal2proteinMeasurement,
-            meal3proteinMeasurement: today.meal3proteinMeasurement,
-            meal4proteinMeasurement: today.meal4proteinMeasurement,
+            meal1proteinMeasurement: today ? today.meal1proteinMeasurement : null,
+            meal2proteinMeasurement: today ? today.meal2proteinMeasurement : null,
+            meal3proteinMeasurement: today ? today.meal3proteinMeasurement : null,
+            meal4proteinMeasurement: today ? today.meal4proteinMeasurement : null,
 
-            meal1carbsMeasurement: today.meal1carbsMeasurement,
-            meal2carbsMeasurement: today.meal2carbsMeasurement,
-            meal3carbsMeasurement: today.meal3carbsMeasurement,
-            meal4carbsMeasurement: today.meal4carbsMeasurement,
+            meal1carbsMeasurement: today ? today.meal1carbsMeasurement : null,
+            meal2carbsMeasurement: today ? today.meal2carbsMeasurement : null,
+            meal3carbsMeasurement: today ? today.meal3carbsMeasurement : null,
+            meal4carbsMeasurement: today ? today.meal4carbsMeasurement : null,
 
-            meal1fatsMeasurement: today.meal1fatsMeasurement,
-            meal2fatsMeasurement: today.meal2fatsMeasurement,
-            meal3fatsMeasurement: today.meal3fatsMeasurement,
-            meal4fatsMeasurement: today.meal4fatsMeasurement,
+            meal1fatsMeasurement: today ? today.meal1fatsMeasurement : null,
+            meal2fatsMeasurement: today ? today.meal2fatsMeasurement : null,
+            meal3fatsMeasurement: today ? today.meal3fatsMeasurement : null,
+            meal4fatsMeasurement: today ? today.meal4fatsMeasurement : null,
 
-            meal1veggiesMeasurement: today.meal1veggiesMeasurement,
-            meal2veggiesMeasurement: today.meal2veggiesMeasurement,
-            meal3veggiesMeasurement: today.meal3veggiesMeasurement,
-            meal4veggiesMeasurement: today.meal4veggiesMeasurement,
+            meal1veggiesMeasurement: today ? today.meal1veggiesMeasurement : null,
+            meal2veggiesMeasurement: today ? today.meal2veggiesMeasurement : null,
+            meal3veggiesMeasurement: today ? today.meal3veggiesMeasurement : null,
+            meal4veggiesMeasurement: today ? today.meal4veggiesMeasurement : null,
 
-            meal1measurementsCompleted: today.meal1measurementsCompleted,
-            meal2measurementsCompleted: today.meal2measurementsCompleted,
-            meal3measurementsCompleted: today.meal3measurementsCompleted,
-            meal4measurementsCompleted: today.meal4measurementsCompleted
+            meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
+            meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
+            meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
+            meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null
           });
         }
       }

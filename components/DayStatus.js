@@ -57,16 +57,18 @@ class Meal extends React.Component {
               day.meal4 === 1 ? styles.dayStatusMealGood :
               day.meal4 === 2 ? styles.dayStatusMealBad : '']}>
             </View>
-            <View style={[
-              styles.dayStatusMeal,
-              day.meal5 === 1 ? styles.dayStatusMealGood :
-              day.meal5 === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
-            <View style={[
-              styles.dayStatusMeal,
-              day.meal6 === 1 ? styles.dayStatusMealGood :
-              day.meal6 === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
+            {phase === 3 &&
+              <View style={[
+                styles.dayStatusMeal,
+                day.meal5 === 1 ? styles.dayStatusMealGood :
+                day.meal5 === 2 ? styles.dayStatusMealBad : '']}>
+              </View>}
+            {phase === 3 &&
+              <View style={[
+                styles.dayStatusMeal,
+                day.meal6 === 1 ? styles.dayStatusMealGood :
+                day.meal6 === 2 ? styles.dayStatusMealBad : '']}>
+              </View>}
           </View>
         </View>}
 

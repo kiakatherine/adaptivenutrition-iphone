@@ -79,8 +79,10 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Protein</Text>}
-          {this.props.phase < 3 && <View style={styles.mealRowCol}>
+          {this.props.phase === 3 &&
+            <Text style={styles.mealRowColPhase3}>Protein</Text>}
+          {this.props.phase < 3 &&
+            <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/protein.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
               <Text style={styles.macroLabelsWithIcon}>Protein</Text>
@@ -113,7 +115,7 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Starches</Text>}
+          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>Starches</Text>}
           {(this.props.phase < 3 && this.props.trainingIntensity === true) && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/carbs-training.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
@@ -153,7 +155,7 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowCol}>Fats</Text>}
+          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>Fats</Text>}
           {this.props.phase < 3 && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/fats.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
@@ -188,7 +190,7 @@ class Meal extends React.Component {
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
-          {this.props.phase ===3 && <Text style={styles.mealRowCol}>Veggies</Text>}
+          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>Veggies</Text>}
           {this.props.phase < 3 && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
@@ -258,9 +260,11 @@ const styles = StyleSheet.create ({
     paddingBottom: 10
   },
   mealRowCol: {
-    // flex: 1
     width: 100,
     height: 75
+  },
+  mealRowColPhase3: {
+    flex: 1
   },
   mealRowColLong: {
     flex: 2
