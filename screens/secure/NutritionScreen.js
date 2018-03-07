@@ -252,9 +252,7 @@ export default class LoginScreen extends React.Component {
     const dayStatuses = this.state.dayStatuses;
     const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
-    let todayKey;
-    let todayRef;
-    let today;
+    let todayKey, todayRef, today;
 
     Object.keys(dayStatuses).map(key => {
       if(dayStatuses[key].timestamp === client.timestamp) {
@@ -405,8 +403,7 @@ export default class LoginScreen extends React.Component {
       if(key) {
         const date = new Date();
         const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
-        let today;
-        let todayKey;
+        let today, todayKey;
 
         phaseTwoDayStatuses.once('value', snapshot => {
           const phaseTwoDayStatusesRef = snapshot.val();
@@ -430,11 +427,7 @@ export default class LoginScreen extends React.Component {
             todayRef.on('value', snapshot => {
               const today = snapshot.val();
               // update progress bar
-              let mealNumber;
-              let p;
-              let c;
-              let f;
-              let v;
+              let mealNumber, p, c, f, v;
 
               if(key.indexOf('1') > -1) {
                 mealNumber = 1;
@@ -568,15 +561,6 @@ export default class LoginScreen extends React.Component {
                 }
               }
             });
-
-            // // set meal completed boolean
-            // today.set(key, value);
-            // today.save().then(resp => {
-            //   this.send('updatePhase2progressBar', resp, key);
-            //   Ember.Logger.log('saved measurement', key, ':', resp.get(key));
-            // }, reason => {
-            //   Ember.Logger.error('could not save measurement', reason);
-            // });
           } else {
             // save date and selected meal and whether completed or not
             if(!today) {
@@ -593,31 +577,6 @@ export default class LoginScreen extends React.Component {
                 alert('Could not save measurement');
               });
             }
-
-            // TO DO: update phase 2 progress bar
-
-            // this.store.createRecord('phase-two-day', {
-            //   date: moment(date).format('MM-DD-YY'),
-            //   fullDate: date,
-            //   timestamp: this.get('timestamp')
-            // }).save().then(resp => {
-            //   resp.set(key, value);
-            //   resp.setProperties({
-            //     [key]: value,
-            //     meal1measurementsCompleted: 3,
-            //     meal2measurementsCompleted: 3,
-            //     meal3measurementsCompleted: 3,
-            //     meal4measurementsCompleted: 3
-            //   });
-            //   resp.save().then(resp => {
-            //     Ember.Logger.log('saved measurement', key, ' value:', resp.get(key));
-            //   }, reason => {
-            //     Ember.Logger.error('could not save measurement', reason);
-            //   });
-            //   this.send('updatePhase2progressBar', resp, key);
-            // }, reason => {
-            //   Ember.Logger.error('could not save measurement', reason);
-            // });
           }
         });
       }
@@ -627,23 +586,6 @@ export default class LoginScreen extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
 
-    let bodyweight;
-    let bodyfat;
-    let age;
-    let gender;
-    let height;
-    let leanMass;
-    let proteinDelta;
-
-    let template;
-    let phase;
-    let currentMeal;
-    let mealsBeforeWorkout;
-    let trainingIntensity;
-    let showInGrams;
-    let viewAllMeals;
-    let isPwoMeal;
-    let wakeTime;
     let mealTimes = {
       breakfastTime: null,
       earlyLunchTime: null,
@@ -651,32 +593,16 @@ export default class LoginScreen extends React.Component {
       dinnerTime: null
     };
 
-    let complete1;
-    let complete2;
-    let complete3;
-    let complete4;
-    let complete5;
-    let complete6;
-    let enablePhase2;
-    let enablePhase3;
-    let showRestDay;
+    let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta,
+      template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity,
+      showInGrams, viewAllMeals, isPwoMeal, wakeTime,
+      complete1, complete2, complete3, complete4, complete5, complete6,
+      enablePhase2, enablePhase3, showRestDay, customMacros, customRestDayProtein,
+      customRestDayCarbs, customRestDayFat, customModerateDayProtein,
+      customModerateDayCarbs, customModerateDayFat, customHeavyDayProtein,
+      customHeavyDayCarbs, customHeavyDayFat;
 
-    let customMacros;
-    let customRestDayProtein;
-    let customRestDayCarbs;
-    let customRestDayFat;
-    let customModerateDayProtein;
-    let customModerateDayCarbs;
-    let customModerateDayFat;
-    let customHeavyDayProtein;
-    let customHeavyDayCarbs;
-    let customHeavyDayFat;
-
-    let labels = [];
-    let proteins = [];
-    let carbs = [];
-    let fats = [];
-    let veggies = [];
+    let labels = [], proteins = [], carbs = [], fats = [], veggies = [];
 
     if(this.state.client) {
       const client = this.state.client;
@@ -739,10 +665,10 @@ export default class LoginScreen extends React.Component {
           customRestDayProtein, customRestDayCarbs, customRestDayFat,
           customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
           customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat);
-        const totalProtein = totals['totalProtein'];
-        const totalCarbs = totals['totalCarbs'];
-        const totalFat = totals['totalFat'];
-        const totalCalories = totals['totalCalories'];
+        const totalProtein = totals['totalProtein'],
+          totalCarbs = totals['totalCarbs'],
+          totalFat = totals['totalFat'],
+          totalCalories = totals['totalCalories'];
 
         protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
         carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
