@@ -52,6 +52,18 @@ export default {
   listItem: {
     marginBottom: 20
   },
+  button: {
+    padding: 10,
+    borderRadius: 2,
+    borderColor: Colors.primaryColor,
+    borderWidth: 2
+  },
+  buttonText: {
+    color: Colors.primaryColor,
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center'
+  },
   modalContent: {
     margin: 10
   },

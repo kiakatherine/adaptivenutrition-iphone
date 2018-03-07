@@ -232,14 +232,14 @@ export default class LoginScreen extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={this._hideAll}>
-        <ScrollView style={Styles.body}>
+        <View style={Styles.body}>
           <View style={Styles.title}>
             <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
           </View>
 
-          <View style={Styles.content}>
+          <ScrollView style={Styles.content}>
             <View>
-              <Text style={Styles.h3}>Your Progress</Text>
+              <Text style={styles.bigTitle}>Your Progress</Text>
 
               <BodyweightGraph
                 data={this.state.bodyweightData}
@@ -276,7 +276,7 @@ export default class LoginScreen extends React.Component {
               </View>
 
               <View>
-                <Text style={Styles.h3}>Meal Consistency</Text>
+                <Text style={styles.bigTitle}>Meal Consistency</Text>
 
                 <View>
                   <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
@@ -317,14 +317,19 @@ export default class LoginScreen extends React.Component {
                 maximumDate={new Date()}
                 onDateChange={date => this.setState({ date })}
               />}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </TouchableWithoutFeedback>
     );
   }
 }
 
 const styles = StyleSheet.create ({
+  bigTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
   todaysBodyweight: {
     marginTop: 20,
     marginBottom: 20
