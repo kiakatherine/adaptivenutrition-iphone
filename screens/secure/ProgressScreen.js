@@ -279,8 +279,9 @@ export default class LoginScreen extends React.Component {
                 <Text style={Styles.h3}>Meal Consistency</Text>
 
                 <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}>
-                    <Text>Phase 1</Text>
+                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>Phase 1</Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase1 &&
@@ -288,8 +289,9 @@ export default class LoginScreen extends React.Component {
                 </View>
 
                 <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase2()}}>
-                    <Text>Phase 2</Text>
+                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase2()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>Phase 2</Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase2 &&
@@ -297,8 +299,9 @@ export default class LoginScreen extends React.Component {
                 </View>
 
                 <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase3()}}>
-                    <Text>Phase 3</Text>
+                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase3()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>Phase 3</Text>
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase3 &&
@@ -340,5 +343,14 @@ const styles = StyleSheet.create ({
   },
   bodyweight: {
     fontSize: 36
+  },
+  phaseHeader: {
+    padding: 15,
+    marginBottom: 5,
+    backgroundColor: Colors.lightGray
+  },
+  phaseHeaderText: {
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 });
