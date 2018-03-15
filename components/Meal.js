@@ -103,7 +103,7 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <MeasurementInput
+            <View><MeasurementInput
               unit={'oz'}
               currentMeal={this.props.currentMeal}
               macro={'protein'}
@@ -111,7 +111,8 @@ class Meal extends React.Component {
                 this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />}
+              updateMeasurement={this.props.updateMeasurement} />
+            <Text>oz</Text></View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -143,7 +144,7 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <MeasurementInput
+            <View><MeasurementInput
               unit={'cups'}
               currentMeal={this.props.currentMeal}
               macro={'carbs'}
@@ -151,7 +152,8 @@ class Meal extends React.Component {
                 this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />}
+              updateMeasurement={this.props.updateMeasurement} />
+            <Text>cups</Text></View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -178,7 +180,7 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <MeasurementInput
+            <View><MeasurementInput
               unit={'tsp'}
               currentMeal={this.props.currentMeal}
               macro={'fats'}
@@ -186,7 +188,8 @@ class Meal extends React.Component {
                 this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />}
+              updateMeasurement={this.props.updateMeasurement} />
+            <Text>tsp</Text></View>}
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
@@ -213,7 +216,7 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <MeasurementInput
+            <View><MeasurementInput
               unit={'cups'}
               currentMeal={this.props.currentMeal}
               macro={'veggies'}
@@ -221,7 +224,8 @@ class Meal extends React.Component {
                 this.props.currentMeal === 1 ? this.props.meal2veggiesMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3veggiesMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4veggiesMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />}
+              updateMeasurement={this.props.updateMeasurement} />
+            <Text>cups</Text></View>}
         </View>}
        </View>
      );
