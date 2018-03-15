@@ -1336,11 +1336,15 @@ export default class LoginScreen extends React.Component {
 
           <View>
             {viewAllMeals &&
-              <Text>View by meal to see meal completion buttons.</Text>}
+              <TouchableHighlight
+                style={Styles.center}
+                onPress={() => this.toggleView(viewAllMeals) }>
+                <Text style={Styles.textCenter}>View by meal to see meal completion buttons.</Text>
+              </TouchableHighlight>}
           </View>
 
           <View>
-            {this.state.phase === 1 &&
+            {(!viewAllMeals && this.state.phase === 1) &&
               <ProgressBar
                 complete1={this.state.phase1meal1}
                 complete2={this.state.phase1meal2}
@@ -1350,7 +1354,7 @@ export default class LoginScreen extends React.Component {
                 enablePhase2={enablePhase2}
                 enablePhase3={enablePhase3}
                 trainingIntensity={trainingIntensity} />}
-            {this.state.phase === 2 &&
+            {(!viewAllMeals && this.state.phase === 2) &&
               <ProgressBar
                 complete1={this.state.meal1measurementsCompleted}
                 complete2={this.state.meal2measurementsCompleted}
@@ -1360,7 +1364,7 @@ export default class LoginScreen extends React.Component {
                 enablePhase2={enablePhase2}
                 enablePhase3={enablePhase3}
                 trainingIntensity={trainingIntensity} />}
-            {this.state.phase === 3 &&
+            {(!viewAllMeals && this.state.phase === 3) &&
               <ProgressBar
                 complete1={this.state.phase3meal1}
                 complete2={this.state.phase3meal2}
