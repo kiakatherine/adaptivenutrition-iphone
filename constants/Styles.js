@@ -86,16 +86,39 @@ export default {
     color: Colors.primaryColor,
     marginBottom: 30
   },
-  modalButton: {
-    alignSelf: 'stretch',
+  modalButtons: {
+    flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'stretch'
+  },
+  modalButton: {
+    flex: 1,
     marginTop: 30,
     marginBottom: 50,
     padding: 20,
-    backgroundColor: Colors.primaryColor
+    backgroundColor: Colors.primaryColor,
+    borderColor: Colors.primaryColor,
+    borderWidth: 2,
+    borderRadius: 2
   },
   modalButtonText: {
     color: Colors.white,
+    letterSpacing: 1,
+    fontWeight: 'bold'
+  },
+  modalButtonCancel: {
+    flex: 1,
+    marginTop: 30,
+    marginBottom: 50,
+    marginRight: 5,
+    padding: 20,
+    backgroundColor: Colors.white,
+    borderColor: Colors.primaryColor,
+    borderWidth: 2,
+    borderRadius: 2
+  },
+  modalButtonCancelText: {
+    color: Colors.primaryColor,
     letterSpacing: 1,
     fontWeight: 'bold'
   },

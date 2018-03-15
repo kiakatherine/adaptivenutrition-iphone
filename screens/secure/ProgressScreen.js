@@ -233,8 +233,8 @@ export default class LoginScreen extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={this._hideAll}>
         <View style={Styles.body}>
-          <View style={Styles.title}>
-            <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
+          <View style={Styles.header}>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
           </View>
 
           <ScrollView style={Styles.content}>
@@ -245,7 +245,7 @@ export default class LoginScreen extends React.Component {
                 data={this.state.bodyweightData}
                 clientTimestamp={this.state.clientTimestamp} />
 
-              <View style={[Styles.flexRow, styles.todaysBodyweight, styles.progressSection]}>
+              {this.state.bodyweightData && <View style={[Styles.flexRow, styles.todaysBodyweight, styles.progressSection]}>
                 <TouchableHighlight
                   style={styles.bodyweightDateButton}
                   onPress={this._showDatepicker}>
@@ -273,7 +273,7 @@ export default class LoginScreen extends React.Component {
                     size={24}
                   />
                 </TouchableHighlight>
-              </View>
+              </View>}
 
               <View style={styles.progressSection}>
                 <Text style={Styles.bigTitle}>Meal Consistency</Text>

@@ -389,8 +389,36 @@ export default class LoginScreen extends React.Component {
 
   clickNavPhase(phase) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ phase: phase });
-    this.setState({ phase: phase });
+
+    if((phase === 1 && this.state.phase === 2) || (phase === 2 && this.state.phase === 3)) {
+      client.update({ phase: phase });
+      this.setState({ phase: phase });
+    } else {
+      if(phase === 2) {
+        this.setState({
+          showModal: true,
+          showNavToPhase2Modal: true
+        });
+      } else if(phase === 3) {
+        this.setState({
+          showModal: true,
+          showNavToPhase3Modal: true
+        });
+      }
+    }
+  }
+
+  movePhase(phase) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const direction = this.state.phase < phase ? 'forward' : 'backward';
+
+    client.update({ phase: direction === 'forward' ? phase : phase - 1 });
+    this.setState({
+      phase: direction === 'forward' ? phase : phase - 1,
+      showModal: false,
+      showNavToPhase2Modal: false,
+      showNavToPhase3Modal: false
+    });
   }
 
   saveMeasurement(currentMeal, macro, value) {
@@ -1568,6 +1596,75 @@ export default class LoginScreen extends React.Component {
             <Picker.Item label="Deficit 3" value={3} />
           </Picker>
         </View>}
+
+        {this.state.showNavToPhase2Modal && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipHeader}>Ready to move to Phase 2?</Text>
+            <Text style={Styles.tooltipParagraph}>A minimum of one successful week following Phase 1 before moving to Phase 2 is strongly encouraged.</Text>
+            <Text style={Styles.tooltipParagraph}>The goal of Phase 1 is to establish consistent timing of meals (every 4 hours) and high quality of food intake by sticking to only those listed.</Text>
+            <Text style={Styles.tooltipParagraph}>Phase 1 is the most important phase of the Adaptive Nutrition program - success with these basic habits means much greater success as you progress with the meal plan.</Text>
+            <Text style={Styles.tooltipParagraph}>The goal of Phase 1 is to get comfortable weighing and measuring your food intake. It can be a challenge at first if these habits are new, but it gets easier the more you do it!</Text>
+
+            <View style={Styles.modalButtons}>
+              <TouchableHighlight style={Styles.modalButtonCancel}
+                underlayColor='white'
+                onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
+                <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={Styles.modalButton}
+                underlayColor='white'
+                onPress={() => { this.movePhase(2) }}>
+                <Text style={Styles.modalButtonText}>I am ready!</Text>
+              </TouchableHighlight>
+            </View>
+
+            <Text></Text>
+            <Text></Text>
+          </View>
+        </ScrollView>}
+
+        {this.state.showNavToPhase3Modal && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight
+              underlayColor='white'
+              onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipHeader}>Ready to move to Phase 3?</Text>
+            <Text style={Styles.tooltipParagraph}>We recommend spending a minimum of one week on Phase 1 and one week on Phase 2 before moving to Phase 3. The purpose of Phase 2 is to ingrain the habit of weighing and measuring every meal at current portion sizes before applying specific portion sizes in Phase 3. While this may seem unnecessary, we find that skipping this week of the program lowers client success rates.</Text>
+
+            <View style={Styles.modalButtons}>
+              <TouchableHighlight style={Styles.modalButtonCancel}
+                underlayColor='white'
+                onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
+                <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={Styles.modalButton}
+                underlayColor='white'
+                onPress={() => { this.movePhase(3) }}>
+                <Text style={Styles.modalButtonText}>I am ready!</Text>
+              </TouchableHighlight>
+            </View>
+
+            <Text></Text>
+            <Text></Text>
+          </View>
+        </ScrollView>}
       </View>
     );
   }

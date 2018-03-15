@@ -199,6 +199,20 @@ class BodyweightGraph extends React.Component {
 
         return (
           <View>
+          {this.state.showTooltip &&
+            <View style={styles.tooltip}>
+              <Text style={styles.tooltipWeight}>{this.state.tooltipWeight} lbs</Text>
+              <Text style={styles.tooltipDate} key={'tooltip'}>{this.state.tooltipDate}</Text>
+              <TouchableHighlight
+                onPress={() => { this.clickDeleteDataPoint() }}>
+                <FontAwesome
+                  name='trash'
+                  size={24}
+                  style={styles.trashIcon}
+                />
+              </TouchableHighlight>
+            </View>}
+
             {this.props.data && <ScrollView
               style={{ width: '100%' }}
               horizontal={true}
@@ -234,23 +248,10 @@ class BodyweightGraph extends React.Component {
             {!this.props.data &&
               <Text>Getting data...</Text>}
 
-            {this.state.showTooltip &&
-              <View style={styles.tooltip}>
-                <Text style={styles.tooltipWeight}>{this.state.tooltipWeight} lbs</Text>
-                <Text style={styles.tooltipDate} key={'tooltip'}>{this.state.tooltipDate}</Text>
-                <TouchableHighlight
-                  onPress={() => { this.clickDeleteDataPoint() }}>
-                  <FontAwesome
-                    name='trash'
-                    size={24}
-                    style={styles.trashIcon}
-                  />
-                </TouchableHighlight>
-              </View>}
-
-            <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
-              <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
-            </TouchableHighlight>
+            {this.props.data &&
+              <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
+                <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
+              </TouchableHighlight>}
           </View>
         );
    }
