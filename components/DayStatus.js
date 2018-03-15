@@ -32,11 +32,9 @@ class Meal extends React.Component {
        <View style={styles.dayStatusWrapper}>
 
         {phase !== 2 && <View>
-          <View style={styles.dayStatusDate}>
-            <Text>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
-          </View>
-
           <View style={styles.dayStatusMeals}>
+            <Text style={styles.dayStatusDate}>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
+
             <View style={[
               styles.dayStatusMeal,
               day.meal1 === 1 ? styles.dayStatusMealGood :
@@ -73,11 +71,9 @@ class Meal extends React.Component {
         </View>}
 
         {phase === 2 && <View>
-          <View style={styles.dayStatusDate}>
-            <Text>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
-          </View>
-
           <View style={styles.dayStatusMeals}>
+            <Text style={styles.dayStatusDate}>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
+
             <View style={[
               styles.dayStatusMeal,
               day.meal1measurementsCompleted === 1 ? styles.dayStatusMealGood :
@@ -113,9 +109,6 @@ export default Meal;
 Meal.propTypes = { };
 
 const styles = StyleSheet.create ({
-  dayStatusDate: {
-    width: 100
-  },
   dayStatusMeals: {
     display: 'flex',
     flexDirection: 'row',
@@ -123,7 +116,6 @@ const styles = StyleSheet.create ({
   dayStatusMeal: {
     flex: 1,
     height: 20,
-    marginRight: 2,
     backgroundColor: Colors.lightGray
   },
   dayStatusMealGood: {
@@ -131,5 +123,8 @@ const styles = StyleSheet.create ({
   },
   dayStatusMealBad: {
     backgroundColor: Colors.paleRed
+  },
+  dayStatusDate: {
+    width: 100
   }
 });

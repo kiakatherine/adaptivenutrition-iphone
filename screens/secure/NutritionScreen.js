@@ -904,7 +904,8 @@ export default class LoginScreen extends React.Component {
         fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nut butter'];
         veggies = ['Spinach', 'Broccoli', 'Lettuce', 'Onions', 'Asparagus', 'Kale',
           'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms',
-          'Yellow squash', 'Zucchini', 'Mixed veggies', 'Brussels sprouts', 'Swiss chard'];
+          'Yellow squash', 'Zucchini', 'Mixed veggies', 'Brussels sprouts',
+          'Swiss chard', 'Carrots'];
       }
     }
 

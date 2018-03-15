@@ -296,7 +296,7 @@ export default class LoginScreen extends React.Component {
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase1 &&
-                    <View>{dayStatusesPhase1}</View>}
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
                 </View>
 
                 <View>
@@ -317,7 +317,7 @@ export default class LoginScreen extends React.Component {
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase2 &&
-                    <View>{dayStatusesPhase2}</View>}
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
                 </View>
 
                 <View>
@@ -338,7 +338,7 @@ export default class LoginScreen extends React.Component {
                   </TouchableHighlight>
 
                   {this.state.showProgressPhase3 &&
-                    <View>{dayStatusesPhase3}</View>}
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
                 </View>
               </View>
             </View>
@@ -388,5 +388,9 @@ const styles = StyleSheet.create ({
   },
   progressSection: {
     marginBottom: 50
+  },
+  phaseProgressWrapper: {
+    marginTop: 10,
+    marginBottom: 15
   }
 });
