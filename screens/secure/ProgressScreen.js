@@ -116,7 +116,7 @@ export default class LoginScreen extends React.Component {
 
   _submitWeight (w) {
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
-    const date = new Date();
+    const date = this.state.date;
     const clientTimestamp = this.state.clientTimestamp;
 
     this.setState({
@@ -138,28 +138,31 @@ export default class LoginScreen extends React.Component {
 
         filteredBodyweightRecords.forEach(rec => {
           if(rec.date === moment(date).format('MM-DD-YY')) {
+            alert('oh hey')
             duplicateEntry = true;
           }
         });
-      }
 
-      if(!duplicateEntry) {
-        bodyweightRecords.push({
-          date: moment(new Date).format('MM-DD-YY'),
-          timestamp: Number(this.state.clientTimestamp),
-          weight: Number(this.state.weight)
-        }).then(resp => {}, reason => {
-          alert('Could not save bodyweight');
-        });
-      } else {
-        alert('Oops! Looks like there is already an entry for that day.')
-      }
+        alert(duplicateEntry)
 
-      this.setState({
-        showDatepicker: false,
-        date: new Date(),
-        weight: ''
-      }, this._hideAll());
+        // if(!duplicateEntry) {
+        //   bodyweightRecords.push({
+        //     date: moment(new Date).format('MM-DD-YY'),
+        //     timestamp: Number(this.state.clientTimestamp),
+        //     weight: Number(this.state.weight)
+        //   }).then(resp => {}, reason => {
+        //     alert('Could not save bodyweight');
+        //   });
+        // } else {
+        //   alert('Oops! Looks like there is already an entry for that day.')
+        // }
+
+        this.setState({
+          showDatepicker: false,
+          date: new Date(),
+          weight: ''
+        }, this._hideAll());
+      }
     });
   }
 
@@ -245,34 +248,39 @@ export default class LoginScreen extends React.Component {
                 data={this.state.bodyweightData}
                 clientTimestamp={this.state.clientTimestamp} />
 
-              {this.state.bodyweightData && <View style={[Styles.flexRow, styles.todaysBodyweight, styles.progressSection]}>
-                <TouchableHighlight
-                  style={styles.bodyweightDateButton}
-                  onPress={this._showDatepicker}>
-                  <FontAwesome
-                    name='calendar'
-                    size={24}
-                  />
-                </TouchableHighlight>
+              {this.state.bodyweightData && <View style={[styles.todaysBodyweight, styles.progressSection]}>
+                <View style={Styles.flexRow}>
+                  <View>
+                    <TouchableHighlight
+                      style={styles.bodyweightDateButton}
+                      onPress={this._showDatepicker}>
+                      <FontAwesome
+                        name='calendar'
+                        size={24}
+                      />
+                    </TouchableHighlight>
+                    <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
+                  </View>
 
-                <TextInput
-                  style={[Styles.forms.textInput, styles.bodyweightInput]}
-                  keyboardType={'numeric'}
-                  placeholder={'Enter your weight'}
-                  onFocus={() => this.setState({ showDatepicker: false })}
-                  onChangeText={weight => this.setState({ weight })}
-                  value={this.state.weight}
-                />
-
-                <TouchableHighlight
-                  style={styles.bodyweightSaveButton}
-                  onPress={this._submitWeight}
-                  disabled={this.state.weight.trim().length < 1}>
-                  <FontAwesome
-                    name='check'
-                    size={24}
+                  <TextInput
+                    style={[Styles.forms.textInput, styles.bodyweightInput]}
+                    keyboardType={'numeric'}
+                    placeholder={'Enter your weight'}
+                    onFocus={() => this.setState({ showDatepicker: false })}
+                    onChangeText={weight => this.setState({ weight })}
+                    value={this.state.weight}
                   />
-                </TouchableHighlight>
+
+                  <TouchableHighlight
+                    style={styles.bodyweightSaveButton}
+                    onPress={this._submitWeight}
+                    disabled={this.state.weight.trim().length < 1}>
+                    <FontAwesome
+                      name='check'
+                      size={24}
+                    />
+                  </TouchableHighlight>
+                </View>
               </View>}
 
               <View style={styles.progressSection}>
@@ -343,14 +351,17 @@ export default class LoginScreen extends React.Component {
               </View>
             </View>
 
-            {this.state.showDatepicker &&
-              <DatePickerIOS
-                mode={'date'}
-                date={this.state.date}
-                maximumDate={new Date()}
-                onDateChange={date => this.setState({ date })}
-              />}
           </ScrollView>
+
+          {this.state.showDatepicker &&
+            <DatePickerIOS
+              style={styles.datePicker}
+              mode={'date'}
+              date={this.state.date}
+              maximumDate={new Date()}
+              onDateChange={date => this.setState({ date, showDatepicker: false })}
+            />}
+
         </View>
       </TouchableWithoutFeedback>
     );
@@ -359,12 +370,17 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create ({
   todaysBodyweight: {
-    marginTop: 20,
-    marginBottom: 20
+    marginTop: 20
   },
   bodyweightDateButton: {
     width: 40,
-    paddingTop: 15
+    paddingTop: 10,
+    marginLeft: 10,
+    marginBottom: 5
+  },
+  bodyweightDate: {
+    fontSize: 14,
+    marginRight: 10
   },
   bodyweightInput: {
     flex: 1
@@ -374,8 +390,8 @@ const styles = StyleSheet.create ({
     paddingTop: 15,
     paddingLeft: 10
   },
-  bodyweight: {
-    fontSize: 36
+  datePicker: {
+    flex: 1
   },
   phaseHeader: {
     padding: 15,
