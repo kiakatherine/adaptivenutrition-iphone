@@ -123,7 +123,7 @@ export default class LoginScreen extends React.Component {
       weight: w
     });
 
-    bodyweightRecords.on('value', snapshot => {
+    bodyweightRecords.orderByChild('timestamp').equalTo(clientTimestamp).on('value', snapshot => {
       const records = snapshot.val();
       let duplicateEntry = false;
       let filteredBodyweightRecords = [];
@@ -142,6 +142,8 @@ export default class LoginScreen extends React.Component {
             duplicateEntry = true;
           }
         });
+
+        alert('hi')
 
         alert(duplicateEntry)
 
@@ -248,40 +250,43 @@ export default class LoginScreen extends React.Component {
                 data={this.state.bodyweightData}
                 clientTimestamp={this.state.clientTimestamp} />
 
-              {this.state.bodyweightData && <View style={[styles.todaysBodyweight, styles.progressSection]}>
-                <View style={Styles.flexRow}>
-                  <View>
-                    <TouchableHighlight
-                      style={styles.bodyweightDateButton}
-                      onPress={this._showDatepicker}>
-                      <FontAwesome
-                        name='calendar'
-                        size={24}
-                      />
-                    </TouchableHighlight>
-                    <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
+              {this.state.bodyweightData &&
+                <View style={[styles.todaysBodyweight, styles.progressSection]}>
+                  <View style={[Styles.flexRow, styles.bodyweightInputsWrapper]}>
+                    <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+                      <TouchableHighlight
+                        underlayColor={Colors.lightGray}
+                        style={styles.bodyweightDateButton}
+                        onPress={this._showDatepicker}>
+                        <FontAwesome
+                          name='calendar'
+                          size={24}
+                        />
+                      </TouchableHighlight>
+                      <TouchableHighlight
+                        underlayColor={Colors.lightGray}
+                        onPress={this._showDatepicker}>
+                        <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
+                      </TouchableHighlight>
+                    </View>
+
+                    <TextInput
+                      style={[Styles.forms.textInput, styles.bodyweightInput]}
+                      keyboardType={'numeric'}
+                      placeholder={'Enter your weight'}
+                      onFocus={() => this.setState({ showDatepicker: false })}
+                      onChangeText={weight => this.setState({ weight })}
+                      value={this.state.weight}
+                    />
                   </View>
 
-                  <TextInput
-                    style={[Styles.forms.textInput, styles.bodyweightInput]}
-                    keyboardType={'numeric'}
-                    placeholder={'Enter your weight'}
-                    onFocus={() => this.setState({ showDatepicker: false })}
-                    onChangeText={weight => this.setState({ weight })}
-                    value={this.state.weight}
-                  />
-
                   <TouchableHighlight
-                    style={styles.bodyweightSaveButton}
+                    style={Styles.button}
                     onPress={this._submitWeight}
                     disabled={this.state.weight.trim().length < 1}>
-                    <FontAwesome
-                      name='check'
-                      size={24}
-                    />
+                    <Text style={Styles.buttonText}>Save</Text>
                   </TouchableHighlight>
-                </View>
-              </View>}
+                </View>}
 
               <View style={styles.progressSection}>
                 <Text style={Styles.bigTitle}>Meal Consistency</Text>
@@ -372,23 +377,31 @@ const styles = StyleSheet.create ({
   todaysBodyweight: {
     marginTop: 20
   },
+  bodyweightInputsWrapper: {
+    flex: 1,
+    marginBottom: 5
+  },
   bodyweightDateButton: {
     width: 40,
-    paddingTop: 10,
-    marginLeft: 10,
+    paddingTop: 12,
+    marginLeft: 15,
     marginBottom: 5
   },
   bodyweightDate: {
-    fontSize: 14,
-    marginRight: 10
+    fontSize: 16,
+    paddingTop: 15
+  },
+  bodyweightDateInput: {
+    height: 50,
+    borderRightColor: Colors.white,
+    borderRightWidth: 5,
+    backgroundColor: Colors.lightGray,
+    marginTop: 5,
+    marginBottom: 5
   },
   bodyweightInput: {
-    flex: 1
-  },
-  bodyweightSaveButton: {
-    width: 40,
-    paddingTop: 15,
-    paddingLeft: 10
+    flex: 1,
+    flexDirection: 'row'
   },
   datePicker: {
     flex: 1

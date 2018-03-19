@@ -246,7 +246,7 @@ class BodyweightGraph extends React.Component {
             </ScrollView>}
 
             {!this.props.data &&
-              <Text>Getting data...</Text>}
+              <Text style={styles.loadingMessage}>Getting data...</Text>}
 
             {this.props.data &&
               <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
@@ -281,5 +281,10 @@ const styles = StyleSheet.create ({
   trashIcon: {
     flex: 1,
     textAlign: 'right'
+  },
+  loadingMessage: {
+    color: Colors.gray,
+    marginBottom: 20,
+    fontSize: 16
   }
 });
