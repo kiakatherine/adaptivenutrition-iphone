@@ -649,3 +649,15 @@ export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWork
     dinnerTime: cleanTimeLabel(convertToTime(dinnerTimeLower) + '-' + convertToTime(dinnerTimeUpper))
   };
 }
+
+export function convertTemplateNumberToString(template) {
+  let t = template === 0 ? 'Maintenance' :
+    template === 1 ? 'Cut 1' :
+    template === 2 ? 'Cut 2' :
+    template === 3 ? 'Cut 3' :
+    template === 4 ? 'Bulk 1' :
+    template === 5 ? 'Bulk 2' :
+    template === 6 ? 'Bulk 3' : null;
+
+  return t;
+}

@@ -12,7 +12,7 @@ import * as labels from '../../constants/MealLabels';
 import moment from 'moment';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, calculateTotals, convertTrainingIntensity, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -47,7 +47,9 @@ export default class LoginScreen extends React.Component {
       showMealsTooltip: false,
       showWakeTimePicker: false,
       showEnergyBalancePicker: false,
+      showTemplateConfirmation: false,
 
+      potentialTemplate: null,
       phase: null,
 
       phase1meal1: null,
@@ -59,7 +61,14 @@ export default class LoginScreen extends React.Component {
       phase3meal3: null,
       phase3meal4: null,
       phase3meal5: null,
-      phase3meal6: null
+      phase3meal6: null,
+
+      checkedTemplate1: false,
+      checkedTemplate2: false,
+      checkedTemplate3: false,
+      checkedTemplate4: false,
+      checkedTemplate5: false,
+      checkedTemplate6: false
     };
   }
 
@@ -193,10 +202,8 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  saveTemplateType(template) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-
-    t = template === 0 ? 'Maintenance' :
+  clickTemplateType(template) {
+    let t = template === 0 ? 'Maintenance' :
       template === 1 ? 'Cut 1' :
       template === 2 ? 'Cut 2' :
       template === 3 ? 'Cut 3' :
@@ -204,12 +211,34 @@ export default class LoginScreen extends React.Component {
       template === 5 ? 'Bulk 2' :
       template === 6 ? 'Bulk 3' : null;
 
+    this.setState({
+      showEnergyBalancePicker: false,
+      showModal: true,
+      showTemplateConfirmation: true,
+      potentialTemplate: template
+    });
+  }
+
+  saveTemplateType() {
+    const template = this.state.potentialTemplate;
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    let t = convertTemplateNumberToString(template);
+
     client.update({ templateType: t });
 
     this.setState({
       showEnergyBalancePicker: false,
+      showTemplateConfirmation: false,
       showModal: false,
-      template: template
+      template: template,
+      potentialTemplate: null,
+      checkedTemplate1: false,
+      checkedTemplate2: false,
+      checkedTemplate3: false,
+      checkedTemplate4: false,
+      checkedTemplate5: false,
+      checkedTemplate6: false
     });
   }
 
@@ -1075,7 +1104,7 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.mealPlanSection}>
               <Text style={[Styles.bigTitle, styles.bigTitle]}>Todays Meal Plan</Text>
-              <Text style={styles.phase}>Phase {phase}</Text>
+              <Text style={styles.phase}>Phase {phase} - {convertTemplateNumberToString(template)}</Text>
 
               {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton,
@@ -1591,7 +1620,7 @@ export default class LoginScreen extends React.Component {
           <Picker
             style={styles.picker}
             selectedValue={template}
-            onValueChange={(itemValue, itemIndex) => this.saveTemplateType(itemValue)}>
+            onValueChange={(itemValue, itemIndex) => this.clickTemplateType(itemValue)}>
             <Picker.Item label="Surplus 3" value={6} />
             <Picker.Item label="Surplus 2" value={5} />
             <Picker.Item label="Surplus 1" value={4} />
@@ -1602,9 +1631,125 @@ export default class LoginScreen extends React.Component {
           </Picker>
         </View>}
 
+        {this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
+          <TouchableHighlight underlayColor='white' onPress={() => { this.setState({
+            showTemplateConfirmation: false,
+            showModal: false,
+            checkedTemplate1: false,
+            checkedTemplate2: false,
+            checkedTemplate3: false,
+            checkedTemplate4: false,
+            checkedTemplate5: false,
+            checkedTemplate6: false
+           })
+          }}>
+            <FontAwesome
+              style={[Styles.textCenter, Styles.tooltipClose]}
+              name='remove'
+              size={24}
+            />
+          </TouchableHighlight>
+
+          <Text style={Styles.tooltipHeader}>Confirm</Text>
+
+          <Text style={Styles.tooltipParagraph}>Before changing templates, check off the items below if you have followed them 90% or more of the time.</Text>
+          <Text style={Styles.tooltipParagraph}>Not following any one of these variables can prevent you from seeing progress.</Text>
+
+          <View>
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate1 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on {convertTemplateNumberToString(this.state.template)} for at least 1 week.</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate2 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate2: !this.state.checkedTemplate2 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate2: !this.state.checkedTemplate2 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate2 ? styles.checkedText : styles.uncheckedText]}>I have gotten all my meals in each day.</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate3 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate3 ? styles.checkedText : styles.uncheckedText]}>I have eaten according to the food options in the app.</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate4 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate4 ? styles.checkedText : styles.uncheckedText]}>I have spaced my meals out according to the app.</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate5 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate5 ? styles.checkedText : styles.uncheckedText]}>I have gotten 7+ hours of sleep each night.</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.checkedTemplate6 ? styles.checked : '']}
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate6: !this.state.checkedTemplate6 }) }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate6: !this.state.checkedTemplate6 }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate6 ? styles.checkedText : styles.uncheckedText]}>My body weight has been relatively consistent for the past 5+ days.</Text>
+              </TouchableHighlight>
+            </View>
+
+          </View>
+
+          <TouchableHighlight style={[Styles.modalButton,
+            this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
+            && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabled]}
+            underlayColor='white' onPress={ () => {
+              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
+              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? this.saveTemplateType() : null
+            }}>
+            <Text style={[Styles.modalButtonText,
+              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
+              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabledText]}>
+              Confirm</Text>
+          </TouchableHighlight>
+
+          <Text></Text>
+          <Text></Text>
+        </ScrollView>}
+
         {this.state.showNavToPhase2Modal && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
+            <TouchableHighlight underlayColor='#CCC' onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1801,5 +1946,25 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: Colors.lightGray
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    marginBottom: 5
+  },
+  checkbox: {
+    width: 25,
+    height: 25,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 2,
+    marginRight: 8
+  },
+  checked: {
+    backgroundColor: Colors.primaryColor
+  },
+  checkedText: {
+    color: Colors.black
+  },
+  uncheckedText: {
+    color: Colors.gray
   }
 });

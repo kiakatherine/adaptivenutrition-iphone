@@ -104,7 +104,8 @@ export default {
   modalButtonText: {
     color: Colors.white,
     letterSpacing: 1,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   modalButtonCancel: {
     flex: 1,
@@ -121,6 +122,13 @@ export default {
     color: Colors.primaryColor,
     letterSpacing: 1,
     fontWeight: 'bold'
+  },
+  modalButtonDisabled: {
+    backgroundColor: Colors.gray,
+    borderColor: Colors.gray
+  },
+  modalButtonDisabledText: {
+    color: Colors.white
   },
   h1: {
     fontWeight: 'bold',
