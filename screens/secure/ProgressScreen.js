@@ -123,48 +123,43 @@ export default class LoginScreen extends React.Component {
       weight: w
     });
 
-    bodyweightRecords.orderByChild('timestamp').equalTo(clientTimestamp).on('value', snapshot => {
+    bodyweightRecords.once('value', snapshot => {
       const records = snapshot.val();
       let duplicateEntry = false;
       let filteredBodyweightRecords = [];
 
       // check first that there is not already an entry for today - check timestamp and date
-      if(this.state.clientTimestamp) {
+      if(clientTimestamp) {
         Object.keys(records).map(function(key) {
           if(records[key].timestamp === clientTimestamp) {
             filteredBodyweightRecords.push(records[key]);
+            if(records[key].date === moment(date).format('MM-DD-YY')) {
+              // alert('oh hey')
+              const recordRef = firebase.database().ref('bodyweightRecords/' + key);
+              recordRef.remove();
+              duplicateEntry = true;
+            }
           }
         });
 
-        filteredBodyweightRecords.forEach(rec => {
-          if(rec.date === moment(date).format('MM-DD-YY')) {
-            alert('oh hey')
-            duplicateEntry = true;
-          }
-        });
-
-        alert('hi')
-
-        alert(duplicateEntry)
-
-        // if(!duplicateEntry) {
-        //   bodyweightRecords.push({
-        //     date: moment(new Date).format('MM-DD-YY'),
-        //     timestamp: Number(this.state.clientTimestamp),
-        //     weight: Number(this.state.weight)
-        //   }).then(resp => {}, reason => {
-        //     alert('Could not save bodyweight');
-        //   });
-        // } else {
-        //   alert('Oops! Looks like there is already an entry for that day.')
-        // }
-
-        this.setState({
-          showDatepicker: false,
-          date: new Date(),
-          weight: ''
-        }, this._hideAll());
+        if(duplicateEntry === false) {
+          bodyweightRecords.push({
+            date: moment(new Date).format('MM-DD-YY'),
+            timestamp: Number(this.state.clientTimestamp),
+            weight: Number(this.state.weight)
+          }).then(resp => {}, reason => {
+            alert('Could not save bodyweight');
+          });
+        } else {
+          alert('Oops! Looks like there is already an entry for that day.')
+        }
       }
+
+      this.setState({
+        showDatepicker: false,
+        date: new Date(),
+        weight: ''
+      }, this._hideAll());
     });
   }
 
