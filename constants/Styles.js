@@ -145,6 +145,10 @@ export default {
     fontSize: 16,
     marginBottom: 5
   },
+  loadingMessage: {
+    color: Colors.gray,
+    fontSize: 16
+  },
   menuItem: {
     backgroundColor: Colors.paleBlue,
     borderBottomWidth: 1,

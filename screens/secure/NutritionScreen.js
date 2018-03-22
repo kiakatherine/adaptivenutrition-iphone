@@ -278,18 +278,25 @@ export default class LoginScreen extends React.Component {
 
   completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
-    const dayStatuses = this.state.dayStatuses;
+    const dayStatusesRef = firebase.database().ref().child('dayStatuses');
     const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
     let todayKey, todayRef, today;
 
-    Object.keys(dayStatuses).map(key => {
-      if(dayStatuses[key].timestamp === client.timestamp) {
-        if(dayStatuses[key].date === moment(date).format('MM-DD-YY')) {
-          todayKey = key;
-          today = dayStatuses[key];
+    // check if a dayStatus exists with timestamp and today's date
+    dayStatusesRef.once('value', snapshot => {
+      const ds = snapshot.val();
+
+      Object.keys(ds).map(key => {
+        if(ds[key].timestamp === client.timestamp) {
+          if(ds[key].date === moment(date).format('MM-DD-YY')) {
+            todayKey = key;
+            today = ds[key];
+            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+            // todayRef.remove();
+          }
         }
-      }
+      });
     });
 
     if(today && todayKey && today.phase === this.state.phase) {
@@ -395,7 +402,7 @@ export default class LoginScreen extends React.Component {
       });
     } else {
       // save date and selected meal and whether completed or not
-      if(!today || today.phase !== this.state.phase) {
+      // if(!today || today.phase !== this.state.phase) {
         const dayStatuses = firebase.database().ref('dayStatuses');
         dayStatuses.push({
           date: moment(new Date).format('MM-DD-YY'),
@@ -412,7 +419,7 @@ export default class LoginScreen extends React.Component {
         }).then(resp => {}, reason => {
           alert('Could not save meal completion');
         });
-      }
+      // }
     }
   }
 
@@ -472,6 +479,8 @@ export default class LoginScreen extends React.Component {
                   todayKey = key;
                   today = phaseTwoDayStatusesRef[key];
                 }
+                // todayRef = firebase.database().ref().child('phaseTwoDays/' + key);
+                // todayRef.remove();
               }
             });
           }

@@ -206,7 +206,7 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
         });
       } else {
-        dayStatusesPhase1 = <Text>No progress for this phase yet</Text>;
+        dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
       }
     }
 
@@ -216,7 +216,7 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
         });
       } else {
-        dayStatusesPhase2 = <Text>No progress for this phase yet</Text>;
+        dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
       }
     }
 
@@ -226,144 +226,142 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
         });
       } else {
-        dayStatusesPhase3 = <Text>No progress for this phase yet</Text>;
+        dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
       }
     }
 
     return (
-      <TouchableWithoutFeedback onPress={this._hideAll}>
-        <View style={Styles.body}>
-          <View style={Styles.header}>
-            <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
-          </View>
+      <View style={Styles.body}>
+        <View style={Styles.header}>
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
+        </View>
 
-          <ScrollView style={Styles.content}>
-            <View>
-              <Text style={Styles.bigTitle}>Bodyweight</Text>
+        <ScrollView style={Styles.content}>
+          <View>
+            <Text style={Styles.bigTitle}>Bodyweight</Text>
 
-              <BodyweightGraph
-                data={this.state.bodyweightData}
-                clientTimestamp={this.state.clientTimestamp} />
+            <BodyweightGraph
+              data={this.state.bodyweightData}
+              clientTimestamp={this.state.clientTimestamp} />
 
-              {this.state.bodyweightData &&
-                <View style={[styles.todaysBodyweight, styles.progressSection]}>
-                  <View style={[Styles.flexRow, styles.bodyweightInputsWrapper]}>
-                    <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
-                      <TouchableHighlight
-                        underlayColor={Colors.lightGray}
-                        style={styles.bodyweightDateButton}
-                        onPress={this._showDatepicker}>
-                        <FontAwesome
-                          name='calendar'
-                          size={24}
-                        />
-                      </TouchableHighlight>
-                      <TouchableHighlight
-                        underlayColor={Colors.lightGray}
-                        onPress={this._showDatepicker}>
-                        <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
-                      </TouchableHighlight>
-                    </View>
-
-                    <TextInput
-                      style={[Styles.forms.textInput, styles.bodyweightInput]}
-                      keyboardType={'numeric'}
-                      placeholder={'Enter your weight'}
-                      onFocus={() => this.setState({ showDatepicker: false })}
-                      onChangeText={weight => this.setState({ weight })}
-                      value={this.state.weight}
-                    />
+            {this.state.bodyweightData &&
+              <View style={[styles.todaysBodyweight, styles.progressSection]}>
+                <View style={[Styles.flexRow, styles.bodyweightInputsWrapper]}>
+                  <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      style={styles.bodyweightDateButton}
+                      onPress={this._showDatepicker}>
+                      <FontAwesome
+                        name='calendar'
+                        size={24}
+                      />
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      onPress={this._showDatepicker}>
+                      <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
+                    </TouchableHighlight>
                   </View>
 
-                  <TouchableHighlight
-                    style={Styles.button}
-                    onPress={this._submitWeight}
-                    disabled={this.state.weight.trim().length < 1}>
-                    <Text style={Styles.buttonText}>Save</Text>
-                  </TouchableHighlight>
-                </View>}
-
-              <View style={styles.progressSection}>
-                <Text style={Styles.bigTitle}>Meal Consistency</Text>
-
-                <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
-                    style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      {this.state.showProgressPhase1 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-down'
-                        size={20}
-                      />}
-                      {!this.state.showProgressPhase1 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-right'
-                        size={20}
-                      />} Phase 1
-                    </Text>
-                  </TouchableHighlight>
-
-                  {this.state.showProgressPhase1 &&
-                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
+                  <TextInput
+                    style={[Styles.forms.textInput, styles.bodyweightInput]}
+                    keyboardType={'numeric'}
+                    placeholder={'Enter your weight'}
+                    onFocus={() => this.setState({ showDatepicker: false })}
+                    onChangeText={weight => this.setState({ weight })}
+                    value={this.state.weight}
+                  />
                 </View>
 
-                <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase2()}}
-                    style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      {this.state.showProgressPhase2 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-down'
-                        size={20}
-                      />}
-                      {!this.state.showProgressPhase2 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-right'
-                        size={20}
-                      />} Phase 2
-                    </Text>
-                  </TouchableHighlight>
+                <TouchableHighlight
+                  style={Styles.button}
+                  onPress={this._submitWeight}
+                  disabled={this.state.weight.trim().length < 1}>
+                  <Text style={Styles.buttonText}>Save</Text>
+                </TouchableHighlight>
+              </View>}
 
-                  {this.state.showProgressPhase2 &&
-                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
-                </View>
+            <View style={styles.progressSection}>
+              <Text style={Styles.bigTitle}>Meal Consistency</Text>
 
-                <View>
-                  <TouchableHighlight onPress={() => { this._clickProgressReportPhase3()}}
-                    style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      {this.state.showProgressPhase3 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-down'
-                        size={20}
-                      />}
-                      {!this.state.showProgressPhase3 && <FontAwesome
-                        style={styles.phaseHeaderIcon}
-                        name='angle-right'
-                        size={20}
-                      />} Phase 3
-                    </Text>
-                  </TouchableHighlight>
+              <View>
+                <TouchableHighlight onPress={() => { this._clickProgressReportPhase1()}}
+                  style={styles.phaseHeader}>
+                  <Text style={styles.phaseHeaderText}>
+                    {this.state.showProgressPhase1 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-down'
+                      size={20}
+                    />}
+                    {!this.state.showProgressPhase1 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-right'
+                      size={20}
+                    />} Phase 1
+                  </Text>
+                </TouchableHighlight>
 
-                  {this.state.showProgressPhase3 &&
-                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
-                </View>
+                {this.state.showProgressPhase1 &&
+                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
+              </View>
+
+              <View>
+                <TouchableHighlight onPress={() => { this._clickProgressReportPhase2()}}
+                  style={styles.phaseHeader}>
+                  <Text style={styles.phaseHeaderText}>
+                    {this.state.showProgressPhase2 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-down'
+                      size={20}
+                    />}
+                    {!this.state.showProgressPhase2 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-right'
+                      size={20}
+                    />} Phase 2
+                  </Text>
+                </TouchableHighlight>
+
+                {this.state.showProgressPhase2 &&
+                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
+              </View>
+
+              <View>
+                <TouchableHighlight onPress={() => { this._clickProgressReportPhase3()}}
+                  style={styles.phaseHeader}>
+                  <Text style={styles.phaseHeaderText}>
+                    {this.state.showProgressPhase3 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-down'
+                      size={20}
+                    />}
+                    {!this.state.showProgressPhase3 && <FontAwesome
+                      style={styles.phaseHeaderIcon}
+                      name='angle-right'
+                      size={20}
+                    />} Phase 3
+                  </Text>
+                </TouchableHighlight>
+
+                {this.state.showProgressPhase3 &&
+                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
               </View>
             </View>
+          </View>
 
-          </ScrollView>
+        </ScrollView>
 
-          {this.state.showDatepicker &&
-            <DatePickerIOS
-              style={styles.datePicker}
-              mode={'date'}
-              date={this.state.date}
-              maximumDate={new Date()}
-              onDateChange={date => this.setState({ date, showDatepicker: false })}
-            />}
+        {this.state.showDatepicker &&
+          <DatePickerIOS
+            style={styles.datePicker}
+            mode={'date'}
+            date={this.state.date}
+            maximumDate={new Date()}
+            onDateChange={date => this.setState({ date, showDatepicker: false })}
+          />}
 
-        </View>
-      </TouchableWithoutFeedback>
+      </View>
     );
   }
 }
