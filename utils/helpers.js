@@ -87,7 +87,7 @@ export function changeUnit(showInGrams, macroType, value, altSource) {
       } else if(afterDecimal === '25') {
         return beforeDecimal + ' 1/4 ' + cup;
       }
-    } else if(macroType === 'fat') {
+    } else if(macroType === 'fats') {
       let fat;
       let fatBeforeDecimal;
       let fatAfterDecimal;
@@ -215,7 +215,7 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
       return sources;
     }
   } else if(macro === 'fats') {
-    let fatString = 'fat' + currMeal;
+    let fatString = 'fats' + currMeal;
     const fatAmount = sources[fatString];
 
     if(phase === 3) {
@@ -295,14 +295,6 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
     totals['restDayCarbs'] = Math.round(0.75 * leanMass);
   }
 
-  // rest day fat
-  if(totals['restCaloriesFinal'] && totals['restDayProtein'] && totals['restDayCarbs']) {
-    totals['restDayFat'] = Math.round((totals['restCaloriesFinal'] - ((totals['restDayProtein'] * 4) +
-      (totals['restDayCarbs'] * 4))) / 9);
-    // this.set('client.restDayFat', restDayFat);
-    // return restDayFat;
-  }
-
   // rest calories final
   let restCalories;
 
@@ -322,6 +314,14 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
     totals['restCaloriesFinal'] = restCalories + Number(difference);
     // this.set('client.restCaloriesFinal', restCaloriesFinal);
     // return restCaloriesFinal;
+  }
+
+  // rest day fat
+  if(totals['restCaloriesFinal'] && totals['restDayProtein'] && totals['restDayCarbs']) {
+    totals['restDayFat'] = Math.round((totals['restCaloriesFinal'] - ((totals['restDayProtein'] * 4) +
+      (totals['restDayCarbs'] * 4))) / 9);
+    // this.set('client.restDayFat', restDayFat);
+    // return restDayFat;
   }
 
   // custom rest day calories final

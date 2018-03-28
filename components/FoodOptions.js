@@ -80,19 +80,21 @@ class FoodOptions extends React.Component {
      const isPwoShake = this.props.pwo;
      let hidePwoShakeArrows = false;
 
-     let options = !showInGrams ? createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) : null;
+     let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
 
-     let content;
+     let content = null;
+     const currMeal = Number(currentMeal) + 1;
+     const string = macro + currMeal;
 
-     if(selection) {
-       content = selection;
-     } else if(isPwoShake) {
-       const currMeal = currentMeal + 1;
-       const string = macro + currMeal;
-       hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
-       content = sources[string + 'Grams'] + ' of whey protein';
-     } else if(options) {
-       content = options[0];
+     if(Number.isInteger(currMeal)) {
+       if(selection) {
+         content = selection;
+       } else if(isPwoShake) {
+         hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
+         content = sources[string + 'Grams'] + ' of whey protein';
+       } else if(showInGrams) {
+         content = sources[string + 'Grams'];
+       }
      }
 
      return (

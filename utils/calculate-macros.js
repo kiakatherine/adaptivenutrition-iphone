@@ -101,54 +101,54 @@ export function calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs) {
 }
 
 export function calcFat(trainingIntensity, mealsBeforeWorkout, totalFat) {
-  let fat = [];
+  let fats = [];
 
   if(trainingIntensity === 0) {
-    fat[0] = Math.round(totalFat * 0.3);
-    fat[1] = Math.round(totalFat * 0.2);
-    fat[2] = Math.round(totalFat * 0.2);
-    fat[3] = Math.round(totalFat * 0.3);
-    fat[4] = '---';
+    fats[0] = Math.round(totalFat * 0.3);
+    fats[1] = Math.round(totalFat * 0.2);
+    fats[2] = Math.round(totalFat * 0.2);
+    fats[3] = Math.round(totalFat * 0.3);
+    fats[4] = '---';
   } else if(trainingIntensity === 1 || trainingIntensity === 2) {
     if(mealsBeforeWorkout === 0) {
-      fat[0] = '---';
-      fat[1] = '---';
-      fat[2] = Math.round(totalFat * 0.1);
-      fat[3] = Math.round(totalFat * 0.3);
-      fat[4] = Math.round(totalFat * 0.3);
-      fat[5] = Math.round(totalFat * 0.3);
+      fats[0] = '---';
+      fats[1] = '---';
+      fats[2] = Math.round(totalFat * 0.1);
+      fats[3] = Math.round(totalFat * 0.3);
+      fats[4] = Math.round(totalFat * 0.3);
+      fats[5] = Math.round(totalFat * 0.3);
     } else if(mealsBeforeWorkout === 1) {
-      fat[0] = Math.round(totalFat * 0.1);
-      fat[1] = '---';
-      fat[2] = '---';
-      fat[3] = Math.round(totalFat * 0.3);
-      fat[4] = Math.round(totalFat * 0.3);
-      fat[5] = Math.round(totalFat * 0.3);
+      fats[0] = Math.round(totalFat * 0.1);
+      fats[1] = '---';
+      fats[2] = '---';
+      fats[3] = Math.round(totalFat * 0.3);
+      fats[4] = Math.round(totalFat * 0.3);
+      fats[5] = Math.round(totalFat * 0.3);
     } else if(mealsBeforeWorkout === 2) {
-      fat[0] = Math.round(totalFat * 0.3);
-      fat[1] = Math.round(totalFat * 0.1);
-      fat[2] = '---';
-      fat[3] = '---';
-      fat[4] = Math.round(totalFat * 0.3);
-      fat[5] = Math.round(totalFat * 0.3);
+      fats[0] = Math.round(totalFat * 0.3);
+      fats[1] = Math.round(totalFat * 0.1);
+      fats[2] = '---';
+      fats[3] = '---';
+      fats[4] = Math.round(totalFat * 0.3);
+      fats[5] = Math.round(totalFat * 0.3);
     } else if(mealsBeforeWorkout === 3) {
-      fat[0] = Math.round(totalFat * 0.3);
-      fat[1] = Math.round(totalFat * 0.3);
-      fat[2] = Math.round(totalFat * 0.1);
-      fat[3] = '---';
-      fat[4] = '---';
-      fat[5] = Math.round(totalFat * 0.3);
+      fats[0] = Math.round(totalFat * 0.3);
+      fats[1] = Math.round(totalFat * 0.3);
+      fats[2] = Math.round(totalFat * 0.1);
+      fats[3] = '---';
+      fats[4] = '---';
+      fats[5] = Math.round(totalFat * 0.3);
     } else if(mealsBeforeWorkout === 4) {
-      fat[0] = Math.round(totalFat * 0.3);
-      fat[1] = Math.round(totalFat * 0.3);
-      fat[2] = Math.round(totalFat * 0.3);
-      fat[3] = Math.round(totalFat * 0.1);
-      fat[4] = '---';
-      fat[5] = '---';
+      fats[0] = Math.round(totalFat * 0.3);
+      fats[1] = Math.round(totalFat * 0.3);
+      fats[2] = Math.round(totalFat * 0.3);
+      fats[3] = Math.round(totalFat * 0.1);
+      fats[4] = '---';
+      fats[5] = '---';
     }
   }
 
-  return fat;
+  return fats;
 }
 
 export function calcVeggies(trainingIntensity, mealsBeforeWorkout) {

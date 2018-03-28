@@ -39,7 +39,6 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       mealsBeforeWorkout: 3,
-      currentMeal: 1,
 
       showModal: false,
       showTimeTooltip: false,
@@ -710,7 +709,7 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 2' ? 5 :
         client.templateType === 'Bulk 3' ? 6 : null;
       phase = client.phase;
-      currentMeal = client.selectedMeal ? client.selectedMeal : 0;
+      currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
@@ -759,7 +758,7 @@ export default class LoginScreen extends React.Component {
 
         protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
         carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
-        fat = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
+        fats = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
         veggies = calcVeggies(trainingIntensity, mealsBeforeWorkout);
 
         protein1 = changeUnit(showInGrams, 'protein', protein[0]);
@@ -847,6 +846,13 @@ export default class LoginScreen extends React.Component {
         carbs5pwo = changeUnit(showInGrams, 'carbs', carbs[4], 'pwo');
         carbs6pwo = changeUnit(showInGrams, 'carbs', carbs[5], 'pwo');
 
+        carbs1Grams = changeUnit(true, 'carbs', carbs[0]);
+        carbs2Grams = changeUnit(true, 'carbs', carbs[1]);
+        carbs3Grams = changeUnit(true, 'carbs', carbs[2]);
+        carbs4Grams = changeUnit(true, 'carbs', carbs[3]);
+        carbs5Grams = changeUnit(true, 'carbs', carbs[4]);
+        carbs6Grams = changeUnit(true, 'carbs', carbs[5]);
+
         carbs = {
           carbs1: carbs1,
           carbs2: carbs2,
@@ -890,62 +896,81 @@ export default class LoginScreen extends React.Component {
           carbs3pwo: carbs3pwo,
           carbs4pwo: carbs4pwo,
           carbs5pwo: carbs5pwo,
-          carbs6pwo: carbs6pwo
+          carbs6pwo: carbs6pwo,
+          carbs1Grams: carbs1Grams,
+          carbs2Grams: carbs2Grams,
+          carbs3Grams: carbs3Grams,
+          carbs4Grams: carbs4Grams,
+          carbs5Grams: carbs5Grams,
+          carbs6Grams: carbs6Grams
         };
 
-        fat1 = changeUnit(showInGrams, 'fat', fat[0], 'oil');
-        fat2 = changeUnit(showInGrams, 'fat', fat[1], 'oil');
-        fat3 = changeUnit(showInGrams, 'fat', fat[2], 'oil');
-        fat4 = changeUnit(showInGrams, 'fat', fat[3], 'oil');
-        fat5 = changeUnit(showInGrams, 'fat', fat[4], 'oil');
-        fat6 = changeUnit(showInGrams, 'fat', fat[5], 'oil');
+        fats1 = changeUnit(showInGrams, 'fats', fats[0], 'oil');
+        fats2 = changeUnit(showInGrams, 'fats', fats[1], 'oil');
+        fats3 = changeUnit(showInGrams, 'fats', fats[2], 'oil');
+        fats4 = changeUnit(showInGrams, 'fats', fats[3], 'oil');
+        fats5 = changeUnit(showInGrams, 'fats', fats[4], 'oil');
+        fats6 = changeUnit(showInGrams, 'fats', fats[5], 'oil');
 
-        fat1butter = changeUnit(showInGrams, 'fat', fat[0], 'butter');
-        fat2butter = changeUnit(showInGrams, 'fat', fat[1], 'butter');
-        fat3butter = changeUnit(showInGrams, 'fat', fat[2], 'butter');
-        fat4butter = changeUnit(showInGrams, 'fat', fat[3], 'butter');
-        fat5butter = changeUnit(showInGrams, 'fat', fat[4], 'butter');
-        fat6butter = changeUnit(showInGrams, 'fat', fat[5], 'butter');
+        fats1butter = changeUnit(showInGrams, 'fats', fats[0], 'butter');
+        fats2butter = changeUnit(showInGrams, 'fats', fats[1], 'butter');
+        fats3butter = changeUnit(showInGrams, 'fats', fats[2], 'butter');
+        fats4butter = changeUnit(showInGrams, 'fats', fats[3], 'butter');
+        fats5butter = changeUnit(showInGrams, 'fats', fats[4], 'butter');
+        fats6butter = changeUnit(showInGrams, 'fats', fats[5], 'butter');
 
-        fat1nutButter = changeUnit(showInGrams, 'fat', fat[0], 'nutButter');
-        fat2nutButter = changeUnit(showInGrams, 'fat', fat[1], 'nutButter');
-        fat3nutButter = changeUnit(showInGrams, 'fat', fat[2], 'nutButter');
-        fat4nutButter = changeUnit(showInGrams, 'fat', fat[3], 'nutButter');
-        fat5nutButter = changeUnit(showInGrams, 'fat', fat[4], 'nutButter');
-        fat6nutButter = changeUnit(showInGrams, 'fat', fat[5], 'nutButter');
+        fats1nutButter = changeUnit(showInGrams, 'fats', fats[0], 'nutButter');
+        fats2nutButter = changeUnit(showInGrams, 'fats', fats[1], 'nutButter');
+        fats3nutButter = changeUnit(showInGrams, 'fats', fats[2], 'nutButter');
+        fats4nutButter = changeUnit(showInGrams, 'fats', fats[3], 'nutButter');
+        fats5nutButter = changeUnit(showInGrams, 'fats', fats[4], 'nutButter');
+        fats6nutButter = changeUnit(showInGrams, 'fats', fats[5], 'nutButter');
 
-        fat1avocado = changeUnit(showInGrams, 'fat', fat[0], 'avocado');
-        fat2avocado = changeUnit(showInGrams, 'fat', fat[1], 'avocado');
-        fat3avocado = changeUnit(showInGrams, 'fat', fat[2], 'avocado');
-        fat4avocado = changeUnit(showInGrams, 'fat', fat[3], 'avocado');
-        fat5avocado = changeUnit(showInGrams, 'fat', fat[4], 'avocado');
-        fat6avocado = changeUnit(showInGrams, 'fat', fat[5], 'avocado');
+        fats1avocado = changeUnit(showInGrams, 'fats', fats[0], 'avocado');
+        fats2avocado = changeUnit(showInGrams, 'fats', fats[1], 'avocado');
+        fats3avocado = changeUnit(showInGrams, 'fats', fats[2], 'avocado');
+        fats4avocado = changeUnit(showInGrams, 'fats', fats[3], 'avocado');
+        fats5avocado = changeUnit(showInGrams, 'fats', fats[4], 'avocado');
+        fats6avocado = changeUnit(showInGrams, 'fats', fats[5], 'avocado');
+
+        fats1Grams = changeUnit(true, 'fats', fats[0]);
+        fats2Grams = changeUnit(true, 'fats', fats[1]);
+        fats3Grams = changeUnit(true, 'fats', fats[2]);
+        fats4Grams = changeUnit(true, 'fats', fats[3]);
+        fats5Grams = changeUnit(true, 'fats', fats[4]);
+        fats6Grams = changeUnit(true, 'fats', fats[5]);
 
         fats = {
-          fat1: fat1,
-          fat2: fat2,
-          fat3: fat3,
-          fat4: fat4,
-          fat5: fat5,
-          fat6: fat6,
-          fat1butter: fat1butter,
-          fat2butter: fat2butter,
-          fat3butter: fat3butter,
-          fat4butter: fat4butter,
-          fat5butter: fat5butter,
-          fat6butter: fat6butter,
-          fat1nutButter: fat1nutButter,
-          fat2nutButter: fat2nutButter,
-          fat3nutButter: fat3nutButter,
-          fat4nutButter: fat4nutButter,
-          fat5nutButter: fat5nutButter,
-          fat6nutButter: fat6nutButter,
-          fat1avocado: fat1avocado,
-          fat2avocado: fat2avocado,
-          fat3avocado: fat3avocado,
-          fat4avocado: fat4avocado,
-          fat5avocado: fat5avocado,
-          fat6avocado: fat6avocado
+          fats1: fats1,
+          fats2: fats2,
+          fats3: fats3,
+          fats4: fats4,
+          fats5: fats5,
+          fats6: fats6,
+          fats1butter: fats1butter,
+          fats2butter: fats2butter,
+          fats3butter: fats3butter,
+          fats4butter: fats4butter,
+          fats5butter: fats5butter,
+          fats6butter: fats6butter,
+          fats1nutButter: fats1nutButter,
+          fats2nutButter: fats2nutButter,
+          fats3nutButter: fats3nutButter,
+          fats4nutButter: fats4nutButter,
+          fats5nutButter: fats5nutButter,
+          fats6nutButter: fats6nutButter,
+          fats1avocado: fats1avocado,
+          fats2avocado: fats2avocado,
+          fats3avocado: fats3avocado,
+          fats4avocado: fats4avocado,
+          fats5avocado: fats5avocado,
+          fats6avocado: fats6avocado,
+          fats1Grams: fats1Grams,
+          fats2Grams: fats2Grams,
+          fats3Grams: fats3Grams,
+          fats4Grams: fats4Grams,
+          fats5Grams: fats5Grams,
+          fats6Grams: fats6Grams
         };
 
         veggies = {
