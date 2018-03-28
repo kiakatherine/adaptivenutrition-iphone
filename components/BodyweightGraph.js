@@ -132,40 +132,64 @@ class BodyweightGraph extends React.Component {
   }
 
    render() {
-      const obj = this.props.data;
+      // const obj = this.props.data;
+      const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
       const timestamp = Number(this.props.clientTimestamp);
       let data = [];
+      let dates, weights;
 
       // filter bodyweight records by client
-      if(obj) {
-        Object.keys(obj).map(function(key) {
-          if(Number(obj[key].timestamp) === timestamp) {
-            data.push({
-              date: obj[key].date,
-              weight: obj[key].weight
-            });
-          }
+      // if(obj) {
+        // Object.keys(obj).map(function(key) {
+        //   if(Number(obj[key].timestamp) === timestamp) {
+        //     data.push({
+        //       date: obj[key].date,
+        //       weight: obj[key].weight
+        //     });
+        //   }
+        // });
+
+        bodyweightRecords.once('value', snapshot => {
+          d = snapshot.val();
+
+          Object.keys(d).map(function(key) {
+            if(Number(d[key].timestamp) === timestamp) {
+              // ref = firebase.database().ref('bodyweightRecords/' + key);
+              // ref.remove();
+
+              data.push({
+                date: d[key].date,
+                weight: d[key].weight,
+                key
+              });
+            }
+          });
+
+          // sort dates
+          data = data.sort(function compare(a, b) {
+            var dateA = moment(a.date, "MM-DD-YY");
+            var dateB = moment(b.date, "MM-DD-YY");
+
+            return dateB - dateA;
+          });
+
+          let datesArr = [];
+
+          dates = Object.keys(data).map(key => {
+            datesArr.push(data[key].date);
+          });
+
+          dates = datesArr.reverse();
+
+          let weightsArr = [];
+
+          weights = Object.keys(data).map(key => {
+            weightsArr.push(data[key].weight);
+          });
+
+          weights = weightsArr.reverse();
         });
-      }
-
-      // order data by date
-      data = data.sort((a,b) => {
-        a = a.date.split('-').reverse().join('');
-        b = b.date.split('-').reverse().join('');
-        return a > b ? 1 : a < b ? -1 : 0;
-      });
-
-      data = data.sort((a, b) => {
-        return a - b;
-      });
-
-      const dates = Object.keys(data).map(key => {
-        return data[key].date;
-      });
-
-      const weights = Object.keys(data).map(key => {
-        return data[key].weight;
-      });
+      // }
 
       // const keys = ['weight'];
       // const colors = [Colors.paleGreen];
@@ -213,13 +237,13 @@ class BodyweightGraph extends React.Component {
               </TouchableHighlight>
             </View>}
 
-            {this.props.data && <ScrollView
+            {weights && <ScrollView
               style={{ width: '100%' }}
               horizontal={true}
               alwaysBounceHorizontal={true}
               showsHorizontalScrollIndicator={true}>
               <LineChart
-                style={{ width: (this.state.showAllData ? weights.length*40 : '100%'), minWidth: '100%', height: 200 }}
+                style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
                 data={weights}
                 svg={{
                   stroke: Colors.paleGreen,
@@ -245,13 +269,17 @@ class BodyweightGraph extends React.Component {
               />
             </ScrollView>}
 
+            {!weights && <View>
+                <Text style={Styles.loadingMessage}>No bodyweight data yet</Text>
+              </View>}
+
             {!this.props.data &&
               <Text style={[Styles.loadingMessage, styles.loadingMessage]}>Getting data...</Text>}
 
-            {this.props.data &&
+            {/*{this.props.data &&
               <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
                 <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
-              </TouchableHighlight>}
+              </TouchableHighlight>} */}
           </View>
         );
    }

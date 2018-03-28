@@ -48,6 +48,7 @@ export default class LoginScreen extends React.Component {
       showWakeTimePicker: false,
       showEnergyBalancePicker: false,
       showTemplateConfirmation: false,
+      showMacrosWarning: false,
 
       potentialTemplate: null,
       phase: null,
@@ -455,6 +456,26 @@ export default class LoginScreen extends React.Component {
       showNavToPhase2Modal: false,
       showNavToPhase3Modal: false
     });
+  }
+
+  // clickViewMacros(showInGrams) {
+  //   if(this.state.client.doNotShowMacroWarning) {
+  //     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+  //     client.update({ showInGrams: !showInGrams });
+  //   } else {
+  //     this.setState({
+  //       showModal: true,
+  //       showMacrosWarning: true
+  //     });
+  //   }
+  // }
+
+  doNotShowMacroWarning() {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    client.update({
+      doNotShowMacroWarning: true
+    });
+    this.setState({ doNotShowMacroWarning: true });
   }
 
   saveMeasurement(currentMeal, macro, value) {
@@ -1485,12 +1506,17 @@ export default class LoginScreen extends React.Component {
                  </Text>
               </TouchableHighlight>
 
-              <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
+              {showInGrams && <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
                  <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                  {showInGrams && 'View in serving sizes'}
-                  {!showInGrams && 'View in macros'}
+                  View in serving sizes
                  </Text>
-              </TouchableHighlight>
+              </TouchableHighlight>}
+
+              {!showInGrams && <TouchableHighlight underlayColor='white' onPress={() => { this.state.client.doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.setState({ showModal: true, showMacrosWarning: true }) }}>
+                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+                  View in macros
+                 </Text>
+              </TouchableHighlight>}
 
               <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
                  <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
@@ -1824,6 +1850,38 @@ export default class LoginScreen extends React.Component {
             <Text></Text>
           </View>
         </ScrollView>}
+
+        {this.state.showMacrosWarning &&
+          <ScrollView style={Styles.tooltip}>
+            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
+            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
+
+            <TouchableHighlight style={Styles.modalButton} onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
+              <Text style={Styles.modalButtonText}>Got it!</Text>
+            </TouchableHighlight>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']} onPress={() => { this.doNotShowMacroWarning() }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
+              </TouchableHighlight>
+            </View>
+
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+          </ScrollView>}
       </View>
     );
   }

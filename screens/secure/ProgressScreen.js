@@ -135,8 +135,8 @@ export default class LoginScreen extends React.Component {
             filteredBodyweightRecords.push(records[key]);
             if(records[key].date === moment(date).format('MM-DD-YY')) {
               // alert('oh hey')
-              const recordRef = firebase.database().ref('bodyweightRecords/' + key);
-              recordRef.remove();
+              // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
+              // recordRef.remove();
               duplicateEntry = true;
             }
           }
@@ -144,7 +144,8 @@ export default class LoginScreen extends React.Component {
 
         if(duplicateEntry === false) {
           bodyweightRecords.push({
-            date: moment(new Date).format('MM-DD-YY'),
+            // date: moment(new Date).format('MM-DD-YY'),
+            date: moment(this.state.date).format('MM-DD-YY'),
             timestamp: Number(this.state.clientTimestamp),
             weight: Number(this.state.weight)
           }).then(resp => {}, reason => {
