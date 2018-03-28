@@ -6,7 +6,7 @@ export function calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein,
     protein[1] = Math.round(totalProtein * 0.25);
     protein[2] = Math.round(totalProtein * 0.25);
     protein[3] = Math.round(totalProtein * 0.25);
-    protein[4] = '---';
+    protein[4] = proteinDelta;
   } else if(trainingIntensity === 1 || trainingIntensity === 2) {
     if(mealsBeforeWorkout === 0) {
       protein[0] = proteinDelta;
