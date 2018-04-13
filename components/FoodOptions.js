@@ -114,7 +114,7 @@ class FoodOptions extends React.Component {
            <View>
              <Picker
                style={styles.picker}
-               itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+               itemStyle={{height: 50, textAlign: 'left', fontSize: 22, width: '100%'}}
                selectedValue={selection ? selection : options[0]}
                onValueChange={(itemValue, itemIndex) => this.setSelection(itemValue)}>
                {optionsHtml}
