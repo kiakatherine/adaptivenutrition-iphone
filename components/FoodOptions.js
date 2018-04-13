@@ -5,6 +5,7 @@ import {
   Button,
   Keyboard,
   Modal,
+  Picker,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,6 +16,7 @@ import {
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
+import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
 import { createFoodMenu } from '../utils/helpers';
@@ -68,6 +70,10 @@ class FoodOptions extends React.Component {
      }
    }
 
+   setSelection(itemValue) {
+     this.setState({ selection: itemValue });
+   }
+
    render() {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
@@ -97,34 +103,22 @@ class FoodOptions extends React.Component {
        }
      }
 
+     let optionsHtml = [];
+     options.forEach((opt, i) => {
+       optionsHtml.push(<Picker.Item label={opt} value={opt} key={i} />)
+     });
+
      return (
        <View>
          {!showInGrams &&
-           <View style={styles.foodOptionsWrapper}>
-             {!hidePwoShakeArrows &&
-               <TouchableHighlight style={[
-                 styles.foodOptionsButton,
-                 styles.prevButton, content === '---' ? styles.disabled : '']}
-                 onPress={() => {this.clickPrevious()}}>
-                 <FontAwesome
-                   name='chevron-left'
-                   size={16}
-                 />
-               </TouchableHighlight>}
-
-             <Text style={styles.content}>{selection ? selection : options[0]}</Text>
-
-             {!hidePwoShakeArrows &&
-               <TouchableHighlight style={[
-                 styles.foodOptionsButton,
-                 styles.nextButton,
-                 content === '---' ? styles.disabled : '']}
-                 onPress={() => {this.clickNext()}}>
-                 <FontAwesome
-                   name='chevron-right'
-                   size={16}
-                 />
-               </TouchableHighlight>}
+           <View>
+             <Picker
+               style={styles.picker}
+               itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+               selectedValue={selection ? selection : options[0]}
+               onValueChange={(itemValue, itemIndex) => this.setSelection(itemValue)}>
+               {optionsHtml}
+             </Picker>
          </View>}
 
          {showInGrams && <Text style={styles.content}>{content}</Text>}

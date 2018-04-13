@@ -256,22 +256,26 @@ const styles = StyleSheet.create ({
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightGray
   },
-  mealRow: {
-    alignSelf: 'stretch',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  mealRowCol: {
-    width: 100,
-    height: 75
-  },
+  // mealRow: {
+  //   alignSelf: 'stretch',
+  //   alignItems: 'flex-start',
+  //   flexDirection: 'row',
+  //   paddingTop: 10,
+  //   paddingBottom: 10
+  // },
+  // mealRowCol: {
+  //   width: 100,
+  //   height: 75
+  // },
+  // mealRowColPhase3: {
+  //   flex: 1
+  // },
+  // mealRowColLong: {
+  //   flex: 2
+  // },
   mealRowColPhase3: {
-    flex: 1
-  },
-  mealRowColLong: {
-    flex: 2
+    marginTop: 10,
+    color: Colors.darkGray
   },
   mealRowHeader: {
     alignSelf: 'stretch',

@@ -10,6 +10,7 @@ export default {
   paleBlue: '#F5F7FD',
   lightGray: '#F2F2F2',
   gray: '#CCC',
+  darkGray: '#AAA',
   paleGreen: '#9dde73',
   paleRed: '#ff7373'
 }
