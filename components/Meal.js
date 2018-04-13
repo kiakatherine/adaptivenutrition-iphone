@@ -6,6 +6,7 @@ import {
   Image,
   Keyboard,
   Modal,
+  Picker,
   ScrollView,
   StyleSheet,
   Text,
@@ -103,16 +104,24 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <View><MeasurementInput
-              unit={'oz'}
-              currentMeal={this.props.currentMeal}
-              macro={'protein'}
-              value={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
+            <View>
+
+            <Picker
+              style={styles.picker}
+              itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+              selectedValue={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
                 this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-            <Text>oz</Text></View>}
+              onValueChange={(itemValue, itemIndex) => this.props.updateMeasurement(this.props.currentMeal, 'protein', itemValue)}>
+              <Picker.Item label="2 oz" value="2" />
+              <Picker.Item label="3 oz" value="3" />
+              <Picker.Item label="4 oz" value="4" />
+              <Picker.Item label="5 oz" value="5" />
+              <Picker.Item label="6 oz" value="6" />
+              <Picker.Item label="7 oz" value="7" />
+              <Picker.Item label="8 oz" value="8" />
+            </Picker></View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -144,16 +153,28 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <View><MeasurementInput
-              unit={'cups'}
-              currentMeal={this.props.currentMeal}
-              macro={'carbs'}
-              value={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
+            <View>
+            <Picker
+              style={styles.picker}
+              itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+              selectedValue={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
                 this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-            <Text>cups</Text></View>}
+              onValueChange={(itemValue, itemIndex) => this.props.updateMeasurement(this.props.currentMeal, 'carbs', itemValue)}>
+              <Picker.Item label="1/4 cup" value=".25" />
+              <Picker.Item label="1/2 cup" value=".5" />
+              <Picker.Item label="3/4 cup" value=".75" />
+              <Picker.Item label="1 cup" value="1" />
+              <Picker.Item label="1 1/4 cup" value="1.25" />
+              <Picker.Item label="1 1/2 cup" value="1.5" />
+              <Picker.Item label="1 3/4 cup" value="1.75" />
+              <Picker.Item label="2 cup" value="2" />
+              <Picker.Item label="2 1/4 cup" value="2.25" />
+              <Picker.Item label="2 1/2 cup" value="2.5" />
+              <Picker.Item label="2 3/4 cup" value="2.75" />
+              <Picker.Item label="3 cup" value="3" />
+            </Picker></View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -180,16 +201,28 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <View><MeasurementInput
-              unit={'tsp'}
-              currentMeal={this.props.currentMeal}
-              macro={'fats'}
-              value={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
-                this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
-                this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
-                this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-            <Text>tsp</Text></View>}
+            <View>
+              <Picker
+                style={styles.picker}
+                itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+                selectedValue={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
+                  this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
+                  this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
+                  this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
+                onValueChange={(itemValue, itemIndex) => this.props.updateMeasurement(this.props.currentMeal, 'fats', itemValue)}>
+                <Picker.Item label="1 tsp" value="1" />
+                <Picker.Item label="2 tsp" value="2" />
+                <Picker.Item label="3 tsp" value="3" />
+                <Picker.Item label="4 tsp" value="4" />
+                <Picker.Item label="5 tsp" value="5" />
+                <Picker.Item label="6 tsp" value="6" />
+                <Picker.Item label="7 tsp" value="7" />
+                <Picker.Item label="8 tsp" value="8" />
+                <Picker.Item label="9 tsp" value="9" />
+                <Picker.Item label="10 tsp" value="10" />
+                <Picker.Item label="11 tsp" value="11" />
+                <Picker.Item label="12 tsp" value="12" />
+              </Picker></View>}
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
@@ -216,16 +249,20 @@ class Meal extends React.Component {
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
           {this.props.phase === 2 &&
-            <View><MeasurementInput
-              unit={'cups'}
-              currentMeal={this.props.currentMeal}
-              macro={'veggies'}
-              value={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
+            <View>
+
+            <Picker
+              style={styles.picker}
+              itemStyle={{height: 50, textAlign: 'left', fontSize: 22, marginRight: 60}}
+              selectedValue={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
                 this.props.currentMeal === 1 ? this.props.meal2veggiesMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3veggiesMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4veggiesMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-            <Text>cups</Text></View>}
+              onValueChange={(itemValue, itemIndex) => this.props.updateMeasurement(this.props.currentMeal, 'veggies', itemValue)}>
+              <Picker.Item label="1 cup" value="1" />
+              <Picker.Item label="2 cups" value="2" />
+              <Picker.Item label="3 cups" value="3" />
+            </Picker></View>}
         </View>}
        </View>
      );
