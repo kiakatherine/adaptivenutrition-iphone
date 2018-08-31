@@ -273,9 +273,7 @@ const styles = StyleSheet.create ({
     marginTop: 30,
     marginBottom: 30,
     paddingLeft: 20,
-    paddingRight: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGray
+    paddingRight: 20
   },
   // mealRow: {
   //   alignSelf: 'stretch',
@@ -285,8 +283,6 @@ const styles = StyleSheet.create ({
   //   paddingBottom: 10
   // },
   mealRow: {
-    borderWidth: 2,
-    borderColor: Colors.primaryColor,
     paddingLeft: 15,
     paddingRight: 15,
     marginBottom: 10
@@ -311,9 +307,7 @@ const styles = StyleSheet.create ({
     alignItems: 'flex-start',
     flexDirection: 'row',
     marginBottom: 5,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGray
+    paddingBottom: 10
   },
   mealRowHeaderCol: {
     width: '50%',

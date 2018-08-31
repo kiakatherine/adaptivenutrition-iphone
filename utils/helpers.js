@@ -461,6 +461,16 @@ export function convertTrainingIntensity(string) {
   }
 }
 
+export function convertTrainingIntensityToString(num) {
+  if(num === 0) {
+    return 'Rest or low-intensity exercise';
+  } else if(num === 1) {
+    return '< 90 min of high-intensity exercise';
+  } else {
+    return '> 90 min of high-intensity exercise';
+  }
+}
+
 export function convertTrainingTime(string) {
   if(string.indexOf('waking') > -1) {
     return 0;

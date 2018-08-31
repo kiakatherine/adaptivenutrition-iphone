@@ -5,11 +5,19 @@ export default {
     flex: 1,
     backgroundColor: Colors.white
   },
+  nameHeader: {
+    backgroundColor: Colors.secondaryColor,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  nameHeaderText: {
+    textAlign: 'center'
+  },
   header: {
     backgroundColor: Colors.primaryColor,
     flexDirection: 'row',
     alignItems: 'center',
-    height: 75,
+    height: 50,
     paddingLeft: 20
   },
   title: {
@@ -24,7 +32,8 @@ export default {
   bigTitle: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center'
   },
   paragraphText: {
     fontSize: 18,

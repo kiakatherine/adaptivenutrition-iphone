@@ -12,7 +12,7 @@ import * as labels from '../../constants/MealLabels';
 import moment from 'moment';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, convertTrainingIntensityToString, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -45,6 +45,7 @@ export default class LoginScreen extends React.Component {
       showTrainingTooltip: false,
       showMealsTooltip: false,
       showWakeTimePicker: false,
+      showTrainingIntensityPicker: false,
       showEnergyBalancePicker: false,
       showTemplateConfirmation: false,
       showMacrosWarning: false,
@@ -72,16 +73,16 @@ export default class LoginScreen extends React.Component {
     };
   }
 
-  componentWillMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-
-    client.on('value', snapshot => {
-      this.setState({
-        client: snapshot.val(),
-        phase: snapshot.val().phase
-      });
-    });
-  }
+  // componentWillMount() {
+  //   var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+  //
+  //   client.on('value', snapshot => {
+  //     this.setState({
+  //       client: snapshot.val(),
+  //       phase: snapshot.val().phase
+  //     });
+  //   });
+  // }
 
   componentDidMount() {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
@@ -91,6 +92,11 @@ export default class LoginScreen extends React.Component {
 
     client.on('value', snapshot => {
       clientResponse = snapshot.val();
+
+      this.setState({
+        client: snapshot.val(),
+        phase: snapshot.val().phase
+      });
     });
 
     dayStatuses.on('value', snapshot => {
@@ -253,12 +259,24 @@ export default class LoginScreen extends React.Component {
 
   saveTrainingIntensity(intensity) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    let val = 'rest';
+
+    if(intensity === 1) {
+      val = 'moderate';
+    } else {
+      val = 'heavy';
+    }
 
     if(this.state.phase === 3) {
-      client.update({ trainingIntensity: intensity });
+      client.update({ trainingIntensity: val });
     } else {
       client.update({ phase1training: intensity });
     }
+
+    this.setState({
+      showModal: false,
+      showTrainingIntensityPicker: false
+    });
   }
 
   saveCurrentMeal(meal) {
@@ -710,6 +728,7 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 3' ? 6 : null;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
+      // client.trainingIntensity = 'rest';
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
@@ -1024,16 +1043,19 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <ScrollView>
+          <View style={Styles.nameHeader}>
+            <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} - {convertTemplateNumberToString(this.state.template)}</Text>
+          </View>
+
           <View style={Styles.header}>
-            <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
-            <Text style={[Styles.flexCol, styles.clientName]}>Hi {this.state.client ? this.state.client.name : ''}!</Text>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
           </View>
 
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
             <TouchableHighlight
               style={styles.optionTooltip}
-              underlayColor={Colors.paleBlue}
+              underlayColor={Colors.white}
               onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
               <FontAwesome
                 style={styles.tooltipIcon}
@@ -1046,7 +1068,7 @@ export default class LoginScreen extends React.Component {
           <View>
             <TouchableHighlight
               style={styles.optionButton}
-              underlayColor={Colors.paleBlue}
+              underlayColor={Colors.white}
               onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
               <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
             </TouchableHighlight>
@@ -1056,7 +1078,7 @@ export default class LoginScreen extends React.Component {
             <Text style={styles.optionTitle}>Are you training today?</Text>
             <TouchableHighlight
               style={styles.optionTooltip}
-              underlayColor={Colors.paleBlue}
+              underlayColor={Colors.white}
               onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
               <FontAwesome
                 style={styles.tooltipIcon}
@@ -1069,41 +1091,27 @@ export default class LoginScreen extends React.Component {
           {this.state.phase < 3 && <View style={styles.optionSection}>
             <TouchableHighlight style={[styles.optionButton,
               { borderColor: trainingIntensity === true ? Colors.primaryColor : 0 }]}
-              underlayColor={Colors.paleBlue}
+              underlayColor={Colors.white}
               onPress={() => { this.saveTrainingIntensity(true) }}>
               <Text style={styles.optionButtonText}>Yes</Text>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.optionButton,
               { borderColor: trainingIntensity === false ? Colors.primaryColor : 0 }]}
-               underlayColor={Colors.paleBlue}
+               underlayColor={Colors.white}
                onPress={() => { this.saveTrainingIntensity(false) }}>
                <Text style={styles.optionButtonText}>No</Text>
             </TouchableHighlight>
           </View>}
 
           {this.state.phase === 3 && <View style={styles.optionSection}>
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: trainingIntensity === 0 ? Colors.primaryColor : 0 }]}
-              underlayColor={Colors.paleBlue}
-              onPress={() => { this.saveTrainingIntensity('rest') }}>
-              <Text style={styles.optionButtonText}>Rest or low-intensity exercise</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-               { borderColor: trainingIntensity === 1 ? Colors.primaryColor : 0 }]}
-               underlayColor={Colors.paleBlue}
-               onPress={() => { this.saveTrainingIntensity('moderate') }}>
-               <Text style={styles.optionButtonText}>&#60; 90 min of high-intensity exercise</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: trainingIntensity === 2 ? Colors.primaryColor : 0 }]}
-               underlayColor={Colors.paleBlue}
-               onPress={() => { this.saveTrainingIntensity('hard') }}>
-               <Text style={styles.optionButtonText}>&#62; 90 min of high-intensity exercise</Text>
-            </TouchableHighlight>
-          </View>}
+              <TouchableHighlight
+                style={styles.optionButton}
+                underlayColor={Colors.white}
+                onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
+                <Text style={styles.optionButtonText}>{convertTrainingIntensityToString(trainingIntensity)}</Text>
+              </TouchableHighlight>
+            </View>}
 
           {(this.state.phase === null) &&
             <Text style={Styles.centerText}>Loading...</Text>}
@@ -1111,7 +1119,7 @@ export default class LoginScreen extends React.Component {
           <View>
             {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
               <Text style={styles.optionTitle}>How many meals before your workout?</Text>
-              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.paleBlue} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
+              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.white} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
                 <FontAwesome
                   style={styles.tooltipIcon}
                   name='info-circle'
@@ -1123,35 +1131,35 @@ export default class LoginScreen extends React.Component {
             <View style={styles.optionSection}>
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
                  <Text style={styles.optionButtonText}>0</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
                  <Text style={styles.optionButtonText}>1</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
                  <Text style={styles.optionButtonText}>2</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
                  <Text style={styles.optionButtonText}>3</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={[styles.optionButton,
                 { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
                  <Text style={styles.optionButtonText}>4</Text>
               </TouchableHighlight>
@@ -1159,33 +1167,32 @@ export default class LoginScreen extends React.Component {
 
             <View style={styles.mealPlanSection}>
               <Text style={[Styles.bigTitle, styles.bigTitle]}>Todays Meal Plan</Text>
-              <Text style={styles.phase}>Phase {phase} - {convertTemplateNumberToString(template)}</Text>
 
               {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                   { borderColor: currentMeal === 0 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.saveCurrentMeal(0) }}>
                     {firstMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                   { borderColor: currentMeal === 1 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.saveCurrentMeal(1) }}>
                    {secondMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                   { borderColor: currentMeal === 2 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.saveCurrentMeal(2) }}>
                    {thirdMealIcon}
                 </TouchableHighlight>
 
                 <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                   { borderColor: currentMeal === 3 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.paleBlue}
+                   underlayColor={Colors.white}
                    onPress={() => { this.saveCurrentMeal(3) }}>
                    <Text style={styles.optionButtonText}>4</Text>
                 </TouchableHighlight>
@@ -1193,7 +1200,7 @@ export default class LoginScreen extends React.Component {
                 {this.state.phase === 3 &&
                   <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                     { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
-                     underlayColor={Colors.paleBlue}
+                     underlayColor={Colors.white}
                      onPress={() => { this.saveCurrentMeal(4) }}>
                      {fifthMealIcon}
                   </TouchableHighlight>}
@@ -1201,7 +1208,7 @@ export default class LoginScreen extends React.Component {
                 {(this.state.phase === 3 && trainingIntensity !== 0) &&
                   <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                     { borderColor: currentMeal === 5 ? Colors.primaryColor : 0 }]}
-                     underlayColor={Colors.paleBlue}
+                     underlayColor={Colors.white}
                      onPress={() => { this.saveCurrentMeal(5) }}>
                      {sixthMealIcon}
                   </TouchableHighlight>}
@@ -1387,7 +1394,7 @@ export default class LoginScreen extends React.Component {
                      style={styles.progressButtonGoodIcon}
                      name='check'
                      size={16}
-                   /> Ate meal on plan!
+                   />
                  </Text>
             </TouchableHighlight>}
 
@@ -1400,7 +1407,7 @@ export default class LoginScreen extends React.Component {
                    style={styles.progressButtonBadIcon}
                    name='remove'
                    size={16}
-                 /> Ate off plan
+                 />
                </Text>
             </TouchableHighlight>}
 
@@ -1606,6 +1613,16 @@ export default class LoginScreen extends React.Component {
             <Picker.Item label="10:30 p.m." value="10:30 p.m." />
             <Picker.Item label="11:00 p.m." value="11:00 p.m." />
             <Picker.Item label="11:30 p.m." value="11:30 p.m." />
+          </Picker>
+        </View>}
+
+        {this.state.showTrainingIntensityPicker && <View style={styles.wakeTimePicker}>
+          <Picker
+            selectedValue={convertTrainingIntensityToString(trainingIntensity)}
+            onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
+            <Picker.Item label="Rest or low-intensity" value={0} />
+            <Picker.Item label="> 90 min of high-intensity exercise" value={1} />
+            <Picker.Item label="< 90 min of high-intensity exercise" value={2} />
           </Picker>
         </View>}
 
@@ -1921,7 +1938,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'stretch',
-    // justifyContent: 'center'
+    justifyContent: 'center'
   },
   optionSection: {
     alignSelf: 'stretch',
@@ -1948,7 +1965,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderBottomWidth: 3,
     borderColor: 0,
-    backgroundColor: Colors.paleBlue
+    backgroundColor: Colors.white
   },
   optionButtonText: {
     textAlign: 'center'
