@@ -18,4 +18,6 @@ firebase.initializeApp({
   messagingSenderId: FIREBASE_MESSAGING_SENDER_ID
 });
 
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 export default firebase;

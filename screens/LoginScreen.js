@@ -41,6 +41,11 @@ export default class LoginScreen extends React.Component {
     else this.setState({ unauthorized: true });
   }
 
+  async signUp() {
+    this.setState({ signUp: true });
+    AuthService.signUp(this.state.email, this.state.password);
+  }
+
   render() {
     const { navigate } = this.props.navigation;
 
@@ -74,6 +79,13 @@ export default class LoginScreen extends React.Component {
                 title="Login"
                 disabled={!this.state.email.trim() || !this.state.password.trim()}
                 onPress={this.login}
+              />
+            </View>
+            <View style={{backgroundColor: 'white', margin: 5}}>
+              <Button
+                color={Colors.primaryColor}
+                title="Sign up"
+                onPress={this.signUp}
               />
             </View>
             <View style={{margin: 5}}>
