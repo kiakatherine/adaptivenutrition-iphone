@@ -34,7 +34,10 @@ export default {
     fontSize: 32,
     // fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center'
+    // textAlign: 'center'
+  },
+  pageTitle: {
+    marginTop: 20
   },
   paragraphText: {
     fontSize: 18,

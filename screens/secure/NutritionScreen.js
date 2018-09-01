@@ -1055,14 +1055,16 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <ScrollView>
-          <View style={Styles.nameHeader}>
-            <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} - {convertTemplateNumberToString(this.state.template)}</Text>
-          </View>
+        <View style={Styles.nameHeader}>
+          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} - {convertTemplateNumberToString(this.state.template)}</Text>
+        </View>
 
-          <View style={Styles.header}>
-            <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
-          </View>
+        <View style={Styles.header}>
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
+        </View>
+
+        <ScrollView style={Styles.content}>
+          <Text style={[Styles.bigTitle, Styles.pageTitle]}>Todays Meal Plan</Text>
 
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
@@ -1151,8 +1153,6 @@ export default class LoginScreen extends React.Component {
             </View></View>}
 
             <View style={styles.mealPlanSection}>
-              <Text style={[Styles.bigTitle, styles.bigTitle]}>Todays Meal Plan</Text>
-
               {!viewAllMeals && <View style={styles.mealsMenu}>
                 <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
                   { borderColor: currentMeal === 0 ? Colors.primaryColor : 0 }]}
@@ -1933,27 +1933,24 @@ const styles = StyleSheet.create({
   },
   optionWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     alignSelf: 'stretch',
-    justifyContent: 'center'
+    // justifyContent: 'center'
   },
   optionSection: {
     alignSelf: 'stretch',
-    alignItems: 'center',
+    // alignItems: 'center',
     flexDirection: 'row'
   },
   optionTitle: {
     color: Colors.black,
     fontWeight: 'bold',
-    fontSize: 16,
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingLeft: 20
+    fontSize: 16
   },
-  optionTooltip: {
-    paddingTop: 10,
-    marginLeft: 5
-  },
+  // optionTooltip: {
+  //   paddingTop: 10,
+  //   marginLeft: 5
+  // },
   optionButton: {
     flex: 1,
     padding: 5,
@@ -1965,7 +1962,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white
   },
   optionButtonText: {
-    textAlign: 'center'
+    // textAlign: 'center'
+    color: Colors.primaryColor
   },
   bigTitle: {
     paddingLeft: 20
@@ -1976,7 +1974,7 @@ const styles = StyleSheet.create({
   mealPlanSection: {
     alignSelf: 'stretch',
     // alignItems: 'center',
-    marginTop: 50
+    // marginTop: 50
   },
   mealsMenu: {
     alignSelf: 'stretch',

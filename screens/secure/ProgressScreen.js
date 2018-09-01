@@ -195,7 +195,7 @@ export default class LoginScreen extends React.Component {
         <ScrollView style={Styles.content}>
           <View>
             <View style={styles.progressSection}>
-              <Text style={Styles.bigTitle}>Progress Reports</Text>
+              <Text style={[Styles.bigTitle, Styles.pageTitle]}>Progress Reports</Text>
 
               <View>
                 <TouchableHighlight
