@@ -10,6 +10,8 @@ import BodyweightScreen from './screens/secure/BodyweightScreen';
 import ProgressScreen from './screens/secure/ProgressScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 import HelpScreen from './screens/secure/HelpScreen';
+import EducationScreen from './screens/secure/EducationScreen';
+import ScoreboardScreen from './screens/secure/ScoreboardScreen';
 import LogoutScreen from './screens/secure/LogoutScreen';
 
 import Colors from './constants/Colors';
@@ -25,6 +27,12 @@ export const AuthenticatedScreen = TabNavigator(
     Progress: {
       screen: ProgressScreen,
       headerLeft: null
+    },
+    Education: {
+      screen: EducationScreen
+    },
+    Scoreboard: {
+      screen: ScoreboardScreen
     },
     Help: {
       screen: HelpScreen
@@ -64,6 +72,28 @@ export const AuthenticatedScreen = TabNavigator(
           return (
             <MaterialCommunityIcons
               name={'food-apple'}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Education') {
+          return (
+            <MaterialCommunityIcons
+              name={'school'}
+              size={28}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Scoreboard') {
+          return (
+            <MaterialCommunityIcons
+              name={'trophy'}
               size={28}
               style={{ marginBottom: -3 }}
               color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
