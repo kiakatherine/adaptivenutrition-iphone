@@ -203,16 +203,7 @@ export default class LoginScreen extends React.Component {
                   onPress={() => { this._clickProgressReportPhase1()}}
                   style={styles.phaseHeader}>
                   <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase1 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={24}
-                    />}
-                    {!this.state.showProgressPhase1 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 1
+                    Phase 1
                   </Text>
                 </TouchableHighlight>
 
@@ -226,16 +217,7 @@ export default class LoginScreen extends React.Component {
                   onPress={() => { this._clickProgressReportPhase2()}}
                   style={styles.phaseHeader}>
                   <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase2 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={20}
-                    />}
-                    {!this.state.showProgressPhase2 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 2
+                    Phase 2
                   </Text>
                 </TouchableHighlight>
 
@@ -249,16 +231,7 @@ export default class LoginScreen extends React.Component {
                   onPress={() => { this._clickProgressReportPhase3()}}
                   style={styles.phaseHeader}>
                   <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase3 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={20}
-                    />}
-                    {!this.state.showProgressPhase3 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 3
+                    Phase 3
                   </Text>
                 </TouchableHighlight>
 
@@ -319,11 +292,11 @@ const styles = StyleSheet.create ({
   },
   phaseHeader: {
     paddingTop: 15,
-    paddingBottom: 15,
     marginBottom: 5,
     backgroundColor: Colors.white
   },
   phaseHeaderText: {
+    color: Colors.black,
     fontSize: 20,
     fontWeight: 'bold'
   },

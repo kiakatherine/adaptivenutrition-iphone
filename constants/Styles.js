@@ -166,10 +166,16 @@ export default {
     fontSize: 16
   },
   menuItem: {
-    backgroundColor: Colors.paleBlue,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.white,
-    padding: 20
+    fontSize: 20,
+    fontWeight: 'bold',
+    backgroundColor: Colors.white,
+    color: Colors.black,
+    paddingTop: 20
+  },
+  menuItemSubText: {
+    fontSize: 15,
+    color: Colors.darkGray,
+    marginBottom: 10
   },
   biometricRow: {
     paddingTop: 20,

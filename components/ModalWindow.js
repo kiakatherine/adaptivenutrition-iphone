@@ -15,6 +15,7 @@ import {
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
+import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
@@ -53,8 +54,10 @@ class ModalWindow extends React.Component {
 
             <ScrollView>
               <View style={styles.modal}>
-                <TouchableHighlight style={styles.closeButton} onPress={() => {
-                   this.toggleModal(!this.state.modalVisible)}}>
+                <TouchableHighlight
+                  style={styles.closeButton}
+                  underlayColor={Colors.white}
+                  onPress={() => {this.toggleModal(!this.state.modalVisible)}}>
                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                      <FontAwesome
                        name='remove'
@@ -82,9 +85,7 @@ export default ModalWindow;
 const styles = StyleSheet.create ({
    container: {
       alignItems: 'flex-start',
-      backgroundColor: '#ede3f2',
-      borderBottomColor: '#fff',
-      borderBottomWidth: 1
+      backgroundColor: '#ede3f2'
    },
    modal: {
       flex: 1,
