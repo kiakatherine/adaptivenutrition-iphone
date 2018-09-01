@@ -68,10 +68,11 @@ export default {
   },
   forms: {
     textInput: {
+      fontFamily: 'Futura-Medium',
       fontSize: 20,
-      margin: 5,
+      // margin: 5,
       padding: 15,
-      //backgroundColor: Colors.lightGray,
+      backgroundColor: Colors.lightGray,
       // borderRadius: 1,
       borderBottomColor: Colors.lightGray,
       borderBottomWidth: 1

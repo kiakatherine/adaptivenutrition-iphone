@@ -6,6 +6,7 @@ import { FontAwesomeIcons, Ionicons, MaterialCommunityIcons } from 'react-native
 import LoginScreen from './screens/LoginScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
+import BodyweightScreen from './screens/secure/BodyweightScreen';
 import ProgressScreen from './screens/secure/ProgressScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 import HelpScreen from './screens/secure/HelpScreen';
@@ -17,6 +18,9 @@ export const AuthenticatedScreen = TabNavigator(
   {
     Nutrition: {
       screen: NutritionScreen
+    },
+    Bodyweight: {
+      screen: BodyweightScreen
     },
     Progress: {
       screen: ProgressScreen,
@@ -35,6 +39,17 @@ export const AuthenticatedScreen = TabNavigator(
         const { routeName } = navigation.state;
 
         if (routeName === 'Progress') {
+          return (
+            <Ionicons
+              name={`ios-checkmark${focused ? '' : '-outline'}`}
+              size={48}
+              style={{ marginBottom: -3 }}
+              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            />
+          )
+        }
+
+        if (routeName === 'Bodyweight') {
           return (
             <Ionicons
               name={`ios-podium${focused ? '' : '-outline'}`}
