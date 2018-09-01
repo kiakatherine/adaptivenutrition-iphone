@@ -1992,9 +1992,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 30,
-    marginRight: 20,
-    marginLeft: 20
+    marginBottom: 30
   },
   progressButtonText: {
     textAlign: 'center'
@@ -2039,14 +2037,14 @@ const styles = StyleSheet.create({
   },
   phaseNavButton: {
     flex: 1,
-    padding: 20
+    marginTop: 20
   },
   phaseNavButtonText: {
     fontSize: 18
   },
   mealSettingsSection: {
     marginTop: 20,
-    marginBottom: 20
+    marginBottom: 30
   },
   mealSettingsLink: {
     paddingTop: 10,

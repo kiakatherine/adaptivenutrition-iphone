@@ -50,9 +50,7 @@ const styles = StyleSheet.create ({
   progressBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    marginLeft: 20,
-    marginRight: 20
+    alignSelf: 'stretch'
   },
   meal: {
     flex: 1,

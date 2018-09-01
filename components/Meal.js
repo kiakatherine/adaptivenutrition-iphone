@@ -272,8 +272,8 @@ const styles = StyleSheet.create ({
   mealContainer: {
     marginTop: 30,
     marginBottom: 30,
-    paddingLeft: 20,
-    paddingRight: 20
+    // paddingLeft: 20,
+    // paddingRight: 20
   },
   // mealRow: {
   //   alignSelf: 'stretch',
@@ -283,8 +283,8 @@ const styles = StyleSheet.create ({
   //   paddingBottom: 10
   // },
   mealRow: {
-    paddingLeft: 15,
-    paddingRight: 15,
+    // paddingLeft: 15,
+    // paddingRight: 15,
     marginBottom: 10
   },
   mealRowCol: {
