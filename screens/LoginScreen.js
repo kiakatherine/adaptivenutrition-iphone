@@ -56,7 +56,7 @@ export default class LoginScreen extends React.Component {
             <Image source={require('../assets/an_logo_green.jpg')} style={styles.logo} />
           </View>
           <View style={styles.title}>
-            <Text style={styles.welcomeText}>Welcome!</Text>
+            <Text style={[Styles.bigTitle, styles.welcomeText]}>Welcome!</Text>
           </View>
           <View style={styles.content}>
             {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
@@ -120,10 +120,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   welcomeText: {
-    color: Colors.black,
-    fontFamily: 'Futura',
-    fontWeight: '700',
-    fontSize: 36,
     marginBottom: 20
   },
   // company: {

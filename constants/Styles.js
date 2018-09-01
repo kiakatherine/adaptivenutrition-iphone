@@ -29,8 +29,10 @@ export default {
     fontSize: 24
   },
   bigTitle: {
+    fontFamily: 'Futura',
+    fontWeight: '700',
     fontSize: 32,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center'
   },

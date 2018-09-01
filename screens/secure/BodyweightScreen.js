@@ -25,12 +25,10 @@ import format from 'date-fns/format';
 import subDays from 'date-fns/sub_days';
 
 import BodyweightGraph from '../../components/BodyweightGraph';
-import DayStatus from '../../components/DayStatus';
-import { convertTemplateNumberToString } from '../../utils/helpers';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Progress',
+    title: 'Bodyweight',
   };
 
   constructor(props) {
@@ -41,13 +39,14 @@ export default class LoginScreen extends React.Component {
       showDatepicker: false,
       weight: '',
       clientTimestamp: null,
-      showProgressPhase1: true,
-      showProgressPhase2: true,
-      showProgressPhase3: true
+      showProgressPhase1: false,
+      showProgressPhase2: false,
+      showProgressPhase3: false
     }
 
     this._showDatepicker = this._showDatepicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
+    this._submitWeight = this._submitWeight.bind(this);
   }
 
   componentDidMount() {
@@ -114,13 +113,62 @@ export default class LoginScreen extends React.Component {
     this.setState({ showDatepicker: false });
   }
 
+  _submitWeight (w) {
+    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const date = this.state.date;
+    const clientTimestamp = this.state.clientTimestamp;
+
+    this.setState({
+      weight: w
+    });
+
+    bodyweightRecords.once('value', snapshot => {
+      const records = snapshot.val();
+      let duplicateEntry = false;
+      let filteredBodyweightRecords = [];
+
+      // check first that there is not already an entry for today - check timestamp and date
+      if(clientTimestamp) {
+        Object.keys(records).map(function(key) {
+          if(records[key].timestamp === clientTimestamp) {
+            filteredBodyweightRecords.push(records[key]);
+            if(records[key].date === moment(date).format('MM-DD-YY')) {
+              // alert('oh hey')
+              // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
+              // recordRef.remove();
+              duplicateEntry = true;
+            }
+          }
+        });
+
+        if(duplicateEntry === false) {
+          bodyweightRecords.push({
+            // date: moment(new Date).format('MM-DD-YY'),
+            date: moment(this.state.date).format('MM-DD-YY'),
+            timestamp: Number(this.state.clientTimestamp),
+            weight: Number(this.state.weight)
+          }).then(resp => {}, reason => {
+            alert('Could not save bodyweight');
+          });
+        } else {
+          alert('Oops! Looks like there is already an entry for that day.')
+        }
+      }
+
+      this.setState({
+        showDatepicker: false,
+        date: new Date(),
+        weight: ''
+      }, this._hideAll());
+    });
+  }
+
   componentWillMount() {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
 
     client.on('value', snapshot => {
       this.setState({
-        client: snapshot.val(),
         clientTimestamp: snapshot.val().timestamp,
         clientPhase: snapshot.val().phase
       });
@@ -153,7 +201,7 @@ export default class LoginScreen extends React.Component {
     let dayStatusesPhase3 = [];
 
     if(this.state.showProgressPhase1) {
-      if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
+      if(filteredDayStatusesPhase1.length) {
         Object.keys(filteredDayStatusesPhase1).map((key, index) => {
           dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
         });
@@ -163,7 +211,7 @@ export default class LoginScreen extends React.Component {
     }
 
     if(this.state.showProgressPhase2) {
-      if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
+      if(filteredDayStatusesPhase2.length) {
         Object.keys(filteredDayStatusesPhase2).map((key, index) => {
           dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
         });
@@ -173,7 +221,7 @@ export default class LoginScreen extends React.Component {
     }
 
     if(this.state.showProgressPhase3) {
-      if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
+      if(filteredDayStatusesPhase3.length) {
         Object.keys(filteredDayStatusesPhase3).map((key, index) => {
           dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
         });
@@ -184,90 +232,56 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <View style={Styles.nameHeader}>
-          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.clientPhase} - {convertTemplateNumberToString(this.state.template)}</Text>
-        </View>
-
         <View style={Styles.header}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
+          <Image source={require('../../assets/an_logo.png')} style={{ width: 80, height: 80 }} />
         </View>
 
         <ScrollView style={Styles.content}>
           <View>
-            <View style={styles.progressSection}>
-              <Text style={Styles.bigTitle}>Progress Reports</Text>
+            <Text style={Styles.bigTitle}>Bodyweight</Text>
 
-              <View>
+            <BodyweightGraph
+              data={this.state.bodyweightData}
+              clientTimestamp={this.state.clientTimestamp} />
+
+            {this.state.bodyweightData &&
+              <View style={[styles.todaysBodyweight, styles.progressSection]}>
+                <View style={[Styles.flexRow, styles.bodyweightInputsWrapper]}>
+                  <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      style={styles.bodyweightDateButton}
+                      onPress={this._showDatepicker}>
+                      <FontAwesome
+                        name='calendar'
+                        size={24}
+                      />
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      onPress={this._showDatepicker}>
+                      <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMM DD')}</Text>
+                    </TouchableHighlight>
+                  </View>
+
+                  <TextInput
+                    style={[Styles.forms.textInput, styles.bodyweightInput]}
+                    keyboardType={'numeric'}
+                    placeholder={'Enter your weight'}
+                    onFocus={() => this.setState({ showDatepicker: false })}
+                    onChangeText={weight => this.setState({ weight })}
+                    value={this.state.weight}
+                  />
+                </View>
+
                 <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase1()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase1 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={24}
-                    />}
-                    {!this.state.showProgressPhase1 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 1
-                  </Text>
+                  style={Styles.button}
+                  onPress={this._submitWeight}
+                  disabled={this.state.weight.trim().length < 1}>
+                  <Text style={Styles.buttonText}>Save</Text>
                 </TouchableHighlight>
-
-                {this.state.showProgressPhase1 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
-              </View>
-
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase2()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase2 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={20}
-                    />}
-                    {!this.state.showProgressPhase2 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 2
-                  </Text>
-                </TouchableHighlight>
-
-                {this.state.showProgressPhase2 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
-              </View>
-
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase3()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    {this.state.showProgressPhase3 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-down'
-                      size={20}
-                    />}
-                    {!this.state.showProgressPhase3 && <FontAwesome
-                      style={styles.phaseHeaderIcon}
-                      name='angle-right'
-                      size={20}
-                    />} Phase 3
-                  </Text>
-                </TouchableHighlight>
-
-                {this.state.showProgressPhase3 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
-              </View>
-            </View>
+              </View>}
           </View>
-
         </ScrollView>
 
         {this.state.showDatepicker &&
@@ -318,13 +332,12 @@ const styles = StyleSheet.create ({
     flex: 1
   },
   phaseHeader: {
-    paddingTop: 15,
-    paddingBottom: 15,
+    padding: 15,
     marginBottom: 5,
-    backgroundColor: Colors.white
+    backgroundColor: Colors.paleBlue
   },
   phaseHeaderText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold'
   },
   progressSection: {
