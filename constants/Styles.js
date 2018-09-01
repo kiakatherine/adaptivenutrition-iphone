@@ -22,7 +22,6 @@ export default {
   },
   title: {
     paddingTop: 10,
-    // alignItems: 'center',
     backgroundColor: Colors.primaryColor
   },
   titleText: {

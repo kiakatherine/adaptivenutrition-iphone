@@ -1606,8 +1606,8 @@ export default class LoginScreen extends React.Component {
             selectedValue={convertTrainingIntensityToString(trainingIntensity)}
             onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
             <Picker.Item label="Rest or low-intensity" value={0} />
-            <Picker.Item label="> 90 min of high-intensity exercise" value={1} />
-            <Picker.Item label="< 90 min of high-intensity exercise" value={2} />
+            <Picker.Item label="< 90 min of high-intensity exercise" value={1} />
+            <Picker.Item label="> 90 min of high-intensity exercise" value={2} />
           </Picker>
         </View>}
 
