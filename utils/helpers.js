@@ -487,6 +487,20 @@ export function convertTrainingTime(string) {
   }
 }
 
+export function convertTrainingTimeToString(num) {
+  if(num === 0) {
+    return 'firstThing';
+  } else if(num === 1) {
+    return 'One';
+  } else if(num === 2) {
+    return 'Two';
+  } else if(num === 3) {
+    return 'Three';
+  } else if(num === 4) {
+    return 'Four';
+  }
+}
+
 export function convertToTime(integer) {
   let hour;
   let minute;

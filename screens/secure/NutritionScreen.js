@@ -12,7 +12,7 @@ import * as labels from '../../constants/MealLabels';
 import moment from 'moment';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, convertTrainingIntensityToString, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -38,7 +38,7 @@ export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mealsBeforeWorkout: 3,
+      // mealsBeforeWorkout: 3,
 
       showModal: false,
       showTimeTooltip: false,
@@ -46,6 +46,7 @@ export default class LoginScreen extends React.Component {
       showMealsTooltip: false,
       showWakeTimePicker: false,
       showTrainingIntensityPicker: false,
+      showMealsBeforeWorkoutPicker: false,
       showEnergyBalancePicker: false,
       showTemplateConfirmation: false,
       showMacrosWarning: false,
@@ -276,6 +277,18 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showModal: false,
       showTrainingIntensityPicker: false
+    });
+  }
+
+  saveMealsBeforeWorkout(numberOfMeals) {
+    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    client.update({ trainingTime: convertTrainingTimeToString(numberOfMeals) });
+
+    this.setState({
+      showModal: false,
+      showMealsBeforeWorkoutPicker: false,
+      mealsBeforeWorkout: numberOfMeals
     });
   }
 
@@ -734,7 +747,7 @@ export default class LoginScreen extends React.Component {
       enablePhase3 = client.enablePhase3;
 
       if(phase === 3) {
-        mealsBeforeWorkout = this.state.mealsBeforeWorkout;
+        mealsBeforeWorkout = convertTrainingTime(client.trainingTime);
         showInGrams = client.showInGrams;
         viewAllMeals = client.viewAllMeals;
         isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
@@ -1012,23 +1025,23 @@ export default class LoginScreen extends React.Component {
       }
     }
 
-    const firstMealIcon = this.state.mealsBeforeWorkout === 0 ?
+    const firstMealIcon = mealsBeforeWorkout === 0 ?
       <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
       <Image source={require('../../assets/icons/breakfast.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
 
-    const secondMealIcon = this.state.mealsBeforeWorkout === 1 ?
+    const secondMealIcon = mealsBeforeWorkout === 1 ?
       <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
       <Image source={require('../../assets/icons/half-sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
 
-    const thirdMealIcon = this.state.mealsBeforeWorkout === 2 ?
+    const thirdMealIcon = mealsBeforeWorkout === 2 ?
       <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
       <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
 
-    const fourthMealIcon = this.state.mealsBeforeWorkout === 3 ?
+    const fourthMealIcon = mealsBeforeWorkout === 3 ?
       <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
       <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
 
-    const fifthMealIcon = this.state.mealsBeforeWorkout === 4 ?
+    const fifthMealIcon = mealsBeforeWorkout === 4 ?
       <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
       <Image source={require('../../assets/icons/sunset.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
 
@@ -1129,39 +1142,11 @@ export default class LoginScreen extends React.Component {
             </View>
 
             <View style={styles.optionSection}>
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.mealsBeforeWorkout === 0 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.setState({mealsBeforeWorkout: 0}) }}>
-                 <Text style={styles.optionButtonText}>0</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.mealsBeforeWorkout === 1 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.setState({mealsBeforeWorkout: 1}) }}>
-                 <Text style={styles.optionButtonText}>1</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.mealsBeforeWorkout === 2 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.setState({mealsBeforeWorkout: 2}) }}>
-                 <Text style={styles.optionButtonText}>2</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.mealsBeforeWorkout === 3 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.setState({mealsBeforeWorkout: 3}) }}>
-                 <Text style={styles.optionButtonText}>3</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={[styles.optionButton,
-                { borderColor: this.state.mealsBeforeWorkout === 4 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.setState({mealsBeforeWorkout: 4}) }}>
-                 <Text style={styles.optionButtonText}>4</Text>
+              <TouchableHighlight
+                style={[styles.optionButton]}
+                underlayColor={Colors.white}
+                onPress={() => { this.setState({ showModal: true, showMealsBeforeWorkoutPicker: true }) }}>
+                <Text style={styles.optionButtonText}>{mealsBeforeWorkout}</Text>
               </TouchableHighlight>
             </View></View>}
 
@@ -1216,7 +1201,7 @@ export default class LoginScreen extends React.Component {
 
               {!viewAllMeals && <Meal
                 trainingIntensity={trainingIntensity}
-                mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                mealsBeforeWorkout={mealsBeforeWorkout}
                 template={template}
                 phase={phase}
                 currentMeal={currentMeal}
@@ -1255,7 +1240,7 @@ export default class LoginScreen extends React.Component {
               {(this.state.phase === 3 && viewAllMeals) && <View>
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={0}
@@ -1276,7 +1261,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={1}
@@ -1297,7 +1282,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={2}
@@ -1318,7 +1303,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={3}
@@ -1339,7 +1324,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={4}
@@ -1360,7 +1345,7 @@ export default class LoginScreen extends React.Component {
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={this.state.mealsBeforeWorkout}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
                   template={template}
                   phase={phase}
                   currentMeal={5}
@@ -1623,6 +1608,18 @@ export default class LoginScreen extends React.Component {
             <Picker.Item label="Rest or low-intensity" value={0} />
             <Picker.Item label="> 90 min of high-intensity exercise" value={1} />
             <Picker.Item label="< 90 min of high-intensity exercise" value={2} />
+          </Picker>
+        </View>}
+
+        {this.state.showMealsBeforeWorkoutPicker && <View style={styles.wakeTimePicker}>
+          <Picker
+            selectedValue={mealsBeforeWorkout}
+            onValueChange={(itemValue, itemIndex) => this.saveMealsBeforeWorkout(itemValue)}>
+            <Picker.Item label="0" value={0} />
+            <Picker.Item label="1" value={1} />
+            <Picker.Item label="2" value={2} />
+            <Picker.Item label="3" value={3} />
+            <Picker.Item label="4" value={4} />
           </Picker>
         </View>}
 
