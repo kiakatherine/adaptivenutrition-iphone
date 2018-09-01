@@ -45,7 +45,6 @@ export default class ResetPasswordScreen extends React.Component {
           />
           <View style={{backgroundColor: Colors.primaryColor, margin: 5}}>
             <Button
-              color={Colors.primaryColorText}
               title="Reset Password"
               disabled={!this.state.email.trim()}
               onPress={this.resetPassword}

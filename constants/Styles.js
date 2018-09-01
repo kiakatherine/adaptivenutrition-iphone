@@ -64,23 +64,26 @@ export default {
   },
   forms: {
     textInput: {
+      fontSize: 20,
       margin: 5,
       padding: 15,
-      backgroundColor: Colors.lightGray,
-      borderRadius: 1
+      //backgroundColor: Colors.lightGray,
+      // borderRadius: 1,
+      borderBottomColor: Colors.lightGray,
+      borderBottomWidth: 1
     }
   },
   listItem: {
     marginBottom: 20
   },
   button: {
-    padding: 10,
+    padding: 8,
     borderRadius: 2,
-    borderColor: Colors.primaryColor,
-    borderWidth: 2
+    backgroundColor: Colors.primaryColor
   },
   buttonText: {
-    color: Colors.primaryColor,
+    fontFamily: 'Futura-Medium',
+    color: Colors.white,
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center'

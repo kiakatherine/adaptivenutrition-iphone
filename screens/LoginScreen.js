@@ -51,14 +51,15 @@ export default class LoginScreen extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={Styles.body}>
-          <View style={Styles.title}>
-            <Image source={require('../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
+        <View style={styles.body}>
+          <View style={styles.title}>
+            <Image source={require('../assets/an_logo_green.jpg')} style={styles.logo} />
+            <Text style={styles.company}>Adaptive Nutrition</Text>
           </View>
-          <View style={Styles.content}>
+          <View style={styles.content}>
             {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
             <TextInput
-              style={Styles.forms.textInput}
+              style={styles.textInput}
               autoCapitalize= { 'none' }
               placeholder={"Email Address"}
               autoFocus
@@ -67,29 +68,32 @@ export default class LoginScreen extends React.Component {
             />
 
             <TextInput
-              style={Styles.forms.textInput}
+              style={styles.textInput}
               placeholder={"Password"}
               secureTextEntry
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
             />
-            <View style={{backgroundColor: Colors.primaryColor, margin: 5}}>
+            <View style={[Styles.button, styles.loginButton]}>
               <Button
-                color={Colors.primaryColorText}
+                color={Colors.white}
                 title="Login"
                 disabled={!this.state.email.trim() || !this.state.password.trim()}
                 onPress={this.login}
               />
             </View>
-            <View style={{backgroundColor: 'white', margin: 5}}>
+            <View>
               <Button
                 color={Colors.primaryColor}
                 title="Sign up"
                 onPress={this.signUp}
               />
             </View>
-            <View style={{margin: 5}}>
-              <Button title="Forgot your password?" onPress={() => navigate('ResetPassword')}/>
+            <View>
+              <Button
+                color={Colors.black}
+                title="Forgot your password?"
+                onPress={() => navigate('ResetPassword')}/>
             </View>
           </View>
         </View>
@@ -97,3 +101,43 @@ export default class LoginScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    padding: 50
+  },
+  title: {
+    alignItems: 'center',
+    marginTop: 20
+  },
+  logo: {
+    width: 100,
+    height: 100
+  },
+  company: {
+    color: Colors.primaryColor,
+    fontFamily: 'Futura-Medium',
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 15,
+    marginBottom: 30
+  },
+  content: {
+    flex: 1
+  },
+  textInput: {
+    fontFamily: 'Futura-Medium',
+    fontSize: 20,
+    margin: 5,
+    padding: 15,
+    backgroundColor: Colors.lightGray,
+  },
+  loginButton: {
+    marginTop: 10,
+    marginBottom: 20,
+    marginRight: 5,
+    marginLeft: 5
+  }
+});
