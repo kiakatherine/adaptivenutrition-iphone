@@ -29,6 +29,24 @@ class Meal extends React.Component {
      selected: false,
    }
 
+   changeMeal(dir) {
+     let meal = 0;
+     let totalMeals = 3;
+
+     if(this.props.phase === 3 && this.props.trainingIntensity > 0) {
+       totalMeals = 4;
+     }
+
+     if(dir === 'prev') {
+       meal = (this.props.currentMeal - 1 >= 0) ? (this.props.currentMeal - 1) : totalMeals;
+     } else {
+       meal = 4;
+       meal = (this.props.currentMeal + 1 <= totalMeals) ? (this.props.currentMeal + 1) : 0;
+     }
+
+     this.props.changeMeal(meal);
+   }
+
    render() {
      let label;
      let time;
@@ -79,8 +97,32 @@ class Meal extends React.Component {
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
-          <Text style={styles.mealRowHeaderCol}>{label ? label.toUpperCase(): ''}</Text>
-          <Text style={styles.mealRowHeaderColTime}>{this.props.timing}{time}</Text>
+          <TouchableHighlight
+            underlayColor={Colors.white}
+            onPress={() => this.changeMeal('prev')}>
+            <Text style={styles.mealRowHeaderColArrowLeft}>
+              <FontAwesome
+                name='arrow-left'
+                size={24}
+              />
+            </Text>
+          </TouchableHighlight>
+
+          <View style={styles.mealRowHeaderColLong}>
+            <Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>
+            <Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>
+          </View>
+
+          <TouchableHighlight
+            underlayColor={Colors.white}
+            onPress={() => this.changeMeal('next')}>
+            <Text style={styles.mealRowHeaderColArrowRight}>
+              <FontAwesome
+                name='arrow-right'
+                size={24}
+              />
+            </Text>
+          </TouchableHighlight>
         </View>
 
         <View style={styles.mealRow}>
@@ -310,16 +352,28 @@ const styles = StyleSheet.create ({
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     flexDirection: 'row',
-    marginBottom: 5,
-    paddingBottom: 10
+    marginBottom: 15
   },
   mealRowHeaderCol: {
-    width: '50%',
-    letterSpacing: 1
+    textAlign: 'center',
+    letterSpacing: 1,
+    flex: 1
   },
-  mealRowHeaderColTime: {
-    width: '50%',
-    textAlign: 'right',
+  mealRowHeaderColArrowLeft: {
+    textAlign: 'left'
+  },
+  mealRowHeaderColArrowRight: {
+    textAlign: 'right'
+  },
+  mealRowHeaderColLong: {
+    flex: 2
+  },
+  mealLabel: {
+    fontWeight: 'bold'
+  },
+  mealRowHeaderColText: {
+    width: '100%',
+    textAlign: 'center',
     letterSpacing: 1
   },
   macroLabelsWithIcon: {

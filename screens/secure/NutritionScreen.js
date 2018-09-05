@@ -1024,28 +1024,6 @@ export default class LoginScreen extends React.Component {
       }
     }
 
-    const firstMealIcon = mealsBeforeWorkout === 0 ?
-      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
-      <Image source={require('../../assets/icons/breakfast.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
-    const secondMealIcon = mealsBeforeWorkout === 1 ?
-      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
-      <Image source={require('../../assets/icons/half-sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
-    const thirdMealIcon = mealsBeforeWorkout === 2 ?
-      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
-      <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
-    const fourthMealIcon = mealsBeforeWorkout === 3 ?
-      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
-      <Image source={require('../../assets/icons/sun.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
-    const fifthMealIcon = mealsBeforeWorkout === 4 ?
-      <Image source={require('../../assets/icons/workout.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} /> :
-      <Image source={require('../../assets/icons/sunset.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
-    const sixthMealIcon = <Image source={require('../../assets/icons/moon.png')} style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />;
-
     // style based on state:
     // style={[styles.container, { borderRadius: !value ? Colors.gray : Colors.primaryColor }]}
 
@@ -1144,52 +1122,6 @@ export default class LoginScreen extends React.Component {
             </View></View>}
 
             <View style={styles.mealPlanSection}>
-              {!viewAllMeals && <View style={styles.mealsMenu}>
-                <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                  { borderColor: currentMeal === 0 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.saveCurrentMeal(0) }}>
-                    {firstMealIcon}
-                </TouchableHighlight>
-
-                <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                  { borderColor: currentMeal === 1 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.saveCurrentMeal(1) }}>
-                   {secondMealIcon}
-                </TouchableHighlight>
-
-                <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                  { borderColor: currentMeal === 2 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.saveCurrentMeal(2) }}>
-                   {thirdMealIcon}
-                </TouchableHighlight>
-
-                <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                  { borderColor: currentMeal === 3 ? Colors.primaryColor : 0 }]}
-                   underlayColor={Colors.white}
-                   onPress={() => { this.saveCurrentMeal(3) }}>
-                   <Text>4</Text>
-                </TouchableHighlight>
-
-                {this.state.phase === 3 &&
-                  <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                    { borderColor: currentMeal === 4 ? Colors.primaryColor : 0 }]}
-                     underlayColor={Colors.white}
-                     onPress={() => { this.saveCurrentMeal(4) }}>
-                     {fifthMealIcon}
-                  </TouchableHighlight>}
-
-                {(this.state.phase === 3 && trainingIntensity !== 0) &&
-                  <TouchableHighlight style={[styles.optionButton, styles.mealOptionButton,
-                    { borderColor: currentMeal === 5 ? Colors.primaryColor : 0 }]}
-                     underlayColor={Colors.white}
-                     onPress={() => { this.saveCurrentMeal(5) }}>
-                     {sixthMealIcon}
-                  </TouchableHighlight>}
-              </View>}
-
               {!viewAllMeals && <Meal
                 trainingIntensity={trainingIntensity}
                 mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1226,7 +1158,8 @@ export default class LoginScreen extends React.Component {
                 fats={fats}
                 veggies={veggies}
                 showInGrams={showInGrams}
-                updateMeasurement={this.saveMeasurement} />}
+                updateMeasurement={this.saveMeasurement}
+                changeMeal={this.saveCurrentMeal} />}
 
               {(this.state.phase === 3 && viewAllMeals) && <View>
                 <Meal
@@ -1933,24 +1866,21 @@ const styles = StyleSheet.create({
   },
   optionWrapper: {
     flexDirection: 'row',
-    // alignItems: 'center',
+    alignItems: 'center',
     alignSelf: 'stretch',
-    // justifyContent: 'center'
+    justifyContent: 'center'
   },
   optionSection: {
     alignSelf: 'stretch',
-    // alignItems: 'center',
+    alignItems: 'center',
     flexDirection: 'row'
   },
   optionTitle: {
     color: Colors.black,
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    marginRight: 3
   },
-  // optionTooltip: {
-  //   paddingTop: 10,
-  //   marginLeft: 5
-  // },
   optionButton: {
     flex: 1,
     padding: 10,
@@ -1959,6 +1889,7 @@ const styles = StyleSheet.create({
   },
   optionButtonText: {
     color: Colors.primaryColor,
+    textAlign: 'center',
     fontWeight: 'bold'
   },
   bigTitle: {

@@ -18,7 +18,7 @@ export default {
     backgroundColor: Colors.primaryColor,
     flexDirection: 'row',
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     height: 50,
     paddingLeft: 20
   },
@@ -36,7 +36,7 @@ export default {
     fontSize: 32,
     // fontWeight: 'bold',
     marginBottom: 20,
-    // textAlign: 'center'
+    textAlign: 'center'
   },
   pageTitle: {
     marginTop: 20
