@@ -7,6 +7,7 @@ import AuthService from '../../services/AuthService';
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
+import Header from '../../components/Header';
 import ModalWindow from '../../components/ModalWindow';
 import MenuRow from '../../components/MenuRow';
 
@@ -49,9 +50,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <View style={Styles.title}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
-        </View>
+        <Header />
 
         <ScrollView style={Styles.content}>
           <Text style={Styles.menuItem}>How Do I Use the App?</Text>

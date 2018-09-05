@@ -7,6 +7,7 @@ import AuthService from '../../services/AuthService';
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
+import Header from '../../components/Header';
 import Lesson from '../../components/Lesson';
 
 import {
@@ -49,9 +50,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <View style={Styles.header}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
-        </View>
+        <Header />
 
         <ScrollView style={Styles.content}>
           <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>

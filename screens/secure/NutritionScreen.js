@@ -27,6 +27,7 @@ import {
   View
 } from 'react-native';
 
+import Header from '../../components/Header';
 import Meal from '../../components/Meal';
 import ProgressBar from '../../components/ProgressBar';
 import MealPlanSettings from '../../components/MealPlanSettings';
@@ -1033,13 +1034,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <View style={Styles.nameHeader}>
-          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} {this.state.phase === 3 ? "- " + convertTemplateNumberToString(this.state.template) : ''}</Text>
-        </View>
-
-        <View style={Styles.header}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
-        </View>
+        <Header />
 
         <ScrollView style={Styles.content}>
           <Text style={[Styles.bigTitle, Styles.pageTitle]}>{"Today's Meal Plan"}</Text>
