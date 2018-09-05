@@ -11,12 +11,14 @@ export default {
     paddingBottom: 10
   },
   nameHeaderText: {
-    textAlign: 'center'
+    textAlign: 'center',
+    color: Colors.white
   },
   header: {
     backgroundColor: Colors.primaryColor,
     flexDirection: 'row',
     alignItems: 'center',
+    // justifyContent: 'center',
     height: 50,
     paddingLeft: 20
   },

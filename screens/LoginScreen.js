@@ -87,7 +87,7 @@ export default class LoginScreen extends React.Component {
             <View>
               <Button
                 color={Colors.primaryColor}
-                title="Sign up"
+                title="Create account"
                 onPress={this.signUp}
               />
             </View>

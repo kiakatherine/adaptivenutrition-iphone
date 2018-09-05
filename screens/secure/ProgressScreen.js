@@ -43,7 +43,9 @@ export default class LoginScreen extends React.Component {
       clientTimestamp: null,
       showProgressPhase1: true,
       showProgressPhase2: true,
-      showProgressPhase3: true
+      showProgressPhase3: true,
+      showBodyweightLog: true,
+      showProgressReports: false
     }
 
     this._showDatepicker = this._showDatepicker.bind(this);
@@ -194,9 +196,69 @@ export default class LoginScreen extends React.Component {
 
         <ScrollView style={Styles.content}>
           <View>
-            <View style={styles.progressSection}>
-              <Text style={[Styles.bigTitle, Styles.pageTitle]}>Progress Reports</Text>
+            <View style={Styles.flexRow}>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={[Styles.flexRowCol, styles.progressButtonFirst, this.state.showBodyweightLog ? styles.progressButtonActive : styles.progressButton]}
+                onPress={() => this.setState({ showBodyweightLog: true, showProgressReports: false })}>
+                <Text style={this.state.showBodyweightLog ? styles.progressButtonTextActive : styles.progressButtonText}>Weight</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={[Styles.flexRowCol, this.state.showProgressReports ? styles.progressButtonActive : styles.progressButton]}
+                onPress={() => this.setState({ showBodyweightLog: false, showProgressReports: true })}>
+                <Text style={this.state.showProgressReports ? styles.progressButtonTextActive : styles.progressButtonText}>Consistency</Text>
+              </TouchableHighlight>
+            </View>
 
+            {this.state.showBodyweightLog && <View style={styles.progressSection}>
+            <Text style={[Styles.bigTitle, Styles.pageTitle]}>{this.state.client ? this.state.client.bodyweightDelta : '192'}</Text>
+            <Text style={Styles.menuItemSubText}>Average over last 5 days</Text>
+
+            <BodyweightGraph
+              data={this.state.bodyweightData}
+              clientTimestamp={this.state.clientTimestamp} />
+
+            {this.state.bodyweightData &&
+              <View style={[styles.todaysBodyweight, styles.progressSection]}>
+                <View style={[styles.bodyweightInputsWrapper]}>
+                  <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      style={styles.bodyweightDateButton}
+                      onPress={this._showDatepicker}>
+                      <FontAwesome
+                        name='calendar'
+                        size={24}
+                      />
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                      underlayColor={Colors.lightGray}
+                      onPress={this._showDatepicker}>
+                      <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMMM D')}</Text>
+                    </TouchableHighlight>
+                  </View>
+
+                  <TextInput
+                    style={[Styles.forms.textInput, styles.bodyweightInput]}
+                    keyboardType={'numeric'}
+                    placeholder={'Enter your weight'}
+                    onFocus={() => this.setState({ showDatepicker: false })}
+                    onChangeText={weight => this.setState({ weight })}
+                    value={this.state.weight}
+                  />
+                </View>
+
+                <TouchableHighlight
+                  style={Styles.button}
+                  onPress={this._submitWeight}
+                  disabled={this.state.weight.trim().length < 1}>
+                  <Text style={Styles.buttonText}>Save</Text>
+                </TouchableHighlight>
+              </View>}
+            </View>}
+
+            {this.state.showProgressReports && <View style={styles.progressSection}>
               <View>
                 <TouchableHighlight
                   underlayColor={Colors.white}
@@ -238,7 +300,7 @@ export default class LoginScreen extends React.Component {
                 {this.state.showProgressPhase3 &&
                   <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
               </View>
-            </View>
+            </View>}
           </View>
 
         </ScrollView>
@@ -258,12 +320,33 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
+  progressButton: {
+    marginRight: 20
+  },
+  progressButtonActive: {
+    borderBottomWidth: 3,
+    borderColor: Colors.black
+  },
+  progressButtonText: {
+    fontFamily: 'Futura',
+    textAlign: 'center',
+    color: Colors.black,
+    fontSize: 20,
+    paddingBottom: 10
+  },
+  progressButtonTextActive: {
+    fontFamily: 'Futura',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+    paddingBottom: 10
+  },
   todaysBodyweight: {
     marginTop: 20
   },
   bodyweightInputsWrapper: {
     flex: 1,
-    marginBottom: 5
+    marginBottom: 15
   },
   bodyweightDateButton: {
     width: 40,
@@ -272,16 +355,14 @@ const styles = StyleSheet.create ({
     marginBottom: 5
   },
   bodyweightDate: {
-    fontSize: 16,
-    paddingTop: 15
+    fontSize: 20,
+    paddingTop: 10
   },
   bodyweightDateInput: {
     height: 50,
-    borderRightColor: Colors.white,
-    borderRightWidth: 5,
     backgroundColor: Colors.lightGray,
     marginTop: 5,
-    marginBottom: 5
+    marginBottom: 10
   },
   bodyweightInput: {
     flex: 1,

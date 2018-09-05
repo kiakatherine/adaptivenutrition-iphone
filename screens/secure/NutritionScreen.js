@@ -741,7 +741,6 @@ export default class LoginScreen extends React.Component {
         client.templateType === 'Bulk 3' ? 6 : null;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
-      // client.trainingIntensity = 'rest';
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
@@ -1056,7 +1055,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <View style={Styles.nameHeader}>
-          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} - {convertTemplateNumberToString(this.state.template)}</Text>
+          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.phase} {this.state.phase === 3 ? "- " + convertTemplateNumberToString(this.state.template) : ''}</Text>
         </View>
 
         <View style={Styles.header}>
@@ -1064,7 +1063,7 @@ export default class LoginScreen extends React.Component {
         </View>
 
         <ScrollView style={Styles.content}>
-          <Text style={[Styles.bigTitle, Styles.pageTitle]}>Todays Meal Plan</Text>
+          <Text style={[Styles.bigTitle, Styles.pageTitle]}>{"Today's Meal Plan"}</Text>
 
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
@@ -1090,7 +1089,7 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>Are you training today?</Text>
+            <Text style={styles.optionTitle}>Are you working out today?</Text>
             <TouchableHighlight
               style={styles.optionTooltip}
               underlayColor={Colors.white}
@@ -1104,18 +1103,10 @@ export default class LoginScreen extends React.Component {
           </View>
 
           {this.state.phase < 3 && <View style={styles.optionSection}>
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: trainingIntensity === true ? Colors.primaryColor : 0 }]}
+            <TouchableHighlight style={styles.optionButton}
               underlayColor={Colors.white}
-              onPress={() => { this.saveTrainingIntensity(true) }}>
-              <Text style={styles.optionButtonText}>Yes</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.optionButton,
-              { borderColor: trainingIntensity === false ? Colors.primaryColor : 0 }]}
-               underlayColor={Colors.white}
-               onPress={() => { this.saveTrainingIntensity(false) }}>
-               <Text style={styles.optionButtonText}>No</Text>
+              onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
+              <Text style={styles.optionButtonText}>{trainingIntensity ? 'Yes' : 'No'}</Text>
             </TouchableHighlight>
           </View>}
 
@@ -1179,7 +1170,7 @@ export default class LoginScreen extends React.Component {
                   { borderColor: currentMeal === 3 ? Colors.primaryColor : 0 }]}
                    underlayColor={Colors.white}
                    onPress={() => { this.saveCurrentMeal(3) }}>
-                   <Text style={styles.optionButtonText}>4</Text>
+                   <Text>4</Text>
                 </TouchableHighlight>
 
                 {this.state.phase === 3 &&
@@ -1601,13 +1592,22 @@ export default class LoginScreen extends React.Component {
           </Picker>
         </View>}
 
-        {this.state.showTrainingIntensityPicker && <View style={styles.wakeTimePicker}>
+        {this.state.showTrainingIntensityPicker && this.state.phase === 3 && <View style={styles.wakeTimePicker}>
           <Picker
             selectedValue={convertTrainingIntensityToString(trainingIntensity)}
             onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
             <Picker.Item label="Rest or low-intensity" value={0} />
             <Picker.Item label="< 90 min of high-intensity exercise" value={1} />
             <Picker.Item label="> 90 min of high-intensity exercise" value={2} />
+          </Picker>
+        </View>}
+
+        {this.state.showTrainingIntensityPicker && this.state.phase < 3 && <View style={styles.wakeTimePicker}>
+          <Picker
+            selectedValue={trainingIntensity}
+            onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
+            <Picker.Item label="Yes" value={true} />
+            <Picker.Item label="No" value={false} />
           </Picker>
         </View>}
 
@@ -1953,17 +1953,13 @@ const styles = StyleSheet.create({
   // },
   optionButton: {
     flex: 1,
-    padding: 5,
-    paddingTop: 20,
-    paddingBottom: 20,
-    marginBottom: 5,
-    borderBottomWidth: 3,
-    borderColor: 0,
-    backgroundColor: Colors.white
+    padding: 10,
+    paddingLeft: 0,
+    marginBottom: 10
   },
   optionButtonText: {
-    // textAlign: 'center'
-    color: Colors.primaryColor
+    color: Colors.primaryColor,
+    fontWeight: 'bold'
   },
   bigTitle: {
     paddingLeft: 20

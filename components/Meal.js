@@ -37,12 +37,16 @@ class Meal extends React.Component {
      let viewAllMeals = this.props.viewAllMeals;
 
      // label
-     if(this.props.trainingIntensity === 0) {
+     if(this.props.phase === 3) {
+       if(this.props.trainingIntensity === 0) {
+         label = labels.x.low[this.props.currentMeal];
+       } else if(this.props.trainingIntensity === 1) {
+         label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
+       } else if(this.props.trainingIntensity === 2) {
+         label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
+       }
+     } else {
        label = labels.x.low[this.props.currentMeal];
-     } else if(this.props.trainingIntensity === 1) {
-       label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
-     } else if(this.props.trainingIntensity === 2) {
-       label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
      }
 
      // bedtime

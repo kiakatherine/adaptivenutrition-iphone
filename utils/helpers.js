@@ -681,7 +681,7 @@ export function convertTemplateNumberToString(template) {
     template === 3 ? 'Cut 3' :
     template === 4 ? 'Bulk 1' :
     template === 5 ? 'Bulk 2' :
-    template === 6 ? 'Bulk 3' : null;
+    template === 6 ? 'Bulk 3' : '';
 
   return t;
 }
