@@ -266,7 +266,7 @@ export default class LoginScreen extends React.Component {
 
     if(intensity === 1) {
       val = 'moderate';
-    } else {
+    } else if(intensity === 2) {
       val = 'heavy';
     }
 
@@ -1509,7 +1509,7 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showTrainingIntensityPicker && this.state.phase === 3 && <View style={styles.wakeTimePicker}>
           <Picker
-            selectedValue={convertTrainingIntensityToString(trainingIntensity)}
+            selectedValue={trainingIntensity}
             onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
             <Picker.Item label="Rest or low-intensity" value={0} />
             <Picker.Item label="< 90 min of high-intensity exercise" value={1} />
