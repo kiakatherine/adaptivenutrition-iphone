@@ -29,6 +29,7 @@ import {
 
 import Meal from '../../components/Meal';
 import ProgressBar from '../../components/ProgressBar';
+import MealPlanSettings from '../../components/MealPlanSettings';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -1157,6 +1158,7 @@ export default class LoginScreen extends React.Component {
                 carbs={carbs}
                 fats={fats}
                 veggies={veggies}
+                viewAllMeals={viewAllMeals}
                 showInGrams={showInGrams}
                 updateMeasurement={this.saveMeasurement}
                 changeMeal={this.saveCurrentMeal} />}
@@ -1182,6 +1184,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
@@ -1203,6 +1206,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
@@ -1224,6 +1228,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
@@ -1245,6 +1250,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
@@ -1266,6 +1272,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 <Meal
                   trainingIntensity={trainingIntensity}
@@ -1287,6 +1294,7 @@ export default class LoginScreen extends React.Component {
                   fats={fats}
                   veggies={veggies}
                   pwo={isPwoMeal}
+                  viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams} />
                 </View>}
             </View>
@@ -1378,6 +1386,14 @@ export default class LoginScreen extends React.Component {
                 trainingIntensity={trainingIntensity} />}
           </View>
 
+          {this.state.phase === 3 && <MealPlanSettings
+            template={template}
+            viewAllMeals={viewAllMeals}
+            showInGrams={showInGrams}
+            doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
+            toggleView={this.toggleView}
+            toggleUnits={this.toggleUnits} />}
+
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
               <TouchableHighlight style={styles.phaseNavButton}
@@ -1435,35 +1451,6 @@ export default class LoginScreen extends React.Component {
                 </Text>
               </TouchableHighlight>}
           </View>
-
-          {this.state.phase === 3 && <View style={styles.mealSettingsSection}>
-            <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
-
-            <View style={styles.mealSettingsSectionList}>
-              <TouchableHighlight underlayColor='white' onPress={() => { this.toggleView(viewAllMeals) }}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                 {viewAllMeals && 'View by meal'}
-                 {!viewAllMeals && 'View by day'}
-                 </Text>
-              </TouchableHighlight>
-
-              {showInGrams && <TouchableHighlight underlayColor='white' onPress={() => { this.toggleUnits(showInGrams) }}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                  View in serving sizes
-                 </Text>
-              </TouchableHighlight>}
-
-              {!showInGrams && <TouchableHighlight underlayColor='white' onPress={() => { this.state.client.doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.setState({ showModal: true, showMacrosWarning: true }) }}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-                  View in macros
-                 </Text>
-              </TouchableHighlight>}
-
-              <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
-                 <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust energy balance</Text>
-              </TouchableHighlight>
-            </View>
-          </View>}
         </ScrollView>
 
         {this.state.showModal &&
@@ -1959,23 +1946,15 @@ const styles = StyleSheet.create({
   phaseNavButtons: {
     display: 'flex',
     flexDirection: 'row',
-    marginTop: 20,
     marginBottom: 20
   },
   phaseNavButton: {
     flex: 1,
-    marginTop: 20
+    paddingTop: 20,
+    paddingBottom: 20
   },
   phaseNavButtonText: {
     fontSize: 18
-  },
-  mealSettingsSection: {
-    marginTop: 20,
-    marginBottom: 30
-  },
-  mealSettingsLink: {
-    paddingTop: 10,
-    paddingBottom: 10
   },
   picker: {
     backgroundColor: Colors.white,

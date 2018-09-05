@@ -93,11 +93,11 @@ class Meal extends React.Component {
      } else if(label === 'Dinner') {
        time = this.props.dinnerTime;
      }
-
+     
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
-          <TouchableHighlight
+          {!viewAllMeals && <TouchableHighlight
             underlayColor={Colors.white}
             onPress={() => this.changeMeal('prev')}>
             <Text style={styles.mealRowHeaderColArrowLeft}>
@@ -106,14 +106,14 @@ class Meal extends React.Component {
                 size={24}
               />
             </Text>
-          </TouchableHighlight>
+          </TouchableHighlight>}
 
           <View style={styles.mealRowHeaderColLong}>
             <Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>
             <Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>
           </View>
 
-          <TouchableHighlight
+          {!viewAllMeals && <TouchableHighlight
             underlayColor={Colors.white}
             onPress={() => this.changeMeal('next')}>
             <Text style={styles.mealRowHeaderColArrowRight}>
@@ -122,7 +122,7 @@ class Meal extends React.Component {
                 size={24}
               />
             </Text>
-          </TouchableHighlight>
+          </TouchableHighlight>}
         </View>
 
         <View style={styles.mealRow}>

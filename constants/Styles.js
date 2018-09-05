@@ -19,8 +19,7 @@ export default {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
-    paddingLeft: 20
+    height: 50
   },
   title: {
     paddingTop: 10,
