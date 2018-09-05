@@ -19,6 +19,8 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+import { convertTemplateNumberToString } from '../utils/helpers';
+
 class MealPlanSettings extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +74,7 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor='white'
             onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal ({template})</Text>
+              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal {convertTemplateNumberToString(template)}</Text>
            </TouchableHighlight>
          </View>
        </View>
@@ -87,8 +89,7 @@ MealPlanSettings.propTypes = {
 
 const styles = StyleSheet.create ({
   mealSettingsSection: {
-    marginTop: 20,
-    marginBottom: 30
+    marginTop: 40
   },
   mealSettingsLink: {
     paddingTop: 10,

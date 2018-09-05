@@ -45,7 +45,7 @@ class Header extends React.Component {
        <View>
          <View style={Styles.nameHeader}>
            <Text style={Styles.nameHeaderText}>
-            {this.state.client ? this.state.client.name : ''} - Phase {this.state.client ? this.state.client.phase : ''} {(this.state.client && this.state.client.phase === 3) ? "- " + convertTemplateNumberToString(this.state.client.templateType) : ''}
+            {this.state.client ? this.state.client.name : ''} - Phase {this.state.client ? this.state.client.phase : ''} {(this.state.client && this.state.client.phase === 3) ? "- " + this.state.client.templateType : ''}
            </Text>
          </View>
 

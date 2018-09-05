@@ -212,13 +212,12 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
-    let t = template === 0 ? 'Maintenance' :
-      template === 1 ? 'Cut 1' :
-      template === 2 ? 'Cut 2' :
-      template === 3 ? 'Cut 3' :
-      template === 4 ? 'Bulk 1' :
-      template === 5 ? 'Bulk 2' :
-      template === 6 ? 'Bulk 3' : null;
+    let t = template === 0 ? 'Home (Step 1)' :
+      template === 1 ? 'Build muscle (Step 2)' :
+      template === 2 ? 'Lose weight (Step 2)' :
+      template === 3 ? 'Lock in results (Step 3)' :
+      template === 4 ? 'Lock in results (Step 4)' :
+      template === 5 ? 'New home (Step 5)' : null;
 
     this.setState({
       showEnergyBalancePicker: false,
@@ -734,13 +733,12 @@ export default class LoginScreen extends React.Component {
       leanMass = client.leanMass;
       proteinDelta = bodyweight > 150 ? 25 : 20;
 
-      template = client.templateType === 'Maintenance' ? 0 :
-        client.templateType === 'Cut 1' ? 1 :
-        client.templateType === 'Cut 2' ? 2 :
-        client.templateType === 'Cut 3' ? 3 :
-        client.templateType === 'Bulk 1' ? 4 :
-        client.templateType === 'Bulk 2' ? 5 :
-        client.templateType === 'Bulk 3' ? 6 : null;
+      template = client.templateType === 'Home (Step 1)' ? 0 :
+        client.templateType === 'Build muscle (Step 2)' ? 1 :
+        client.templateType === 'Lose weight (Step 2)' ? 2 :
+        client.templateType === 'Lock in results (Step 3)' ? 3 :
+        client.templateType === 'Lock in results (Step 4)' ? 4 :
+        client.templateType === 'New home (Step 5)' ? 5 : null;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
@@ -1610,13 +1608,12 @@ export default class LoginScreen extends React.Component {
             style={styles.picker}
             selectedValue={template}
             onValueChange={(itemValue, itemIndex) => this.clickTemplateType(itemValue)}>
-            <Picker.Item label="Surplus 3" value={6} />
-            <Picker.Item label="Surplus 2" value={5} />
-            <Picker.Item label="Surplus 1" value={4} />
-            <Picker.Item label="Base" value={0} />
-            <Picker.Item label="Deficit 1" value={1} />
-            <Picker.Item label="Deficit 2" value={2} />
-            <Picker.Item label="Deficit 3" value={3} />
+            <Picker.Item label="Home (Step 1)" value={0} />
+            <Picker.Item label="Build muscle (Step 2)" value={1} />
+            <Picker.Item label="Lose weight (Step 2)" value={2} />
+            <Picker.Item label="Lock in results (Step 3)" value={3} />
+            <Picker.Item label="Lock in results (Step 4)" value={4} />
+            <Picker.Item label="New home (Step 5)" value={5} />
           </Picker>
         </View>}
 
@@ -1653,7 +1650,7 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>
               <TouchableHighlight
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on {convertTemplateNumberToString(this.state.template)} for at least 1 week.</Text>
+                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on {this.state.client.templateType} for at least 1 week.</Text>
               </TouchableHighlight>
             </View>
 
