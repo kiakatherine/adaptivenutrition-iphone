@@ -1389,36 +1389,36 @@ export default class LoginScreen extends React.Component {
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
-              <TouchableHighlight style={styles.phaseNavButton}
+              <TouchableHighlight style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
                 onPress={() => { this.clickNavPhase(1) }}>
-                <Text style={styles.phaseNavButtonText}>
+                <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
                   <FontAwesome
                     style={styles.phaseNavButtonIconLeft}
                     name='arrow-left'
                     size={24}
                   />
-                  Phase 1
+                  {'  '}Phase 1
                 </Text>
               </TouchableHighlight>}
 
             {(this.state.phase > 2) &&
-              <TouchableHighlight style={styles.phaseNavButton}
+              <TouchableHighlight style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonRight]}
                 onPress={() => { this.clickNavPhase(2) }}>
-                <Text style={styles.phaseNavButtonText}>
+                <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
                   <FontAwesome
                     style={styles.phaseNavButtonIconLeft}
                     name='arrow-left'
                     size={24}
                   />
-                  Phase 2
+                  {'  '}Phase 2
                 </Text>
               </TouchableHighlight>}
 
             {(this.state.phase === 2) &&
-              <TouchableHighlight style={styles.phaseNavButton}
+              <TouchableHighlight style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
                 onPress={() => { this.clickNavPhase(3) }}>
-                <Text style={styles.phaseNavButtonText}>
-                Phase 3
+                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                Phase 3{'  '}
                 <FontAwesome
                   style={styles.phaseNavButtonIconRight}
                   name='arrow-right'
@@ -1428,14 +1428,10 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
             {(this.state.phase === 1) &&
-              <View style={styles.phaseNavButton}>
-              </View>}
-
-            {(this.state.phase === 1) &&
-              <TouchableHighlight style={styles.phaseNavButton}
+              <TouchableHighlight style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
                 onPress={() => { this.clickNavPhase(2) }}>
-                <Text style={styles.phaseNavButtonText}>
-                  Phase 2
+                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                  Phase 2{'  '}
                   <FontAwesome
                     style={styles.phaseNavButtonIconRight}
                     name='arrow-right'
@@ -1938,15 +1934,14 @@ const styles = StyleSheet.create({
   phaseNavButtons: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 20
+    marginTop: 40,
+    marginBottom: 40
   },
   phaseNavButton: {
-    flex: 1,
-    paddingTop: 20,
-    paddingBottom: 20
+    flex: 1
   },
-  phaseNavButtonText: {
-    fontSize: 18
+  phaseNavButtonLeft: {
+    marginRight: 10
   },
   picker: {
     backgroundColor: Colors.white,

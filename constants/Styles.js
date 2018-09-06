@@ -83,16 +83,34 @@ export default {
     marginBottom: 20
   },
   button: {
-    padding: 8,
+    padding: 10,
     borderRadius: 2,
     backgroundColor: Colors.primaryColor
   },
+  buttonInverted: {
+    padding: 10,
+    borderRadius: 2,
+    backgroundColor: Colors.white,
+    borderColor: Colors.primaryColor,
+    borderWidth: 2
+  },
   buttonText: {
-    fontFamily: 'Futura-Medium',
     color: Colors.white,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center'
+  },
+  buttonInvertedText: {
+    color: Colors.primaryColor,
+    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  buttonWithIconText: {
+    paddingBottom: 4
+  },
+  buttonWithIconToLeftText: {
+    paddingLeft: 5
   },
   modalContent: {
     margin: 10
