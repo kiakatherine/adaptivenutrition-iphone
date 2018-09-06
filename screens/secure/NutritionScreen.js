@@ -1389,7 +1389,9 @@ export default class LoginScreen extends React.Component {
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
-              <TouchableHighlight style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
+              <TouchableHighlight
+                style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
+                underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.clickNavPhase(1) }}>
                 <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
                   <FontAwesome
@@ -1402,7 +1404,9 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
             {(this.state.phase > 2) &&
-              <TouchableHighlight style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonRight]}
+              <TouchableHighlight
+                style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonRight]}
+                underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.clickNavPhase(2) }}>
                 <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
                   <FontAwesome
@@ -1415,7 +1419,9 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
             {(this.state.phase === 2) &&
-              <TouchableHighlight style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+              <TouchableHighlight
+                style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+                underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.clickNavPhase(3) }}>
                 <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
                 Phase 3{'  '}
@@ -1428,7 +1434,9 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
             {(this.state.phase === 1) &&
-              <TouchableHighlight style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+              <TouchableHighlight
+                style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+                underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.clickNavPhase(2) }}>
                 <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
                   Phase 2{'  '}

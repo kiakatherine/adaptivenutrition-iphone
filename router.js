@@ -10,6 +10,7 @@ import ProgressScreen from './screens/secure/ProgressScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 import HelpScreen from './screens/secure/HelpScreen';
 import EducationScreen from './screens/secure/EducationScreen';
+import QuizScreen from './screens/secure/QuizScreen';
 import ScoreboardScreen from './screens/secure/ScoreboardScreen';
 import LogoutScreen from './screens/secure/LogoutScreen';
 
@@ -26,6 +27,9 @@ export const AuthenticatedScreen = TabNavigator(
     },
     Education: {
       screen: EducationScreen
+    },
+    Quiz: {
+      screen: QuizScreen
     },
     Scoreboard: {
       screen: ScoreboardScreen

@@ -26,6 +26,10 @@ class Lesson extends React.Component {
     this.state = { };
   }
 
+  clickTakeQuiz(lessonNumber, timestamp) {
+    this.props.clickTakeQuiz(lessonNumber, timestamp);
+  }
+
    render() {
      const lessonNumber = this.props.lessonNumber;
 
@@ -44,7 +48,7 @@ class Lesson extends React.Component {
            <TouchableHighlight
              style={styles.optionTooltip}
              underlayColor={Colors.white}
-             onPress={() => {}}>
+             onPress={() => { this.clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
              <Text style={styles.lessonText}>Take quiz</Text>
            </TouchableHighlight>
           </View>

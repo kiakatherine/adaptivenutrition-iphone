@@ -40,6 +40,12 @@ export default {
   pageTitle: {
     marginTop: 20
   },
+  pageSubTitle: {
+    fontFamily: 'Futura',
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center'
+  },
   paragraphText: {
     fontSize: 18,
     lineHeight: 26,
