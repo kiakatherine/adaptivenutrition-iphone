@@ -76,6 +76,8 @@ export default class LoginScreen extends React.Component {
       checkedTemplate5: false,
       checkedTemplate6: false
     };
+
+    this.clickNavPhase = this.clickNavPhase.bind(this);
   }
 
   // componentWillMount() {
@@ -1277,10 +1279,10 @@ export default class LoginScreen extends React.Component {
           <View style={styles.progressSection}>
             {!viewAllMeals && phase !== 2 &&
               <TouchableHighlight
-                style={styles.progressButtonGood}
+                style={[Styles.button, styles.progressButtonGood]}
                 underlayColor='white'
                 onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                 <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
+                 <Text style={styles.progressButtonText}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}
                      name='check'
@@ -1290,10 +1292,10 @@ export default class LoginScreen extends React.Component {
             </TouchableHighlight>}
 
             {!viewAllMeals && phase !== 2 &&
-              <TouchableHighlight style={styles.progressButtonBad}
+              <TouchableHighlight style={[Styles.button, styles.progressButtonBad]}
                 underlayColor='white'
                 onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-               <Text style={[styles.progressButtonText, styles.progressButtonBadText]}>
+               <Text style={styles.progressButtonText}>
                  <FontAwesome
                    style={styles.progressButtonBadIcon}
                    name='remove'
@@ -1303,10 +1305,10 @@ export default class LoginScreen extends React.Component {
             </TouchableHighlight>}
 
             {!viewAllMeals && phase !== 1 && phase !== 3 &&
-              <TouchableHighlight style={styles.progressButtonGood}
+              <TouchableHighlight style={[Styles.button, styles.progressButtonGood]}
                 underlayColor='white'
                 onPress={() => {}}>
-               <Text style={[styles.progressButtonText, styles.progressButtonGoodText]}>
+               <Text style={[Styles.buttonWithIconText, Styles.buttonText, styles.progressButtonText]}>
                  <FontAwesome
                    style={styles.progressButtonGoodIcon}
                    name='check'
@@ -1366,7 +1368,8 @@ export default class LoginScreen extends React.Component {
             showInGrams={showInGrams}
             doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
             toggleView={this.toggleView}
-            toggleUnits={this.toggleUnits} />}
+            toggleUnits={this.toggleUnits}
+            clickNavPhase={this.clickNavPhase} />}
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
@@ -1381,21 +1384,6 @@ export default class LoginScreen extends React.Component {
                     size={24}
                   />
                   {'  '}Phase 1
-                </Text>
-              </TouchableHighlight>}
-
-            {(this.state.phase > 2) &&
-              <TouchableHighlight
-                style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonRight]}
-                underlayColor={Colors.darkerPrimaryColor}
-                onPress={() => { this.clickNavPhase(2) }}>
-                <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
-                  <FontAwesome
-                    style={styles.phaseNavButtonIconLeft}
-                    name='arrow-left'
-                    size={24}
-                  />
-                  {'  '}Phase 2
                 </Text>
               </TouchableHighlight>}
 
@@ -1886,38 +1874,26 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   progressButtonText: {
-    textAlign: 'center'
-  },
-  progressButtonGoodText: {
-    color: Colors.primaryColor
-  },
-  progressButtonBadText: {
-    color: Colors.paleRed
+    textAlign: 'center',
+    color: Colors.white
   },
   progressButtonGood: {
     flex: 1,
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: Colors.white,
-    borderWidth: 3,
-    borderColor: Colors.paleGreen,
-    borderRadius: 1,
     marginRight: 5
   },
   progressButtonGoodIcon: {
-    color: Colors.primaryColor
+    color: Colors.white
   },
   progressButtonBadIcon: {
-    color: Colors.paleRed
+    color: Colors.white
   },
   progressButtonBad: {
     flex: 1,
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: Colors.white,
-    borderWidth: 3,
-    borderColor: Colors.paleRed,
-    borderRadius: 1,
+    backgroundColor: Colors.paleRed,
     marginLeft: 5
   },
   phaseNavButtons: {

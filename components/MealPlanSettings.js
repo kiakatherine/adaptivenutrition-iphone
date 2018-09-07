@@ -74,6 +74,12 @@ class MealPlanSettings extends React.Component {
             onPress={() => { this.setState({ showEnergyBalancePicker: true, showModal: true }) }}>
               <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal {template}</Text>
            </TouchableHighlight>
+
+           <TouchableHighlight
+            underlayColor='white'
+            onPress={() => { this.props.clickNavPhase(2) }}>
+              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Go back to Phase 2</Text>
+           </TouchableHighlight>
          </View>
        </View>
      );
