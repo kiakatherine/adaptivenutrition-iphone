@@ -195,7 +195,7 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
 
   let totals = {};
   const bmr = calculateBmr(gender, age, height, bodyweight);
-  const difference = calculateDifference(bmr, templateType, templates.templates);
+  const difference = calculateDifference(bmr, bodyweight, templateType, templates.templates);
 
   // rest calories final
   let restCalories;
@@ -388,7 +388,7 @@ function calculateBmrProxyRevDiet2(bmr, bmrProxyNewBmr, bmrProxyLeaningOut, body
   return (bmrProxyNewBmr - bmrProxyLeaningOut) * 0.66 + bmrProxyLeaningOut;
 }
 
-function calculateDifference(bmr, templateType, templates) {
+function calculateDifference(bmr, bodyweight, templateType, templates) {
   if(templateType === templates[0]) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D9
     return calculateBmrProxyMetabolicTest(bmr) - bmr;

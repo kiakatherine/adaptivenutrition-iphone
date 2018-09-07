@@ -1520,7 +1520,9 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showTimeTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1538,7 +1540,9 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showTrainingTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTrainingTooltip: false, showModal: false }) }}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showTrainingTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1572,7 +1576,9 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1590,26 +1596,28 @@ export default class LoginScreen extends React.Component {
             style={styles.picker}
             selectedValue={template}
             onValueChange={(itemValue, itemIndex) => this.clickTemplateType(itemValue)}>
-            <Picker.Item label="Home (Step 1)" value={0} />
-            <Picker.Item label="Build muscle (Step 2)" value={1} />
-            <Picker.Item label="Lose weight (Step 2)" value={2} />
-            <Picker.Item label="Lock in results (Step 3)" value={3} />
-            <Picker.Item label="Lock in results (Step 4)" value={4} />
-            <Picker.Item label="New home (Step 5)" value={5} />
+            <Picker.Item label="Home (Step 1)" value={"Home (Step 1)"} />
+            <Picker.Item label="Build muscle (Step 2)" value={"Build muscle (Step 2)"} />
+            <Picker.Item label="Lose weight (Step 2)" value={"Lose weight (Step 2)"} />
+            <Picker.Item label="Lock in results (Step 3)" value={"Lock in results (Step 3)"} />
+            <Picker.Item label="Lock in results (Step 4)" value={"Lock in results (Step 4)"} />
+            <Picker.Item label="New home (Step 5)" value={"New home (Step 5)"} />
           </Picker>
         </View>}
 
         {this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
-          <TouchableHighlight underlayColor='white' onPress={() => { this.setState({
-            showTemplateConfirmation: false,
-            showModal: false,
-            checkedTemplate1: false,
-            checkedTemplate2: false,
-            checkedTemplate3: false,
-            checkedTemplate4: false,
-            checkedTemplate5: false,
-            checkedTemplate6: false
-           })
+          <TouchableHighlight
+            underlayColor={Colors.white}
+            onPress={() => { this.setState({
+              showTemplateConfirmation: false,
+              showModal: false,
+              checkedTemplate1: false,
+              checkedTemplate2: false,
+              checkedTemplate3: false,
+              checkedTemplate4: false,
+              checkedTemplate5: false,
+              checkedTemplate6: false
+             })
           }}>
             <FontAwesome
               style={[Styles.textCenter, Styles.tooltipClose]}
@@ -1620,17 +1628,19 @@ export default class LoginScreen extends React.Component {
 
           <Text style={Styles.tooltipHeader}>Confirm</Text>
 
-          <Text style={Styles.tooltipParagraph}>Before changing templates, check off the items below if you have followed them 90% or more of the time.</Text>
-          <Text style={Styles.tooltipParagraph}>Not following any one of these variables can prevent you from seeing progress.</Text>
+          <Text style={Styles.tooltipParagraph}>Before moving to the next step, confirm you have followed the tasks below 90% or more of the time.</Text>
+          <Text style={Styles.tooltipParagraph}>Ignoring any one of these variables may prevent you from seeing progress.</Text>
 
           <View>
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate1 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
                 <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on {this.state.client.templateType} for at least 1 week.</Text>
               </TouchableHighlight>
@@ -1639,6 +1649,7 @@ export default class LoginScreen extends React.Component {
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate2 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate2: !this.state.checkedTemplate2 }) }}>
                 <Text></Text>
               </TouchableHighlight>
@@ -1651,10 +1662,12 @@ export default class LoginScreen extends React.Component {
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate3 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
                 <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate3 ? styles.checkedText : styles.uncheckedText]}>I have eaten according to the food options in the app.</Text>
               </TouchableHighlight>
@@ -1663,10 +1676,12 @@ export default class LoginScreen extends React.Component {
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate4 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
                 <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate4 ? styles.checkedText : styles.uncheckedText]}>I have spaced my meals out according to the app.</Text>
               </TouchableHighlight>
@@ -1675,10 +1690,12 @@ export default class LoginScreen extends React.Component {
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate5 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
                 <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate5 ? styles.checkedText : styles.uncheckedText]}>I have gotten 7+ hours of sleep each night.</Text>
               </TouchableHighlight>
@@ -1687,6 +1704,7 @@ export default class LoginScreen extends React.Component {
             <View style={styles.checkboxRow}>
               <TouchableHighlight
                 style={[styles.checkbox, this.state.checkedTemplate6 ? styles.checked : '']}
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate6: !this.state.checkedTemplate6 }) }}>
                 <Text></Text>
               </TouchableHighlight>
@@ -1698,10 +1716,12 @@ export default class LoginScreen extends React.Component {
 
           </View>
 
-          <TouchableHighlight style={[Styles.modalButton,
-            this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
-            && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabled]}
-            underlayColor='white' onPress={ () => {
+          <TouchableHighlight
+            style={[Styles.modalButton,
+              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
+              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabled]}
+            underlayColor={Colors.white}
+            onPress={ () => {
               this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
               && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? this.saveTemplateType() : null
             }}>
@@ -1717,7 +1737,9 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showNavToPhase2Modal && <ScrollView style={Styles.tooltip}>
           <View>
-            <TouchableHighlight underlayColor='#CCC' onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1733,13 +1755,13 @@ export default class LoginScreen extends React.Component {
 
             <View style={Styles.modalButtons}>
               <TouchableHighlight style={Styles.modalButtonCancel}
-                underlayColor='white'
+                underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
                 <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={Styles.modalButton}
-                underlayColor='white'
+                underlayColor={Colors.white}
                 onPress={() => { this.movePhase(2) }}>
                 <Text style={Styles.modalButtonText}>I am ready!</Text>
               </TouchableHighlight>
@@ -1753,7 +1775,7 @@ export default class LoginScreen extends React.Component {
         {this.state.showNavToPhase3Modal && <ScrollView style={Styles.tooltip}>
           <View>
             <TouchableHighlight
-              underlayColor='white'
+              underlayColor={Colors.white}
               onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
@@ -1767,13 +1789,13 @@ export default class LoginScreen extends React.Component {
 
             <View style={Styles.modalButtons}>
               <TouchableHighlight style={Styles.modalButtonCancel}
-                underlayColor='white'
+                underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
                 <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={Styles.modalButton}
-                underlayColor='white'
+                underlayColor={Colors.white}
                 onPress={() => { this.movePhase(3) }}>
                 <Text style={Styles.modalButtonText}>I am ready!</Text>
               </TouchableHighlight>
@@ -1786,7 +1808,9 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showMacrosWarning &&
           <ScrollView style={Styles.tooltip}>
-            <TouchableHighlight underlayColor='white' onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1797,15 +1821,21 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
             <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
 
-            <TouchableHighlight style={Styles.modalButton} onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
+            <TouchableHighlight
+              style={Styles.modalButton}
+              underlayColor={Colors.white}
+              onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
               <Text style={Styles.modalButtonText}>Got it!</Text>
             </TouchableHighlight>
 
             <View style={styles.checkboxRow}>
-              <TouchableHighlight style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']} onPress={() => { this.doNotShowMacroWarning() }}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
+                onPress={() => { this.doNotShowMacroWarning() }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
+                underlayColor={Colors.white}
                 onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
                 <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
               </TouchableHighlight>
@@ -1940,6 +1970,6 @@ const styles = StyleSheet.create({
     color: Colors.black
   },
   uncheckedText: {
-    color: Colors.gray
+    color: Colors.black
   }
 });
