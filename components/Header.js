@@ -40,14 +40,11 @@ class Header extends React.Component {
    render() {
      return (
        <View>
-         <View style={Styles.nameHeader}>
-           <Text style={Styles.nameHeaderText}>
+         <View style={styles.nameHeader}>
+           {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />*/}
+           <Text style={styles.nameHeaderText}>
             {this.state.client ? this.state.client.name : ''} - Phase {this.state.client ? this.state.client.phase : ''} {(this.state.client && this.state.client.phase === 3) ? "- " + this.state.client.templateType : ''}
            </Text>
-         </View>
-
-         <View style={Styles.header}>
-           <Image source={require('../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
          </View>
       </View>
      );
@@ -60,5 +57,24 @@ Header.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-
+  nameHeader: {
+    backgroundColor: Colors.secondaryColor,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  nameHeaderText: {
+    textAlign: 'center',
+    color: Colors.white
+  },
+  // logo: {
+  //   width: 50,
+  //   height: 50
+  // },
+  // header: {
+  //   // backgroundColor: Colors.primaryColor,
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   height: 50
+  // }
 });

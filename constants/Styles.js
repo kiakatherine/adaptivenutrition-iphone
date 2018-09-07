@@ -5,22 +5,6 @@ export default {
     flex: 1,
     backgroundColor: Colors.white
   },
-  nameHeader: {
-    backgroundColor: Colors.secondaryColor,
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  nameHeaderText: {
-    textAlign: 'center',
-    color: Colors.white
-  },
-  header: {
-    backgroundColor: Colors.primaryColor,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50
-  },
   title: {
     paddingTop: 10,
     backgroundColor: Colors.primaryColor
@@ -38,7 +22,7 @@ export default {
     textAlign: 'center'
   },
   pageTitle: {
-    marginTop: 20
+    marginTop: 10
   },
   pageSubTitle: {
     fontFamily: 'Futura',

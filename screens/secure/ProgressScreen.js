@@ -5,6 +5,8 @@ import firebase from '../../services/FirebaseService';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
+
+import Header from '../../components/Header';
 import moment from 'moment';
 
 import {
@@ -185,13 +187,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <View style={Styles.nameHeader}>
-          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.clientPhase} - {this.state.template}</Text>
-        </View>
-
-        <View style={Styles.header}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 50, height: 50 }} />
-        </View>
+        <Header />
 
         <ScrollView style={Styles.content}>
           <View>
