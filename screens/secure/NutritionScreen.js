@@ -78,6 +78,7 @@ export default class LoginScreen extends React.Component {
     };
 
     this.clickNavPhase = this.clickNavPhase.bind(this);
+    this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
   }
 
   // componentWillMount() {
@@ -216,12 +217,12 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
-    let t = template === 0 ? 'Home (Step 1)' :
-      template === 1 ? 'Build muscle (Step 2)' :
-      template === 2 ? 'Lose weight (Step 2)' :
-      template === 3 ? 'Lock in results (Step 3)' :
-      template === 4 ? 'Lock in results (Step 4)' :
-      template === 5 ? 'New home (Step 5)' : null;
+    let t = template === 0 ? templates[0] :
+      template === 1 ? templates[1] :
+      template === 2 ? templates[2] :
+      template === 3 ? templates[3] :
+      template === 4 ? templates[4] :
+      template === 5 ? templates[5] : null;
 
     this.setState({
       showEnergyBalancePicker: false,
@@ -478,6 +479,13 @@ export default class LoginScreen extends React.Component {
         });
       }
     }
+  }
+
+  showEnergyBalancePicker() {
+    this.setState({
+      showEnergyBalancePicker: true,
+      showModal: true
+    });
   }
 
   movePhase(phase) {
@@ -1369,7 +1377,8 @@ export default class LoginScreen extends React.Component {
             doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
             toggleView={this.toggleView}
             toggleUnits={this.toggleUnits}
-            clickNavPhase={this.clickNavPhase} />}
+            clickNavPhase={this.clickNavPhase}
+            showEnergyBalancePicker={this.showEnergyBalancePicker} />}
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
