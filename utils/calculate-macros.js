@@ -14,42 +14,37 @@ export function calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein,
       protein[2] = (totalProtein - proteinDelta) * 0.25;
       protein[3] = (totalProtein - proteinDelta) * 0.25;
       protein[4] = (totalProtein - proteinDelta) * 0.25;
-      protein[5] = proteinDelta;
     } else if(mealsBeforeWorkout === 1) {
       protein[0] = (totalProtein - proteinDelta) * 0.25;
       protein[1] = proteinDelta;
       protein[2] = (totalProtein - proteinDelta) * 0.25;
       protein[3] = (totalProtein - proteinDelta) * 0.25;
       protein[4] = (totalProtein - proteinDelta) * 0.25;
-      protein[5] = proteinDelta;
     } else if(mealsBeforeWorkout === 2) {
       protein[0] = (totalProtein - proteinDelta) * 0.25;
       protein[1] = (totalProtein - proteinDelta) * 0.25;
       protein[2] = proteinDelta;
       protein[3] = (totalProtein - proteinDelta) * 0.25;
       protein[4] = (totalProtein - proteinDelta) * 0.25;
-      protein[5] = proteinDelta;
     } else if(mealsBeforeWorkout === 3) {
       protein[0] = (totalProtein - proteinDelta) * 0.25;
       protein[1] = (totalProtein - proteinDelta) * 0.25;
       protein[2] = (totalProtein - proteinDelta) * 0.25;
       protein[3] = proteinDelta;
       protein[4] = (totalProtein - proteinDelta) * 0.25;
-      protein[5] = proteinDelta;
     } else if(mealsBeforeWorkout === 4) {
       protein[0] = (totalProtein - proteinDelta) * 0.25;
       protein[1] = (totalProtein - proteinDelta) * 0.25;
       protein[2] = (totalProtein - proteinDelta) * 0.25;
       protein[3] = (totalProtein - proteinDelta) * 0.25;
       protein[4] = proteinDelta;
-      protein[5] = proteinDelta;
     }
   }
 
   return protein;
 }
 
-export function calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs) {
+export function calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs, carbDelta) {
   let carbs = [];
 
   if(trainingIntensity === 0) {
@@ -60,40 +55,35 @@ export function calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs) {
     carbs[4] = '---';
   } else if(trainingIntensity === 1 || trainingIntensity === 2) {
     if(mealsBeforeWorkout === 0) {
-      carbs[0] = Math.round(totalCarbs * 0.2);
-      carbs[1] = Math.round(totalCarbs * 0.3);
-      carbs[2] = Math.round(totalCarbs * 0.2);
-      carbs[3] = Math.round(totalCarbs * 0.1);
-      carbs[4] = Math.round(totalCarbs * 0.1);
-      carbs[5] = Math.round(totalCarbs * 0.1);
+      carbs[0] = carbDelta;
+      carbs[1] = Math.round((totalCarbs - carbDelta) * 0.4);
+      carbs[2] = Math.round((totalCarbs - carbDelta) * 0.3);
+      carbs[3] = Math.round((totalCarbs - carbDelta) * 0.15);
+      carbs[4] = Math.round((totalCarbs - carbDelta) * 0.15);
     } else if(mealsBeforeWorkout === 1) {
-      carbs[0] = Math.round(totalCarbs * 0.15);
-      carbs[1] = Math.round(totalCarbs * 0.15);
-      carbs[2] = Math.round(totalCarbs * 0.3);
-      carbs[3] = Math.round(totalCarbs * 0.2);
-      carbs[4] = Math.round(totalCarbs * 0.1);
-      carbs[5] = Math.round(totalCarbs * 0.1);
+      carbs[0] = Math.round((totalCarbs - carbDelta) * 0.3);
+      carbs[1] = carbDelta;
+      carbs[2] = Math.round((totalCarbs - carbDelta) * 0.4);
+      carbs[3] = Math.round((totalCarbs - carbDelta) * 0.2);
+      carbs[4] = Math.round((totalCarbs - carbDelta) * 0.1);
     } else if(mealsBeforeWorkout === 2) {
-      carbs[0] = Math.round(totalCarbs * 0.1);
-      carbs[1] = Math.round(totalCarbs * 0.15);
-      carbs[2] = Math.round(totalCarbs * 0.15);
-      carbs[3] = Math.round(totalCarbs * 0.3);
-      carbs[4] = Math.round(totalCarbs * 0.2);
-      carbs[5] = Math.round(totalCarbs * 0.1);
+      carbs[0] = Math.round((totalCarbs - carbDelta) * 0.15);
+      carbs[1] = Math.round((totalCarbs - carbDelta) * 0.3);
+      carbs[2] = carbDelta;
+      carbs[3] = Math.round((totalCarbs - carbDelta) * 0.15);
+      carbs[4] = Math.round((totalCarbs - carbDelta) * 0.3);
     } else if(mealsBeforeWorkout === 3) {
-      carbs[0] = Math.round(totalCarbs * 0.1);
-      carbs[1] = Math.round(totalCarbs * 0.1);
-      carbs[2] = Math.round(totalCarbs * 0.15);
-      carbs[3] = Math.round(totalCarbs * 0.15);
-      carbs[4] = Math.round(totalCarbs * 0.3);
-      carbs[5] = Math.round(totalCarbs * 0.2);
+      carbs[0] = Math.round((totalCarbs - carbDelta) * 0.15);
+      carbs[1] = Math.round((totalCarbs - carbDelta) * 0.15);
+      carbs[2] = Math.round((totalCarbs - carbDelta) * 0.3);
+      carbs[3] = carbDelta;
+      carbs[4] = Math.round((totalCarbs - carbDelta) * 0.4);
     } else if(mealsBeforeWorkout === 4) {
-      carbs[0] = Math.round(totalCarbs * 0.1);
-      carbs[1] = Math.round(totalCarbs * 0.1);
-      carbs[2] = Math.round(totalCarbs * 0.15);
-      carbs[3] = Math.round(totalCarbs * 0.2);
-      carbs[4] = Math.round(totalCarbs * 0.15);
-      carbs[5] = Math.round(totalCarbs * 0.3);
+      carbs[0] = Math.round((totalCarbs - carbDelta) * 0.4);
+      carbs[1] = Math.round((totalCarbs - carbDelta) * 0.4);
+      carbs[2] = Math.round((totalCarbs - carbDelta) * 0.2);
+      carbs[3] = carbDelta;
+      carbs[4] = Math.round((totalCarbs - carbDelta) * 0.4);
     }
   }
 
@@ -104,47 +94,42 @@ export function calcFat(trainingIntensity, mealsBeforeWorkout, totalFat) {
   let fats = [];
 
   if(trainingIntensity === 0) {
-    fats[0] = Math.round(totalFat * 0.3);
-    fats[1] = Math.round(totalFat * 0.2);
-    fats[2] = Math.round(totalFat * 0.2);
-    fats[3] = Math.round(totalFat * 0.3);
+    fats[0] = Math.round(totalFat * 0.25);
+    fats[1] = Math.round(totalFat * 0.25);
+    fats[2] = Math.round(totalFat * 0.25);
+    fats[3] = Math.round(totalFat * 0.25);
     fats[4] = '---';
   } else if(trainingIntensity === 1 || trainingIntensity === 2) {
     if(mealsBeforeWorkout === 0) {
       fats[0] = '---';
       fats[1] = '---';
-      fats[2] = Math.round(totalFat * 0.1);
-      fats[3] = Math.round(totalFat * 0.3);
-      fats[4] = Math.round(totalFat * 0.3);
-      fats[5] = Math.round(totalFat * 0.3);
+      fats[2] = Math.round(totalFat * 0.2);
+      fats[3] = Math.round(totalFat * 0.4);
+      fats[4] = Math.round(totalFat * 0.4);
     } else if(mealsBeforeWorkout === 1) {
-      fats[0] = Math.round(totalFat * 0.1);
+      fats[0] = Math.round(totalFat * 0.2);
       fats[1] = '---';
       fats[2] = '---';
-      fats[3] = Math.round(totalFat * 0.3);
-      fats[4] = Math.round(totalFat * 0.3);
-      fats[5] = Math.round(totalFat * 0.3);
+      fats[3] = Math.round(totalFat * 0.4);
+      fats[4] = Math.round(totalFat * 0.4);
     } else if(mealsBeforeWorkout === 2) {
-      fats[0] = Math.round(totalFat * 0.3);
-      fats[1] = Math.round(totalFat * 0.1);
+      fats[0] = Math.round(totalFat * 0.4);
+      fats[1] = Math.round(totalFat * 0.2);
       fats[2] = '---';
       fats[3] = '---';
-      fats[4] = Math.round(totalFat * 0.3);
-      fats[5] = Math.round(totalFat * 0.3);
+      fats[4] = Math.round(totalFat * 0.4);
     } else if(mealsBeforeWorkout === 3) {
-      fats[0] = Math.round(totalFat * 0.3);
-      fats[1] = Math.round(totalFat * 0.3);
-      fats[2] = Math.round(totalFat * 0.1);
+      fats[0] = Math.round(totalFat * 0.4);
+      fats[1] = Math.round(totalFat * 0.4);
+      fats[2] = Math.round(totalFat * 0.2);
       fats[3] = '---';
       fats[4] = '---';
-      fats[5] = Math.round(totalFat * 0.3);
     } else if(mealsBeforeWorkout === 4) {
-      fats[0] = Math.round(totalFat * 0.3);
+      fats[0] = Math.round(totalFat * 0.4);
       fats[1] = Math.round(totalFat * 0.3);
-      fats[2] = Math.round(totalFat * 0.3);
-      fats[3] = Math.round(totalFat * 0.1);
+      fats[2] = Math.round(totalFat * 0.15);
+      fats[3] = Math.round(totalFat * 0.15);
       fats[4] = '---';
-      fats[5] = '---';
     }
   }
 
@@ -207,8 +192,6 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
   customRestDayProtein, customRestDayCarbs, customRestDayFat,
   customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
   customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat, templates, macroRatios) {
-
-    // alert(macroRatios.maleRatios.maleProtein1)
 
   let totals = {};
   const bmr = calculateBmr(gender, age, height, bodyweight);
@@ -276,7 +259,6 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
   // moderate day carbs
   // moderate day fat
   if(totals['moderateCaloriesFinal']) {
-    // alert(calculateProteinPercentage(gender, bodyfat, macroRatios))
     totals['moderateDayProtein'] = Math.round(calculateProteinPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 4);
     totals['moderateDayCarbs'] = Math.round(calculateCarbPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 4);
     totals['moderateDayFat'] = Math.round(calculateFatPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 9);
@@ -430,7 +412,6 @@ function calculateDifference(bmr, templateType, templates) {
 
 function calculateProteinPercentage(gender, bodyfat, macroRatios) {
   // refer to Adaptive Nutrition Meal Planning Development Google Sheet - C16
-  alert(macroRatios.femaleRatios.femaleProtein2)
   if(gender === 'Male') {
     if(bodyfat >= 25) {
       return macroRatios.maleRatios.maleProtein1;

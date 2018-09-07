@@ -713,7 +713,7 @@ export default class LoginScreen extends React.Component {
       dinnerTime: null
     };
 
-    let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta,
+    let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta, carbDelta,
       template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity,
       showInGrams, viewAllMeals, isPwoMeal, wakeTime,
       complete1, complete2, complete3, complete4, complete5, complete6,
@@ -733,7 +733,10 @@ export default class LoginScreen extends React.Component {
       gender = client.gender;
       height = client.height;
       leanMass = client.leanMass;
-      proteinDelta = bodyweight > 150 ? 25 : 20;
+      proteinDelta = leanMass > 150 ? 25 :
+        (leanMass < 150 && leanMass > 100) ? 20 : 15;
+      carbDelta = leanMass > 150 ? 50 :
+        (leanMass < 150 && leanMass > 100) ? 35 : 20;
 
       template = client.templateType;
       phase = client.phase;
@@ -788,7 +791,7 @@ export default class LoginScreen extends React.Component {
           totalCalories = totals['totalCalories'];
 
         protein = calcProtein(trainingIntensity, mealsBeforeWorkout, totalProtein, proteinDelta);
-        carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs);
+        carbs = calcCarbs(trainingIntensity, mealsBeforeWorkout, totalCarbs, carbDelta);
         fats = calcFat(trainingIntensity, mealsBeforeWorkout, totalFat);
         veggies = calcVeggies(trainingIntensity, mealsBeforeWorkout);
 
@@ -1251,28 +1254,6 @@ export default class LoginScreen extends React.Component {
                   template={template}
                   phase={phase}
                   currentMeal={4}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={5}
                   breakfastTime={mealTimes['breakfastTime']}
                   earlyLunchTime={mealTimes['earlyLunchTime']}
                   lateLunchTime={mealTimes['lateLunchTime']}

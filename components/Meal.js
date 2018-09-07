@@ -230,7 +230,7 @@ class Meal extends React.Component {
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
               <Text style={styles.macroLabelsWithIcon}>Fats</Text>
             </View>}
-          <FoodOptions style={styles.mealRowColLong}
+          {this.props.phase === 3 && <FoodOptions style={styles.mealRowColLong}
             macro='fats'
             sources={this.props.fats}
             trainingIntensity={this.props.trainingIntensity}
@@ -245,7 +245,7 @@ class Meal extends React.Component {
             height={this.props.height}
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
-            showInGrams={this.props.showInGrams} />
+            showInGrams={this.props.showInGrams} />}
           {this.props.phase === 2 &&
             <View>
               <Picker
@@ -273,7 +273,7 @@ class Meal extends React.Component {
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
           {this.props.phase === 3 && <View><Text style={styles.mealRowColPhase3}>VEGGIES</Text>
-            <Text style={styles.veggieText}>1 cup</Text></View>}
+            <Text style={styles.veggieText}>{pwo ? '---' : '1 cup'}</Text></View>}
           {this.props.phase < 3 && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
