@@ -48,8 +48,8 @@ class MealPlanSettings extends React.Component {
             underlayColor='white'
             onPress={() => { this.toggleView(viewAllMeals) }}>
               <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
-              {viewAllMeals && 'View by meal'}
-              {!viewAllMeals && 'View by day'}
+              {viewAllMeals && 'View single meal'}
+              {!viewAllMeals && 'View all meals'}
               </Text>
            </TouchableHighlight>
 

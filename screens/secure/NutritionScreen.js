@@ -1321,7 +1321,7 @@ export default class LoginScreen extends React.Component {
               <TouchableHighlight
                 style={Styles.center}
                 onPress={() => this.toggleView(viewAllMeals) }>
-                <Text style={Styles.textCenter}>View by meal to see meal completion buttons.</Text>
+                <Text style={Styles.textCenter}>View single meal to see meal completion buttons</Text>
               </TouchableHighlight>}
           </View>
 

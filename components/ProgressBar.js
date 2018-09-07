@@ -34,8 +34,7 @@ class ProgressBar extends React.Component {
             <View style={[styles.meal, this.props.complete2 === 1 ? styles.complete : '', this.props.complete2 === 2 ? styles.incomplete : '']}></View>
             <View style={[styles.meal, this.props.complete3 === 1 ? styles.complete : '', this.props.complete3 === 2 ? styles.incomplete : '']}></View>
             <View style={[styles.meal, this.props.complete4 === 1 ? styles.complete : '', this.props.complete4 === 2 ? styles.incomplete : '']}></View>
-            <View style={[styles.meal, this.props.trainingIntensity > 0 ? '' : styles.lastMeal, this.props.complete5 === 1 ? styles.complete : '', this.props.complete5 === 2 ? styles.incomplete : '']}></View>
-            {this.props.trainingIntensity > 0 && <View style={[styles.meal, styles.lastMeal, this.props.complete6 === 1 ? styles.complete : '', this.props.complete6 === 2 ? styles.incomplete : '']}></View>}
+            {this.props.trainingIntensity > 0 && <View style={[styles.meal, this.props.trainingIntensity > 0 ? '' : styles.lastMeal, this.props.complete5 === 1 ? styles.complete : '', this.props.complete5 === 2 ? styles.incomplete : '']}></View>}
            </View>}
        </View>
      );
