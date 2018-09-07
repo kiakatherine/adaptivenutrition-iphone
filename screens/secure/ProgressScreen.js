@@ -26,7 +26,6 @@ import subDays from 'date-fns/sub_days';
 
 import BodyweightGraph from '../../components/BodyweightGraph';
 import DayStatus from '../../components/DayStatus';
-import { convertTemplateNumberToString } from '../../utils/helpers';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -187,7 +186,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <View style={Styles.nameHeader}>
-          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.clientPhase} - {convertTemplateNumberToString(this.state.template)}</Text>
+          <Text style={Styles.nameHeaderText}>{this.state.client ? this.state.client.name : ''} - Phase {this.state.clientPhase} - {this.state.template}</Text>
         </View>
 
         <View style={Styles.header}>

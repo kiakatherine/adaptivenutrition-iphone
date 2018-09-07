@@ -93,7 +93,7 @@ class Meal extends React.Component {
      } else if(label === 'Dinner') {
        time = this.props.dinnerTime;
      }
-     
+
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
@@ -304,7 +304,7 @@ export default Meal;
 Meal.propTypes = {
   // trainingIntensity: PropTypes.number,
   mealsBeforeWorkout: PropTypes.number,
-  template: PropTypes.number,
+  template: PropTypes.string,
   currentMeal: PropTypes.number,
   age: PropTypes.number,
   gender: PropTypes.string,

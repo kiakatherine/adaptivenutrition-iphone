@@ -18,8 +18,9 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
+import * as templates from '../constants/Templates';
 
-import { createFoodMenu } from '../utils/helpers';
+import { convertTemplateToNumber, createFoodMenu } from '../utils/helpers';
 
 class FoodOptions extends React.Component {
    state = {
@@ -30,7 +31,7 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
-     const template = this.props.template;
+     const template = convertTemplateToNumber(this.props.template, templates);
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
@@ -52,7 +53,7 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
-     const template = this.props.template;
+     const template = convertTemplateToNumber(this.props.template, templates);
      const sources = this.props.sources;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
@@ -78,7 +79,6 @@ class FoodOptions extends React.Component {
      const macro = this.props.macro;
      const currentMeal = this.props.currentMeal;
      const phase = this.props.phase;
-     const template = this.props.template;
      const showInGrams = this.props.showInGrams;
      const sources = this.props.sources;
      const selection = this.state.selection;
@@ -132,7 +132,7 @@ export default FoodOptions;
 FoodOptions.propTypes = {
   // trainingIntensity: PropTypes.number,
   mealsBeforeWorkout: PropTypes.number,
-  template: PropTypes.number,
+  template: PropTypes.string,
   currentMeal: PropTypes.number,
   age: PropTypes.number,
   gender: PropTypes.string,

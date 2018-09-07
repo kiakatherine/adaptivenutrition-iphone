@@ -21,9 +21,6 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
-import { convertTemplateNumberToString } from '../utils/helpers';
-
-
 class Header extends React.Component {
   constructor(props) {
     super(props);

@@ -9,10 +9,12 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 import * as labels from '../../constants/MealLabels';
+import * as templates from '../../constants/Templates';
+import * as macroRatios from '../../constants/MacroRatios';
 import moment from 'moment';
 
-import { calcProtein, calcCarbs, calcFat, calcVeggies } from '../../utils/calculate-macros';
-import { changeUnit, convertTemplateNumberToString, calculateTotals, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, setMealTimes } from '../../utils/helpers';
+import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
+import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, setMealTimes } from '../../utils/helpers';
 
 import {
   Alert,
@@ -231,7 +233,7 @@ export default class LoginScreen extends React.Component {
     const template = this.state.potentialTemplate;
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
-    let t = convertTemplateNumberToString(template);
+    let t = template;
 
     client.update({ templateType: t });
 
@@ -733,12 +735,7 @@ export default class LoginScreen extends React.Component {
       leanMass = client.leanMass;
       proteinDelta = bodyweight > 150 ? 25 : 20;
 
-      template = client.templateType === 'Home (Step 1)' ? 0 :
-        client.templateType === 'Build muscle (Step 2)' ? 1 :
-        client.templateType === 'Lose weight (Step 2)' ? 2 :
-        client.templateType === 'Lock in results (Step 3)' ? 3 :
-        client.templateType === 'Lock in results (Step 4)' ? 4 :
-        client.templateType === 'New home (Step 5)' ? 5 : null;
+      template = client.templateType;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
@@ -777,11 +774,14 @@ export default class LoginScreen extends React.Component {
         customHeavyDayCarbs = client.customHeavyDayCarbs;
         customHeavyDayFat = client.customHeavyDayFat;
 
+        weight1 = client.weight1;
+        weight2 = client.weight2;
+
         const totals = calculateTotals(age, gender, height, bodyfat, bodyweight, leanMass,
-          template, trainingIntensity, customMacros,
+          weight1, weight2, template, trainingIntensity, customMacros,
           customRestDayProtein, customRestDayCarbs, customRestDayFat,
           customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
-          customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat);
+          customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat, templates, macroRatios);
         const totalProtein = totals['totalProtein'],
           totalCarbs = totals['totalCarbs'],
           totalFat = totals['totalFat'],

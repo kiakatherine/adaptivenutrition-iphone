@@ -201,3 +201,293 @@ export function calcVeggies(trainingIntensity, mealsBeforeWorkout) {
 
   return veggies;
 }
+
+export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMass,
+  weight1, weight2, templateType, trainingIntensity, customMacros,
+  customRestDayProtein, customRestDayCarbs, customRestDayFat,
+  customModerateDayProtein, customModerateDayCarbs, customModerateDayFat,
+  customHeavyDayProtein, customHeavyDayCarbs, customHeavyDayFat, templates, macroRatios) {
+
+    // alert(macroRatios.maleRatios.maleProtein1)
+
+  let totals = {};
+  const bmr = calculateBmr(gender, age, height, bodyweight);
+  const difference = calculateDifference(bmr, templateType, templates.templates);
+
+  // rest calories final
+  let restCalories;
+
+  if(age && bodyweight && height) {
+    if(gender === 'Female') {
+      restCalories = Math.round(1.2 * (655 + (4.35 * bodyweight) + (4.7 * height) -
+        (4.7 * age)));
+      // this.set('client.restCalories', restCalories);
+    } else {
+      restCalories = Math.round(1.2 * (66 + (6.23 * bodyweight) + (12.7 * height) -
+        (6.8 * age)));
+      // this.set('client.restCalories', restCalories);
+    }
+  }
+
+  if(restCalories) {
+    totals['restCaloriesFinal'] = restCalories + difference;
+    // this.set('client.restCaloriesFinal', restCaloriesFinal);
+    // return restCaloriesFinal;
+  }
+
+  // rest day protein
+  // rest day carbs
+  // rest day fat
+  if(totals['restCaloriesFinal']) {
+    totals['restDayProtein'] = Math.round(calculateProteinPercentage(gender, bodyfat, macroRatios) * totals['restCaloriesFinal'] / 4);
+    totals['restDayCarbs'] = Math.round(calculateCarbPercentage(gender, bodyfat, macroRatios) * totals['restCaloriesFinal'] / 4);
+    totals['restDayFat'] = Math.round(calculateFatPercentage(gender, bodyfat, macroRatios) * totals['restCaloriesFinal'] / 9);
+    // this.set('client.restDayFat', restDayFat);
+    // return restDayFat;
+  }
+
+  // custom rest day calories final
+  const customRestDayCaloriesFinalProtein = customRestDayProtein ? customRestDayProtein : totals['restDayProtein'];
+  const customRestDayCaloriesFinalCarbs = customRestDayCarbs ? customRestDayCarbs : totals['restDayCarbs'];
+  const customRestDayCaloriesFinalFat = customRestDayFat ? customRestDayFat : totals['restDayFat'];
+
+  totals['customRestDayCaloriesFinal'] = (Number(customRestDayCaloriesFinalProtein) * 4) + (Number(customRestDayCaloriesFinalCarbs) * 4) + (Number(customRestDayCaloriesFinalFat) * 9);
+
+  // moderate calories final
+  let moderateCalories;
+
+  if(age && bodyweight && height) {
+    if(gender === 'Female') {
+      moderateCalories = Math.round(1.375 * (655 + (4.35 * bodyweight) + (4.7 * height) - (4.7 * age)));
+      // this.set('client.moderateCaloriesFemale', moderateCalories);
+    } else {
+      moderateCalories = Math.round(1.375 * (66 + (6.23 * bodyweight) + (12.7 * height) - (6.8 * age)));
+      // this.set('client.moderateCaloriesMale', moderateCalories);
+    }
+  }
+
+  if(moderateCalories) {
+    totals['moderateCaloriesFinal'] = moderateCalories + difference;
+    // this.set('client.moderateCaloriesFinal', moderateCaloriesFinal);
+    // return moderateCaloriesFinal;
+  }
+
+  // moderate day protein
+  // moderate day carbs
+  // moderate day fat
+  if(totals['moderateCaloriesFinal']) {
+    // alert(calculateProteinPercentage(gender, bodyfat, macroRatios))
+    totals['moderateDayProtein'] = Math.round(calculateProteinPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 4);
+    totals['moderateDayCarbs'] = Math.round(calculateCarbPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 4);
+    totals['moderateDayFat'] = Math.round(calculateFatPercentage(gender, bodyfat, macroRatios) * totals['moderateCaloriesFinal'] / 9);
+    // this.set('client.moderateDayFat', moderateDayFat);
+    // return moderateDayFat;
+  }
+
+  // custom moderate calories final
+  const customModerateCaloriesFinalProtein = customModerateDayProtein ? customModerateDayProtein : totals['moderateDayProtein'];
+  const customModerateCaloriesFinalCarbs = customModerateDayCarbs ? customModerateDayCarbs : totals['moderateDayCarbs'];
+  const customModerateCaloriesFinalFat = customModerateDayFat ? customModerateDayFat : totals['moderateDayFat'];
+
+  totals['customModerateCaloriesFinal'] = (Number(customModerateCaloriesFinalProtein) * 4) + (Number(customModerateCaloriesFinalCarbs) * 4) + (Number(customModerateCaloriesFinalFat) * 9);
+
+  // heavy calories final
+  let heavyCalories;
+
+  if(age && bodyweight && height) {
+    if(gender === 'Female') {
+      heavyCalories = Math.round(1.55 * (655 + (4.35 * bodyweight) + (4.7 * height) - (4.7 * age)));
+      // this.set('client.heavyCalories', heavyCalories);
+    } else {
+      // fix
+      // this.set('client.heavyCalories', Math.round(1.55 * (66 + (6.23 * bodyweight) + (12.7 * height) - (6.8 * age))));
+      heavyCalories = Math.round(1.55 * (66 + (6.23 * bodyweight) + (12.7 * height) - (6.8 * age)));
+    }
+  }
+
+  if(heavyCalories) {
+    totals['heavyCaloriesFinal'] = heavyCalories + difference;
+    // this.set('client.heavyCaloriesFinal', heavyCaloriesFinal);
+    // return heavyCaloriesFinal;
+  }
+
+  // heavy day protein
+  // heavy day carbs
+  // heavy day fat
+  if(totals['heavyCaloriesFinal']) {
+    totals['heavyDayProtein'] = Math.round(calculateProteinPercentage(gender, bodyfat, macroRatios) * totals['heavyCaloriesFinal'] / 4);
+    totals['heavyDayCarbs'] = Math.round(calculateCarbPercentage(gender, bodyfat, macroRatios) * totals['heavyCaloriesFinal'] / 4);
+    totals['heavyDayFat'] = Math.round(calculateFatPercentage(gender, bodyfat, macroRatios) * totals['heavyCaloriesFinal'] / 9);
+    // this.set('client.moderateDayFat', moderateDayFat);
+    // return moderateDayFat;
+  }
+
+  // custom heavy calories final
+  const customHeavyCaloriesFinalProtein = customHeavyDayProtein ? customHeavyDayProtein : totals['heavyDayProtein'];
+  const customHeavyCaloriesFinalCarbs = customHeavyDayCarbs ? customHeavyDayCarbs : totals['heavyDayCarbs'];
+  const customHeavyCaloriesFinalFat = customHeavyDayFat ? customHeavyDayFat : totals['heavyDayFat'];
+
+  totals['customHeavyCaloriesFinal'] = (Number(customHeavyCaloriesFinalProtein) * 4) + (Number(customHeavyCaloriesFinalCarbs) * 4) + (Number(customHeavyCaloriesFinalFat) * 9);
+
+  if(trainingIntensity === 0) {
+    totals['totalProtein'] = customMacros && customRestDayProtein ? customRestDayProtein : totals['restDayProtein'];
+    totals['totalCarbs'] = customMacros && customRestDayCarbs ? customRestDayCarbs : totals['restDayCarbs'];
+    totals['totalFat'] = customMacros && customRestDayFat ? customRestDayFat : totals['restDayFat'];
+    totals['totalCalories'] = customMacros && totals['customRestCaloriesFinal'] ? totals['customRestCaloriesFinal'] : totals['restCaloriesFinal'];
+  } else if(trainingIntensity === 1) {
+    totals['totalProtein'] = customMacros && customModerateDayProtein ? customModerateDayProtein : totals['moderateDayProtein'];
+    totals['totalCarbs'] = customMacros && customModerateDayCarbs ? customModerateDayCarbs : totals['moderateDayCarbs'];
+    totals['totalFat'] = customMacros && customModerateDayFat ? customModerateDayFat : totals['moderateDayFat'];
+    totals['totalCalories'] = customMacros && totals['customModerateCaloriesFinal'] ? totals['customModerateCaloriesFinal'] : totals['moderateCaloriesFinal'];
+  } else {
+    totals['totalProtein'] = customMacros && customHeavyDayProtein ? customHeavyDayProtein : totals['heavyDayProtein'];
+    totals['totalCarbs'] = customMacros && customHeavyDayCarbs ? customHeavyDayCarbs : totals['heavyDayCarbs'];
+    totals['totalFat'] = customMacros && customHeavyDayFat ? customHeavyDayFat : totals['heavyDayFat'];
+    totals['totalCalories'] = customMacros && totals['customHeavyCaloriesFinal'] ? totals['customHeavyCaloriesFinal'] : totals['heavyCaloriesFinal'];
+  }
+
+  // totals includes:
+  // restDayProtein, restDayCarbs, restDayFat, restCaloriesFinal, customRestCaloriesFinal
+  // moderateDayProtein, moderateDayCarbs, moderateDayFat, moderateCaloriesFinal, customModerateCaloriesFinal
+  // heavyDayProtein, heavyDayCarbs, heavyDayFat, heavyCaloriesFinal, customHeavyCaloriesFinal
+  // totalProtein, totalCarbs, totalFat, totalCalories
+
+  return totals;
+}
+
+function calculateBmr(gender, age, height, bodyweight) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - G14
+  if(gender === 'Female') {
+    return Math.round(655 + (4.35 * bodyweight) + (4.7 * height) - (4.7 * age));
+  } else if(gender === 'Male') {
+    return Math.round(66 + (6.23 * bodyweight) + (12.7 * height) - (6.8 * age));
+  }
+}
+
+function calculateBmrProxyNewBmr(gender, age, height, weight2) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - G8
+  if(gender && height && age && weight2) {
+    if(gender === 'Female') {
+      return Math.round(655 + (4.35 * weight2) + (4.7 * height) - (4.7 * age));
+    } else if(gender === 'Male') {
+      return Math.round(66 + (6.23 * weight2) + (12.7 * height) - (6.8 * age));
+    }
+  } else {
+    if(!weight2) {
+      alert('missing weight2');
+    } else {
+      alert('missing variable to calculate bmrProxyNewBmr');
+    }
+  }
+}
+
+function calculateBmrProxyMetabolicTest(bmr) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D8
+  return bmr;
+}
+
+function calculateBmrProxyLeaningOut(bmr, bodyweight) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - C8
+  return bmr - ((0.0075 * bodyweight) / 7) * 3500;
+}
+
+function calculateBmrProxyBuildingMass(bmr, bodyweight) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - B8
+  return bmr + ((0.007 * bodyweight / 7)) * 2500;
+}
+
+function calculateBmrProxyRevDiet1(bmr, bmrProxyNewBmr, bmrProxyLeaningOut, bodyweight) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - E8
+  return (bmrProxyNewBmr - bmrProxyLeaningOut) * 0.33 + bmrProxyLeaningOut;
+}
+
+function calculateBmrProxyRevDiet2(bmr, bmrProxyNewBmr, bmrProxyLeaningOut, bodyweight) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - F8
+  return (bmrProxyNewBmr - bmrProxyLeaningOut) * 0.66 + bmrProxyLeaningOut;
+}
+
+function calculateDifference(bmr, templateType, templates) {
+  if(templateType === templates[0]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D9
+    return calculateBmrProxyMetabolicTest(bmr) - bmr;
+  } else if(templateType === templates[1]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - B9
+    return calculateBmrProxyBuildingMass(bmr, bodyweight) - bmr;
+  } else if(templateType === templates[2]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - C9
+    return calculateBmrProxyLeaningOut(bmr, bodyweight) - bmr;
+  } else if(templateType === templates[3]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - E9
+    return calculateBmrProxyRevDiet1(bmr, bmrProxyNewBmr, bmrProxyLeaningOut, bodyweight) - bmr;
+  } else if(templateType === templates[4]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - F9
+    return calculateBmrProxyRevDiet1(bmr, bmrProxyNewBmr, bmrProxyLeaningOut, bodyweight) - bmr;
+  } else if(templateType === templates[5]) {
+    // refer to Adaptive Nutrition Meal Planning Development Google Sheet - G9
+    return calculateBmrProxyNewBmr(gender, age, height, weight2) - bmr;
+  }
+}
+
+function calculateProteinPercentage(gender, bodyfat, macroRatios) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - C16
+  alert(macroRatios.femaleRatios.femaleProtein2)
+  if(gender === 'Male') {
+    if(bodyfat >= 25) {
+      return macroRatios.maleRatios.maleProtein1;
+    } else if(bodyfat > 15) {
+      return maleProtein2;
+    } else {
+      return maleProtein3;
+    }
+  } else if(gender === 'Female') {
+    if(bodyfat >= 35) {
+      return macroRatios.femaleRatios.femaleProtein1;
+    } else if(bodyfat > 22) {
+      return macroRatios.femaleRatios.femaleProtein2;
+    } else {
+      return macroRatios.femaleRatios.femaleProtein3;
+    }
+  }
+}
+
+function calculateCarbPercentage(gender, bodyfat, macroRatios) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D16
+  if(gender === 'Male') {
+    if(bodyfat >= 25) {
+      return macroRatios.maleRatios.maleCarb1;
+    } else if(bodyfat > 15) {
+      return macroRatios.maleRatios.maleCarb2;
+    } else {
+      return macroRatios.maleRatios.maleCarb3;
+    }
+  } else if(gender === 'Female') {
+    if(bodyfat >= 35) {
+      return macroRatios.femaleRatios.femaleCarb1;
+    } else if(bodyfat > 22) {
+      return macroRatios.femaleRatios.femaleCarb2;
+    } else {
+      return macroRatios.femaleRatios.femaleCarb3;
+    }
+  }
+}
+
+function calculateFatPercentage(gender, bodyfat, macroRatios) {
+  // refer to Adaptive Nutrition Meal Planning Development Google Sheet - E16
+  if(gender === 'Male') {
+    if(bodyfat >= 25) {
+      return macroRatios.maleRatios.maleFat1;
+    } else if(bodyfat > 15) {
+      return macroRatios.maleRatios.maleFat2;
+    } else {
+      return macroRatios.maleRatios.maleFat3;
+    }
+  } else if(gender === 'Female') {
+    if(bodyfat >= 35) {
+      return macroRatios.femaleRatios.femaleFat1;
+    } else if(bodyfat > 22) {
+      return macroRatios.femaleRatios.femaleFat2;
+    } else {
+      return macroRatios.femaleRatios.femaleFat3;
+    }
+  }
+}
