@@ -33,6 +33,7 @@ import Header from '../../components/Header';
 import Meal from '../../components/Meal';
 import ProgressBar from '../../components/ProgressBar';
 import MealPlanSettings from '../../components/MealPlanSettings';
+import ModalWindow from '../../components/ModalWindow';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -52,6 +53,7 @@ export default class LoginScreen extends React.Component {
       showTrainingIntensityPicker: false,
       showMealsBeforeWorkoutPicker: false,
       showEnergyBalancePicker: false,
+      showNeedBodyweightEntries: false,
       showTemplateConfirmation: false,
       showMacrosWarning: false,
 
@@ -217,19 +219,28 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
-    let t = template === 0 ? templates[0] :
-      template === 1 ? templates[1] :
-      template === 2 ? templates[2] :
-      template === 3 ? templates[3] :
-      template === 4 ? templates[4] :
-      template === 5 ? templates[5] : null;
+    const hasBodyweightEntries = false; // MOCK
 
-    this.setState({
-      showEnergyBalancePicker: false,
-      showModal: true,
-      showTemplateConfirmation: true,
-      potentialTemplate: template
-    });
+    if(hasBodyweightEntries) {
+      let t = template === 0 ? templates[0] :
+        template === 1 ? templates[1] :
+        template === 2 ? templates[2] :
+        template === 3 ? templates[3] :
+        template === 4 ? templates[4] :
+        template === 5 ? templates[5] : null;
+
+      this.setState({
+        showEnergyBalancePicker: false,
+        showModal: true,
+        showTemplateConfirmation: true,
+        potentialTemplate: template
+      });
+    } else {
+      this.setState({
+        showEnergyBalancePicker: false,
+        showNeedBodyweightEntries: true
+      });
+    }
   }
 
   saveTemplateType() {
@@ -1604,6 +1615,33 @@ export default class LoginScreen extends React.Component {
             <Picker.Item label="New home (Step 5)" value={"New home (Step 5)"} />
           </Picker>
         </View>}
+
+        {this.state.showNeedBodyweightEntries && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>
+              <FontAwesome
+                style={[Styles.textCenter]}
+                name='lock'
+                size={36}
+              />
+            </Text>
+            <Text style={Styles.tooltipHeader}>
+              Uh oh!
+            </Text>
+            <Text style={Styles.tooltipParagraph}>You need to have entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step.</Text>
+            <Text></Text>
+            <Text></Text>
+          </View>
+        </ScrollView>}
 
         {this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
           <TouchableHighlight

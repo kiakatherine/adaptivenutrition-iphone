@@ -72,7 +72,7 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor='white'
             onPress={() => { this.props.showEnergyBalancePicker() }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal {template}</Text>
+              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal - {template}</Text>
            </TouchableHighlight>
 
            <TouchableHighlight
