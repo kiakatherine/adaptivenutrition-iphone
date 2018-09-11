@@ -262,8 +262,10 @@ export default class LoginScreen extends React.Component {
             </View>
 
             {this.state.showBodyweightLog && <View style={styles.progressSection}>
-              <Text style={[Styles.bigTitle, Styles.pageTitle]}>{this.state.client ? this.state.client.bodyweightDelta : '192'}</Text>
-              <Text style={Styles.menuItemSubText}>Average over last 5 days</Text>
+              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>
+                {this.state.client ? '-' + this.state.client.bodyweightDelta : '-7'}
+              </Text>
+              <Text style={Styles.menuItemSubText}>Change since {this.state.client ? this.state.client.firstWeightDate : ' starting'}</Text>
 
               <BodyweightGraph
                 data={this.state.bodyweightData}
@@ -342,7 +344,7 @@ export default class LoginScreen extends React.Component {
                 size={24}
               />
             </TouchableHighlight>
-            <View style={[styles.todaysBodyweight, styles.progressSection]}>
+            <View style={[styles.progressSection]}>
               <View style={[styles.bodyweightInputsWrapper]}>
                 <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
                   <TouchableHighlight
@@ -416,8 +418,9 @@ const styles = StyleSheet.create ({
     fontSize: 20,
     paddingBottom: 10
   },
-  todaysBodyweight: {
-    marginTop: 20
+  weightDelta: {
+    textAlign: 'left',
+    marginBottom: 0
   },
   bodyweightInputsWrapper: {
     flex: 1,
@@ -457,6 +460,7 @@ const styles = StyleSheet.create ({
     fontWeight: 'bold'
   },
   progressSection: {
+    marginTop: 20,
     marginBottom: 50
   },
   phaseProgressWrapper: {

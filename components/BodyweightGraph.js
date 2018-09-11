@@ -7,6 +7,7 @@ import { LineChart, StackedAreaChart, YAxis } from 'react-native-svg-charts';
 import { Circle, G, Line, Rect } from 'react-native-svg';
 import * as shape from 'd3-shape';
 import moment from 'moment';
+import { formatBodyweightLogDate } from '../utils/helpers';
 
 import {
   Button,
@@ -242,7 +243,7 @@ class BodyweightGraph extends React.Component {
               horizontal={true}
               alwaysBounceHorizontal={true}
               showsHorizontalScrollIndicator={true}>
-              <LineChart
+              {/*<LineChart
                 style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
                 data={weights}
                 svg={{
@@ -266,7 +267,19 @@ class BodyweightGraph extends React.Component {
                     />
                   </G>
                 )}
-              />
+              />*/}
+              {data && data.map((rec, i) =>
+                <View style={styles.bodyweightLogWrapper} key={i}>
+                  <Text>{rec.weight}</Text>
+                  <View style={{ height: Number(rec.weight), width: 15, marginRight: 30, backgroundColor: Colors.white }}>
+                    <TouchableHighlight
+                      underlayColor={Colors.darkerPrimaryColor}
+                      style={{ borderRadius: 100, height: 10, width: 10, backgroundColor: Colors.primaryColor }}
+                      onPress={() => { this.clickDeleteDataPoint() }}>
+                      <Text></Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>)}
             </ScrollView>}
 
             {!weights && <View>
@@ -312,5 +325,15 @@ const styles = StyleSheet.create ({
   },
   loadingMessage: {
     marginBottom: 20
+  },
+  bodyweightLogWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    paddingTop: 10,
+    height: 300,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: Colors.gray
   }
 });

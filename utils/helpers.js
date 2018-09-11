@@ -5,6 +5,11 @@ Date.prototype.subtractDays = function(date, days) {
   return date;
 };
 
+export function formatBodyweightLogDate(d) {
+  // const date = d ? new Date(d) : null;
+  return d ? moment(d,"DD-MM-YY").format('M-D') : '-';
+}
+
 function hasVal(val) {
   return val !== null;
 }

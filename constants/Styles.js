@@ -260,5 +260,8 @@ export default {
   },
   tooltipTerm: {
     fontWeight: 'bold'
+  },
+  verticalText: {
+    transform: [{ rotate: '-90deg'}]
   }
 }
