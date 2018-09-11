@@ -34,6 +34,7 @@ export default class LoginScreen extends React.Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation;
     const { params } = this.props.navigation.state;
     const timestamp = params ? params.timestamp : null;
     const lessonNumber = params ? params.lessonNumber : null;

@@ -172,6 +172,7 @@ export default class LoginScreen extends React.Component {
                 </View>
 
                 <TouchableHighlight
+                  underlayColor={Colors.darkerPrimaryColor}
                   style={Styles.button}
                   onPress={this._submitWeight}
                   disabled={this.state.weight.trim().length < 1}>

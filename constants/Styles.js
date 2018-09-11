@@ -84,6 +84,18 @@ export default {
     borderColor: Colors.primaryColor,
     borderWidth: 2
   },
+  buttonCircular: {
+    borderRadius: 100,
+    backgroundColor: Colors.primaryColor,
+    alignSelf: 'center',
+    width: 50,
+    height: 50
+  },
+  buttonCircularIcon: {
+    marginTop: 6,
+    alignSelf: 'center',
+    color: Colors.white
+  },
   buttonText: {
     color: Colors.white,
     fontWeight: 'bold',
@@ -216,7 +228,8 @@ export default {
     left: 0,
     right: 0,
     backgroundColor: Colors.gray,
-    opacity: 0.8
+    opacity: 0.8,
+    zIndex: 1
   },
   tooltip: {
     position: 'absolute',
@@ -227,7 +240,8 @@ export default {
     backgroundColor: Colors.white,
     margin: 20,
     padding: 30,
-    borderRadius: 2
+    borderRadius: 2,
+    zIndex: 10
   },
   tooltipHeader: {
     fontSize: 22,

@@ -39,7 +39,9 @@ export default class LoginScreen extends React.Component {
 
     this.state = {
       date: new Date(),
+      showModal: false,
       showDatepicker: false,
+      showAddBodyweightModal: false,
       weight: '',
       clientTimestamp: null,
       showProgressPhase1: true,
@@ -51,6 +53,7 @@ export default class LoginScreen extends React.Component {
 
     this._showDatepicker = this._showDatepicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
+    this._submitWeight = this._submitWeight.bind(this);
   }
 
   componentDidMount() {
@@ -134,6 +137,58 @@ export default class LoginScreen extends React.Component {
     });
   }
 
+  _submitWeight(w) {
+    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const date = this.state.date;
+    const clientTimestamp = this.state.clientTimestamp;
+
+    this.setState({
+      weight: w
+    });
+
+    bodyweightRecords.once('value', snapshot => {
+      const records = snapshot.val();
+      let duplicateEntry = false;
+      let filteredBodyweightRecords = [];
+
+      // check first that there is not already an entry for today - check timestamp and date
+      if(clientTimestamp) {
+        Object.keys(records).map(function(key) {
+          if(records[key].timestamp === clientTimestamp) {
+            filteredBodyweightRecords.push(records[key]);
+            if(records[key].date === moment(date).format('MM-DD-YY')) {
+              // alert('oh hey')
+              // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
+              // recordRef.remove();
+              duplicateEntry = true;
+            }
+          }
+        });
+
+        if(duplicateEntry === false) {
+          bodyweightRecords.push({
+            // date: moment(new Date).format('MM-DD-YY'),
+            date: moment(this.state.date).format('MM-DD-YY'),
+            timestamp: Number(this.state.clientTimestamp),
+            weight: Number(this.state.weight)
+          }).then(resp => {}, reason => {
+            alert('Could not save bodyweight');
+          });
+        } else {
+          alert('Oops! Looks like there is already an entry for that day.')
+        }
+      }
+
+      this.setState({
+        showAddBodyweightModal: false,
+        showDatepicker: false,
+        showModal: false,
+        date: new Date(),
+        weight: ''
+      }, this._hideAll());
+    });
+  }
+
   _clickProgressReportPhase1() {
     this.setState({ showProgressPhase1: !this.state.showProgressPhase1 });
   }
@@ -207,50 +262,24 @@ export default class LoginScreen extends React.Component {
             </View>
 
             {this.state.showBodyweightLog && <View style={styles.progressSection}>
-            <Text style={[Styles.bigTitle, Styles.pageTitle]}>{this.state.client ? this.state.client.bodyweightDelta : '192'}</Text>
-            <Text style={Styles.menuItemSubText}>Average over last 5 days</Text>
+              <Text style={[Styles.bigTitle, Styles.pageTitle]}>{this.state.client ? this.state.client.bodyweightDelta : '192'}</Text>
+              <Text style={Styles.menuItemSubText}>Average over last 5 days</Text>
 
-            <BodyweightGraph
-              data={this.state.bodyweightData}
-              clientTimestamp={this.state.clientTimestamp} />
+              <BodyweightGraph
+                data={this.state.bodyweightData}
+                clientTimestamp={this.state.clientTimestamp} />
 
-            {this.state.bodyweightData &&
-              <View style={[styles.todaysBodyweight, styles.progressSection]}>
-                <View style={[styles.bodyweightInputsWrapper]}>
-                  <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
-                    <TouchableHighlight
-                      underlayColor={Colors.lightGray}
-                      style={styles.bodyweightDateButton}
-                      onPress={this._showDatepicker}>
-                      <FontAwesome
-                        name='calendar'
-                        size={24}
-                      />
-                    </TouchableHighlight>
-                    <TouchableHighlight
-                      underlayColor={Colors.lightGray}
-                      onPress={this._showDatepicker}>
-                      <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMMM D')}</Text>
-                    </TouchableHighlight>
-                  </View>
-
-                  <TextInput
-                    style={[Styles.forms.textInput, styles.bodyweightInput]}
-                    keyboardType={'numeric'}
-                    placeholder={'Enter your weight'}
-                    onFocus={() => this.setState({ showDatepicker: false })}
-                    onChangeText={weight => this.setState({ weight })}
-                    value={this.state.weight}
+              <TouchableHighlight
+                underlayColor={Colors.darkerPrimaryColor}
+                style={[Styles.button, Styles.buttonCircular]}
+                onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
+                <Text style={[Styles.buttonCircularIcon]}>
+                  <FontAwesome
+                    name='plus'
+                    size={16}
                   />
-                </View>
-
-                <TouchableHighlight
-                  style={Styles.button}
-                  onPress={this._submitWeight}
-                  disabled={this.state.weight.trim().length < 1}>
-                  <Text style={Styles.buttonText}>Save</Text>
-                </TouchableHighlight>
-              </View>}
+                </Text>
+              </TouchableHighlight>
             </View>}
 
             {this.state.showProgressReports && <View style={styles.progressSection}>
@@ -297,18 +326,69 @@ export default class LoginScreen extends React.Component {
               </View>
             </View>}
           </View>
-
         </ScrollView>
 
-        {this.state.showDatepicker &&
-          <DatePickerIOS
-            style={styles.datePicker}
-            mode={'date'}
-            date={this.state.date}
-            maximumDate={new Date()}
-            onDateChange={date => this.setState({ date, showDatepicker: false })}
-          />}
+        {this.state.showModal &&
+          <View style={Styles.showModal}></View>}
 
+        {this.state.showAddBodyweightModal &&
+          <ScrollView style={Styles.tooltip}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showAddBodyweightModal: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <View style={[styles.todaysBodyweight, styles.progressSection]}>
+              <View style={[styles.bodyweightInputsWrapper]}>
+                <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+                  <TouchableHighlight
+                    underlayColor={Colors.lightGray}
+                    style={styles.bodyweightDateButton}
+                    onPress={this._showDatepicker}>
+                    <FontAwesome
+                      name='calendar'
+                      size={24}
+                    />
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    underlayColor={Colors.lightGray}
+                    onPress={this._showDatepicker}>
+                    <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMMM D')}</Text>
+                  </TouchableHighlight>
+                </View>
+
+                {this.state.showDatepicker &&
+                  <DatePickerIOS
+                    style={styles.datePicker}
+                    mode={'date'}
+                    date={this.state.date}
+                    maximumDate={new Date()}
+                    onDateChange={date => this.setState({ date, showDatepicker: false })}
+                  />}
+
+                <TextInput
+                  style={[Styles.forms.textInput, styles.bodyweightInput]}
+                  keyboardType={'numeric'}
+                  placeholder={'Enter your weight'}
+                  onFocus={() => this.setState({ showDatepicker: false })}
+                  onChangeText={weight => this.setState({ weight })}
+                  value={this.state.weight}
+                />
+              </View>
+
+              <TouchableHighlight
+                underlayColor={Colors.darkerPrimaryColor}
+                style={Styles.button}
+                onPress={this._submitWeight}
+                disabled={this.state.weight.trim().length < 1}>
+                <Text style={Styles.buttonText}>Save</Text>
+              </TouchableHighlight>
+            </View>
+          </ScrollView>}
       </View>
     );
   }

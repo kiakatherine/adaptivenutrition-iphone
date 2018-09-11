@@ -1908,13 +1908,16 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontWeight: 'bold',
     fontSize: 16,
-    marginRight: 3
+    marginRight: 3,
+    marginBottom: 5
   },
   optionButton: {
     flex: 1,
     padding: 10,
-    paddingLeft: 0,
-    marginBottom: 10
+    marginBottom: 15,
+    borderWidth: 2,
+    borderColor: Colors.primaryColor,
+    borderRadius: 2
   },
   optionButtonText: {
     color: Colors.primaryColor,
