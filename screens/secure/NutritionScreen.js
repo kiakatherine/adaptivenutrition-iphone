@@ -1054,10 +1054,14 @@ export default class LoginScreen extends React.Component {
     // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
 
     return (
-      <View style={Styles.body}>
-        <Header />
+      <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
+        {this.state.phase !== null &&
+          <Header />}
 
-        <ScrollView style={Styles.content}>
+        {(this.state.phase === null) &&
+          <Text style={styles.loadingText}>Adaptive Nutrition</Text>}
+
+        {this.state.phase !== null && <ScrollView style={Styles.content}>
           <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
 
           <View style={styles.optionWrapper}>
@@ -1113,9 +1117,6 @@ export default class LoginScreen extends React.Component {
                 <Text style={styles.optionButtonText}>{convertTrainingIntensityToString(trainingIntensity)}</Text>
               </TouchableHighlight>
             </View>}
-
-          {(this.state.phase === null) &&
-            <Text style={Styles.centerText}>Loading...</Text>}
 
           <View>
             {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
@@ -1451,7 +1452,7 @@ export default class LoginScreen extends React.Component {
                 </Text>
               </TouchableHighlight>}
           </View>
-        </ScrollView>
+        </ScrollView>}
 
         {this.state.showModal &&
           <View style={Styles.showModal}></View>}
@@ -2015,5 +2016,23 @@ const styles = StyleSheet.create({
   },
   uncheckedText: {
     color: Colors.black
+  },
+  loading: {
+    backgroundColor: Colors.primaryColor,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingImage: {
+    flex: 1,
+    width: 50,
+    height: 50,
+    alignSelf: 'center'
+  },
+  loadingText: {
+    fontFamily: 'Futura',
+    fontWeight: 'bold',
+    fontSize: 24,
+    color: Colors.white
   }
 });
