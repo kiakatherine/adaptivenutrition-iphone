@@ -13,5 +13,6 @@ export default {
   gray: '#CCC',
   darkGray: '#AAA',
   paleGreen: '#9dde73',
-  paleRed: '#ff7373'
+  paleRed: '#ff7373',
+  darkerRed: '#f74242' 
 }

@@ -369,7 +369,10 @@ const styles = StyleSheet.create ({
     flex: 2
   },
   mealLabel: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 24,
+    fontFamily: 'Futura',
+    marginTop: -5
   },
   mealRowHeaderColText: {
     width: '100%',

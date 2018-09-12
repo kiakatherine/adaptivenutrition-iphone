@@ -16,8 +16,8 @@ import {
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
-import Colors from '../constants/Colors';
-import Styles from '../constants/Styles';
+import Colors from '../../constants/Colors';
+import Styles from '../../constants/Styles';
 
 class MealPlanSettings extends React.Component {
   constructor(props) {
@@ -40,45 +40,50 @@ class MealPlanSettings extends React.Component {
      const doNotShowMacroWarning = this.props.doNotShowMacroWarning;
 
      return (
-       <View style={styles.mealSettingsSection}>
-         <Text style={[Styles.h2, Styles.textCenter]}>Meal Plan Settings</Text>
+       <View style={[Styles.modalContent, styles.mealSettingsSection]}>
+         <Text style={Styles.modalH1}>Meal Plan Settings</Text>
 
          <View style={styles.mealSettingsSectionList}>
            <TouchableHighlight
-            underlayColor='white'
+            underlayColor={Colors.darkerPrimaryColor}
+            style={[Styles.button, styles.button]}
             onPress={() => { this.toggleView(viewAllMeals) }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+              <Text style={Styles.buttonText}>
               {viewAllMeals && 'View single meal'}
               {!viewAllMeals && 'View all meals'}
               </Text>
            </TouchableHighlight>
 
            {showInGrams && <TouchableHighlight
-             underlayColor='white'
+             underlayColor={Colors.darkerPrimaryColor}
+             style={[Styles.button, styles.button]}
              onPress={() => { this.toggleUnits(showInGrams) }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+              <Text style={Styles.buttonText}>
                View in serving sizes
               </Text>
            </TouchableHighlight>}
 
            {!showInGrams && <TouchableHighlight
-             underlayColor='white'
+             underlayColor={Colors.darkerPrimaryColor}
+             style={[Styles.button, styles.button]}
              onPress={() => { doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.setState({ showModal: true, showMacrosWarning: true }) }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>
+              <Text style={Styles.buttonText}>
                View in macros
               </Text>
            </TouchableHighlight>}
 
            <TouchableHighlight
-            underlayColor='white'
+            underlayColor={Colors.darkerPrimaryColor}
+            style={[Styles.button, styles.button]}
             onPress={() => { this.props.showEnergyBalancePicker() }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Adjust goal - {template}</Text>
+              <Text style={Styles.buttonText}>Adjust goal - {template}</Text>
            </TouchableHighlight>
 
            <TouchableHighlight
-            underlayColor='white'
+            underlayColor={Colors.darkerPrimaryColor}
+            style={[Styles.button, styles.button]}
             onPress={() => { this.props.clickNavPhase(2) }}>
-              <Text style={[Styles.link, Styles.textCenter, styles.mealSettingsLink]}>Go back to Phase 2</Text>
+              <Text style={Styles.buttonText}>Go back to Phase 2</Text>
            </TouchableHighlight>
          </View>
        </View>
@@ -99,4 +104,7 @@ const styles = StyleSheet.create ({
     paddingTop: 10,
     paddingBottom: 10
   },
+  button: {
+    marginBottom: 10
+  }
 });

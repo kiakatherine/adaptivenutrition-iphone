@@ -8,7 +8,7 @@ export const x = {
   ],
   "moderate": [
     [
-      "PWO Shake",
+      "PWO shake",
       "Breakfast",
       "Early lunch",
       "Late lunch",
@@ -17,7 +17,7 @@ export const x = {
     ],
     [
       "Breakfast",
-      "PWO Shake",
+      "PWO shake",
       "Early lunch",
       "Late lunch",
       "Dinner",
@@ -26,7 +26,7 @@ export const x = {
     [
       "Breakfast",
       "Early lunch",
-      "PWO Shake",
+      "PWO shake",
       "Late lunch",
       "Dinner",
       "Bedtime"
@@ -35,7 +35,7 @@ export const x = {
       "Breakfast",
       "Early lunch",
       "Late lunch",
-      "PWO Shake",
+      "PWO shake",
       "Dinner",
       "Bedtime"
     ],
@@ -44,13 +44,13 @@ export const x = {
       "Early lunch",
       "Late lunch",
       "Dinner",
-      "PWO Shake",
+      "PWO shake",
       "Bedtime"
     ]
   ],
   "high": [
     [
-      "PWO Shake",
+      "PWO shake",
       "Breakfast",
       "Early lunch",
       "Late lunch",
@@ -59,7 +59,7 @@ export const x = {
     ],
     [
       "Breakfast",
-      "PWO Shake",
+      "PWO shake",
       "Early lunch",
       "Late lunch",
       "Dinner",
@@ -68,7 +68,7 @@ export const x = {
     [
       "Breakfast",
       "Early lunch",
-      "PWO Shake",
+      "PWO shake",
       "Late lunch",
       "Dinner",
       "Bedtime"
@@ -77,7 +77,7 @@ export const x = {
       "Breakfast",
       "Early lunch",
       "Late lunch",
-      "PWO Shake",
+      "PWO shake",
       "Dinner",
       "Bedtime"
     ],
@@ -86,7 +86,7 @@ export const x = {
       "Early lunch",
       "Late lunch",
       "Dinner",
-      "PWO Shake",
+      "PWO shake",
       "Bedtime"
     ]
   ],

@@ -21,6 +21,7 @@ import Styles from '../constants/Styles';
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
 import AboutModal from './modals/AboutModal';
+import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 
 class ModalWindow extends React.Component {
    state = {
@@ -42,6 +43,18 @@ class ModalWindow extends React.Component {
        modal = <FoodsToAvoidModal />;
      } else if(this.props.currentModal === 'ABOUT') {
        modal = <AboutModal />;
+     } else if(this.props.currentModal === 'MEAL_PLAN_SETTINGS') {
+       modal = <MealPlanSettingsModal
+         style={this.props.style}
+         data={this.props.data}
+         template={this.props.template}
+         viewAllMeals={this.props.viewAllMeals}
+         showInGrams={this.props.showInGrams}
+         doNotShowMacroWarning={this.props.doNotShowMacroWarning}
+         toggleView={this.props.toggleView}
+         toggleUnits={this.props.toggleUnits}
+         showEnergyBalancePicker={this.props.showEnergyBalancePicker}
+         clickNavPhase={this.props.clickNavPhase} />;
      }
 
      return (
@@ -72,8 +85,16 @@ class ModalWindow extends React.Component {
            </Modal>
          </View>
 
-         <TouchableHighlight onPress={() => {this.toggleModal(true)}}>
-            <Text style={Styles.menuItem}>{this.props.label}</Text>
+         <TouchableHighlight
+          style={this.props.style === 'button' ? Styles.buttonCircular : ''}
+          underlayColor={Colors.darkerPrimaryColor}
+          onPress={() => {this.toggleModal(true)}}>
+            <Text style={this.props.style === 'button' ? Styles.buttonCircularIcon : Styles.menuItem}>
+              <FontAwesome
+                name='gear'
+                size={20}
+              /> {this.props.label}
+            </Text>
          </TouchableHighlight>
        </View>
      );

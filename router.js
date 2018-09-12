@@ -31,9 +31,9 @@ export const AuthenticatedScreen = TabNavigator(
     Quiz: {
       screen: QuizScreen
     },
-    Scoreboard: {
-      screen: ScoreboardScreen
-    },
+    // Scoreboard: {
+    //   screen: ScoreboardScreen
+    // },
     Help: {
       screen: HelpScreen
     },

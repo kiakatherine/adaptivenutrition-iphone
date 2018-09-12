@@ -62,7 +62,7 @@ class Header extends React.Component {
 
            <Text style={styles.headerItem}>
              <MaterialCommunityIcons
-               name={'trophy-outline'}
+               name={'trophy'}
                size={16}
              /> Points
            </Text>

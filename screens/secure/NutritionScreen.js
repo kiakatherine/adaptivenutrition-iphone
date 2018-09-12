@@ -32,7 +32,6 @@ import {
 import Header from '../../components/Header';
 import Meal from '../../components/Meal';
 import ProgressBar from '../../components/ProgressBar';
-import MealPlanSettings from '../../components/MealPlanSettings';
 import ModalWindow from '../../components/ModalWindow';
 
 export default class LoginScreen extends React.Component {
@@ -1057,9 +1056,9 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <Header />
-        
+
         <ScrollView style={Styles.content}>
-          <Text style={[Styles.bigTitle, Styles.pageTitle]}>{"Today's Meal Plan"}</Text>
+          <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
 
           <View style={styles.optionWrapper}>
             <Text style={styles.optionTitle}>What time did you wake up?</Text>
@@ -1138,6 +1137,48 @@ export default class LoginScreen extends React.Component {
                 <Text style={styles.optionButtonText}>{mealsBeforeWorkout}</Text>
               </TouchableHighlight>
             </View></View>}
+
+            <View style={styles.progressSection}>
+              {!viewAllMeals && phase !== 2 &&
+                <TouchableHighlight
+                  style={[Styles.buttonCircular, styles.progressButtonGood]}
+                  underlayColor={Colors.darkerPrimaryColor}
+                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
+                   <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
+                     <FontAwesome
+                       style={styles.progressButtonGoodIcon}
+                       name='check'
+                       size={16}
+                     />
+                   </Text>
+              </TouchableHighlight>}
+
+              {!viewAllMeals && phase !== 2 &&
+                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad]}
+                  underlayColor={Colors.darkerRed}
+                  onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
+                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
+                   <FontAwesome
+                     style={styles.progressButtonBadIcon}
+                     name='remove'
+                     size={16}
+                   />
+                 </Text>
+              </TouchableHighlight>}
+
+              {!viewAllMeals && phase !== 1 && phase !== 3 &&
+                <TouchableHighlight style={[Styles.button, styles.progressButtonGood]}
+                  underlayColor='white'
+                  onPress={() => {}}>
+                 <Text style={[Styles.buttonWithIconText, Styles.buttonText, styles.progressButtonText]}>
+                   <FontAwesome
+                     style={styles.progressButtonGoodIcon}
+                     name='check'
+                     size={16}
+                   /> Measured portions for this meal
+                 </Text>
+              </TouchableHighlight>}
+            </View>
 
             <View style={styles.mealPlanSection}>
               {!viewAllMeals && <Meal
@@ -1295,48 +1336,6 @@ export default class LoginScreen extends React.Component {
             </View>
           </View>
 
-          <View style={styles.progressSection}>
-            {!viewAllMeals && phase !== 2 &&
-              <TouchableHighlight
-                style={[Styles.button, styles.progressButtonGood]}
-                underlayColor='white'
-                onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                 <Text style={styles.progressButtonText}>
-                   <FontAwesome
-                     style={styles.progressButtonGoodIcon}
-                     name='check'
-                     size={16}
-                   />
-                 </Text>
-            </TouchableHighlight>}
-
-            {!viewAllMeals && phase !== 2 &&
-              <TouchableHighlight style={[Styles.button, styles.progressButtonBad]}
-                underlayColor='white'
-                onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-               <Text style={styles.progressButtonText}>
-                 <FontAwesome
-                   style={styles.progressButtonBadIcon}
-                   name='remove'
-                   size={16}
-                 />
-               </Text>
-            </TouchableHighlight>}
-
-            {!viewAllMeals && phase !== 1 && phase !== 3 &&
-              <TouchableHighlight style={[Styles.button, styles.progressButtonGood]}
-                underlayColor='white'
-                onPress={() => {}}>
-               <Text style={[Styles.buttonWithIconText, Styles.buttonText, styles.progressButtonText]}>
-                 <FontAwesome
-                   style={styles.progressButtonGoodIcon}
-                   name='check'
-                   size={16}
-                 /> Measured portions for this meal
-               </Text>
-            </TouchableHighlight>}
-          </View>
-
           <View>
             {viewAllMeals &&
               <TouchableHighlight
@@ -1346,7 +1345,7 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
           </View>
 
-          <View>
+          {/*<View>
             {(!viewAllMeals && this.state.phase === 1) &&
               <ProgressBar
                 complete1={this.state.phase1meal1}
@@ -1379,9 +1378,24 @@ export default class LoginScreen extends React.Component {
                 enablePhase2={enablePhase2}
                 enablePhase3={enablePhase3}
                 trainingIntensity={trainingIntensity} />}
-          </View>
+          </View>*/}
 
-          {this.state.phase === 3 && <MealPlanSettings
+          {this.state.phase === 3 &&
+            <ModalWindow
+              label=""
+              currentModal="MEAL_PLAN_SETTINGS"
+              style="button"
+              data={this.state.client}
+              template={template}
+              viewAllMeals={viewAllMeals}
+              showInGrams={showInGrams}
+              doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
+              toggleView={this.toggleView}
+              toggleUnits={this.toggleUnits}
+              showEnergyBalancePicker={this.showEnergyBalancePicker}
+              clickNavPhase={this.clickNavPhase} />}
+
+          {/*{this.state.phase === 3 && <MealPlanSettings
             template={template}
             viewAllMeals={viewAllMeals}
             showInGrams={showInGrams}
@@ -1389,7 +1403,7 @@ export default class LoginScreen extends React.Component {
             toggleView={this.toggleView}
             toggleUnits={this.toggleUnits}
             clickNavPhase={this.clickNavPhase}
-            showEnergyBalancePicker={this.showEnergyBalancePicker} />}
+            showEnergyBalancePicker={this.showEnergyBalancePicker} />}*/}
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
@@ -1893,6 +1907,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.white
   },
+  mealPlanTitle: {
+    marginBottom: 40
+  },
   optionWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1914,13 +1931,10 @@ const styles = StyleSheet.create({
   optionButton: {
     flex: 1,
     padding: 10,
-    marginBottom: 15,
-    borderWidth: 2,
-    borderColor: Colors.primaryColor,
-    borderRadius: 2
+    marginBottom: 20
   },
   optionButtonText: {
-    color: Colors.primaryColor,
+    color: Colors.black,
     textAlign: 'center',
     fontWeight: 'bold'
   },
@@ -1941,26 +1955,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 20
   },
-  // mealOptionButton: {
-  //   width: 50,
-  //   height: 50,
-  //   borderRadius: 100,
-  //   padding: 0
-  // },
   progressSection: {
-    alignSelf: 'stretch',
+    display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
-    marginBottom: 30
+    marginTop: 40
   },
   progressButtonText: {
     textAlign: 'center',
     color: Colors.white
   },
   progressButtonGood: {
-    flex: 1,
-    paddingTop: 20,
-    paddingBottom: 20,
     marginRight: 5
   },
   progressButtonGoodIcon: {
@@ -1970,9 +1976,6 @@ const styles = StyleSheet.create({
     color: Colors.white
   },
   progressButtonBad: {
-    flex: 1,
-    paddingTop: 20,
-    paddingBottom: 20,
     backgroundColor: Colors.paleRed,
     marginLeft: 5
   },
