@@ -40,10 +40,31 @@ class Header extends React.Component {
    render() {
      return (
        <View>
-         <View style={styles.nameHeader}>
-           {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />*/}
+         <View style={styles.header}>
+           {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />
            <Text style={styles.nameHeaderText}>
             {this.state.client ? this.state.client.name : ''} - Phase {this.state.client ? this.state.client.phase : ''} {(this.state.client && this.state.client.phase === 3) ? "- " + this.state.client.templateType : ''}
+           </Text>*/}
+
+           <Text style={styles.headerItem}>
+           <MaterialCommunityIcons
+             name={'fire'}
+             size={16}
+           /> Streak
+           </Text>
+
+           <Text style={styles.headerItem}>
+             <MaterialCommunityIcons
+               name={'silverware-fork'}
+               size={16}
+             /> {"Today's Meals"}
+           </Text>
+
+           <Text style={styles.headerItem}>
+             <MaterialCommunityIcons
+               name={'trophy-outline'}
+               size={16}
+             /> Points
            </Text>
          </View>
       </View>
@@ -57,15 +78,26 @@ Header.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-  nameHeader: {
-    backgroundColor: Colors.secondaryColor,
-    paddingTop: 10,
-    paddingBottom: 10
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: Colors.primaryColor,
+    padding: 10
   },
-  nameHeaderText: {
-    textAlign: 'center',
-    color: Colors.white
-  },
+  headerItem: {
+    flex: 1,
+    color: Colors.white,
+    textAlign: 'center'
+  }
+  // nameHeader: {
+  //   backgroundColor: Colors.secondaryColor,
+  //   paddingTop: 10,
+  //   paddingBottom: 10
+  // },
+  // nameHeaderText: {
+  //   textAlign: 'center',
+  //   color: Colors.white
+  // },
   // logo: {
   //   width: 50,
   //   height: 50
