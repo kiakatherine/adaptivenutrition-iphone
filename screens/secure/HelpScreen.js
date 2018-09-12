@@ -50,8 +50,6 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <Header />
-
         <ScrollView style={Styles.content}>
           <Text style={Styles.menuItem}>How Do I Use the App?</Text>
           <Text style={Styles.menuItemSubText}>Take a tour</Text>

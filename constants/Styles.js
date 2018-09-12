@@ -73,13 +73,13 @@ export default {
     marginBottom: 20
   },
   button: {
-    padding: 10,
+    padding: 12,
     borderRadius: 2,
     backgroundColor: Colors.primaryColor
   },
   buttonInverted: {
-    padding: 10,
-    borderRadius: 2,
+    // padding: 10,
+    // borderRadius: 2,
     backgroundColor: Colors.white,
     borderColor: Colors.primaryColor,
     borderWidth: 2
@@ -92,7 +92,7 @@ export default {
     height: 50
   },
   buttonCircularIcon: {
-    marginTop: 6,
+    marginTop: 15,
     alignSelf: 'center',
     color: Colors.white
   },
@@ -104,9 +104,9 @@ export default {
   },
   buttonInvertedText: {
     color: Colors.primaryColor,
-    fontWeight: 'bold',
-    fontSize: 18,
-    textAlign: 'center'
+    // fontWeight: 'bold',
+    // fontSize: 18,
+    // textAlign: 'center'
   },
   buttonWithIconText: {
     paddingBottom: 4

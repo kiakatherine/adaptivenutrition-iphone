@@ -55,8 +55,6 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <Header />
-
         <ScrollView style={Styles.content}>
           <Text style={[Styles.bigTitle, Styles.pageTitle]}>Quiz</Text>
           <Text style={Styles.pageSubTitle}>Lesson {lessonNumber}</Text>

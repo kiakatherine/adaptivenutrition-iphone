@@ -42,7 +42,7 @@ export default class LoginScreen extends React.Component {
       showModal: false,
       showDatepicker: false,
       showAddBodyweightModal: false,
-      weight: '',
+      weight: 0,
       clientTimestamp: null,
       showProgressPhase1: true,
       showProgressPhase2: true,
@@ -65,10 +65,11 @@ export default class LoginScreen extends React.Component {
     client.on('value', snapshot => {
       clientResponse = snapshot.val();
 
-      // this.setState({
-      //   clientTimestamp: clientResponse.timestamp,
-      //   clientPhase: clientResponse.phase
-      // });
+      this.setState({
+        weight: clientResponse.latestBodyweight
+        // clientTimestamp: clientResponse.timestamp,
+        // clientPhase: clientResponse.phase
+      });
     });
 
     dayStatuses.on('value', snapshot => {
@@ -209,6 +210,7 @@ export default class LoginScreen extends React.Component {
     let dayStatusesPhase1 = [];
     let dayStatusesPhase2 = [];
     let dayStatusesPhase3 = [];
+    let weight = this.state.weight;
 
     if(this.state.showProgressPhase1) {
       if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
@@ -242,8 +244,6 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <Header />
-
         <ScrollView style={Styles.content}>
           <View>
             <View style={Styles.flexRow}>
@@ -334,19 +334,19 @@ export default class LoginScreen extends React.Component {
           <View style={Styles.showModal}></View>}
 
         {this.state.showAddBodyweightModal &&
-          <ScrollView style={Styles.tooltip}>
+          <ScrollView style={[Styles.tooltip, styles.addBodyweightModal]}>
             <TouchableHighlight
               underlayColor={Colors.white}
               onPress={() => { this.setState({ showAddBodyweightModal: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
-                size={24}
+                size={28}
               />
             </TouchableHighlight>
             <View style={[styles.progressSection]}>
-              <View style={[styles.bodyweightInputsWrapper]}>
-                <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+              <View style={[styles.bodyweightInputWrapper]}>
+                {/*<View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
                   <TouchableHighlight
                     underlayColor={Colors.lightGray}
                     style={styles.bodyweightDateButton}
@@ -370,23 +370,42 @@ export default class LoginScreen extends React.Component {
                     date={this.state.date}
                     maximumDate={new Date()}
                     onDateChange={date => this.setState({ date, showDatepicker: false })}
-                  />}
+                  />}*/}
 
-                <TextInput
-                  style={[Styles.forms.textInput, styles.bodyweightInput]}
-                  keyboardType={'numeric'}
-                  placeholder={'Enter your weight'}
-                  onFocus={() => this.setState({ showDatepicker: false })}
-                  onChangeText={weight => this.setState({ weight })}
-                  value={this.state.weight}
-                />
+                <TouchableHighlight
+                  underlayColor={Colors.darkerPrimaryColor}
+                  style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
+                  onPress={() => { this.setState({ weight: (weight - 0.1).toFixed(1) }) }}
+                  disabled={weight < 0}>
+                  <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
+                    <FontAwesome
+                      name='minus'
+                      size={16}
+                    />
+                  </Text>
+                </TouchableHighlight>
+
+                <Text style={styles.weight}>{weight}</Text>
+
+                <TouchableHighlight
+                  underlayColor={Colors.darkerPrimaryColor}
+                  style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
+                  onPress={() => { this.setState({ weight: (weight + 0.1).toFixed(1) }) }}
+                  disabled={weight < 0}>
+                  <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
+                    <FontAwesome
+                      name='plus'
+                      size={16}
+                    />
+                  </Text>
+                </TouchableHighlight>
               </View>
 
               <TouchableHighlight
                 underlayColor={Colors.darkerPrimaryColor}
                 style={Styles.button}
                 onPress={this._submitWeight}
-                disabled={this.state.weight.trim().length < 1}>
+                disabled={weight < 0}>
                 <Text style={Styles.buttonText}>Save</Text>
               </TouchableHighlight>
             </View>
@@ -422,32 +441,20 @@ const styles = StyleSheet.create ({
     textAlign: 'left',
     marginBottom: 0
   },
-  bodyweightInputsWrapper: {
-    flex: 1,
-    marginBottom: 15
+  bodyweightInputWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 30
   },
-  bodyweightDateButton: {
-    width: 40,
-    paddingTop: 12,
-    marginLeft: 15,
-    marginBottom: 5
+  weightButton: {
+    // flex: 1,
   },
-  bodyweightDate: {
-    fontSize: 20,
-    paddingTop: 10
-  },
-  bodyweightDateInput: {
-    height: 50,
-    backgroundColor: Colors.lightGray,
-    marginTop: 5,
-    marginBottom: 10
-  },
-  bodyweightInput: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  datePicker: {
-    flex: 1
+  weight: {
+    flex: 3,
+    textAlign: 'center',
+    fontSize: 36,
+    fontFamily: 'Futura',
+    color: Colors.black
   },
   phaseHeader: {
     paddingTop: 15,
@@ -466,5 +473,8 @@ const styles = StyleSheet.create ({
   phaseProgressWrapper: {
     marginTop: 10,
     marginBottom: 15
+  },
+  addBodyweightModal: {
+    height: 250
   }
 });
