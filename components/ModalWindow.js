@@ -24,8 +24,14 @@ import AboutModal from './modals/AboutModal';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 
 class ModalWindow extends React.Component {
-   state = {
-     modalVisible: false,
+   constructor(props) {
+    super(props);
+
+    this.state = {
+      modalVisible: false
+    }
+
+    this.toggleModal = this.toggleModal.bind(this);
    }
 
    toggleModal(visible) {
@@ -54,7 +60,8 @@ class ModalWindow extends React.Component {
          toggleView={this.props.toggleView}
          toggleUnits={this.props.toggleUnits}
          showEnergyBalancePicker={this.props.showEnergyBalancePicker}
-         clickNavPhase={this.props.clickNavPhase} />;
+         clickNavPhase={this.props.clickNavPhase}
+         toggleModal={this.toggleModal} />;
      }
 
      return (

@@ -1340,9 +1340,9 @@ export default class LoginScreen extends React.Component {
           <View>
             {viewAllMeals &&
               <TouchableHighlight
-                style={Styles.center}
+                style={[Styles.center, styles.completionMessage]}
                 onPress={() => this.toggleView(viewAllMeals) }>
-                <Text style={Styles.textCenter}>View single meal to see meal completion buttons</Text>
+                <Text style={Styles.textCenter}>View by single meal to see meal completion buttons</Text>
               </TouchableHighlight>}
           </View>
 
@@ -1993,6 +1993,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   picker: {
+    zIndex: 10,
     backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: Colors.lightGray
@@ -2034,5 +2035,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white
+  },
+  completionMessage: {
+    marginBottom: 20
   }
 });

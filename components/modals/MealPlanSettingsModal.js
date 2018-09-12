@@ -27,10 +27,22 @@ class MealPlanSettings extends React.Component {
 
   toggleView(viewAllMeals) {
     this.props.toggleView(viewAllMeals);
+    this.props.toggleModal(false);
   }
 
   toggleUnits(showInGrams) {
     this.props.toggleUnits(showInGrams);
+    this.props.toggleModal(false);
+  }
+
+  showEnergyBalancePicker() {
+    this.props.showEnergyBalancePicker();
+    this.props.toggleModal(false);
+  }
+
+  clickNavPhase() {
+    this.props.clickNavPhase(2);
+    this.props.toggleModal(false);
   }
 
    render() {
@@ -82,7 +94,7 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
             style={[Styles.button, styles.button]}
-            onPress={() => { this.props.clickNavPhase(2) }}>
+            onPress={() => { this.props.clickNavPhase() }}>
               <Text style={Styles.buttonText}>Go back to Phase 2</Text>
            </TouchableHighlight>
          </View>
