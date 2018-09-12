@@ -7,7 +7,7 @@ import { LineChart, StackedAreaChart, YAxis } from 'react-native-svg-charts';
 import { Circle, G, Line, Rect } from 'react-native-svg';
 import * as shape from 'd3-shape';
 import moment from 'moment';
-import { formatBodyweightLogDate } from '../utils/helpers';
+import { formatBodyweightLogDate, toDate } from '../utils/helpers';
 
 import {
   Button,
@@ -149,184 +149,137 @@ class BodyweightGraph extends React.Component {
       const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
       const timestamp = Number(this.props.clientTimestamp);
       let data = [];
-      let dates, weights;
+      let sortedData;
 
-      // filter bodyweight records by client
-      // if(obj) {
-        // Object.keys(obj).map(function(key) {
-        //   if(Number(obj[key].timestamp) === timestamp) {
-        //     data.push({
-        //       date: obj[key].date,
-        //       weight: obj[key].weight
-        //     });
-        //   }
-        // });
+      bodyweightRecords.once('value', snapshot => {
+        d = snapshot.val();
 
-        bodyweightRecords.once('value', snapshot => {
-          d = snapshot.val();
+        Object.keys(d).map(function(key) {
+          if(Number(d[key].timestamp) === timestamp) {
+            // ref = firebase.database().ref('bodyweightRecords/' + key);
+            // ref.remove();
 
-          Object.keys(d).map(function(key) {
-            if(Number(d[key].timestamp) === timestamp) {
-              // ref = firebase.database().ref('bodyweightRecords/' + key);
-              // ref.remove();
-
-              data.push({
-                date: d[key].date,
-                weight: d[key].weight,
-                key
-              });
-            }
-          });
-
-          // sort dates
-          data = data.sort(function compare(a, b) {
-            var dateA = moment(a.date, "MM-DD-YY");
-            var dateB = moment(b.date, "MM-DD-YY");
-
-            return dateB - dateA;
-          });
-
-          let datesArr = [];
-
-          dates = Object.keys(data).map(key => {
-            datesArr.push(data[key].date);
-          });
-
-          dates = datesArr.reverse();
-
-          let weightsArr = [];
-
-          weights = Object.keys(data).map(key => {
-            weightsArr.push(data[key].weight);
-          });
-
-          weights = weightsArr.reverse();
+            data.push({
+              date: d[key].date,
+              weight: d[key].weight,
+              key
+            });
+          }
         });
-      // }
 
-      // const keys = ['weight'];
-      // const colors = [Colors.paleGreen];
-      //
-      // return (
-      //     <ScrollView>
-      //       <StackedAreaChart
-      //         style={{ height: 200, paddingVertical: 16 }}
-      //         data={data}
-      //         keys={keys}
-      //         colors={colors}
-      //         showGrid={false}
-      //         renderDecorator={({ x, y, index, value }) => (
-      //           <G
-      //             onResponderMove={this.onMove}
-      //             onPressIn={this.onPressIn}
-      //             onPressOut={this.onPressOut.bind(this, index)}
-      //             onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
-      //           <Circle
-      //             cx={x(index)}
-      //             cy={y(value)}
-      //             r={6}
-      //             stroke={Colors.paleGreen}
-      //             fill={Colors.paleGreen}
-      //           />
-      //           <Text x={x(index)} y={y(value)} font-family="Verdana" font-size="35">hi</Text>
-      //           </G>)}
-      //       />
-      //     </ScrollView>
-      // );
+        // sort dates
+        data = data.sort(function compare(a, b) {
+          var dateA = toDate(a.date);
+          var dateB = toDate(b.date);
 
-        return (
-          <View>
-          {this.state.showTooltip &&
-            <View style={styles.tooltip}>
-              <Text style={styles.tooltipWeight}>{this.state.tooltipWeight} lbs</Text>
-              <Text style={styles.tooltipDate} key={'tooltip'}>{this.state.tooltipDate}</Text>
-              <TouchableHighlight
-                onPress={() => { this.confirmDeleteEntry() }}>
-                <FontAwesome
-                  name='trash'
-                  size={24}
-                  style={styles.trashIcon}
-                />
-              </TouchableHighlight>
+          return dateB - dateA;
+        });
+
+        let dataArr = [];
+
+        sortedData = Object.keys(data).map(key => {
+          dataArr.push({
+            date: data[key].date,
+            weight: data[key].weight
+          });
+        });
+
+        sortedData = dataArr.reverse();
+      });
+
+      return (
+        <View>
+        {this.state.showTooltip &&
+          <View style={styles.tooltip}>
+            <Text style={styles.tooltipWeight}>{this.state.tooltipWeight} lbs</Text>
+            <Text style={styles.tooltipDate} key={'tooltip'}>{this.state.tooltipDate}</Text>
+            <TouchableHighlight
+              onPress={() => { this.confirmDeleteEntry() }}>
+              <FontAwesome
+                name='trash'
+                size={24}
+                style={styles.trashIcon}
+              />
+            </TouchableHighlight>
+          </View>}
+
+          {sortedData && <ScrollView
+            style={{ width: '100%' }}
+            horizontal={true}
+            alwaysBounceHorizontal={true}
+            showsHorizontalScrollIndicator={true}>
+            {/*<LineChart
+              style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
+              data={weights}
+              svg={{
+                stroke: Colors.paleGreen,
+                strokeWidth: 3,
+              }}
+              contentInset={{ top: 20, bottom: 20 }}
+              curve={shape.curveLinear}
+              showGrid={false}
+              renderDecorator={({ x, y, index, value }) => (
+                <G
+                  onResponderMove={this.onMove}
+                  onPressIn={this.onPressIn}
+                  onPressOut={this.onPressOut.bind(this, index)}
+                  onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
+                  <Circle
+                    cx={x(index)}
+                    cy={y(value)}
+                    r={this.state.showAllData ? 10 : 0}
+                    fill={Colors.paleGreen}
+                  />
+                </G>
+              )}
+            />*/}
+            {sortedData && sortedData.map((rec, i) =>
+              <View style={styles.bodyweightLogWrapper} key={i}>
+                <Text>{rec.weight}</Text>
+                <View style={{ height: Number(rec.weight), width: 50, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
+                    <View style={{ backgroundColor: Colors.primaryColor, borderRadius: 100, width: 10, height: 10 }}></View>
+                  </TouchableHighlight>
+                </View>
+                <Text>{formatBodyweightLogDate(rec.date)}</Text>
+              </View>)}
+          </ScrollView>}
+
+          {!sortedData && <View>
+              <Text style={Styles.loadingMessage}>No bodyweight data yet</Text>
             </View>}
 
-            {weights && <ScrollView
-              style={{ width: '100%' }}
-              horizontal={true}
-              alwaysBounceHorizontal={true}
-              showsHorizontalScrollIndicator={true}>
-              {/*<LineChart
-                style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
-                data={weights}
-                svg={{
-                  stroke: Colors.paleGreen,
-                  strokeWidth: 3,
-                }}
-                contentInset={{ top: 20, bottom: 20 }}
-                curve={shape.curveLinear}
-                showGrid={false}
-                renderDecorator={({ x, y, index, value }) => (
-                  <G
-                    onResponderMove={this.onMove}
-                    onPressIn={this.onPressIn}
-                    onPressOut={this.onPressOut.bind(this, index)}
-                    onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
-                    <Circle
-                      cx={x(index)}
-                      cy={y(value)}
-                      r={this.state.showAllData ? 10 : 0}
-                      fill={Colors.paleGreen}
-                    />
-                  </G>
-                )}
-              />*/}
-              {data && data.map((rec, i) =>
-                <View style={styles.bodyweightLogWrapper} key={i}>
-                  <Text>{rec.weight}</Text>
-                  <View style={{ height: Number(rec.weight), width: 50, marginRight: 30, backgroundColor: Colors.white }}>
-                    <TouchableHighlight
-                      underlayColor={Colors.darkerPrimaryColor}
-                      style={{ borderRadius: 100, height: 10, width: 10, backgroundColor: Colors.primaryColor }}
-                      onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
-                      <Text></Text>
-                    </TouchableHighlight>
-                  </View>
-                </View>)}
+          {!this.props.data &&
+            <Text style={[Styles.loadingMessage, styles.loadingMessage]}>Getting data...</Text>}
+
+          {this.state.showConfirmDeleteEntry &&
+            <ScrollView style={Styles.tooltip}>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                onPress={() => { this.setState({ showConfirmDeleteEntry: false }) }}>
+                <FontAwesome
+                  style={[Styles.textCenter, Styles.tooltipClose]}
+                  name='remove'
+                  size={24}
+                />
+              </TouchableHighlight>
+              <Text style={Styles.tooltipParagraph}>{'Are you sure you want to delete this entry?'}</Text>
+              <TouchableHighlight
+                underlayColor={Colors.darkerPrimaryColor}
+                style={Styles.button}
+                onPress={() => { this.clickDeleteDataPoint() }}>
+                <Text style={Styles.buttonText}>Yes</Text>
+              </TouchableHighlight>
             </ScrollView>}
 
-            {!weights && <View>
-                <Text style={Styles.loadingMessage}>No bodyweight data yet</Text>
-              </View>}
-
-            {!this.props.data &&
-              <Text style={[Styles.loadingMessage, styles.loadingMessage]}>Getting data...</Text>}
-
-            {this.state.showConfirmDeleteEntry &&
-              <ScrollView style={Styles.tooltip}>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showConfirmDeleteEntry: false }) }}>
-                  <FontAwesome
-                    style={[Styles.textCenter, Styles.tooltipClose]}
-                    name='remove'
-                    size={24}
-                  />
-                </TouchableHighlight>
-                <Text style={Styles.tooltipParagraph}>{'Are you sure you want to delete this entry?'}</Text>
-                <TouchableHighlight
-                  underlayColor={Colors.darkerPrimaryColor}
-                  style={Styles.button}
-                  onPress={() => { this.clickDeleteDataPoint() }}>
-                  <Text style={Styles.buttonText}>Yes</Text>
-                </TouchableHighlight>
-              </ScrollView>}
-
-            {/*{this.props.data &&
-              <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
-                <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
-              </TouchableHighlight>} */}
-          </View>
-        );
+          {/*{this.props.data &&
+            <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
+              <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
+            </TouchableHighlight>} */}
+        </View>
+      );
    }
 }
 
@@ -364,6 +317,7 @@ const styles = StyleSheet.create ({
     marginTop: 30,
     marginBottom: 30,
     paddingTop: 10,
+    paddingBottom: 10,
     height: 300,
     borderTopWidth: 1,
     borderBottomWidth: 1,

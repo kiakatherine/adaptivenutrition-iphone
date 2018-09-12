@@ -5,9 +5,13 @@ Date.prototype.subtractDays = function(date, days) {
   return date;
 };
 
+export function toDate(dateStr) {
+  const [month, day, year] = dateStr.split("-");
+  return new Date(Number('20' + year), month - 1, day)
+}
+
 export function formatBodyweightLogDate(d) {
-  // const date = d ? new Date(d) : null;
-  return d ? moment(d,"DD-MM-YY").format('M-D') : '-';
+  return d ? moment(d, 'MM-DD-YY').format('M/D/YY') : '-';
 }
 
 function hasVal(val) {
