@@ -35,7 +35,8 @@ class BodyweightGraph extends React.Component {
 
     this.state = {
       showTooltip: false,
-      showAllData: false
+      showAllData: false,
+      showConfirmDeleteEntry: false
     }
    }
 
@@ -57,14 +58,24 @@ class BodyweightGraph extends React.Component {
      });
    }
 
+   confirmDeleteEntry(weight, date) {
+     this.setState({
+       showConfirmDeleteEntry: true,
+       weightToDelete: weight,
+       dateToDelete: date
+     });
+   }
+
    clickDeleteDataPoint() {
      const records = this.props.data;
      let recordKey;
+     const weight = this.state.weightToDelete;
+     const date = this.state.dateToDelete;
 
      Object.keys(records).map(key => {
        const obj = records[key];
        if(Number(obj.timestamp) === Number(this.props.clientTimestamp)) {
-         if(obj.date === this.state.tooltipDate) {
+         if(obj.date === date) {
            recordKey = key;
          }
        }
@@ -75,6 +86,7 @@ class BodyweightGraph extends React.Component {
 
      this.setState({
        showTooltip: false,
+       showConfirmDeleteEntry: false,
        tooltipWeight: null,
        tooltipDate: null,
        tooltipX: null,
@@ -229,7 +241,7 @@ class BodyweightGraph extends React.Component {
               <Text style={styles.tooltipWeight}>{this.state.tooltipWeight} lbs</Text>
               <Text style={styles.tooltipDate} key={'tooltip'}>{this.state.tooltipDate}</Text>
               <TouchableHighlight
-                onPress={() => { this.clickDeleteDataPoint() }}>
+                onPress={() => { this.confirmDeleteEntry() }}>
                 <FontAwesome
                   name='trash'
                   size={24}
@@ -271,11 +283,11 @@ class BodyweightGraph extends React.Component {
               {data && data.map((rec, i) =>
                 <View style={styles.bodyweightLogWrapper} key={i}>
                   <Text>{rec.weight}</Text>
-                  <View style={{ height: Number(rec.weight), width: 15, marginRight: 30, backgroundColor: Colors.white }}>
+                  <View style={{ height: Number(rec.weight), width: 50, marginRight: 30, backgroundColor: Colors.white }}>
                     <TouchableHighlight
                       underlayColor={Colors.darkerPrimaryColor}
                       style={{ borderRadius: 100, height: 10, width: 10, backgroundColor: Colors.primaryColor }}
-                      onPress={() => { this.clickDeleteDataPoint() }}>
+                      onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
                       <Text></Text>
                     </TouchableHighlight>
                   </View>
@@ -288,6 +300,26 @@ class BodyweightGraph extends React.Component {
 
             {!this.props.data &&
               <Text style={[Styles.loadingMessage, styles.loadingMessage]}>Getting data...</Text>}
+
+            {this.state.showConfirmDeleteEntry &&
+              <ScrollView style={Styles.tooltip}>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showConfirmDeleteEntry: false }) }}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={24}
+                  />
+                </TouchableHighlight>
+                <Text style={Styles.tooltipParagraph}>{'Are you sure you want to delete this entry?'}</Text>
+                <TouchableHighlight
+                  underlayColor={Colors.darkerPrimaryColor}
+                  style={Styles.button}
+                  onPress={() => { this.clickDeleteDataPoint() }}>
+                  <Text style={Styles.buttonText}>Yes</Text>
+                </TouchableHighlight>
+              </ScrollView>}
 
             {/*{this.props.data &&
               <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
@@ -330,6 +362,7 @@ const styles = StyleSheet.create ({
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: 30,
+    marginBottom: 30,
     paddingTop: 10,
     height: 300,
     borderTopWidth: 1,
