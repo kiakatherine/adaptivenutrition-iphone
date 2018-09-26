@@ -272,8 +272,12 @@ class Meal extends React.Component {
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
-          {this.props.phase === 3 && <View><Text style={styles.mealRowColPhase3}>VEGGIES</Text>
-            <Text style={styles.veggieText}>{pwo ? '---' : '1 cup'}</Text></View>}
+          {this.props.phase === 3 &&
+            <View>
+              <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
+              <FoodOptions style={styles.mealRowColLong}
+                macro='veggies'/>
+            </View>}
           {this.props.phase < 3 && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />

@@ -37,19 +37,32 @@ class FoodOptions extends React.Component {
      const isPwoShake = this.props.pwo;
      let hidePwoShakeArrows = false;
 
-     let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
-
      let formattedOptions = [];
+     let i = 0;
 
-     options.forEach(opt => {
-       const option = opt.split('of ');
-       formattedOptions.push({
-         amount: option[0],
-         food: option[1],
+     if(macro !== 'veggies') {
+       let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+
+       options.forEach(opt => {
+         const option = opt !== '---' ? opt.split('of ') : null;
+
+         if(option) {
+           formattedOptions.push({
+             amount: option[0],
+             food: option[1],
+             key: i
+           });
+         }
+
+         i++;
        });
-     });
-
-     console.log(formattedOptions);
+     } else {
+       formattedOptions.push({
+         amount: '1 cup',
+         food: 'veggies',
+         key: i
+       });
+     }
 
      let content = null;
      const currMeal = Number(currentMeal) + 1;
@@ -79,7 +92,7 @@ class FoodOptions extends React.Component {
             style={styles.foodOptionsList}
             data={formattedOptions}
             renderItem={({item}) => (
-              <View style={styles.foodOption}>
+              <View style={styles.foodOption} key={item.key}>
                 <Text style={styles.foodOptionAmount}>{item.amount}</Text>
                 <Text style={styles.foodOptionFood}>{item.food}</Text>
               </View>)}
@@ -107,21 +120,6 @@ FoodOptions.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-   // foodOptionsWrapper: {
-   //   display: 'flex',
-   //   flexDirection: 'row'
-   // },
-   // content: {
-   //   textAlign: 'center',
-   //   paddingLeft: 20,
-   //   paddingRight: 20,
-   //   paddingTop: 5,
-   //   paddingBottom: 5
-   // },
-   // foodOptionsButton: {
-   //   width: 20,
-   //   height: 20
-   // },
    disabled: {
      display: 'none'
    },
