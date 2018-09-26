@@ -4,6 +4,7 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 import { FontAwesomeIcons, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
+import CreateAccountScreen from './screens/CreateAccountScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 import ProgressScreen from './screens/secure/ProgressScreen';
@@ -124,6 +125,9 @@ export const router = (signedIn = false) => {
       navigationOptions: {
         headerLeft: null
       }
+    },
+    CreateAccount: {
+      screen: CreateAccountScreen
     },
     ResetPassword: {
       screen: ResetPasswordScreen

@@ -30,6 +30,7 @@ export default class LoginScreen extends React.Component {
     };
 
     this.login = this.login.bind(this);
+    this.signUp = this.signUp.bind(this);
   }
 
   async login() {
@@ -42,8 +43,9 @@ export default class LoginScreen extends React.Component {
   }
 
   async signUp() {
-    this.setState({ signUp: true });
-    AuthService.signUp(this.state.email, this.state.password);
+    // Luke's code
+    // this.setState({ signUp: true });
+    // AuthService.signUp(this.state.email, this.state.password);
   }
 
   render() {
@@ -88,14 +90,13 @@ export default class LoginScreen extends React.Component {
               <Button
                 color={Colors.primaryColor}
                 title="Create account"
-                onPress={this.signUp}
-              />
+                onPress={() => navigate('CreateAccount')} />
             </View>
             <View>
               <Button
                 color={Colors.black}
                 title="Forgot your password?"
-                onPress={() => navigate('ResetPassword')}/>
+                onPress={() => navigate('ResetPassword')} />
             </View>
           </View>
         </View>
