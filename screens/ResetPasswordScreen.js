@@ -2,6 +2,8 @@ import React from 'react';
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+import firebase from '../services/FirebaseService';
+
 import {
   Button,
   StyleSheet,
@@ -23,7 +25,11 @@ export default class ResetPasswordScreen extends React.Component {
   }
 
   resetPassword() {
-    // Generate a new password for the user here
+    firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+      console.log('email sent');
+    }).catch((error) => {
+      console.log('email could not be sent');
+    });
   }
 
   render() {

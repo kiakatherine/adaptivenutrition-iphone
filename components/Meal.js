@@ -127,7 +127,7 @@ class Meal extends React.Component {
 
         <View style={styles.mealRow}>
           {this.props.phase === 3 &&
-            <Text style={styles.mealRowColPhase3}>PROTEIN</Text>}
+            <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>}
           {this.props.phase < 3 &&
             <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/protein.jpg')}
@@ -171,7 +171,7 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>STARCHES</Text>}
+          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>}
           {(this.props.phase < 3 && this.props.trainingIntensity === true) && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/carbs-training.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
@@ -224,7 +224,7 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>FATS</Text>}
+          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>}
           {this.props.phase < 3 && <View style={styles.mealRowCol}>
               <Image source={require('../assets/icons/fats.jpg')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
@@ -344,9 +344,9 @@ const styles = StyleSheet.create ({
     flex: 2
   },
   mealRowColPhase3: {
-    marginTop: 15,
-    color: Colors.darkGray,
-    letterSpacing: 1
+    color: Colors.black,
+    letterSpacing: 2,
+    marginBottom: 15
   },
   mealRowHeader: {
     alignSelf: 'stretch',
@@ -366,7 +366,8 @@ const styles = StyleSheet.create ({
     textAlign: 'right'
   },
   mealRowHeaderColLong: {
-    flex: 2
+    flex: 2,
+    marginBottom: 40
   },
   mealLabel: {
     fontWeight: 'bold',

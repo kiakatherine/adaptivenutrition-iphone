@@ -10,9 +10,9 @@ class AuthService {
       await firebase.auth().signInWithEmailAndPassword(email.trim().toLowerCase(), password);
       console.log('User is: ', user);
       // TODO: Check isEmailVerified, if not firebase.auth().signOut()
-      if(!user.emailVerified) {
-        await firebase.auth().signOut();
-      }
+      // if(!user.emailVerified) {
+      //   await firebase.auth().signOut();
+      // }
       // await AsyncStorage.setItem(ADAPTIVE_SESSION_KEY, "true");
     } catch(err) {
       console.log(err);

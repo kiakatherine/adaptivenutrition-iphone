@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   Button,
+  FlatList,
   Keyboard,
   Modal,
   Picker,
@@ -23,57 +24,7 @@ import * as templates from '../constants/Templates';
 import { convertTemplateToNumber, createFoodMenu } from '../utils/helpers';
 
 class FoodOptions extends React.Component {
-   state = {
-     selection: this.props.selection || null
-   }
-
-   clickPrevious() {
-     const macro = this.props.macro;
-     const currentMeal = this.props.currentMeal;
-     const phase = this.props.phase;
-     const template = convertTemplateToNumber(this.props.template, templates);
-     const sources = this.props.sources;
-     const isBedtimeMeal = this.props.bedtime;
-     const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
-     const selection = this.props.selection || this.state.selection || options[0]; //need
-     const newSelection = options[options.indexOf(selection) - 1];
-     const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
-
-     if(options.indexOf(selection) <= 0 || selection === null) {
-       // this.setState({ [string]: newSelection }); --- change to set to client, not state
-       this.setState({ selection: options[options.length-1] });
-     } else if(newSelection) {
-       // this.setState({ [string]: newSelection }); --- change to set to client, not state
-       this.setState({ selection: options.indexOf(newSelection) === -1 ? options[0] : newSelection });
-     }
-   }
-
-   clickNext() {
-     const macro = this.props.macro;
-     const currentMeal = this.props.currentMeal;
-     const phase = this.props.phase;
-     const template = convertTemplateToNumber(this.props.template, templates);
-     const sources = this.props.sources;
-     const isBedtimeMeal = this.props.bedtime;
-     const isPwoShake = this.props.pwo;
-     const options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
-     const selection = this.props.selection || this.state.selection || options[0]; //need
-     const newSelection = options[options.indexOf(selection) + 1];
-     const string = 'phase' + (phase === 3 ? 3 : 1) + macro + currentMeal;
-
-     if(newSelection) {
-       // this.setState({ [string]: newSelection }); --- change to set to client, not state
-       this.setState({ selection: newSelection });
-     } else {
-       // this.setState({ [string]: newSelection }); --- change to set to client, not state
-       this.setState({ selection: options[0] });
-     }
-   }
-
-   setSelection(itemValue) {
-     this.setState({ selection: itemValue });
-   }
+   state = { }
 
    render() {
      const macro = this.props.macro;
@@ -88,43 +39,56 @@ class FoodOptions extends React.Component {
 
      let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
 
+     let formattedOptions = [];
+
+     options.forEach(opt => {
+       const option = opt.split('of ');
+       formattedOptions.push({
+         amount: option[0],
+         food: option[1],
+       });
+     });
+
+     console.log(formattedOptions);
+
      let content = null;
      const currMeal = Number(currentMeal) + 1;
      const string = macro + currMeal;
 
-     if(Number.isInteger(currMeal)) {
-       if(selection) {
-         content = selection;
-       } else if(isPwoShake) {
-         hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
-         content = sources[string + 'Grams'] + ' of whey protein';
-       } else if(showInGrams) {
-         content = sources[string + 'Grams'];
-       }
-     }
+     // if(Number.isInteger(currMeal)) {
+     //   if(selection) {
+     //     content = selection;
+     //   } else if(isPwoShake) {
+     //     hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
+     //     content = sources[string + 'Grams'] + ' of whey protein';
+     //   } else if(showInGrams) {
+     //     content = sources[string + 'Grams'];
+     //   }
+     // }
 
-     let optionsHtml = [];
-     options.forEach((opt, i) => {
-       optionsHtml.push(<Picker.Item label={opt} value={opt} key={i} />)
-     });
+     // let optionsHtml = [];
+     // options.forEach((opt, i) => {
+     //   optionsHtml.push(<Picker.Item label={opt} value={opt} key={i} />)
+     // });
 
-     return (
-       <View>
-         {!showInGrams &&
-           <View>
-             <Picker
-               style={styles.picker}
-               itemStyle={{height: 50, textAlign: 'left', fontSize: 22, width: '100%'}}
-               selectedValue={selection ? selection : options[0]}
-               onValueChange={(itemValue, itemIndex) => this.setSelection(itemValue)}>
-               {optionsHtml}
-             </Picker>
-         </View>}
+    return (
+      <View>
+        {!showInGrams &&
+          <FlatList
+            horizontal={true}
+            style={styles.foodOptionsList}
+            data={formattedOptions}
+            renderItem={({item}) => (
+              <View style={styles.foodOption}>
+                <Text style={styles.foodOptionAmount}>{item.amount}</Text>
+                <Text style={styles.foodOptionFood}>{item.food}</Text>
+              </View>)}
+          />}
 
-         {showInGrams && <Text style={styles.content}>{content}</Text>}
-       </View>
-     );
-   }
+        {showInGrams && <Text style={styles.content}>{content}</Text>}
+      </View>
+    );
+  }
 }
 
 export default FoodOptions;
@@ -143,22 +107,47 @@ FoodOptions.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-   foodOptionsWrapper: {
-     display: 'flex',
-     flexDirection: 'row'
-   },
-   content: {
-     textAlign: 'center',
-     paddingLeft: 20,
-     paddingRight: 20,
-     paddingTop: 5,
-     paddingBottom: 5
-   },
-   foodOptionsButton: {
-     width: 20,
-     height: 20
-   },
+   // foodOptionsWrapper: {
+   //   display: 'flex',
+   //   flexDirection: 'row'
+   // },
+   // content: {
+   //   textAlign: 'center',
+   //   paddingLeft: 20,
+   //   paddingRight: 20,
+   //   paddingTop: 5,
+   //   paddingBottom: 5
+   // },
+   // foodOptionsButton: {
+   //   width: 20,
+   //   height: 20
+   // },
    disabled: {
      display: 'none'
+   },
+   foodOptionsList: {
+     flex: 1,
+     flexDirection: 'row',
+     marginTop: 10,
+     marginBottom: 40
+   },
+   foodOption: {
+     flex: 1,
+     height: 150,
+     marginRight: 15,
+     padding: 20,
+     paddingTop: 40,
+     backgroundColor: Colors.secondaryColor
+   },
+   foodOptionAmount: {
+     fontSize: 20,
+     fontWeight: '600',
+     marginBottom: 3,
+     color: Colors.white
+   },
+   foodOptionFood: {
+     fontSize: 18,
+     letterSpacing: 1,
+     color: Colors.white
    }
 });
