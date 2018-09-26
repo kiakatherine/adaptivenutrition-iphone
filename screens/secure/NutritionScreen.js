@@ -1107,21 +1107,27 @@ export default class LoginScreen extends React.Component {
                 style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
                 underlayColor={Colors.white}
                 onPress={() => { this.saveTrainingIntensity(0) }}>
-                <Text style={styles.optionButtonText}>Rest or low-intensity</Text>
+                <Text style={[styles.optionButtonText, trainingIntensity === 0 ? styles.optionButtonTextActive : null]}>
+                  Rest or low-intensity
+                </Text>
               </TouchableHighlight>
 
               <TouchableHighlight
                 style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
                 underlayColor={Colors.white}
                 onPress={() => { this.saveTrainingIntensity(1) }}>
-                <Text style={styles.optionButtonText}>{'< 90 min high-intensity'}</Text>
+                <Text style={[styles.optionButtonText, trainingIntensity === 1 ? styles.optionButtonTextActive : null]}>
+                  {'< 90 min high-intensity'}
+                </Text>
               </TouchableHighlight>
 
               <TouchableHighlight
                 style={[styles.optionButton, trainingIntensity === 2 ? styles.optionButtonActive : null]}
                 underlayColor={Colors.white}
                 onPress={() => { this.saveTrainingIntensity(2) }}>
-                <Text style={styles.optionButtonText}>{'> 90 min high-intensity'}</Text>
+                <Text style={[styles.optionButtonText, trainingIntensity === 2 ? styles.optionButtonTextActive : null]}>
+                  {'> 90 min high-intensity'}
+                </Text>
               </TouchableHighlight>
             </View>}
 
@@ -1134,35 +1140,35 @@ export default class LoginScreen extends React.Component {
                   style={[styles.optionButton, mealsBeforeWorkout === 0 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveMealsBeforeWorkout(0) }}>
-                  <Text style={styles.optionButtonText}>0</Text>
+                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 0 ? styles.optionButtonTextActive : null]}>0</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
                   style={[styles.optionButton, mealsBeforeWorkout === 1 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveMealsBeforeWorkout(1) }}>
-                  <Text style={styles.optionButtonText}>1</Text>
+                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 1 ? styles.optionButtonTextActive : null]}>1</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
                   style={[styles.optionButton, mealsBeforeWorkout === 2 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveMealsBeforeWorkout(2) }}>
-                  <Text style={styles.optionButtonText}>2</Text>
+                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 2 ? styles.optionButtonTextActive : null]}>2</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
                   style={[styles.optionButton, mealsBeforeWorkout === 3 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveMealsBeforeWorkout(3) }}>
-                  <Text style={styles.optionButtonText}>3</Text>
+                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 3 ? styles.optionButtonTextActive : null]}>3</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
                   style={[styles.optionButton, mealsBeforeWorkout === 4 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveMealsBeforeWorkout(4) }}>
-                  <Text style={styles.optionButtonText}>4</Text>
+                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 4 ? styles.optionButtonTextActive : null]}>4</Text>
                 </TouchableHighlight>
               </View>
             </View>}
@@ -1947,7 +1953,7 @@ const styles = StyleSheet.create({
   },
   optionSection: {
     alignSelf: 'stretch',
-    alignItems: 'center',
+    alignItems: 'stretch',
     flexDirection: 'row',
     marginBottom: 50
   },
@@ -1956,27 +1962,28 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     fontSize: 14,
     marginRight: 3,
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: 'center'
   },
   optionButton: {
     flex: 1,
     paddingTop: 20,
     paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 8,
+    paddingRight: 8,
     backgroundColor: Colors.paleBlue,
-    marginRight: 10,
-    borderRadius: 4,
-    borderColor: Colors.white,
-    borderWidth: 3
+    marginRight: 10
   },
   optionButtonActive: {
-    borderColor: Colors.secondaryColor
+    backgroundColor: Colors.secondaryColor
   },
   optionButtonText: {
     color: Colors.black,
     textAlign: 'center'
+  },
+  optionButtonTextActive: {
+    fontWeight: 'bold',
+    color: Colors.white
   },
   bigTitle: {
     paddingLeft: 20
