@@ -283,7 +283,7 @@ export function convertTrainingIntensityToString(num) {
 }
 
 export function convertTrainingTime(string) {
-  if(string.indexOf('waking') > -1) {
+  if(string.indexOf('firstThing') > -1) {
     return 0;
   } else if(string.indexOf('One') > -1) {
     return 1;
@@ -292,7 +292,7 @@ export function convertTrainingTime(string) {
   } else if(string.indexOf('Three') > -1) {
     return 3;
   } else if(string.indexOf('Four') > -1) {
-    return 1;
+    return 4;
   } else {
     return 5;
   }

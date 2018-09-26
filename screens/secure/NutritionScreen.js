@@ -289,11 +289,6 @@ export default class LoginScreen extends React.Component {
     } else {
       client.update({ phase1training: intensity });
     }
-
-    this.setState({
-      showModal: false,
-      showTrainingIntensityPicker: false
-    });
   }
 
   saveMealsBeforeWorkout(numberOfMeals) {
@@ -302,8 +297,6 @@ export default class LoginScreen extends React.Component {
     client.update({ trainingTime: convertTrainingTimeToString(numberOfMeals) });
 
     this.setState({
-      showModal: false,
-      showMealsBeforeWorkoutPicker: false,
       mealsBeforeWorkout: numberOfMeals
     });
   }
@@ -1065,7 +1058,7 @@ export default class LoginScreen extends React.Component {
           <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
 
           <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>What time did you wake up?</Text>
+            <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
             <TouchableHighlight
               style={styles.optionTooltip}
               underlayColor={Colors.white}
@@ -1078,7 +1071,7 @@ export default class LoginScreen extends React.Component {
             </TouchableHighlight>
           </View>
 
-          <View>
+          <View style={styles.optionSection}>
             <TouchableHighlight
               style={styles.optionButton}
               underlayColor={Colors.white}
@@ -1088,7 +1081,7 @@ export default class LoginScreen extends React.Component {
           </View>
 
           <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>Are you working out today?</Text>
+            <Text style={styles.optionTitle}>ARE YOU WORKING OUT TODAY?</Text>
             <TouchableHighlight
               style={styles.optionTooltip}
               underlayColor={Colors.white}
@@ -1111,33 +1104,68 @@ export default class LoginScreen extends React.Component {
 
           {this.state.phase === 3 && <View style={styles.optionSection}>
               <TouchableHighlight
-                style={styles.optionButton}
+                style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
                 underlayColor={Colors.white}
-                onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
-                <Text style={styles.optionButtonText}>{convertTrainingIntensityToString(trainingIntensity)}</Text>
+                onPress={() => { this.saveTrainingIntensity(0) }}>
+                <Text style={styles.optionButtonText}>Rest or low-intensity</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
+                underlayColor={Colors.white}
+                onPress={() => { this.saveTrainingIntensity(1) }}>
+                <Text style={styles.optionButtonText}>{'< 90 min high-intensity'}</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={[styles.optionButton, trainingIntensity === 2 ? styles.optionButtonActive : null]}
+                underlayColor={Colors.white}
+                onPress={() => { this.saveTrainingIntensity(2) }}>
+                <Text style={styles.optionButtonText}>{'> 90 min high-intensity'}</Text>
               </TouchableHighlight>
             </View>}
 
           <View>
             {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
-              <Text style={styles.optionTitle}>How many meals before your workout?</Text>
-              <TouchableHighlight style={styles.optionTooltip} underlayColor={Colors.white} onPress={() => { this.setState({ showModal: true, showMealsTooltip: true }) }}>
-                <FontAwesome
-                  style={styles.tooltipIcon}
-                  name='info-circle'
-                  size={16}
-                />
-              </TouchableHighlight>
-            </View>
+              <Text style={styles.optionTitle}>HOW MANY MEALS BEFORE YOUR WORKOUT?</Text></View>
 
-            <View style={styles.optionSection}>
-              <TouchableHighlight
-                style={[styles.optionButton]}
-                underlayColor={Colors.white}
-                onPress={() => { this.setState({ showModal: true, showMealsBeforeWorkoutPicker: true }) }}>
-                <Text style={styles.optionButtonText}>{mealsBeforeWorkout}</Text>
-              </TouchableHighlight>
-            </View></View>}
+              <View style={styles.optionSection}>
+                <TouchableHighlight
+                  style={[styles.optionButton, mealsBeforeWorkout === 0 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveMealsBeforeWorkout(0) }}>
+                  <Text style={styles.optionButtonText}>0</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  style={[styles.optionButton, mealsBeforeWorkout === 1 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveMealsBeforeWorkout(1) }}>
+                  <Text style={styles.optionButtonText}>1</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  style={[styles.optionButton, mealsBeforeWorkout === 2 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveMealsBeforeWorkout(2) }}>
+                  <Text style={styles.optionButtonText}>2</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  style={[styles.optionButton, mealsBeforeWorkout === 3 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveMealsBeforeWorkout(3) }}>
+                  <Text style={styles.optionButtonText}>3</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  style={[styles.optionButton, mealsBeforeWorkout === 4 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveMealsBeforeWorkout(4) }}>
+                  <Text style={styles.optionButtonText}>4</Text>
+                </TouchableHighlight>
+              </View>
+            </View>}
 
             <View style={styles.progressSection}>
               {!viewAllMeals && phase !== 2 &&
@@ -1920,24 +1948,35 @@ const styles = StyleSheet.create({
   optionSection: {
     alignSelf: 'stretch',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 50
   },
   optionTitle: {
     color: Colors.black,
-    fontWeight: 'bold',
-    fontSize: 16,
+    letterSpacing: 1,
+    fontSize: 14,
     marginRight: 3,
-    marginBottom: 5
+    marginBottom: 10,
+    textAlign: 'center'
   },
   optionButton: {
     flex: 1,
-    padding: 10,
-    marginBottom: 20
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: Colors.paleBlue,
+    marginRight: 10,
+    borderRadius: 4,
+    borderColor: Colors.white,
+    borderWidth: 3
+  },
+  optionButtonActive: {
+    borderColor: Colors.secondaryColor
   },
   optionButtonText: {
     color: Colors.black,
-    textAlign: 'center',
-    fontWeight: 'bold'
+    textAlign: 'center'
   },
   bigTitle: {
     paddingLeft: 20
