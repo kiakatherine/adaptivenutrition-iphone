@@ -4,7 +4,7 @@
     "description": "An empty new project",
     "slug": "adaptive",
     "privacy": "public",
-    "sdkVersion": "23.0.0",
+    "sdkVersion": "30.0.1",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
@@ -17,7 +17,11 @@
     },
     "ios": {
       "bundleIdentifier": "host.exp.exponent",
-      "ios.config.googleSignIn.reservedClientId": "com.googleusercontent.apps.665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp"
+        }
+      },
       "supportsTablet": true
     }
   }
