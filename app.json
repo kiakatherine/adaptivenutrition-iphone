@@ -17,7 +17,7 @@
     },
     "ios": {
       "bundleIdentifier": "host.exp.exponent",
-      "ios.config.googleSignIn.reservedClientId": "com.googleusercontent.apps.665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp"
+      "ios.config.googleSignIn.reservedClientId": "com.googleusercontent.apps.665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp",
       "supportsTablet": true
     }
   }
