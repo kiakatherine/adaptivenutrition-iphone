@@ -19,6 +19,55 @@ class AuthService {
     }
   }
 
+  async loginWithGoogle() {
+    try {
+      const result = await Expo.Google.logInAsync({
+        iosClientId: "665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp.apps.googleusercontent.com",
+        scopes: ['profile', 'email'],
+      });
+
+      if (result.type === 'success') {
+        const { idToken, accessToken } = result;
+        const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+        firebase
+        .auth()
+        .signInAndRetrieveDataWithCredential(credential)
+        .then(res => {
+        })
+        .catch(error => {
+          console.log("firebase cred err:", error);
+        });
+      }
+    } catch(e) {
+
+    }
+  }
+
+  async loginWithFacebook() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+      '424797598049653',
+      { permissions: ['public_profile'] }
+    );
+    
+    if (type === 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+  
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+
+      });
+    }
+  }
+  
+  async resetPassword (email) {
+    try {
+      await firebase.auth().re;
+      // await AsyncStorage.removeItem(ADAPTIVE_SESSION_KEY);
+      // await firebase.auth().signOut();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async logout () {
     try {
       await firebase.auth().signOut();

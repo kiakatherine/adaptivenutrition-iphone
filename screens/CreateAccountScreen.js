@@ -24,8 +24,12 @@ export default class CreateAccountScreen extends React.Component {
     this.signUp = this.signUp.bind(this);
   }
 
-  signUp() {
-    AuthService.signUp(this.state.email, this.state.password);
+  async signUp() {
+    const { navigate } = this.props.navigation;
+    await AuthService.signUp(this.state.email, this.state.password);
+    const authenticated = await AuthService.isSignedIn();
+    if (authenticated) navigate('Authenticated');
+    else this.setState({ unauthorized: true });
   }
 
   render() {
