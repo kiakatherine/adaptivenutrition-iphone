@@ -323,8 +323,13 @@ export default class LoginScreen extends React.Component {
     const date = new Date();
     let todayKey, todayRef, today;
 
+    // 1 = completed good
+    // 2 = completed bad
+    // 3 = blank
+
     // check if a dayStatus exists with timestamp and today's date
     dayStatusesRef.once('value', snapshot => {
+      alert('exists')
       const ds = snapshot.val();
 
       Object.keys(ds).map(key => {
@@ -466,7 +471,8 @@ export default class LoginScreen extends React.Component {
   clickNavPhase(phase) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
-    if((phase === 1 && this.state.phase === 2) || (phase === 2 && this.state.phase === 3)) {
+    if((phase === 1 && this.state.phase === 2) ||
+      (phase === 2 && this.state.phase === 3)) {
       client.update({ phase: phase });
       this.setState({ phase: phase });
     } else {
@@ -475,10 +481,11 @@ export default class LoginScreen extends React.Component {
           showModal: true,
           showNavToPhase2Modal: true
         });
-      } else if(phase === 3) {
+      } else {
+        client.update({ phase: 2 });
         this.setState({
-          showModal: true,
-          showNavToPhase3Modal: true
+          phase: 2,
+          showModal: false
         });
       }
     }
@@ -1029,7 +1036,7 @@ export default class LoginScreen extends React.Component {
           veggies6: veggies[5]
         };
       } else {
-        proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Lean pork', 'Game meats'];
+        proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Lean pork', 'Game meat'];
         carbs = ['White rice', 'Brown rice', 'White potatoes', 'Sweet potatoes',
           'Rolled oats', 'Quinoa', 'Acorn squash', 'Butternut squash'];
         fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nut butter'];
@@ -1202,15 +1209,15 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
               {!viewAllMeals && phase !== 1 && phase !== 3 &&
-                <TouchableHighlight style={[Styles.button, styles.progressButtonGood]}
+                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood]}
                   underlayColor='white'
-                  onPress={() => {}}>
-                 <Text style={[Styles.buttonWithIconText, Styles.buttonText, styles.progressButtonText]}>
+                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
+                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}
                      name='check'
                      size={16}
-                   /> Measured portions for this meal
+                   />
                  </Text>
               </TouchableHighlight>}
             </View>
@@ -1443,10 +1450,10 @@ export default class LoginScreen extends React.Component {
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
               <TouchableHighlight
-                style={[Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
+                style={[Styles.button, Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
                 underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.clickNavPhase(1) }}>
-                <Text style={[Styles.buttonInvertedText, Styles.buttonWithIconText]}>
+                <Text style={[Styles.buttonText, Styles.buttonInvertedText, Styles.buttonWithIconText]}>
                   <FontAwesome
                     style={styles.phaseNavButtonIconLeft}
                     name='arrow-left'

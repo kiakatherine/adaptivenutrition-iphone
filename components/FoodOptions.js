@@ -135,17 +135,17 @@ const styles = StyleSheet.create ({
      marginRight: 15,
      padding: 20,
      paddingTop: 40,
-     backgroundColor: Colors.secondaryColor
+     backgroundColor: Colors.lightGray
    },
    foodOptionAmount: {
      fontSize: 20,
      fontWeight: '600',
      marginBottom: 3,
-     color: Colors.white
+     color: Colors.black
    },
    foodOptionFood: {
      fontSize: 18,
      letterSpacing: 1,
-     color: Colors.white
+     color: Colors.black
    }
 });
