@@ -33,12 +33,18 @@ class MeasurementInput extends React.Component {
     }
 
     this.state = {
+      isNull: true,
       measurementInput: props.value ? props.value : defaultSetting
     };
   }
 
   decreaseMeasurement(measurement) {
     let updatedInput = measurement;
+
+    if(this.state.isNull) {
+      this.setState({ isNull: false });
+      return;
+    }
 
     if(this.props.macro === 'protein') {
       updatedInput = (Number(measurement) - 0.1).toFixed(1);
@@ -49,11 +55,18 @@ class MeasurementInput extends React.Component {
     } else if(this.props.macro === 'veggies') {
       updatedInput = (Number(measurement) - 1).toFixed(0);
     }
-    this.setState({ measurementInput: updatedInput > 0 ? updatedInput : 0 });
+    updatedInput = updatedInput > 0 ? updatedInput : 0;
+    this.setState({ measurementInput: updatedInput });
+    this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
   }
 
   increaseMeasurement(measurement) {
     let updatedInput = measurement;
+
+    if(this.state.isNull) {
+      this.setState({ isNull: false });
+      return;
+    }
 
     if(this.props.macro === 'protein') {
       updatedInput = (Number(measurement) + 0.1).toFixed(1);
@@ -64,7 +77,9 @@ class MeasurementInput extends React.Component {
     } else if(this.props.macro === 'veggies') {
       updatedInput = (Number(measurement) + 1).toFixed(0);
     }
-    this.setState({ measurementInput: updatedInput > 0 ? updatedInput : 0 });
+    updatedInput = updatedInput > 0 ? updatedInput : 0;
+    this.setState({ measurementInput: updatedInput });
+    this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
   }
 
    render() {
@@ -95,7 +110,7 @@ class MeasurementInput extends React.Component {
              </Text>
            </TouchableHighlight>
 
-          <Text style={styles.measurementInput}>{this.state.measurementInput} {label}</Text>
+          <Text style={[styles.measurementInput, this.state.isNull ? styles.isNullInput : null]}>{this.state.measurementInput} {label}</Text>
 
            <TouchableHighlight
              style={Styles.buttonCircularInverted}
@@ -127,4 +142,7 @@ const styles = StyleSheet.create ({
     textAlign: 'center',
     paddingTop: 13
   },
+  isNullInput: {
+    color: Colors.gray
+  }
 });

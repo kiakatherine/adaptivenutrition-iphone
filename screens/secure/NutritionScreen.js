@@ -70,6 +70,8 @@ export default class LoginScreen extends React.Component {
       phase3meal5: null,
       phase3meal6: null,
 
+      phaseTwoMealComplete: false,
+
       checkedTemplate1: false,
       checkedTemplate2: false,
       checkedTemplate3: false,
@@ -80,6 +82,7 @@ export default class LoginScreen extends React.Component {
 
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
+    this.saveMeasurement = this.saveMeasurement.bind(this);
   }
 
   // componentWillMount() {
@@ -316,6 +319,39 @@ export default class LoginScreen extends React.Component {
     client.update({ showInGrams: !showInGrams });
   }
 
+  completePhaseTwoMeal(currentMeal) {
+    // this function simply shows a success/error message
+    // saveMeasurement() runs each time portion size is updated and saves measurement
+
+    if(currentMeal === 0 &&
+      this.state.meal1proteinMeasurement &&
+      this.state.meal1carbsMeasurement &&
+      this.state.meal1fatsMeasurement &&
+      this.state.meal1veggiesMeasurement) {
+      alert('great job 1!');
+    } else if(currentMeal === 1 &&
+      this.state.meal2proteinMeasurement &&
+      this.state.meal2carbsMeasurement &&
+      this.state.meal2fatsMeasurement &&
+      this.state.meal2veggiesMeasurement) {
+      alert('great job 2!');
+    } else if(currentMeal === 2 &&
+      this.state.meal3proteinMeasurement &&
+      this.state.meal3carbsMeasurement &&
+      this.state.meal3fatsMeasurement &&
+      this.state.meal3veggiesMeasurement) {
+      alert('great job 3!');
+    } else if(currentMeal === 3 &&
+      this.state.meal4proteinMeasurement &&
+      this.state.meal4carbsMeasurement &&
+      this.state.meal4fatsMeasurement &&
+      this.state.meal4veggiesMeasurement) {
+      alert('great job 4!');
+    } else {
+      alert('make sure to fill out all portions!');
+    }
+  }
+
   completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
     const dayStatusesRef = firebase.database().ref().child('dayStatuses');
@@ -329,7 +365,6 @@ export default class LoginScreen extends React.Component {
 
     // check if a dayStatus exists with timestamp and today's date
     dayStatusesRef.once('value', snapshot => {
-      alert('exists')
       const ds = snapshot.val();
 
       Object.keys(ds).map(key => {
@@ -703,6 +738,8 @@ export default class LoginScreen extends React.Component {
             });
           } else {
             // save date and selected meal and whether completed or not
+
+            console.log('new phase two day');
             if(!today) {
               phaseTwoDayStatuses.push({
                 date: moment(new Date).format('MM-DD-YY'),
@@ -1209,10 +1246,14 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
               {!viewAllMeals && phase !== 1 && phase !== 3 &&
-                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood]}
-                  underlayColor='white'
-                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
+                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
+                  currentMeal === 0 && this.state.meal1measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  currentMeal === 1 && this.state.meal2measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  currentMeal === 2 && this.state.meal3measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  currentMeal === 3 && this.state.meal4measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
+                  underlayColor={Colors.darkerPrimaryColor}
+                  onPress={() => { this.saveMeasurement(currentMeal) }}>
+                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}
                      name='check'
@@ -2091,5 +2132,11 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
+  },
+  incompletePhaseTwoMeal: {
+    backgroundColor: Colors.gray
+  },
+  incompletePhaseTwoMealText: {
+    color: Colors.darkGray
   }
 });
