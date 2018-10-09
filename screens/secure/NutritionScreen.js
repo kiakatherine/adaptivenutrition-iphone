@@ -581,19 +581,23 @@ export default class LoginScreen extends React.Component {
         phaseTwoDayStatuses.once('value', snapshot => {
           const phaseTwoDayStatusesRef = snapshot.val();
 
+          // check whether day recorded yet
           if(clientRef.timestamp) {
-            Object.keys(phaseTwoDayStatusesRef).map(key => {
-              if(phaseTwoDayStatusesRef[key].timestamp === clientRef.timestamp) {
-                if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
-                  todayKey = key;
-                  today = phaseTwoDayStatusesRef[key];
+            Object.keys(phaseTwoDayStatusesRef).map(phaseTwoDayKey => {
+              if(phaseTwoDayKey && (phaseTwoDayStatusesRef[phaseTwoDayKey].timestamp === clientRef.timestamp)) {
+                if(phaseTwoDayStatusesRef[phaseTwoDayKey].date === moment(date).format('MM-DD-YY')) {
+                  todayKey = phaseTwoDayKey;
+                  today = phaseTwoDayStatusesRef[phaseTwoDayKey];
                 }
-                // todayRef = firebase.database().ref().child('phaseTwoDays/' + key);
+                // todayRef = firebase.database().ref().child('phaseTwoDays/' + phaseTwoDayKey);
                 // todayRef.remove();
+              } else {
+                // alert('day has not yet been recorded')
               }
             });
           }
 
+          // if day already recorded
           if(todayKey) {
             // set meal completed boolean
             todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
@@ -756,6 +760,8 @@ export default class LoginScreen extends React.Component {
             }
           }
         });
+      } else {
+        alert('could not get key')
       }
     });
   }
@@ -1252,7 +1258,7 @@ export default class LoginScreen extends React.Component {
                   currentMeal === 2 && this.state.meal3measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
                   currentMeal === 3 && this.state.meal4measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
                   underlayColor={Colors.darkerPrimaryColor}
-                  onPress={() => { this.saveMeasurement(currentMeal) }}>
+                  onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
                  <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
                    <FontAwesome
                      style={styles.progressButtonGoodIcon}

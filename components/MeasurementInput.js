@@ -34,49 +34,55 @@ class MeasurementInput extends React.Component {
 
     this.state = {
       isNull: true,
-      measurementInput: props.value ? props.value : defaultSetting
+      measurementInput: defaultSetting
     };
   }
 
-  decreaseMeasurement(measurement) {
+  // componentDidMount() {
+  //   alert(this.props.measurement)
+  // }
+
+  decreaseMeasurement() {
+    const measurement = this.props.measurement ? this.props.measurement : this.state.measurementInput;
     let updatedInput = measurement;
 
     if(this.state.isNull) {
       this.setState({ isNull: false });
-      return;
+    } else {
+      if(this.props.macro === 'protein') {
+        updatedInput = (Number(measurement) - 0.1).toFixed(1);
+      } else if(this.props.macro === 'carbs') {
+        updatedInput = (Number(measurement) - 0.25).toFixed(2);
+      } else if(this.props.macro === 'fats') {
+        updatedInput = (Number(measurement) - 1).toFixed(0);
+      } else if(this.props.macro === 'veggies') {
+        updatedInput = (Number(measurement) - 1).toFixed(0);
+      }
     }
 
-    if(this.props.macro === 'protein') {
-      updatedInput = (Number(measurement) - 0.1).toFixed(1);
-    } else if(this.props.macro === 'carbs') {
-      updatedInput = (Number(measurement) - 0.25).toFixed(2);
-    } else if(this.props.macro === 'fats') {
-      updatedInput = (Number(measurement) - 1).toFixed(0);
-    } else if(this.props.macro === 'veggies') {
-      updatedInput = (Number(measurement) - 1).toFixed(0);
-    }
     updatedInput = updatedInput > 0 ? updatedInput : 0;
     this.setState({ measurementInput: updatedInput });
     this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
   }
 
-  increaseMeasurement(measurement) {
+  increaseMeasurement() {
+    const measurement = this.props.measurement ? this.props.measurement : this.state.measurementInput;
     let updatedInput = measurement;
 
     if(this.state.isNull) {
       this.setState({ isNull: false });
-      return;
+    } else {
+      if(this.props.macro === 'protein') {
+        updatedInput = (Number(measurement) + 0.1).toFixed(1);
+      } else if(this.props.macro === 'carbs') {
+        updatedInput = (Number(measurement) + 0.25).toFixed(2);
+      } else if(this.props.macro === 'fats') {
+        updatedInput = (Number(measurement) + 1).toFixed(0);
+      } else if(this.props.macro === 'veggies') {
+        updatedInput = (Number(measurement) + 1).toFixed(0);
+      }
     }
 
-    if(this.props.macro === 'protein') {
-      updatedInput = (Number(measurement) + 0.1).toFixed(1);
-    } else if(this.props.macro === 'carbs') {
-      updatedInput = (Number(measurement) + 0.25).toFixed(2);
-    } else if(this.props.macro === 'fats') {
-      updatedInput = (Number(measurement) + 1).toFixed(0);
-    } else if(this.props.macro === 'veggies') {
-      updatedInput = (Number(measurement) + 1).toFixed(0);
-    }
     updatedInput = updatedInput > 0 ? updatedInput : 0;
     this.setState({ measurementInput: updatedInput });
     this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
@@ -101,7 +107,7 @@ class MeasurementInput extends React.Component {
            <TouchableHighlight
              style={Styles.buttonCircularInverted}
              underlayColor={Colors.white}
-             onPress={() => this.decreaseMeasurement(this.state.measurementInput) }>
+             onPress={() => this.decreaseMeasurement() }>
              <Text style={Styles.buttonCircularInvertedText}>
                <FontAwesome
                  name='minus'
@@ -110,12 +116,14 @@ class MeasurementInput extends React.Component {
              </Text>
            </TouchableHighlight>
 
-          <Text style={[styles.measurementInput, this.state.isNull ? styles.isNullInput : null]}>{this.state.measurementInput} {label}</Text>
+          <Text style={[styles.measurementInput, this.state.isNull ? styles.isNullInput : null]}>
+            {this.props.measurement ? this.props.measurement : this.state.measurementInput} {label}
+          </Text>
 
            <TouchableHighlight
              style={Styles.buttonCircularInverted}
              underlayColor={Colors.white}
-             onPress={() => this.increaseMeasurement(this.state.measurementInput) }>
+             onPress={() => this.increaseMeasurement() }>
              <Text style={Styles.buttonCircularInvertedText}>
                <FontAwesome
                  name='plus'
@@ -132,9 +140,10 @@ class MeasurementInput extends React.Component {
 export default MeasurementInput;
 
 MeasurementInput.propTypes = {
+  measurement: PropTypes.number
 };
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   measurementInput: {
     flex: 1,
     fontSize: 24,

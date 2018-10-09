@@ -148,10 +148,10 @@ class Meal extends React.Component {
             <MeasurementInput
               macro='protein'
               currentMeal={this.props.currentMeal}
-              value={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
-                this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
-                this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
-                this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
+              measurement={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
+                this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
+                this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
+                this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
               updateMeasurement={this.props.updateMeasurement} />
           </View>}
 
@@ -194,7 +194,7 @@ class Meal extends React.Component {
             <MeasurementInput
               macro='carbs'
               currentMeal={this.props.currentMeal}
-              value={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
+              measurement={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
                 this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
                 this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
                 this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
@@ -235,7 +235,7 @@ class Meal extends React.Component {
               <MeasurementInput
                 macro='fats'
                 currentMeal={this.props.currentMeal}
-                value={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
+                measurement={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
                   this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
                   this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
                   this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
@@ -281,7 +281,7 @@ class Meal extends React.Component {
               <MeasurementInput
                 macro='veggies'
                 currentMeal={this.props.currentMeal}
-                value={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
+                measurement={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
                   this.props.currentMeal === 1 ? this.props.meal2veggiesMeasurement :
                   this.props.currentMeal === 2 ? this.props.meal3veggiesMeasurement :
                   this.props.currentMeal === 3 ? this.props.meal4veggiesMeasurement : null}
@@ -305,7 +305,8 @@ Meal.propTypes = {
   height: PropTypes.number,
   bodyweight: PropTypes.number,
   bodyfat: PropTypes.number,
-  showInGrams: PropTypes.bool
+  showInGrams: PropTypes.bool,
+  meal1proteinMeasurement: PropTypes.string
 };
 
 const styles = StyleSheet.create ({
