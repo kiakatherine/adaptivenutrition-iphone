@@ -512,15 +512,16 @@ export default class LoginScreen extends React.Component {
       this.setState({ phase: phase });
     } else {
       if(phase === 2) {
+        client.update({ phase: phase });
         this.setState({
+          phase: phase,
           showModal: true,
           showNavToPhase2Modal: true
         });
       } else {
-        client.update({ phase: 2 });
         this.setState({
-          phase: 2,
-          showModal: false
+          showModal: true,
+          showNavToPhase3Modal: true
         });
       }
     }
