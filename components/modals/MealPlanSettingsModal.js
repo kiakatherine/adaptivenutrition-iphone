@@ -87,14 +87,14 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
             style={[Styles.button, styles.button]}
-            onPress={() => { this.props.showEnergyBalancePicker() }}>
+            onPress={() => { this.showEnergyBalancePicker() }}>
               <Text style={Styles.buttonText}>Adjust goal - {template}</Text>
            </TouchableHighlight>
 
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
             style={[Styles.button, styles.button]}
-            onPress={() => { this.props.clickNavPhase() }}>
+            onPress={() => { this.clickNavPhase() }}>
               <Text style={Styles.buttonText}>Go back to Phase 2</Text>
            </TouchableHighlight>
          </View>

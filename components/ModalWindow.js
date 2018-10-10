@@ -35,7 +35,7 @@ class ModalWindow extends React.Component {
    }
 
    toggleModal(visible) {
-     // alert('toggleModal')
+     console.log('toggleModal')
      this.setState({
        modalVisible: visible
      });

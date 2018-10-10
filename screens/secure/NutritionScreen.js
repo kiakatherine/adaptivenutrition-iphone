@@ -598,6 +598,7 @@ export default class LoginScreen extends React.Component {
   }
 
   clickNavPhase(phase) {
+    console.log('CLICKNAVPHASE')
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     if((phase === 1 && this.state.phase === 2) ||
