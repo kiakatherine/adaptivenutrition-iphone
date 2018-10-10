@@ -207,7 +207,11 @@ class BodyweightGraph extends React.Component {
             style={{ width: '100%' }}
             horizontal={true}
             alwaysBounceHorizontal={true}
-            showsHorizontalScrollIndicator={true}>
+            showsHorizontalScrollIndicator={true}
+            ref={ref => this.scrollView = ref}
+            onContentSizeChange={(contentWidth, contentHeight)=>{
+                this.scrollView.scrollToEnd({animated: true});
+            }}>
             {/*<LineChart
               style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
               data={weights}
@@ -236,7 +240,7 @@ class BodyweightGraph extends React.Component {
             {sortedData && sortedData.map((rec, i) =>
               <View style={styles.bodyweightLogWrapper} key={i}>
                 <Text>{rec.weight}</Text>
-                <View style={{ height: Number(rec.weight), width: 50, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
+                <View style={{ height: Number(rec.weight), width: 40, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
                   <TouchableHighlight
                     underlayColor={Colors.white}
                     onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
