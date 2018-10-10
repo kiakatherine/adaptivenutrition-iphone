@@ -16,6 +16,8 @@ import moment from 'moment';
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
 import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, setMealTimes } from '../../utils/helpers';
 
+const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
+
 import {
   Alert,
   Button,
@@ -232,6 +234,7 @@ export default class LoginScreen extends React.Component {
     let hasBodyweightEntries = false;
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const client = this.state.client;
+    const clientRef = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     bodyweightRecords.once('value', snapshot => {
       const records = snapshot.val();
@@ -295,15 +298,15 @@ export default class LoginScreen extends React.Component {
 
         if(template ===  TEMPLATE_TYPES[3]) {
           // TT3 = Lock in results (Step 3)
-          client.update({ weight2 : fiveDayAverage });
+          clientRef.update({ weight2 : fiveDayAverage });
         } else if(template ===  TEMPLATE_TYPES[2]) {
           // TT2 = Lose weight (Step 2)
-          client.update({ weight1 : fiveDayAverage });
+          clientRef.update({ weight1 : fiveDayAverage });
         }
         weight = Math.round(fiveDayAverage);
 
-        client.update({
-          templateType: templateType,
+        clientRef.update({
+          templateType: template,
           weight1: templateType === TEMPLATE_TYPES[2] ? weight : null,
           weight2: templateType === TEMPLATE_TYPES[3] ? weight : null
         }).then(resp => {
@@ -319,55 +322,21 @@ export default class LoginScreen extends React.Component {
           });
         });
       } else {
-        this.get('templateTypes').forEach(tt => {
-          tt.set('selected', false);
-        });
-        type.set('selected', true);
-
         // TT3 = Lock in results (Step 3)
-        this.get('client').save({
-          templateType: this.get('templateType'),
-          // weight1: type.get('value') === TEMPLATE_TYPES[3] ? weight : null,
-          // weight2: type.get('value') === TEMPLATE_TYPES[4] ? weight : null
+        clientRef.update({
+          templateType: template
         }).then(() => {
-          Ember.Logger.info('saved template type');
+          console.log('saved template type');
 
-          if(page === 'client') {
-            this.send('closeModal');
-            this.setProperties({
-              checkedTemplate1: false,
-              checkedTemplate2: false,
-              checkedTemplate3: false,
-              checkedTemplate4: false,
-              checkedTemplate5: false,
-              isConfirmButtonDisabled: true,
-              isConfirming: false
-            });
-          }
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: true,
+            showTemplateConfirmation: true,
+            potentialTemplate: template
+          });
         });
       }
     });
-
-    if(hasBodyweightEntries) {
-      // let t = template === 0 ? templates[0] :
-      //   template === 1 ? templates[1] :
-      //   template === 2 ? templates[2] :
-      //   template === 3 ? templates[3] :
-      //   template === 4 ? templates[4] :
-      //   template === 5 ? templates[5] : null;
-      //
-      // this.setState({
-      //   showEnergyBalancePicker: false,
-      //   showModal: true,
-      //   showTemplateConfirmation: true,
-      //   potentialTemplate: template
-      // });
-    } else {
-      // this.setState({
-      //   showEnergyBalancePicker: false,
-      //   showNeedBodyweightEntries: true
-      // });
-    }
   }
 
   saveTemplateType() {
