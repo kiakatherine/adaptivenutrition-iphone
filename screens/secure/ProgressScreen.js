@@ -42,7 +42,7 @@ export default class LoginScreen extends React.Component {
       showModal: false,
       showDatepicker: false,
       showAddBodyweightModal: false,
-      weight: 0,
+      weight: null,
       clientTimestamp: null,
       showProgressPhase1: true,
       showProgressPhase2: true,
@@ -275,7 +275,7 @@ export default class LoginScreen extends React.Component {
                 underlayColor={Colors.darkerPrimaryColor}
                 style={[Styles.button, Styles.buttonCircular]}
                 onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
-                <Text style={[Styles.buttonCircularIcon]}>
+                <Text style={Styles.buttonCircularIcon}>
                   <FontAwesome
                     name='plus'
                     size={16}
@@ -341,41 +341,38 @@ export default class LoginScreen extends React.Component {
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
-                size={28}
+                size={48}
               />
             </TouchableHighlight>
+
+            <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
+              <TouchableHighlight
+                underlayColor={Colors.lightGray}
+                onPress={this._showDatepicker}>
+                <Text style={styles.bodyweightDate}>
+                  {moment(this.state.date).format('MMMM D')} <FontAwesome
+                    name='pencil'
+                    size={24}
+                  />
+                </Text>
+              </TouchableHighlight>
+            </View>
+
+            {this.state.showDatepicker &&
+              <DatePickerIOS
+                style={styles.datePicker}
+                mode={'date'}
+                date={this.state.date}
+                maximumDate={new Date()}
+                onDateChange={date => this.setState({ date, showDatepicker: false })}
+              />}
+
             <View style={[styles.progressSection]}>
               <View style={[styles.bodyweightInputWrapper]}>
-                {/*<View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
-                  <TouchableHighlight
-                    underlayColor={Colors.lightGray}
-                    style={styles.bodyweightDateButton}
-                    onPress={this._showDatepicker}>
-                    <FontAwesome
-                      name='calendar'
-                      size={24}
-                    />
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={Colors.lightGray}
-                    onPress={this._showDatepicker}>
-                    <Text style={styles.bodyweightDate}>{moment(this.state.date).format('MMMM D')}</Text>
-                  </TouchableHighlight>
-                </View>
-
-                {this.state.showDatepicker &&
-                  <DatePickerIOS
-                    style={styles.datePicker}
-                    mode={'date'}
-                    date={this.state.date}
-                    maximumDate={new Date()}
-                    onDateChange={date => this.setState({ date, showDatepicker: false })}
-                  />}*/}
-
                 <TouchableHighlight
                   underlayColor={Colors.darkerPrimaryColor}
                   style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
-                  onPress={() => { this.setState({ weight: (weight - 0.1).toFixed(1) }) }}
+                  onPress={() => { this.setState({ weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight }) }}
                   disabled={weight < 0}>
                   <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
                     <FontAwesome
@@ -390,7 +387,7 @@ export default class LoginScreen extends React.Component {
                 <TouchableHighlight
                   underlayColor={Colors.darkerPrimaryColor}
                   style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
-                  onPress={() => { this.setState({ weight: (weight + 0.1).toFixed(1) }) }}
+                  onPress={() => { this.setState({ weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight }) }}
                   disabled={weight < 0}>
                   <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
                     <FontAwesome
@@ -406,7 +403,12 @@ export default class LoginScreen extends React.Component {
                 style={Styles.button}
                 onPress={this._submitWeight}
                 disabled={weight < 0}>
-                <Text style={Styles.buttonText}>Save</Text>
+                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                  <FontAwesome
+                    name='check'
+                    size={28}
+                  />
+                </Text>
               </TouchableHighlight>
             </View>
           </ScrollView>}
@@ -446,15 +448,13 @@ const styles = StyleSheet.create ({
     flexDirection: 'row',
     marginBottom: 30
   },
-  weightButton: {
-    // flex: 1,
-  },
   weight: {
     flex: 3,
     textAlign: 'center',
     fontSize: 36,
     fontFamily: 'Futura',
-    color: Colors.black
+    color: Colors.black,
+    paddingTop: 5
   },
   phaseHeader: {
     paddingTop: 15,
@@ -474,7 +474,10 @@ const styles = StyleSheet.create ({
     marginTop: 10,
     marginBottom: 15
   },
-  addBodyweightModal: {
-    height: 250
+  bodyweightDate: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 5
   }
 });

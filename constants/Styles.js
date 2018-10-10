@@ -88,30 +88,30 @@ export default {
     borderRadius: 100,
     backgroundColor: Colors.primaryColor,
     alignSelf: 'center',
-    width: 50,
-    height: 50
+    width: 65,
+    height: 65
   },
   buttonCircularInverted: {
     borderRadius: 100,
     backgroundColor: Colors.white,
     // alignSelf: 'center',
-    width: 50,
-    height: 50,
+    width: 65,
+    height: 65,
     borderWidth: 2,
     borderColor: Colors.primaryColor
   },
   buttonCircularIcon: {
-    marginTop: 15,
+    marginTop: 23,
     alignSelf: 'center',
     color: Colors.white
   },
   buttonCircularText: {
-    marginTop: 15,
+    marginTop: 23,
     alignSelf: 'center',
     color: Colors.white
   },
   buttonCircularInvertedText: {
-    marginTop: 15,
+    marginTop: 23,
     alignSelf: 'center',
     color: Colors.primaryColor,
     fontWeight: 'bold'

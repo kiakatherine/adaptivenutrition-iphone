@@ -221,6 +221,14 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
+    if(template === this.state.client.templateType) {
+      this.setState({
+        showEnergyBalancePicker: false,
+        showModal: false
+      });
+      return;
+    }
+
     let hasBodyweightEntries = false;
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const client = this.state.client;
@@ -302,13 +310,6 @@ export default class LoginScreen extends React.Component {
           alert('saved template type and latest average weight')
           console.log('saved template type and latest average weight');
           console.log('latest average weight', resp.get('weight1'), resp.get('weight2'));
-
-          let t = template === 0 ? templates[0] :
-            template === 1 ? templates[1] :
-            template === 2 ? templates[2] :
-            template === 3 ? templates[3] :
-            template === 4 ? templates[4] :
-            template === 5 ? templates[5] : null;
 
           this.setState({
             showEnergyBalancePicker: false,
