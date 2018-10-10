@@ -260,8 +260,6 @@ export default class LoginScreen extends React.Component {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
 
-      console.log(sortedBodyweightRecords)
-
       // check that latest three bodyweight entries are within the past week
       // if date < oneWeekAgo, it is too old
       if(sortedBodyweightRecords.length >= 3 &&

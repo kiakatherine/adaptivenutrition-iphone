@@ -242,6 +242,61 @@ export default class LoginScreen extends React.Component {
       }
     }
 
+    // seven day bodyweight average, initial weight
+    let sevenDayAverage, initialWeight;
+    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const clientTimestamp = this.state.clientTimestamp;
+
+    bodyweightRecords.once('value', snapshot => {
+      const records = snapshot.val();
+      let weight, clientBodyweightRecords = [];
+
+      // get client's bodyweight records
+      // do this on server side
+      Object.keys(records).map(key => {
+        if(records[key].timestamp === clientTimestamp) {
+          clientBodyweightRecords.push(records[key]);
+        }
+      });
+
+      // sort records by date
+      // TO DO: fix sorting
+      let sortedBodyweightRecords = clientBodyweightRecords.sort((a,b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      });
+      sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+
+      // set initial weight
+      initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
+
+      // get date from 1 week ago
+      let oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
+
+      // find entries within past week
+      let pastWeekEntries = [];
+      sortedBodyweightRecords.forEach(rec => {
+        if(rec.date > oneWeekAgo) {
+          pastWeekEntries.push(rec);
+        }
+      });
+
+      if(pastWeekEntries.length) {
+        sevenDayAverage = (
+          (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
+          (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
+          (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
+          (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
+          (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
+          (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
+          (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
+        sevenDayAverage = sevenDayAverage.toFixed(1);
+      } else {
+        sevenDayAverage = '---';
+      }
+    });
+
     return (
       <View style={Styles.body}>
         <ScrollView style={Styles.content}>
@@ -261,27 +316,35 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>
             </View>
 
-            {this.state.showBodyweightLog && <View style={styles.progressSection}>
-              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>
-                {this.state.client ? '-' + this.state.client.bodyweightDelta : '-7'}
-              </Text>
-              <Text style={Styles.menuItemSubText}>Change since {this.state.client ? this.state.client.firstWeightDate : ' starting'}</Text>
+            {this.state.showBodyweightLog &&
+              <View style={styles.progressSection}>
+                <View style={styles.stats}>
+                  <View style={styles.stat}>
+                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>{sevenDayAverage}</Text>
+                    <Text style={Styles.menuItemSubText}>Average weight over past week</Text>
+                  </View>
 
-              <BodyweightGraph
-                data={this.state.bodyweightData}
-                clientTimestamp={this.state.clientTimestamp} />
+                  <View style={styles.stat}>
+                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>{initialWeight}</Text>
+                    <Text style={Styles.menuItemSubText}>Initial weight</Text>
+                  </View>
+                </View>
 
-              <TouchableHighlight
-                underlayColor={Colors.darkerPrimaryColor}
-                style={Styles.buttonCircular}
-                onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
-                <Text style={Styles.buttonCircularIcon}>
-                  <FontAwesome
-                    name='plus'
-                    size={16}
-                  />
-                </Text>
-              </TouchableHighlight>
+                <BodyweightGraph
+                  data={this.state.bodyweightData}
+                  clientTimestamp={this.state.clientTimestamp} />
+
+                <TouchableHighlight
+                  underlayColor={Colors.darkerPrimaryColor}
+                  style={Styles.buttonCircular}
+                  onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
+                  <Text style={Styles.buttonCircularIcon}>
+                    <FontAwesome
+                      name='plus'
+                      size={16}
+                    />
+                  </Text>
+                </TouchableHighlight>
             </View>}
 
             {this.state.showProgressReports && <View style={styles.progressSection}>
@@ -479,5 +542,13 @@ const styles = StyleSheet.create ({
     textAlign: 'center',
     marginTop: 20,
     marginBottom: 5
+  },
+  stats: {
+    marginTop: 20,
+    marginBottom: 20
+  },
+  statNumber: {
+    fontSize: 28,
+    fontWeight: 'bold'
   }
 });
