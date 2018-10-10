@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
   Button,
+  Image,
   FlatList,
   Keyboard,
   Modal,
@@ -35,6 +36,7 @@ class FoodOptions extends React.Component {
      const selection = this.state.selection;
      const isBedtimeMeal = this.props.bedtime;
      const isPwoShake = this.props.pwo;
+     const trainingIntensity = this.props.trainingIntensity;
      let hidePwoShakeArrows = false;
 
      let formattedOptions = [];
@@ -95,6 +97,18 @@ class FoodOptions extends React.Component {
               <View style={styles.foodOption} key={item.key}>
                 <Text style={styles.foodOptionAmount}>{item.amount}</Text>
                 <Text style={styles.foodOptionFood}>{item.food}</Text>
+                {(phase < 3 && macro === 'protein') &&
+                  <Image source={require('../assets/icons/protein.jpg')}
+                    style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
+                {(phase < 3 && macro === 'carbs' && trainingIntensity === true) &&
+                  <Image source={require('../assets/icons/carbs-training.jpg')}
+                    style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
+                {(phase < 3 && macro === 'carbs' && trainingIntensity === false) &&
+                  <Image source={require('../assets/icons/carbs-rest.jpg')}
+                    style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
+                {(phase < 3 && macro === 'fats') &&
+                  <Image source={require('../assets/icons/fats.jpg')}
+                    style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
               </View>)}
           />}
 

@@ -131,76 +131,40 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 &&
-            <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>}
-          {this.props.phase < 3 &&
-            <View>
-              <Text style={styles.mealRowColPhase3}>PROTEIN</Text>
-              <Text style={styles.macroLabelsWithIconPhase2}>Portion size</Text>
-              <Image source={require('../assets/icons/protein.jpg')}
-                style={{ width: 60, height: 60, resizeMode: 'contain' }} />
+          <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>
+
+          <FoodOptions style={styles.mealRowColLong}
+            macro='protein'
+            sources={this.props.proteins}
+            trainingIntensity={this.props.trainingIntensity}
+            mealsBeforeWorkout={this.props.mealsBeforeWorkout}
+            phase={this.props.phase}
+            currentMeal={this.props.currentMeal}
+            pwo={pwo}
+            bedtime={bedtime}
+            age={this.props.age}
+            gender={this.props.gender}
+            height={this.props.height}
+            bodyweight={this.props.bodyweight}
+            bodyfat={this.props.bodyfat}
+            showInGrams={this.props.showInGrams} />
+
+          {this.props.phase === 2 &&
+            <View style={styles.phase2Measurement}>
+              <Text style={styles.phase2PickerLabel}>Enter your portion weight</Text>
+              <MeasurementInput
+                macro='protein'
+                currentMeal={this.props.currentMeal}
+                measurement={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
+                  this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
+                  this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
+                  this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
+                updateMeasurement={this.props.updateMeasurement} />
             </View>}
         </View>
 
-        {this.props.phase === 2 &&
-          <View style={styles.phase2Measurement}>
-            <Text style={styles.phase2PickerLabel}>Enter your portion weight</Text>
-            <MeasurementInput
-              macro='protein'
-              currentMeal={this.props.currentMeal}
-              measurement={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
-                this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
-                this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
-                this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-          </View>}
-
-        {this.props.phase === 2 &&
-          <Text style={styles.macroLabelsWithIconPhase2}>Options</Text>}
-
-        <FoodOptions style={styles.mealRowColLong}
-          macro='protein'
-          sources={this.props.proteins}
-          trainingIntensity={this.props.trainingIntensity}
-          mealsBeforeWorkout={this.props.mealsBeforeWorkout}
-          phase={this.props.phase}
-          currentMeal={this.props.currentMeal}
-          pwo={pwo}
-          bedtime={bedtime}
-          age={this.props.age}
-          gender={this.props.gender}
-          height={this.props.height}
-          bodyweight={this.props.bodyweight}
-          bodyfat={this.props.bodyfat}
-          showInGrams={this.props.showInGrams} />
-
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>}
-          {(this.props.phase < 3 && this.props.trainingIntensity === true) && <View style={styles.mealRowCol}>
-              <Image source={require('../assets/icons/carbs-training.jpg')}
-                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />
-              <Text style={styles.macroLabelsWithIcon}>Starches</Text>
-            </View>}
-          {(this.props.phase < 3 && this.props.trainingIntensity === false) &&
-            <View>
-              <Text style={styles.mealRowColPhase3}>STARCHES</Text>
-              <Text style={styles.macroLabelsWithIconPhase2}>Portion size</Text>
-              <Image source={require('../assets/icons/carbs-rest.jpg')}
-                style={{ width: 60, height: 60, resizeMode: 'contain' }} />
-            </View>}
-          {this.props.phase === 2 &&
-            <View>
-            <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
-            <MeasurementInput
-              macro='carbs'
-              currentMeal={this.props.currentMeal}
-              measurement={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
-                this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
-                this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
-                this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
-              updateMeasurement={this.props.updateMeasurement} />
-            <Text style={styles.macroLabelsWithIconPhase2}>Options</Text>
-          </View>}
+          <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>
 
           <FoodOptions style={styles.mealRowColLong}
             macro='carbs'
@@ -218,30 +182,23 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+
+          {this.props.phase === 2 &&
+            <View style={styles.phase2Measurement}>
+              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
+              <MeasurementInput
+                macro='carbs'
+                currentMeal={this.props.currentMeal}
+                measurement={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
+                  this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
+                  this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
+                  this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
+                updateMeasurement={this.props.updateMeasurement} />
+          </View>}
         </View>
 
         <View style={styles.mealRow}>
-          {this.props.phase === 3 && <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>}
-          {this.props.phase < 3 &&
-            <View>
-              <Text style={styles.mealRowColPhase3}>HEALTHY FATS</Text>
-              <Text style={styles.macroLabelsWithIconPhase2}>Portion size</Text>
-              <Image source={require('../assets/icons/fats.jpg')}
-                style={{ width: 60, height: 60, resizeMode: 'contain' }} />
-            </View>}
-          {this.props.phase === 2 &&
-            <View>
-              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
-              <MeasurementInput
-                macro='fats'
-                currentMeal={this.props.currentMeal}
-                measurement={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
-                  this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
-                  this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
-                  this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
-                updateMeasurement={this.props.updateMeasurement} />
-            <Text style={styles.macroLabelsWithIconPhase2}>Options</Text>
-            </View>}
+          <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
 
           <FoodOptions style={styles.mealRowColLong}
             macro='fats'
@@ -259,6 +216,19 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
+
+          {this.props.phase === 2 &&
+            <View style={styles.phase2Measurement}>
+              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
+              <MeasurementInput
+                macro='fats'
+                currentMeal={this.props.currentMeal}
+                measurement={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
+                  this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
+                  this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
+                  this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
+                updateMeasurement={this.props.updateMeasurement} />
+            </View>}
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
@@ -268,6 +238,7 @@ class Meal extends React.Component {
               <FoodOptions style={styles.mealRowColLong}
                 macro='veggies'/>
             </View>}
+
           {this.props.phase < 3 &&
             <View>
               <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
@@ -275,8 +246,9 @@ class Meal extends React.Component {
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ width: 60, height: 60, resizeMode: 'contain' }} />
             </View>}
+
           {this.props.phase === 2 &&
-            <View>
+            <View style={styles.phase2Measurement}>
               <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
               <MeasurementInput
                 macro='veggies'
@@ -332,16 +304,13 @@ const styles = StyleSheet.create ({
     width: 100,
     height: 75
   },
-  // mealRowColPhase3: {
-  //   flex: 1
-  // },
   mealRowColLong: {
     flex: 2
   },
   mealRowColPhase3: {
     color: Colors.black,
     letterSpacing: 2,
-    marginBottom: 15
+    marginBottom: 10
   },
   mealRowHeader: {
     alignSelf: 'stretch',
@@ -388,10 +357,11 @@ const styles = StyleSheet.create ({
   phase2PickerLabel: {
     fontSize: 16,
     marginTop: 15,
-    marginBottom: 10
+    marginBottom: 10,
+    textAlign: 'center'
   },
   phase2Measurement: {
-    marginBottom: 20
+    marginBottom: 40
   },
   veggieText: {
     fontSize: 22,
