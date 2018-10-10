@@ -11,7 +11,7 @@ export function toDate(dateStr) {
 }
 
 export function formatBodyweightLogDate(d) {
-  return d ? moment(d, 'MM-DD-YY').format('M/D/YY') : '-';
+  return d ? moment(d, 'MM-DD-YY').format('MMM D') : '-';
 }
 
 function hasVal(val) {

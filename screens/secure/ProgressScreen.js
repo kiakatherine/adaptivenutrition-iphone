@@ -273,7 +273,7 @@ export default class LoginScreen extends React.Component {
 
               <TouchableHighlight
                 underlayColor={Colors.darkerPrimaryColor}
-                style={[Styles.button, Styles.buttonCircular]}
+                style={Styles.buttonCircular}
                 onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
                 <Text style={Styles.buttonCircularIcon}>
                   <FontAwesome
@@ -341,7 +341,7 @@ export default class LoginScreen extends React.Component {
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
-                size={48}
+                size={36}
               />
             </TouchableHighlight>
 
@@ -406,7 +406,7 @@ export default class LoginScreen extends React.Component {
                 <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
                   <FontAwesome
                     name='check'
-                    size={28}
+                    size={20}
                   />
                 </Text>
               </TouchableHighlight>
@@ -454,7 +454,7 @@ const styles = StyleSheet.create ({
     fontSize: 36,
     fontFamily: 'Futura',
     color: Colors.black,
-    paddingTop: 5
+    paddingTop: 7
   },
   phaseHeader: {
     paddingTop: 15,
