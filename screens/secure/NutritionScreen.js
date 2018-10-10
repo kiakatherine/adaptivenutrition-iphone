@@ -600,18 +600,15 @@ export default class LoginScreen extends React.Component {
   clickNavPhase(phase) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
-    console.log(phase)
-    console.log(this.state.phase)
-
     if((phase === 1 && this.state.phase === 2) ||
       (phase === 2 && this.state.phase === 3)) {
+        // save phase if going backwards
       client.update({ phase: phase });
       this.setState({ phase: phase });
     } else {
+      // show confirmation modal before saving
       if(phase === 2) {
-        client.update({ phase: phase });
         this.setState({
-          phase: phase,
           showModal: true,
           showNavToPhase2Modal: true
         });
@@ -634,6 +631,9 @@ export default class LoginScreen extends React.Component {
   movePhase(phase) {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const direction = this.state.phase < phase ? 'forward' : 'backward';
+
+    console.log('state phase', this.state.phase)
+    console.log('phase', phase)
 
     client.update({ phase: direction === 'forward' ? phase : phase - 1 });
     this.setState({
