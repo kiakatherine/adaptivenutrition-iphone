@@ -249,7 +249,7 @@ export default {
     right: 0,
     backgroundColor: Colors.gray,
     opacity: 0.8,
-    zIndex: 1
+    // zIndex: 1
   },
   tooltip: {
     position: 'absolute',

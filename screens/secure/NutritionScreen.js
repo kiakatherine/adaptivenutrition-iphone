@@ -221,27 +221,151 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
-    const hasBodyweightEntries = false; // MOCK
+    let hasBodyweightEntries = false;
+    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const client = this.state.client;
+
+    bodyweightRecords.once('value', snapshot => {
+      const records = snapshot.val();
+      let weight, clientBodyweightRecords = [];
+
+      // get client's bodyweight records
+      // do this on server side
+      Object.keys(records).map(key => {
+        if(records[key].timestamp === client.timestamp) {
+          clientBodyweightRecords.push(records[key]);
+        }
+      });
+
+      // sort records by date
+      // TO DO: sorting not working properly
+      let sortedBodyweightRecords = clientBodyweightRecords.sort((a,b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      });
+      sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+
+      // get date from 1 week ago
+      let oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
+
+      console.log(sortedBodyweightRecords)
+
+      // check that latest three bodyweight entries are within the past week
+      // if date < oneWeekAgo, it is too old
+      if(sortedBodyweightRecords.length >= 3 &&
+        (sortedBodyweightRecords[0].date < oneWeekAgo ||
+        sortedBodyweightRecords[1].date < oneWeekAgo ||
+        sortedBodyweightRecords[2].date < oneWeekAgo)) {
+          hasBodyweightEntries = false;
+          this.setState({
+            showEnergyBalancePicker: false,
+            showNeedBodyweightEntries: true
+          });
+          return;
+      } else if (sortedBodyweightRecords.length < 3) {
+        hasBodyweightEntries = false;
+        this.setState({
+          showEnergyBalancePicker: false,
+          showNeedBodyweightEntries: true
+        });
+        return;
+      } else {
+        hasBodyweightEntries = true;
+      }
+
+      // TT2 = Lose weight (Step 2)
+      // TT3 = Lock in results (Step 3)
+      if(template === TEMPLATE_TYPES[2] || template ===  TEMPLATE_TYPES[3]) {
+        let fiveDayAverage = (sortedBodyweightRecords[0].weight +
+          sortedBodyweightRecords[1].weight +
+          sortedBodyweightRecords[2].weight +
+          (sortedBodyweightRecords[3] ? sortedBodyweightRecords[3].weight : null) +
+          (sortedBodyweightRecords[4] ? sortedBodyweightRecords[4].weight : null)) / 5;
+
+        fiveDayAverage = Number(fiveDayAverage.toFixed(1));
+
+        if(template ===  TEMPLATE_TYPES[3]) {
+          // TT3 = Lock in results (Step 3)
+          client.update({ weight2 : fiveDayAverage });
+        } else if(template ===  TEMPLATE_TYPES[2]) {
+          // TT2 = Lose weight (Step 2)
+          client.update({ weight1 : fiveDayAverage });
+        }
+        weight = Math.round(fiveDayAverage);
+
+        client.update({
+          templateType: templateType,
+          weight1: templateType === TEMPLATE_TYPES[2] ? weight : null,
+          weight2: templateType === TEMPLATE_TYPES[3] ? weight : null
+        }).then(resp => {
+          alert('saved template type and latest average weight')
+          console.log('saved template type and latest average weight');
+          console.log('latest average weight', resp.get('weight1'), resp.get('weight2'));
+
+          let t = template === 0 ? templates[0] :
+            template === 1 ? templates[1] :
+            template === 2 ? templates[2] :
+            template === 3 ? templates[3] :
+            template === 4 ? templates[4] :
+            template === 5 ? templates[5] : null;
+
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: true,
+            showTemplateConfirmation: true,
+            potentialTemplate: template
+          });
+        });
+      } else {
+        this.get('templateTypes').forEach(tt => {
+          tt.set('selected', false);
+        });
+        type.set('selected', true);
+
+        // TT3 = Lock in results (Step 3)
+        this.get('client').save({
+          templateType: this.get('templateType'),
+          // weight1: type.get('value') === TEMPLATE_TYPES[3] ? weight : null,
+          // weight2: type.get('value') === TEMPLATE_TYPES[4] ? weight : null
+        }).then(() => {
+          Ember.Logger.info('saved template type');
+
+          if(page === 'client') {
+            this.send('closeModal');
+            this.setProperties({
+              checkedTemplate1: false,
+              checkedTemplate2: false,
+              checkedTemplate3: false,
+              checkedTemplate4: false,
+              checkedTemplate5: false,
+              isConfirmButtonDisabled: true,
+              isConfirming: false
+            });
+          }
+        });
+      }
+    });
 
     if(hasBodyweightEntries) {
-      let t = template === 0 ? templates[0] :
-        template === 1 ? templates[1] :
-        template === 2 ? templates[2] :
-        template === 3 ? templates[3] :
-        template === 4 ? templates[4] :
-        template === 5 ? templates[5] : null;
-
-      this.setState({
-        showEnergyBalancePicker: false,
-        showModal: true,
-        showTemplateConfirmation: true,
-        potentialTemplate: template
-      });
+      // let t = template === 0 ? templates[0] :
+      //   template === 1 ? templates[1] :
+      //   template === 2 ? templates[2] :
+      //   template === 3 ? templates[3] :
+      //   template === 4 ? templates[4] :
+      //   template === 5 ? templates[5] : null;
+      //
+      // this.setState({
+      //   showEnergyBalancePicker: false,
+      //   showModal: true,
+      //   showTemplateConfirmation: true,
+      //   potentialTemplate: template
+      // });
     } else {
-      this.setState({
-        showEnergyBalancePicker: false,
-        showNeedBodyweightEntries: true
-      });
+      // this.setState({
+      //   showEnergyBalancePicker: false,
+      //   showNeedBodyweightEntries: true
+      // });
     }
   }
 
@@ -1724,7 +1848,7 @@ export default class LoginScreen extends React.Component {
           <View>
             <TouchableHighlight
               underlayColor={Colors.white}
-              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+              onPress={() => { this.setState({ showNeedBodyweightEntries: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
@@ -1741,7 +1865,7 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipHeader}>
               Uh oh!
             </Text>
-            <Text style={Styles.tooltipParagraph}>You need to have entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step.</Text>
+            <Text style={Styles.tooltipParagraph}>{"Make sure you've entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step."}</Text>
             <Text></Text>
             <Text></Text>
           </View>
