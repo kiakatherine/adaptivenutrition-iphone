@@ -495,30 +495,32 @@ export default class LoginScreen extends React.Component {
     // this function simply shows a success/error message
     // saveMeasurement() runs each time portion size is updated and saves measurement
 
+    const phase = this.state.phase;
+
     if(currentMeal === 0 &&
       this.state.meal1proteinMeasurement &&
       this.state.meal1carbsMeasurement &&
       this.state.meal1fatsMeasurement &&
       this.state.meal1veggiesMeasurement) {
-      alert('great job 1!');
+      this.completeMeal(phase, currentMeal, 1);
     } else if(currentMeal === 1 &&
       this.state.meal2proteinMeasurement &&
       this.state.meal2carbsMeasurement &&
       this.state.meal2fatsMeasurement &&
       this.state.meal2veggiesMeasurement) {
-      alert('great job 2!');
+      this.completeMeal(phase, currentMeal, 1);
     } else if(currentMeal === 2 &&
       this.state.meal3proteinMeasurement &&
       this.state.meal3carbsMeasurement &&
       this.state.meal3fatsMeasurement &&
       this.state.meal3veggiesMeasurement) {
-      alert('great job 3!');
+      this.completeMeal(phase, currentMeal, 1);
     } else if(currentMeal === 3 &&
       this.state.meal4proteinMeasurement &&
       this.state.meal4carbsMeasurement &&
       this.state.meal4fatsMeasurement &&
       this.state.meal4veggiesMeasurement) {
-      alert('great job 4!');
+      this.completeMeal(phase, currentMeal, 1);
     } else {
       alert('make sure to fill out all portions!');
     }
@@ -564,6 +566,8 @@ export default class LoginScreen extends React.Component {
       todayRef = firebase.database().ref().child('dayStatuses/' + todayKey);
 
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
+        console.log('update phase 2 day status')
+        // TO DO: congrats message
         const team = client.challengeGroupTeam;
 
         if(team) {
@@ -656,7 +660,8 @@ export default class LoginScreen extends React.Component {
       // save date and selected meal and whether completed or not
       // if(!today || today.phase !== this.state.phase) {
         const dayStatuses = firebase.database().ref('dayStatuses');
-        dayStatuses.push({
+        const newDayStatus = dayStatuses.push();
+        newDayStatus.set({
           date: moment(new Date).format('MM-DD-YY'),
           fullDate: new Date,
           timestamp: Number(client.timestamp),
@@ -668,15 +673,18 @@ export default class LoginScreen extends React.Component {
           meal6: 3,
           [mealToSave]: completion,
           phase: client.phase
-        }).then(resp => {}, reason => {
-          alert('Could not save meal completion');
+        }).then(resp => {
+          console.log('saved new phase 2 day status')
+          // TO DO: congrats message
+        }, reason => {
+          console.log('Could not save meal completion');
+          // TO DO: error message
         });
       // }
     }
   }
 
   clickNavPhase(phase) {
-    console.log('CLICKNAVPHASE')
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     if((phase === 1 && this.state.phase === 2) ||
