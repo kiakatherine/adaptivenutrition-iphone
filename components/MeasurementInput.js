@@ -117,7 +117,8 @@ class MeasurementInput extends React.Component {
            </TouchableHighlight>
 
           <Text style={[styles.measurementInput, this.state.isNull ? styles.isNullInput : null]}>
-            {this.props.measurement ? this.props.measurement : this.state.measurementInput} {label}
+            {this.props.measurement && <Text style={styles.green}>{this.props.measurement} {label}</Text>}
+            {!this.props.measurement && <Text>{this.state.measurementInput} {label}</Text>}
           </Text>
 
            <TouchableHighlight
@@ -140,7 +141,7 @@ class MeasurementInput extends React.Component {
 export default MeasurementInput;
 
 MeasurementInput.propTypes = {
-  measurement: PropTypes.number
+  // measurement: PropTypes.number
 };
 
 const styles = StyleSheet.create({
@@ -153,5 +154,8 @@ const styles = StyleSheet.create({
   },
   isNullInput: {
     color: Colors.gray
+  },
+  green: {
+    color: Colors.primaryColor
   }
 });

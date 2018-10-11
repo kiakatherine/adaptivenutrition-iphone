@@ -282,8 +282,7 @@ Meal.propTypes = {
   height: PropTypes.number,
   bodyweight: PropTypes.number,
   bodyfat: PropTypes.number,
-  showInGrams: PropTypes.bool,
-  meal1proteinMeasurement: PropTypes.string
+  showInGrams: PropTypes.bool
 };
 
 const styles = StyleSheet.create ({

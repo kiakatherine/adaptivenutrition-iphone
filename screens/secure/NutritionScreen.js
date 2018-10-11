@@ -502,25 +502,25 @@ export default class LoginScreen extends React.Component {
       this.state.meal1carbsMeasurement &&
       this.state.meal1fatsMeasurement &&
       this.state.meal1veggiesMeasurement) {
-      this.completeMeal(phase, currentMeal, 1);
+      // show congrats message
     } else if(currentMeal === 1 &&
       this.state.meal2proteinMeasurement &&
       this.state.meal2carbsMeasurement &&
       this.state.meal2fatsMeasurement &&
       this.state.meal2veggiesMeasurement) {
-      this.completeMeal(phase, currentMeal, 1);
+      // show congrats message
     } else if(currentMeal === 2 &&
       this.state.meal3proteinMeasurement &&
       this.state.meal3carbsMeasurement &&
       this.state.meal3fatsMeasurement &&
       this.state.meal3veggiesMeasurement) {
-      this.completeMeal(phase, currentMeal, 1);
+      // show congrats message
     } else if(currentMeal === 3 &&
       this.state.meal4proteinMeasurement &&
       this.state.meal4carbsMeasurement &&
       this.state.meal4fatsMeasurement &&
       this.state.meal4veggiesMeasurement) {
-      this.completeMeal(phase, currentMeal, 1);
+      // show congrats message
     } else {
       alert('make sure to fill out all portions!');
     }
@@ -782,7 +782,7 @@ export default class LoginScreen extends React.Component {
             });
           }
 
-          // if day already recorded
+          // if day already recorded...
           if(todayKey) {
             // set meal completed boolean
             todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
@@ -820,81 +820,83 @@ export default class LoginScreen extends React.Component {
               }
 
               if(p && c && f && v) {
-                  todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
-                    // check if all measurements have been entered for each meal
-                    if(today.meal1proteinMeasurement &&
-                      today.meal1carbsMeasurement &&
-                      today.meal1fatsMeasurement &&
-                      today.meal1veggiesMeasurement &&
-                      today.meal2proteinMeasurement &&
-                      today.meal2carbsMeasurement &&
-                      today.meal2fatsMeasurement &&
-                      today.meal2veggiesMeasurement &&
-                      today.meal3proteinMeasurement &&
-                      today.meal3carbsMeasurement &&
-                      today.meal3fatsMeasurement &&
-                      today.meal3veggiesMeasurement &&
-                      today.meal4proteinMeasurement &&
-                      today.meal4carbsMeasurement &&
-                      today.meal4fatsMeasurement &&
-                      today.meal4veggiesMeasurement &&
-                      today.allMealsCompleted === false) {
+                todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
+                  console.log('updated meal measurements completed');
+                  this.setState({ ['meal' + mealNumber + 'measurementsCompleted'] : true });
+                  // check if all measurements have been entered for each meal
+                  if(today.meal1proteinMeasurement &&
+                    today.meal1carbsMeasurement &&
+                    today.meal1fatsMeasurement &&
+                    today.meal1veggiesMeasurement &&
+                    today.meal2proteinMeasurement &&
+                    today.meal2carbsMeasurement &&
+                    today.meal2fatsMeasurement &&
+                    today.meal2veggiesMeasurement &&
+                    today.meal3proteinMeasurement &&
+                    today.meal3carbsMeasurement &&
+                    today.meal3fatsMeasurement &&
+                    today.meal3veggiesMeasurement &&
+                    today.meal4proteinMeasurement &&
+                    today.meal4carbsMeasurement &&
+                    today.meal4fatsMeasurement &&
+                    today.meal4veggiesMeasurement &&
+                    today.allMealsCompleted === false) {
 
-                      todayRef.update({ allMealsCompleted: true });
+                    todayRef.update({ allMealsCompleted: true });
 
-                      const clientTeam = clientRef.challengeGroupTeam;
+                    const clientTeam = clientRef.challengeGroupTeam;
 
-                      // update team score
-                      if(clientTeam) {
-                        const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
+                    // update team score
+                    if(clientTeam) {
+                      const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
 
-                        challengeGroupTeams.once('value', snapshot => {
-                          const challengeGroupTeamsRef = snapshot.val();
-                          let points;
+                      challengeGroupTeams.once('value', snapshot => {
+                        const challengeGroupTeamsRef = snapshot.val();
+                        let points;
 
-                          Object.keys(challengeGroupTeamsRef).map(key => {
-                            if(challengeGroupTeamsRef[key].name === clientTeam) {
-                              teamKey = key;
-                              points = challengeGroupTeamsRef[key].points;
-                            }
-                          });
-
-                          if(teamKey) {
-                            const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
-
-                            teamRef.update({ points: Number(points) + 1 });
-                            todayRef.update({ allMealsCompleted: true });
+                        Object.keys(challengeGroupTeamsRef).map(key => {
+                          if(challengeGroupTeamsRef[key].name === clientTeam) {
+                            teamKey = key;
+                            points = challengeGroupTeamsRef[key].points;
                           }
                         });
-                      }
-                    } else if(today.meal1measurementsCompleted === 1 &&
-                      today.meal2measurementsCompleted === 1 &&
-                      today.meal3measurementsCompleted === 1 &&
-                      today.meal4measurementsCompleted === 1 &&
-                      today.allMealsCompleted) {
-                        // if all meals already marked as completed and measurement
-                        // is simply changing value, don't add points to team score
-                        return;
-                    }
 
-                    // streaks - WIP
-                    // const client = this.get('client');
-                    // // add 1 to bestStreak and currentStreak
-                    // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
-                    // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
-                    // this.get('client').save().then(resp => {
-                    //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
-                    // }, reason => {
-                    //   Ember.Logger.error('could not save phase 2 streak', reason);
-                    // });
-                  }, reason => {
-                    alert('Could not save meal completion')
-                  });
+                        if(teamKey) {
+                          const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
+
+                          teamRef.update({ points: Number(points) + 1 });
+                          todayRef.update({ allMealsCompleted: true });
+                        }
+                      });
+                    }
+                  } else if(today.meal1measurementsCompleted === 1 &&
+                    today.meal2measurementsCompleted === 1 &&
+                    today.meal3measurementsCompleted === 1 &&
+                    today.meal4measurementsCompleted === 1 &&
+                    today.allMealsCompleted) {
+                      // if all meals already marked as completed and measurement
+                      // is simply changing value, don't add points to team score
+                      return;
+                  }
+
+                  // streaks - WIP
+                  // const client = this.get('client');
+                  // // add 1 to bestStreak and currentStreak
+                  // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
+                  // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
+                  // this.get('client').save().then(resp => {
+                  //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
+                  // }, reason => {
+                  //   Ember.Logger.error('could not save phase 2 streak', reason);
+                  // });
+                }, reason => {
+                  alert('Could not save meal completion')
+                });
               } else {
                 // mark meal measurements as incomplete
                 todayRef.update({
                   ['meal' + mealNumber + 'measurementsCompleted']: 3
-                })
+                });
 
                 if(today.allMealsCompleted) {
                   const clientTeam = clientRef.challengeGroupTeam;
@@ -928,6 +930,7 @@ export default class LoginScreen extends React.Component {
           } else {
             // save date and selected meal and whether completed or not
 
+            // TO DO: check which meal measurements completed
             console.log('new phase two day');
             if(!today) {
               phaseTwoDayStatuses.push({
@@ -1281,6 +1284,11 @@ export default class LoginScreen extends React.Component {
     // passing new values from component actions:
     // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
 
+    console.log('this.state.meal1measurementsCompleted', this.state.meal1measurementsCompleted);
+    console.log('this.state.meal2measurementsCompleted', this.state.meal2measurementsCompleted);
+    console.log('this.state.meal3measurementsCompleted', this.state.meal3measurementsCompleted);
+    console.log('this.state.meal4measurementsCompleted', this.state.meal4measurementsCompleted);
+
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {this.state.phase !== null &&
@@ -1438,10 +1446,10 @@ export default class LoginScreen extends React.Component {
 
               {!viewAllMeals && phase !== 1 && phase !== 3 &&
                 <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
-                  currentMeal === 0 && this.state.meal1measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  currentMeal === 1 && this.state.meal2measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  currentMeal === 2 && this.state.meal3measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  currentMeal === 3 && this.state.meal4measurementsCompleted ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
+                  (currentMeal === 0 && this.state.meal1measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  (currentMeal === 1 && this.state.meal2measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  (currentMeal === 2 && this.state.meal3measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
+                  (currentMeal === 3 && this.state.meal4measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
                   underlayColor={Colors.darkerPrimaryColor}
                   onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
                  <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
