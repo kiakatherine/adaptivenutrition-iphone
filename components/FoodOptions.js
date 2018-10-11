@@ -38,7 +38,6 @@ class FoodOptions extends React.Component {
      const isPwoShake = this.props.pwo;
      const trainingIntensity = this.props.trainingIntensity;
      let hidePwoShakeArrows = false;
-
      let formattedOptions = [];
      let i = 0;
 
@@ -122,15 +121,15 @@ export default FoodOptions;
 
 FoodOptions.propTypes = {
   // trainingIntensity: PropTypes.number,
-  mealsBeforeWorkout: PropTypes.number,
-  template: PropTypes.string,
-  currentMeal: PropTypes.number,
-  age: PropTypes.number,
-  gender: PropTypes.string,
-  height: PropTypes.number,
-  bodyweight: PropTypes.number,
-  bodyfat: PropTypes.number,
-  showMacros: PropTypes.bool
+  // mealsBeforeWorkout: PropTypes.number,
+  // template: PropTypes.string,
+  // currentMeal: PropTypes.number,
+  // age: PropTypes.number,
+  // gender: PropTypes.string,
+  // height: PropTypes.number,
+  // bodyweight: PropTypes.number,
+  // bodyfat: PropTypes.number,
+  // showMacros: PropTypes.bool
 };
 
 const styles = StyleSheet.create ({

@@ -211,7 +211,8 @@ class BodyweightGraph extends React.Component {
             ref={ref => this.scrollView = ref}
             onContentSizeChange={(contentWidth, contentHeight)=>{
                 this.scrollView.scrollToEnd({animated: true});
-            }}>
+            }}
+            >
             {/*<LineChart
               style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
               data={weights}

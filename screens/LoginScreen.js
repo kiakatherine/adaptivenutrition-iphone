@@ -30,14 +30,12 @@ export default class LoginScreen extends React.Component {
     };
 
     this.login = this.login.bind(this);
-    this.signUp = this.signUp.bind(this);
+    // this.signUp = this.signUp.bind(this);
   }
 
   async login() {
     const { navigate } = this.props.navigation;
 
-//    await AuthService.loginWithFacebook();
-//  await AuthService.loginWithGoogle();
     await AuthService.login(this.state.email, this.state.password);
 
     const authenticated = await AuthService.isSignedIn();
@@ -45,11 +43,31 @@ export default class LoginScreen extends React.Component {
     else this.setState({ unauthorized: true });
   }
 
-  async signUp() {
+  async loginWithFacebook() {
+    const { navigate } = this.props.navigation;
+
+    await AuthService.loginWithFacebook();
+
+    const authenticated = await AuthService.isSignedIn();
+    if (authenticated) navigate('Authenticated');
+    else this.setState({ unauthorized: true });
+  }
+
+  async loginWithGoogle() {
+    const { navigate } = this.props.navigation;
+
+    await AuthService.loginWithGoogle();
+
+    const authenticated = await AuthService.isSignedIn();
+    if (authenticated) navigate('Authenticated');
+    else this.setState({ unauthorized: true });
+  }
+
+  // async signUp() {
     // Luke's code
     // this.setState({ signUp: true });
     // AuthService.signUp(this.state.email, this.state.password);
-  }
+  // }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -87,6 +105,22 @@ export default class LoginScreen extends React.Component {
                 title="Login"
                 disabled={!this.state.email.trim() || !this.state.password.trim()}
                 onPress={this.login}
+              />
+            </View>
+            <View style={[Styles.button, styles.loginButton]}>
+              <Button
+                color={Colors.white}
+                title="Login with Facebook"
+                disabled={!this.state.email.trim() || !this.state.password.trim()}
+                onPress={this.loginWithFacebook}
+              />
+            </View>
+            <View style={[Styles.button, styles.loginButton]}>
+              <Button
+                color={Colors.white}
+                title="Login with Google"
+                disabled={!this.state.email.trim() || !this.state.password.trim()}
+                onPress={this.loginWithGoogle}
               />
             </View>
             <View>

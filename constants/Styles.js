@@ -80,10 +80,10 @@ export default {
     textInput: {
       fontFamily: 'Futura-Medium',
       fontSize: 20,
-      // margin: 5,
+      marginBottom: 10,
       padding: 15,
       backgroundColor: Colors.lightGray,
-      // borderRadius: 1,
+      borderRadius: 1,
       borderBottomColor: Colors.lightGray,
       borderBottomWidth: 1
     }
