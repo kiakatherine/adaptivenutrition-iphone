@@ -200,6 +200,8 @@ class Meal extends React.Component {
         <View style={styles.mealRow}>
           <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
 
+          {pwo && <Text style={Styles.emptyMessage}>None</Text>}
+
           <FoodOptions style={styles.mealRowColLong}
             macro='fats'
             sources={this.props.fats}
@@ -235,8 +237,11 @@ class Meal extends React.Component {
           {this.props.phase === 3 &&
             <View>
               <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
-              <FoodOptions style={styles.mealRowColLong}
-                macro='veggies'/>
+
+              {pwo && <Text style={Styles.emptyMessage}>None</Text>}
+
+              {!pwo && <FoodOptions style={styles.mealRowColLong}
+                macro='veggies'/>}
             </View>}
 
           {this.props.phase < 3 &&

@@ -307,5 +307,9 @@ export default {
   },
   verticalText: {
     transform: [{ rotate: '-90deg'}]
+  },
+  emptyMessage: {
+    color: Colors.gray,
+    fontSize: 18
   }
 }
