@@ -27,7 +27,7 @@ class Header extends React.Component {
     this.state = { };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     client.on('value', snapshot => {

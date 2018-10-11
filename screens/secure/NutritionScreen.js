@@ -822,7 +822,7 @@ export default class LoginScreen extends React.Component {
               if(p && c && f && v) {
                 todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
                   console.log('updated meal measurements completed');
-                  this.setState({ ['meal' + mealNumber + 'measurementsCompleted'] : true });
+                  this.setState({ ['meal' + mealNumber + 'measurementsCompleted'] : 1 });
                   // check if all measurements have been entered for each meal
                   if(today.meal1proteinMeasurement &&
                     today.meal1carbsMeasurement &&
@@ -1284,10 +1284,10 @@ export default class LoginScreen extends React.Component {
     // passing new values from component actions:
     // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
 
-    console.log('this.state.meal1measurementsCompleted', this.state.meal1measurementsCompleted);
-    console.log('this.state.meal2measurementsCompleted', this.state.meal2measurementsCompleted);
-    console.log('this.state.meal3measurementsCompleted', this.state.meal3measurementsCompleted);
-    console.log('this.state.meal4measurementsCompleted', this.state.meal4measurementsCompleted);
+    const dayStatusesLoaded = this.state.meal1measurementsCompleted < 4 &&
+      this.state.meal2measurementsCompleted < 4 &&
+      this.state.meal3measurementsCompleted < 4 &&
+      this.state.meal4measurementsCompleted < 4;
 
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
@@ -1444,12 +1444,12 @@ export default class LoginScreen extends React.Component {
                  </Text>
               </TouchableHighlight>}
 
-              {!viewAllMeals && phase !== 1 && phase !== 3 &&
+              {!viewAllMeals && phase !== 1 && phase !== 3 && dayStatusesLoaded &&
                 <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
-                  (currentMeal === 0 && this.state.meal1measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  (currentMeal === 1 && this.state.meal2measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  (currentMeal === 2 && this.state.meal3measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal,
-                  (currentMeal === 3 && this.state.meal4measurementsCompleted) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
+                  (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                  (currentMeal === 1 && this.state.meal2measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                  (currentMeal === 2 && this.state.meal3measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                  (currentMeal === 3 && this.state.meal4measurementsCompleted === 1) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
                   underlayColor={Colors.darkerPrimaryColor}
                   onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
                  <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
@@ -2331,6 +2331,9 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
+  },
+  completedPhaseTwoMeal: {
+    backgroundColor: Colors.primaryColor
   },
   incompletePhaseTwoMeal: {
     backgroundColor: Colors.gray
