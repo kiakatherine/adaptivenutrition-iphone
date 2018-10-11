@@ -90,12 +90,15 @@ export default class LoginScreen extends React.Component {
   // componentWillMount() {
   //   var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
   //
-  //   client.on('value', snapshot => {
-  //     this.setState({
-  //       client: snapshot.val(),
-  //       phase: snapshot.val().phase
-  //     });
-  //   });
+  //   // client.on('value', snapshot => {
+  //   //   this.setState({
+  //   //     client: snapshot.val(),
+  //   //     phase: snapshot.val().phase
+  //   //   });
+  //   // });
+  //
+  //   client.update({ templateType: 'Home (Step 1)'});
+  //   console.log('updating')
   // }
 
   componentDidMount() {
@@ -223,7 +226,15 @@ export default class LoginScreen extends React.Component {
   }
 
   clickTemplateType(template) {
-    if(template === this.state.client.templateType) {
+    // show confirmation or error message
+    // if need confirmation first, saveTemplateType() actually saves template type
+    // if moving to lose weight step 2 or lock in results 3, moveToLockInResults() saves template type and weight1/weight2
+
+    const currentTemplate = this.state.client.templateType;
+    const clientRef = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+
+    // if click on current template
+    if(template === currentTemplate) {
       this.setState({
         showEnergyBalancePicker: false,
         showModal: false
@@ -231,6 +242,94 @@ export default class LoginScreen extends React.Component {
       return;
     }
 
+    if(currentTemplate === TEMPLATE_TYPES[0]) {
+      // if currentTemplate is step 1
+      // show error if template is step 3, 4, 5
+      // else show confirmation modal
+      if(template === TEMPLATE_TYPES[3] || template === TEMPLATE_TYPES[4] || template === TEMPLATE_TYPES[5]) {
+        alert('showTemplateNavError1')
+        this.setState({ showTemplateNavError1: true, showModal: true });
+        return;
+      } else {
+        this.setState({
+          showEnergyBalancePicker: false,
+          showModal: true,
+          showTemplateConfirmation: true,
+          potentialTemplate: template
+        });
+      }
+    } else if(currentTemplate === TEMPLATE_TYPES[1] || currentTemplate === TEMPLATE_TYPES[2]) {
+      // if currentTemplate is step 2
+      // show error if template is step 4, 5
+      // else update without confirmation
+      if(template === TEMPLATE_TYPES[4] || template === TEMPLATE_TYPES[5]) {
+        alert('showTemplateNavError2') // can't move there yet!
+        this.setState({ showTemplateNavError2: true, showModal: true });
+        return;
+      } else {
+        if(template === TEMPLATE_TYPES[3]) {
+          // if moving to lock in results step 3
+          this.moveToLockInResults(template);
+        } else {
+          clientRef.update({
+            templateType: template
+          }).then(() => {
+            console.log('saved template type', template);
+
+            this.setState({
+              showEnergyBalancePicker: false,
+              showModal: false,
+              showTemplateConfirmation: false
+            });
+          });
+        }
+      }
+    } else if(currentTemplate === TEMPLATE_TYPES[3]) {
+      // if currentTemplate is lock in results step 3
+      // show error if template is step 2 or 5
+      // else update without confirmation
+      if(template === TEMPLATE_TYPES[5]) {
+        alert('showTemplateNavError3')
+        this.setState({ showTemplateNavError3: true, showModal: true });
+        return;
+      } else {
+        clientRef.update({
+          templateType: template
+        }).then(() => {
+          console.log('saved template type', template);
+
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: false,
+            showTemplateConfirmation: false
+          });
+        });
+      }
+    } else if(currentTemplate === TEMPLATE_TYPES[4]) {
+      // if currentTemplate is lock in results step 4
+      // confirm if template is going back to step 1, 2, 3
+      // else update without confirmation
+      if(template === TEMPLATE_TYPES[0] || template === TEMPLATE_TYPES[1] || template === TEMPLATE_TYPES[2] || template === TEMPLATE_TYPES[3]) {
+        alert('showTemplateNavConfirm4')
+        this.setState({ showTemplateNavConfirm4: true, showModal: true });
+        return;
+      } else {
+        clientRef.update({
+          templateType: template
+        }).then(() => {
+          console.log('saved template type', template);
+
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: false,
+            showTemplateConfirmation: false
+          });
+        });
+      }
+    }
+  }
+
+  moveToLockInResults(template) {
     let hasBodyweightEntries = false;
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const client = this.state.client;
@@ -240,8 +339,8 @@ export default class LoginScreen extends React.Component {
       const records = snapshot.val();
       let weight, clientBodyweightRecords = [];
 
-      // get client's bodyweight records
-      // do this on server side
+      // TO DO: get client's bodyweight records
+      // TO DO: do this on server side
       Object.keys(records).map(key => {
         if(records[key].timestamp === client.timestamp) {
           clientBodyweightRecords.push(records[key]);
@@ -294,37 +393,14 @@ export default class LoginScreen extends React.Component {
 
         fiveDayAverage = Number(fiveDayAverage.toFixed(1));
 
-        if(template ===  TEMPLATE_TYPES[3]) {
-          // TT3 = Lock in results (Step 3)
-          clientRef.update({ weight2 : fiveDayAverage });
-        } else if(template ===  TEMPLATE_TYPES[2]) {
-          // TT2 = Lose weight (Step 2)
-          clientRef.update({ weight1 : fiveDayAverage });
-        }
-        weight = Math.round(fiveDayAverage);
-
         clientRef.update({
           templateType: template,
-          weight1: templateType === TEMPLATE_TYPES[2] ? weight : null,
-          weight2: templateType === TEMPLATE_TYPES[3] ? weight : null
+          weight1: template === TEMPLATE_TYPES[2] ? Math.round(fiveDayAverage) : null,
+          weight2: template === TEMPLATE_TYPES[3] ? Math.round(fiveDayAverage) : null
         }).then(resp => {
-          alert('saved template type and latest average weight')
+          alert('saved template type and latest average weight');
           console.log('saved template type and latest average weight');
-          console.log('latest average weight', resp.get('weight1'), resp.get('weight2'));
-
-          this.setState({
-            showEnergyBalancePicker: false,
-            showModal: true,
-            showTemplateConfirmation: true,
-            potentialTemplate: template
-          });
-        });
-      } else {
-        // TT3 = Lock in results (Step 3)
-        clientRef.update({
-          templateType: template
-        }).then(() => {
-          console.log('saved template type');
+          // console.log('latest average weight', resp.weight1, resp.weight2);
 
           this.setState({
             showEnergyBalancePicker: false,
@@ -343,7 +419,11 @@ export default class LoginScreen extends React.Component {
 
     let t = template;
 
-    client.update({ templateType: t });
+    if(template === TEMPLATE_TYPES[3]) {
+      this.moveToLockInResults(template);
+    } else {
+      client.update({ templateType: t });
+    }
 
     this.setState({
       showEnergyBalancePicker: false,
