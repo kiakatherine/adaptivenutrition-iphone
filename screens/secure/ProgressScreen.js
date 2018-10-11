@@ -48,7 +48,10 @@ export default class LoginScreen extends React.Component {
       showProgressPhase2: true,
       showProgressPhase3: true,
       showBodyweightLog: true,
-      showProgressReports: false
+      showProgressReports: false,
+      weeklyView: true,
+      monthlyView: false,
+      yearlyView: false
     }
 
     this._showDatepicker = this._showDatepicker.bind(this);
@@ -202,6 +205,10 @@ export default class LoginScreen extends React.Component {
     this.setState({ showProgressPhase3: !this.state.showProgressPhase3 });
   }
 
+  clickWeeklyView(pastWeekEntries) {
+    this.setState({ bodyweightData: pastWeekEntries, weeklyView: true, monthlyView: false, yearlyView: false });
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
@@ -243,7 +250,7 @@ export default class LoginScreen extends React.Component {
     }
 
     // seven day bodyweight average, initial weight
-    let sevenDayAverage, initialWeight;
+    let sevenDayAverage, initialWeight, pastWeekEntries = [];
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientTimestamp = this.state.clientTimestamp;
 
@@ -275,7 +282,7 @@ export default class LoginScreen extends React.Component {
       oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
 
       // find entries within past week
-      let pastWeekEntries = [];
+      // let pastWeekEntries = [];
       sortedBodyweightRecords.forEach(rec => {
         if(rec.date > oneWeekAgo) {
           pastWeekEntries.push(rec);
@@ -320,19 +327,10 @@ export default class LoginScreen extends React.Component {
               <View style={styles.progressSection}>
                 <View style={styles.stats}>
                   <View style={styles.stat}>
-                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>{sevenDayAverage}</Text>
-                    <Text style={Styles.menuItemSubText}>Average weight over past week</Text>
-                  </View>
-
-                  <View style={styles.stat}>
-                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta]}>{initialWeight}</Text>
-                    <Text style={Styles.menuItemSubText}>Initial weight</Text>
+                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{sevenDayAverage}</Text>
+                    <Text style={[Styles.menuItemSubText, Styles.textCenter]}>Average weight over past week</Text>
                   </View>
                 </View>
-
-                <BodyweightGraph
-                  data={this.state.bodyweightData}
-                  clientTimestamp={this.state.clientTimestamp} />
 
                 <TouchableHighlight
                   underlayColor={Colors.darkerPrimaryColor}
@@ -345,7 +343,34 @@ export default class LoginScreen extends React.Component {
                     />
                   </Text>
                 </TouchableHighlight>
-            </View>}
+
+                <View style={[Styles.flexRow, styles.pillButtons]}>
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={[Styles.pillButton, this.state.weeklyView ? Styles.pillButtonSelected : null]}
+                    onPress={() => { this.clickWeeklyView(pastWeekEntries) }}>
+                    <Text style={[Styles.pillButtonText, this.state.weeklyView ? Styles.pillButtonTextSelected : null]}>WEEK</Text>
+                  </TouchableHighlight>
+
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={[Styles.pillButton, this.state.monthlyView ? Styles.pillButtonSelected : null]}
+                    onPress={() => { this.setState({ weeklyView: false, monthlyView: true, yearlyView: false }) }}>
+                    <Text style={[Styles.pillButtonText, this.state.monthlyView ? Styles.pillButtonTextSelected : null]}>MONTH</Text>
+                  </TouchableHighlight>
+
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={[Styles.pillButton, this.state.yearlyView ? Styles.pillButtonSelected : null]}
+                    onPress={() => { this.setState({ weeklyView: false, monthlyView: false, yearlyView: true }) }}>
+                    <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
+                  </TouchableHighlight>
+                </View>
+
+                <BodyweightGraph
+                  data={this.state.bodyweightData}
+                  clientTimestamp={this.state.clientTimestamp} />
+              </View>}
 
             {this.state.showProgressReports && <View style={styles.progressSection}>
               <View>
@@ -550,5 +575,9 @@ const styles = StyleSheet.create ({
   statNumber: {
     fontSize: 28,
     fontWeight: 'bold'
+  },
+  pillButtons: {
+    marginTop: 50,
+    alignItems: 'center'
   }
 });

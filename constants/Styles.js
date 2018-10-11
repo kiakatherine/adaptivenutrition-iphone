@@ -44,6 +44,25 @@ export default {
   errorText: {
     color: '#FF4444'
   },
+  pillButton: {
+    marginRight: 10,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: Colors.white
+  },
+  pillButtonSelected: {
+    backgroundColor: Colors.secondaryColor
+  },
+  pillButtonText: {
+    color: Colors.primaryColor,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  pillButtonTextSelected: {
+    color: Colors.white
+  },
   link: {
     color: Colors.primaryColor,
     fontWeight: 'bold'
@@ -232,8 +251,13 @@ export default {
   },
   flexRow: {
     alignSelf: 'stretch',
-    alignItems: 'flex-start',
     flexDirection: 'row'
+  },
+  flexRowStart: {
+    alignItems: 'flex-start',
+  },
+  flexRowCenter: {
+    alignItems: 'flex-center',
   },
   flexRowCol: {
     width: '50%'

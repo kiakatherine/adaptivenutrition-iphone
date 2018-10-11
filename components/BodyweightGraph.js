@@ -240,7 +240,7 @@ class BodyweightGraph extends React.Component {
             {sortedData && sortedData.map((rec, i) =>
               <View style={styles.bodyweightLogWrapper} key={i}>
                 <Text>{rec.weight}</Text>
-                <View style={{ height: Number(rec.weight), width: 40, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
+                <View style={{ height: Number(rec.weight), width: 35, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
                   <TouchableHighlight
                     underlayColor={Colors.white}
                     onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
