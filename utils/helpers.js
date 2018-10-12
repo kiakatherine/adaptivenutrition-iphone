@@ -324,13 +324,12 @@ export function format12Hour(wakeTime) {
 }
 
 export function convertToTime(wakeTime, integer) {
+  const wakeTimeLabel = wakeTime.split(':')[1].split(' ')[1];
   let hour;
   let minute;
-  let label;
 
   hour = Number(integer.toString().split('.')[0]);
   minute = integer.toString().split('.')[1];
-  label = (integer > 24 || integer < 12) ? ' am' : (integer < 24 && integer > 12) ? ' pm' : ' pm';
 
   if(hour > 24) {
     hour = (hour - 24).toString();
@@ -345,10 +344,10 @@ export function convertToTime(wakeTime, integer) {
   }
 
   if(minute) {
-    return hour + minute + label;
+    return hour + minute;
   }
 
-  return hour + label;
+  return hour;
 }
 
 export function cleanTimeLabel(params) {
@@ -371,6 +370,7 @@ export function cleanTimeLabel(params) {
 export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout) {
   const wakeTimeInteger = Number(wakeTime.split(':')[0]); // between 0 and 24
   const wakeTimeMinutesInteger = Number(wakeTime.split(':')[1].split(' ')[0]) === 30 ? true : false;
+  const wakeTimeLabel = wakeTime.split(':')[1].split(' ')[1];
   const trainingDuration = trainingIntensity;
   const trainingAfter = mealsBeforeWorkout;
 
