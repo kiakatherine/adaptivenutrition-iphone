@@ -14,7 +14,7 @@ import * as macroRatios from '../../constants/MacroRatios';
 import moment from 'moment';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
-import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, format12Hour, setMealTimes } from '../../utils/helpers';
 
 const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
 
@@ -1307,6 +1307,9 @@ export default class LoginScreen extends React.Component {
       this.state.meal3measurementsCompleted < 4 &&
       this.state.meal4measurementsCompleted < 4;
 
+    // console.log('wakeTime', wakeTime);
+    // console.log('formatted wakeTime', format12Hour(wakeTime));
+
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {this.state.phase !== null &&
@@ -1758,57 +1761,57 @@ export default class LoginScreen extends React.Component {
 
         {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
           <Picker
-            selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
+            selectedValue={wakeTime ? format12Hour(wakeTime) : '7:00 a.m.'}
             onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
-            <Picker.Item label="12:00 a.m." value="12:00 a.m." />
-            <Picker.Item label="12:30 a.m." value="12:30 a.m." />
-            <Picker.Item label="1:00 a.m." value="1:00 a.m." />
-            <Picker.Item label="1:30 a.m." value="1:30 a.m." />
-            <Picker.Item label="2:00 a.m." value="2:00 a.m." />
-            <Picker.Item label="2:30 a.m." value="2:30 a.m." />
-            <Picker.Item label="3:00 a.m." value="3:00 a.m." />
-            <Picker.Item label="3:30 a.m." value="3:30 a.m." />
-            <Picker.Item label="4:00 a.m." value="4:00 a.m." />
-            <Picker.Item label="4:30 a.m." value="4:30 a.m." />
-            <Picker.Item label="5:00 a.m." value="5:00 a.m." />
-            <Picker.Item label="5:30 a.m." value="5:30 a.m." />
-            <Picker.Item label="6:00 a.m." value="6:00 a.m." />
-            <Picker.Item label="6:30 a.m." value="6:30 a.m." />
-            <Picker.Item label="7:00 a.m." value="7:00 a.m." />
-            <Picker.Item label="7:30 a.m." value="7:30 a.m." />
-            <Picker.Item label="8:00 a.m." value="8:00 a.m." />
-            <Picker.Item label="8:30 a.m." value="8:30 a.m." />
-            <Picker.Item label="9:00 a.m." value="9:00 a.m." />
-            <Picker.Item label="9:30 a.m." value="9:30 a.m." />
-            <Picker.Item label="10:00 a.m." value="10:00 a.m." />
-            <Picker.Item label="10:30 a.m." value="10:30 a.m." />
-            <Picker.Item label="11:00 a.m." value="11:00 a.m." />
-            <Picker.Item label="11:30 a.m." value="11:30 a.m." />
+            <Picker.Item label="12:00 am" value="0:00 am" />
+            <Picker.Item label="12:30 am" value="0:30 am" />
+            <Picker.Item label="1:00 am" value="1:00 am" />
+            <Picker.Item label="1:30 am" value="1:30 am" />
+            <Picker.Item label="2:00 am" value="2:00 am" />
+            <Picker.Item label="2:30 am" value="2:30 am" />
+            <Picker.Item label="3:00 am" value="3:00 am" />
+            <Picker.Item label="3:30 am" value="3:30 am" />
+            <Picker.Item label="4:00 am" value="4:00 am" />
+            <Picker.Item label="4:30 am" value="4:30 am" />
+            <Picker.Item label="5:00 am" value="5:00 am" />
+            <Picker.Item label="5:30 am" value="6:30 am" />
+            <Picker.Item label="6:00 am" value="6:00 am" />
+            <Picker.Item label="6:30 am" value="6:30 am" />
+            <Picker.Item label="7:00 am" value="7:00 am" />
+            <Picker.Item label="7:30 am" value="7:30 am" />
+            <Picker.Item label="8:00 am" value="8:00 am" />
+            <Picker.Item label="8:30 am" value="8:30 am" />
+            <Picker.Item label="9:00 am" value="9:00 am" />
+            <Picker.Item label="9:30 am" value="9:30 am" />
+            <Picker.Item label="10:00 am" value="10:00 am" />
+            <Picker.Item label="10:30 am" value="10:30 am" />
+            <Picker.Item label="11:00 am" value="11:00 am" />
+            <Picker.Item label="11:30 am" value="11:30 am" />
 
-            <Picker.Item label="12:00 p.m." value="12:00 p.m." />
-            <Picker.Item label="12:30 p.m." value="12:30 p.m." />
-            <Picker.Item label="1:00 p.m." value="1:00 p.m." />
-            <Picker.Item label="1:30 p.m." value="1:30 p.m." />
-            <Picker.Item label="2:00 p.m." value="2:00 p.m." />
-            <Picker.Item label="2:30 p.m." value="2:30 p.m." />
-            <Picker.Item label="3:00 p.m." value="3:00 p.m." />
-            <Picker.Item label="3:30 p.m." value="3:30 p.m." />
-            <Picker.Item label="4:00 p.m." value="4:00 p.m." />
-            <Picker.Item label="4:30 p.m." value="4:30 p.m." />
-            <Picker.Item label="5:00 p.m." value="5:00 p.m." />
-            <Picker.Item label="5:30 p.m." value="5:30 p.m." />
-            <Picker.Item label="6:00 p.m." value="6:00 p.m." />
-            <Picker.Item label="6:30 p.m." value="6:30 p.m." />
-            <Picker.Item label="7:00 p.m." value="7:00 p.m." />
-            <Picker.Item label="7:30 p.m." value="7:30 p.m." />
-            <Picker.Item label="8:00 p.m." value="8:00 p.m." />
-            <Picker.Item label="8:30 p.m." value="8:30 p.m." />
-            <Picker.Item label="9:00 p.m." value="9:00 p.m." />
-            <Picker.Item label="9:30 p.m." value="9:30 p.m." />
-            <Picker.Item label="10:00 p.m." value="10:00 p.m." />
-            <Picker.Item label="10:30 p.m." value="10:30 p.m." />
-            <Picker.Item label="11:00 p.m." value="11:00 p.m." />
-            <Picker.Item label="11:30 p.m." value="11:30 p.m." />
+            <Picker.Item label="12:00 pm" value="12:00 pm" />
+            <Picker.Item label="12:30 pm" value="12:30 pm" />
+            <Picker.Item label="1:00 pm" value="13:00 pm" />
+            <Picker.Item label="1:30 pm" value="13:30 pm" />
+            <Picker.Item label="2:00 pm" value="14:00 pm" />
+            <Picker.Item label="2:30 pm" value="14:30 pm" />
+            <Picker.Item label="3:00 pm" value="15:00 pm" />
+            <Picker.Item label="3:30 pm" value="15:30 pm" />
+            <Picker.Item label="4:00 pm" value="16:00 pm" />
+            <Picker.Item label="4:30 pm" value="16:30 pm" />
+            <Picker.Item label="5:00 pm" value="17:00 pm" />
+            <Picker.Item label="5:30 pm" value="17:30 pm" />
+            <Picker.Item label="6:00 pm" value="18:00 pm" />
+            <Picker.Item label="6:30 pm" value="18:30 pm" />
+            <Picker.Item label="7:00 pm" value="19:00 pm" />
+            <Picker.Item label="7:30 pm" value="19:30 pm" />
+            <Picker.Item label="8:00 pm" value="20:00 pm" />
+            <Picker.Item label="8:30 pm" value="20:30 pm" />
+            <Picker.Item label="9:00 pm" value="21:00 pm" />
+            <Picker.Item label="9:30 pm" value="21:30 pm" />
+            <Picker.Item label="10:00 pm" value="22:00 pm" />
+            <Picker.Item label="10:30 pm" value="22:30 pm" />
+            <Picker.Item label="11:00 pm" value="23:00 pm" />
+            <Picker.Item label="11:30 pm" value="23:30 pm" />
           </Picker>
         </View>}
 

@@ -312,54 +312,30 @@ export function convertTrainingTimeToString(num) {
   }
 }
 
-export function convertToTime(integer) {
+export function format12Hour(wakeTime) {
+  let formattedWakeTime;
+  let hour = Number(wakeTime.toString().split(':')[0]);
+  let minute = wakeTime.toString().split(':')[1].split(' ')[0];
+  let label = wakeTime.toString().split(':')[1].split(' ')[1];
+
+  formattedWakeTime = hour > 12 ? (hour-12).toString() + ':' + minute + ' ' + label : wakeTime;
+
+  return formattedWakeTime;
+}
+
+export function convertToTime(wakeTime, integer) {
   let hour;
   let minute;
   let label;
 
   hour = Number(integer.toString().split('.')[0]);
   minute = integer.toString().split('.')[1];
-  label = integer < 11 ? ' am' : ' pm' ;
+  label = (integer > 24 || integer < 12) ? ' am' : (integer < 24 && integer > 12) ? ' pm' : ' pm';
 
-  if(hour > 12) {
-    switch(hour) {
-      case 13:
-        hour = "1";
-        break;
-      case 14:
-        hour = "2";
-        break;
-      case 15:
-        hour = "3";
-        break;
-      case 16:
-        hour = "4";
-        break;
-      case 17:
-        hour = "5";
-        break;
-      case 18:
-        hour = "6";
-        break;
-      case 19:
-        hour = "7";
-        break;
-      case 20:
-        hour = "8";
-        break;
-      case 21:
-        hour = "9";
-        break;
-      case 22:
-        hour = "10";
-        break;
-      case 23:
-        hour = "11";
-        break;
-      case 24:
-        hour = "12";
-        break;
-    }
+  if(hour > 24) {
+    hour = (hour - 24).toString();
+  } else if(hour > 12) {
+    hour = (hour - 12).toString();
   }
 
   if(minute === "5") {
@@ -393,8 +369,8 @@ export function cleanTimeLabel(params) {
 }
 
 export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWorkout) {
-  const wakeTimeInteger = Number(wakeTime.split(':')[0]);
-  const wakeTimeMinutesInteger = Number(wakeTime.split(':')[1]) === 30 ? true : false;
+  const wakeTimeInteger = Number(wakeTime.split(':')[0]); // between 0 and 24
+  const wakeTimeMinutesInteger = Number(wakeTime.split(':')[1].split(' ')[0]) === 30 ? true : false;
   const trainingDuration = trainingIntensity;
   const trainingAfter = mealsBeforeWorkout;
 
@@ -478,10 +454,10 @@ export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWork
   }
 
   return {
-    breakfastTime: cleanTimeLabel(convertToTime(breakfastTimeLower) + '-' + convertToTime(breakfastTimeUpper)),
-    earlyLunchTime: cleanTimeLabel(convertToTime(earlyLunchTimeLower) + '-' + convertToTime(earlyLunchTimeUpper)),
-    lateLunchTime: cleanTimeLabel(convertToTime(lateLunchTimeLower) + '-' + convertToTime(lateLunchTimeUpper)),
-    dinnerTime: cleanTimeLabel(convertToTime(dinnerTimeLower) + '-' + convertToTime(dinnerTimeUpper))
+    breakfastTime: cleanTimeLabel(convertToTime(wakeTime, breakfastTimeLower) + '-' + convertToTime(wakeTime, breakfastTimeUpper)),
+    earlyLunchTime: cleanTimeLabel(convertToTime(wakeTime, earlyLunchTimeLower) + '-' + convertToTime(wakeTime, earlyLunchTimeUpper)),
+    lateLunchTime: cleanTimeLabel(convertToTime(wakeTime, lateLunchTimeLower) + '-' + convertToTime(wakeTime, lateLunchTimeUpper)),
+    dinnerTime: cleanTimeLabel(convertToTime(wakeTime, dinnerTimeLower) + '-' + convertToTime(wakeTime, dinnerTimeUpper))
   };
 }
 
