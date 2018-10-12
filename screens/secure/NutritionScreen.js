@@ -56,6 +56,7 @@ export default class LoginScreen extends React.Component {
       showEnergyBalancePicker: false,
       showNeedBodyweightEntries: false,
       showTemplateConfirmation: false,
+      showStepSuccessMessage: false,
       showMacrosWarning: false,
 
       potentialTemplate: null,
@@ -309,22 +310,40 @@ export default class LoginScreen extends React.Component {
       // if currentTemplate is lock in results step 4
       // confirm if template is going back to step 1, 2, 3
       // else update without confirmation
-      if(template === TEMPLATE_TYPES[0] || template === TEMPLATE_TYPES[1] || template === TEMPLATE_TYPES[2] || template === TEMPLATE_TYPES[3]) {
-        alert('showTemplateNavConfirm4')
-        this.setState({ showTemplateNavConfirm4: true, showModal: true });
-        return;
-      } else {
-        clientRef.update({
-          templateType: template
-        }).then(() => {
-          console.log('saved template type', template);
+      clientRef.update({
+        templateType: template
+      }).then(() => {
+        console.log('saved template type', template);
 
+        if(template === TEMPLATE_TYPES[5]) {
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: true,
+            showStepSuccessMessage: true
+          });
+        } else {
           this.setState({
             showEnergyBalancePicker: false,
             showModal: false,
             showTemplateConfirmation: false
           });
+        }
+      });
+    } else if(currentTemplate === TEMPLATE_TYPES[5]) {
+      if(template === TEMPLATE_TYPES[0] || template === TEMPLATE_TYPES[1] || template === TEMPLATE_TYPES[2]) {
+        clientRef.update({
+          templateType: template
+        }).then(() => {
+          this.setState({
+            showEnergyBalancePicker: false,
+            showModal: true,
+            showUpdateBiometricsReminder: true
+          });
         });
+      } else {
+        alert('showTemplateNavError4')
+        this.setState({ showTemplateNavError4: true, showModal: true });
+        return;
       }
     }
   }
@@ -402,11 +421,10 @@ export default class LoginScreen extends React.Component {
           console.log('saved template type and latest average weight');
           // console.log('latest average weight', resp.weight1, resp.weight2);
 
+          // TO DO: add confirmation before saving?
           this.setState({
             showEnergyBalancePicker: false,
-            showModal: true,
-            showTemplateConfirmation: true,
-            potentialTemplate: template
+            showModal: false
           });
         });
       }
@@ -2068,6 +2086,54 @@ export default class LoginScreen extends React.Component {
           <Text></Text>
           <Text></Text>
         </ScrollView>}
+
+        {this.state.showStepSuccessMessage &&
+          <ScrollView style={Styles.tooltip}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({
+                showStepSuccessMessage: false,
+                showModal: false
+               })
+            }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipHeader}>Congratulations!</Text>
+
+            <Text style={Styles.tooltipParagraph}>{"You're almost done with the program!"}</Text>
+            <Text style={Styles.tooltipParagraph}>What happens next?</Text>
+            <Text style={Styles.tooltipParagraph}>After 4 weeks on this step, you may choose to maintain your new weight at Step 1.</Text>
+            <Text style={Styles.tooltipParagraph}>{"If you'd like to continue losing weight or building lean muscle, you can skip over Step 1 and go to Step 2 and do the process again from there. Just be sure to update your biometric settings with your new bodyweight and body fat percentage."}</Text>
+            <Text style={Styles.tooltipParagraph}>Keep up the great work!</Text>
+          </ScrollView>}
+
+          {this.state.showUpdateBiometricsReminder &&
+            <ScrollView style={Styles.tooltip}>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                onPress={() => { this.setState({
+                  showUpdateBiometricsReminder: false,
+                  showModal: false
+                 })
+              }}>
+                <FontAwesome
+                  style={[Styles.textCenter, Styles.tooltipClose]}
+                  name='remove'
+                  size={24}
+                />
+              </TouchableHighlight>
+
+              <Text style={Styles.tooltipHeader}>Congrats!</Text>
+
+              <Text style={Styles.tooltipParagraph}>{"Great work making it all the way through the program!"}</Text>
+              <Text style={Styles.tooltipParagraph}>A quick reminder</Text>
+              <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
+            </ScrollView>}
 
         {this.state.showNavToPhase2Modal && <ScrollView style={Styles.tooltip}>
           <View>
