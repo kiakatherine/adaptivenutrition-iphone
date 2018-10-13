@@ -74,19 +74,13 @@ export default class LoginScreen extends React.Component {
       phase3meal5: null,
       phase3meal6: null,
 
-      phaseTwoMealComplete: false,
-
-      checkedTemplate1: false,
-      checkedTemplate2: false,
-      checkedTemplate3: false,
-      checkedTemplate4: false,
-      checkedTemplate5: false,
-      checkedTemplate6: false
+      phaseTwoMealComplete: false
     };
 
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
     this.saveMeasurement = this.saveMeasurement.bind(this);
+    this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
@@ -256,7 +250,6 @@ export default class LoginScreen extends React.Component {
       } else {
         this.setState({
           showEnergyBalancePicker: false,
-          showModal: true,
           showTemplateConfirmation: true,
           potentialTemplate: template
         });
@@ -281,7 +274,6 @@ export default class LoginScreen extends React.Component {
 
             this.setState({
               showEnergyBalancePicker: false,
-              showModal: false,
               showTemplateConfirmation: false
             });
           });
@@ -303,7 +295,6 @@ export default class LoginScreen extends React.Component {
 
           this.setState({
             showEnergyBalancePicker: false,
-            showModal: false,
             showTemplateConfirmation: false
           });
         });
@@ -326,7 +317,6 @@ export default class LoginScreen extends React.Component {
         } else {
           this.setState({
             showEnergyBalancePicker: false,
-            showModal: false,
             showTemplateConfirmation: false
           });
         }
@@ -448,15 +438,9 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showEnergyBalancePicker: false,
       showTemplateConfirmation: false,
-      showModal: false,
       template: template,
       potentialTemplate: null,
-      checkedTemplate1: false,
-      checkedTemplate2: false,
-      checkedTemplate3: false,
-      checkedTemplate4: false,
-      checkedTemplate5: false,
-      checkedTemplate6: false
+      showModal: false
     });
   }
 
@@ -964,6 +948,7 @@ export default class LoginScreen extends React.Component {
 
   closeModal() {
     this.setState({
+      showModal: false,
       showMealPlanSettings: false,
       showTemplateConfirmation: false
     });
@@ -1926,14 +1911,10 @@ export default class LoginScreen extends React.Component {
         </ScrollView>}
 
         {this.state.showTemplateConfirmation && <ModalWindow
-          label="Template Confirmation"
           currentModal="TEMPLATE_CONFIRMATION"
-          checkedTemplate1={this.state.checkedTemplate1}
-          checkedTemplate2={this.state.checkedTemplate2}
-          checkedTemplate3={this.state.checkedTemplate3}
-          checkedTemplate4={this.state.checkedTemplate4}
-          checkedTemplate5={this.state.checkedTemplate5}
-          checkedTemplate6={this.state.checkedTemplate6} />}
+          currentTemplate={this.state.client.templateType}
+          saveTemplateType={this.saveTemplateType}
+          closeModal={this.closeModal} />}
 
         {/*{this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
           <TouchableHighlight

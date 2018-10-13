@@ -93,7 +93,7 @@ export default {
   },
   button: {
     padding: 12,
-    borderRadius: 2,
+    borderRadius: 100,
     backgroundColor: Colors.primaryColor
   },
   buttonInverted: {
@@ -158,10 +158,14 @@ export default {
   },
   modalH1: {
     textAlign: 'center',
-    fontSize: 28,
+    fontSize: 36,
     fontWeight: 'bold',
     color: Colors.primaryColor,
     marginBottom: 30
+  },
+  modalParagraph: {
+    fontSize: 20,
+    marginBottom: 15
   },
   modalButtons: {
     flexDirection: 'row',
@@ -181,6 +185,18 @@ export default {
     letterSpacing: 1,
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+  modalButtonTextNoBackground: {
+    color: Colors.primaryColor,
+    letterSpacing: 1,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 20,
+    marginBottom: 20
+  },
+  modalButtonTextNoBackgroundDisabled: {
+    color: Colors.gray
   },
   modalButtonCancel: {
     flex: 1,

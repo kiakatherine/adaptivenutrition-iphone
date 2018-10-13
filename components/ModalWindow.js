@@ -61,9 +61,11 @@ class ModalWindow extends React.Component {
          showEnergyBalancePicker={this.props.showEnergyBalancePicker}
          clickNavPhase={this.props.clickNavPhase}
          closeModal={this.props.closeModal} />;
-     } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {
-       modal = <TemplateConfirmationModal />;
-     }
+      } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {
+        modal = <TemplateConfirmationModal
+          currentTemplate={this.props.currentTemplate}
+          saveTemplateType={this.props.saveTemplateType} />;
+      }
 
      return (
        <View>
