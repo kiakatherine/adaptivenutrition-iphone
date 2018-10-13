@@ -23,6 +23,7 @@ import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
 import AboutModal from './modals/AboutModal';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
+import MealCompletionModal from './modals/MealCompletionModal';
 
 class ModalWindow extends React.Component {
    constructor(props) {
@@ -65,6 +66,11 @@ class ModalWindow extends React.Component {
         modal = <TemplateConfirmationModal
           currentTemplate={this.props.currentTemplate}
           saveTemplateType={this.props.saveTemplateType} />;
+      } else if(this.props.currentModal === 'MEAL_COMPLETION') {
+        modal = <MealCompletionModal
+          date={this.props.date}
+          mealNumber={this.props.mealNumber}
+          completeMeal={this.props.completeMeal}/>;
       }
 
      return (

@@ -372,49 +372,50 @@ export default class LoginScreen extends React.Component {
                   clientTimestamp={this.state.clientTimestamp} />
               </View>}
 
-            {this.state.showProgressReports && <View style={styles.progressSection}>
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase1()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    Phase 1
-                  </Text>
-                </TouchableHighlight>
+            {this.state.showProgressReports &&
+              <View style={styles.progressSection}>
+                <View>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={() => { this._clickProgressReportPhase1()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>
+                      Phase 1
+                    </Text>
+                  </TouchableHighlight>
 
-                {this.state.showProgressPhase1 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
-              </View>
+                  {this.state.showProgressPhase1 &&
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase1}</View>}
+                </View>
 
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase2()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    Phase 2
-                  </Text>
-                </TouchableHighlight>
+                <View>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={() => { this._clickProgressReportPhase2()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>
+                      Phase 2
+                    </Text>
+                  </TouchableHighlight>
 
-                {this.state.showProgressPhase2 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
-              </View>
+                  {this.state.showProgressPhase2 &&
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase2}</View>}
+                </View>
 
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this._clickProgressReportPhase3()}}
-                  style={styles.phaseHeader}>
-                  <Text style={styles.phaseHeaderText}>
-                    Phase 3
-                  </Text>
-                </TouchableHighlight>
+                <View>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={() => { this._clickProgressReportPhase3()}}
+                    style={styles.phaseHeader}>
+                    <Text style={styles.phaseHeaderText}>
+                      Phase 3
+                    </Text>
+                  </TouchableHighlight>
 
-                {this.state.showProgressPhase3 &&
-                  <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
-              </View>
-            </View>}
+                  {this.state.showProgressPhase3 &&
+                    <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
+                </View>
+              </View>}
           </View>
         </ScrollView>
 
