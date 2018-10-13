@@ -69,7 +69,8 @@ export default class LoginScreen extends React.Component {
 
           <Text style={Styles.menuItem}
             onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
-          <Text style={Styles.menuItemSubText}>What we use to build your meal plan</Text>
+          <Text style={Styles.menuItemSubText}
+            onPress={() => this.setState({ showBiometricSettings: true }) }>What we use to build your meal plan</Text>
 
           {this.state.showBiometricSettings &&
             <ModalWindow
@@ -79,7 +80,8 @@ export default class LoginScreen extends React.Component {
 
           <Text style={Styles.menuItem}
             onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
-          <Text style={Styles.menuItemSubText}>Inflammatory foods</Text>
+          <Text style={Styles.menuItemSubText}
+            onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods</Text>
 
           {this.state.showFoodsToAvoid &&
             <ModalWindow

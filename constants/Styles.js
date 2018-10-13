@@ -169,14 +169,12 @@ export default {
     alignSelf: 'stretch'
   },
   modalButton: {
-    flex: 1,
-    marginTop: 30,
-    marginBottom: 50,
+    marginBottom: 15,
     padding: 20,
     backgroundColor: Colors.primaryColor,
     borderColor: Colors.primaryColor,
     borderWidth: 2,
-    borderRadius: 2
+    borderRadius: 100
   },
   modalButtonText: {
     color: Colors.white,

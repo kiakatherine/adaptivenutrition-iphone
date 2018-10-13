@@ -58,7 +58,7 @@ class MealPlanSettings extends React.Component {
          <View style={styles.mealSettingsSectionList}>
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
-            style={[Styles.button, styles.button]}
+            style={Styles.modalButton}
             onPress={() => { this.toggleView(viewAllMeals) }}>
               <Text style={Styles.buttonText}>
               {viewAllMeals && 'View single meal'}
@@ -68,7 +68,7 @@ class MealPlanSettings extends React.Component {
 
            {showInGrams && <TouchableHighlight
              underlayColor={Colors.darkerPrimaryColor}
-             style={[Styles.button, styles.button]}
+             style={Styles.modalButton}
              onPress={() => { this.toggleUnits(showInGrams) }}>
               <Text style={Styles.buttonText}>
                View in serving sizes
@@ -77,7 +77,7 @@ class MealPlanSettings extends React.Component {
 
            {!showInGrams && <TouchableHighlight
              underlayColor={Colors.darkerPrimaryColor}
-             style={[Styles.button, styles.button]}
+             style={Styles.modalButton}
              onPress={() => { doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.setState({ showModal: true, showMacrosWarning: true }) }}>
               <Text style={Styles.buttonText}>
                View in macros
@@ -86,14 +86,14 @@ class MealPlanSettings extends React.Component {
 
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
-            style={[Styles.button, styles.button]}
+            style={Styles.modalButton}
             onPress={() => { this.showEnergyBalancePicker() }}>
               <Text style={Styles.buttonText}>Adjust goal - {template}</Text>
            </TouchableHighlight>
 
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
-            style={[Styles.button, styles.button]}
+            style={Styles.modalButton}
             onPress={() => { this.clickNavPhase() }}>
               <Text style={Styles.buttonText}>Go back to Phase 2</Text>
            </TouchableHighlight>
