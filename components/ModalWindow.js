@@ -24,6 +24,7 @@ import AboutModal from './modals/AboutModal';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 import MealCompletionModal from './modals/MealCompletionModal';
+import LessonQuizModal from './modals/LessonQuizModal';
 
 class ModalWindow extends React.Component {
    constructor(props) {
@@ -71,7 +72,12 @@ class ModalWindow extends React.Component {
           phase={this.props.phase}
           date={this.props.date}
           mealNumber={this.props.mealNumber}
-          completeMeal={this.props.completeMeal}/>;
+          completeMeal={this.props.completeMeal} />;
+      } else if(this.props.currentModal === 'LESSON_QUIZ') {
+        modal = <LessonQuizModal
+          lesson={this.props.lesson}
+          timestamp={this.props.timestamp}
+          closeModal={this.props.closeModal} />;
       }
 
      return (

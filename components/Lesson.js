@@ -20,14 +20,26 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+import ModalWindow from '../components/ModalWindow';
+
+
 class Lesson extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {
+      showQuiz: false
+    };
+
+    this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
+    this._closeModal = this._closeModal.bind(this);
   }
 
-  clickTakeQuiz(lessonNumber, timestamp) {
-    this.props.clickTakeQuiz(lessonNumber, timestamp);
+  _clickTakeQuiz(lessonNumber, timestamp) {
+    this.setState({ showQuiz: true });
+  }
+
+  _closeModal() {
+    this.setState({ showQuiz: false });
   }
 
    render() {
@@ -48,10 +60,16 @@ class Lesson extends React.Component {
            <TouchableHighlight
              style={styles.optionTooltip}
              underlayColor={Colors.white}
-             onPress={() => { this.clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
+             onPress={() => { this._clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
              <Text style={styles.lessonText}>Take quiz</Text>
            </TouchableHighlight>
           </View>
+
+          {this.state.showQuiz &&
+            <ModalWindow
+              currentModal="LESSON_QUIZ"
+              lesson={1}
+              closeModal={this._closeModal} />}
        </View>
      );
    }

@@ -32,8 +32,6 @@ export default class LoginScreen extends React.Component {
     this.state = {
       client: null
     }
-
-    this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
   }
 
   componentWillMount() {
@@ -41,18 +39,14 @@ export default class LoginScreen extends React.Component {
 
     client.on('value', snapshot => {
       this.setState({
-        client: snapshot.val()
+        client: snapshot.val(),
+        showQuiz: false
       });
     });
   }
 
-  _clickTakeQuiz(lessonNumber, timestamp) {
-    const { navigate } = this.props.navigation;
-    navigate('Quiz', { lessonNumber: lessonNumber, timestamp: timestamp });
-  }
-
   render() {
-    const lessons = [1,2,3,4,5,6,7,8,9,10];
+    const lessons = [1,2,3,4,5,6,7,8];
 
     return (
       <View style={Styles.body}>
@@ -62,7 +56,6 @@ export default class LoginScreen extends React.Component {
           {lessons.map(i => <Lesson
             key={i}
             lessonNumber={i}
-            clickTakeQuiz={this._clickTakeQuiz}
             timestamp={this.state.client ? this.state.client : null} />)}
         </ScrollView>
       </View>

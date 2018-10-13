@@ -98,7 +98,7 @@ export default class LoginScreen extends React.Component {
   //   console.log('updating')
   // }
 
-  componentDidMount() {
+  componentWillMount() {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const dayStatuses = firebase.database().ref('dayStatuses');
     const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');

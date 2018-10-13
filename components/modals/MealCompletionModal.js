@@ -51,18 +51,22 @@ class MealCompletionModal extends React.Component {
           <View style={styles.phase2Inputs}>
             <TextInput
               style={Styles.forms.textInput}
+              keyboardType="number-pad"
               placeholder={"Protein"}
             />
             <TextInput
               style={Styles.forms.textInput}
+              keyboardType="number-pad"
               placeholder={"Carbs"}
             />
             <TextInput
               style={Styles.forms.textInput}
+              keyboardType="number-pad"
               placeholder={"Fat"}
             />
             <TextInput
               style={Styles.forms.textInput}
+              keyboardType="number-pad"
               placeholder={"Veggies"}
             />
           </View>}
