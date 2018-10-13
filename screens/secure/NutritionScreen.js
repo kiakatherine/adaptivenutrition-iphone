@@ -58,6 +58,7 @@ export default class LoginScreen extends React.Component {
       showTemplateConfirmation: false,
       showStepSuccessMessage: false,
       showMacrosWarning: false,
+      showMealPlanSettings: false,
 
       potentialTemplate: null,
       phase: null,
@@ -86,6 +87,7 @@ export default class LoginScreen extends React.Component {
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
     this.saveMeasurement = this.saveMeasurement.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   // componentWillMount() {
@@ -749,18 +751,6 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  // clickViewMacros(showInGrams) {
-  //   if(this.state.client.doNotShowMacroWarning) {
-  //     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-  //     client.update({ showInGrams: !showInGrams });
-  //   } else {
-  //     this.setState({
-  //       showModal: true,
-  //       showMacrosWarning: true
-  //     });
-  //   }
-  // }
-
   doNotShowMacroWarning() {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     client.update({
@@ -969,6 +959,13 @@ export default class LoginScreen extends React.Component {
       } else {
         alert('could not get key')
       }
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      showMealPlanSettings: false,
+      showTemplateConfirmation: false
     });
   }
 
@@ -1680,9 +1677,20 @@ export default class LoginScreen extends React.Component {
                 trainingIntensity={trainingIntensity} />}
           </View>*/}
 
-          {this.state.phase === 3 &&
+          <TouchableHighlight
+           style={Styles.buttonCircular}
+           underlayColor={Colors.darkerPrimaryColor}
+           onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
+             <Text style={Styles.buttonCircularIcon}>
+               <FontAwesome
+                 name='gear'
+                 size={20}
+               /> {this.props.label}
+             </Text>
+          </TouchableHighlight>
+
+          {this.state.phase === 3 && this.state.showMealPlanSettings &&
             <ModalWindow
-              label=""
               currentModal="MEAL_PLAN_SETTINGS"
               style="button"
               data={this.state.client}
@@ -1693,17 +1701,8 @@ export default class LoginScreen extends React.Component {
               toggleView={this.toggleView}
               toggleUnits={this.toggleUnits}
               showEnergyBalancePicker={this.showEnergyBalancePicker}
-              clickNavPhase={this.clickNavPhase} />}
-
-          {/*{this.state.phase === 3 && <MealPlanSettings
-            template={template}
-            viewAllMeals={viewAllMeals}
-            showInGrams={showInGrams}
-            doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
-            toggleView={this.toggleView}
-            toggleUnits={this.toggleUnits}
-            clickNavPhase={this.clickNavPhase}
-            showEnergyBalancePicker={this.showEnergyBalancePicker} />}*/}
+              clickNavPhase={this.clickNavPhase}
+              closeModal={this.closeModal} />}
 
           <View style={styles.phaseNavButtons}>
             {(this.state.phase === 2) &&
@@ -1809,37 +1808,6 @@ export default class LoginScreen extends React.Component {
             <Picker.Item label="10:30 pm" value="10:30 pm" />
             <Picker.Item label="11:00 pm" value="11:00 pm" />
             <Picker.Item label="11:30 pm" value="11:30 pm" />
-          </Picker>
-        </View>}
-
-        {this.state.showTrainingIntensityPicker && this.state.phase === 3 && <View style={styles.wakeTimePicker}>
-          <Picker
-            selectedValue={trainingIntensity}
-            onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
-            <Picker.Item label="Rest or low-intensity" value={0} />
-            <Picker.Item label="< 90 min of high-intensity exercise" value={1} />
-            <Picker.Item label="> 90 min of high-intensity exercise" value={2} />
-          </Picker>
-        </View>}
-
-        {this.state.showTrainingIntensityPicker && this.state.phase < 3 && <View style={styles.wakeTimePicker}>
-          <Picker
-            selectedValue={trainingIntensity}
-            onValueChange={(itemValue, itemIndex) => this.saveTrainingIntensity(itemValue)}>
-            <Picker.Item label="Yes" value={true} />
-            <Picker.Item label="No" value={false} />
-          </Picker>
-        </View>}
-
-        {this.state.showMealsBeforeWorkoutPicker && <View style={styles.wakeTimePicker}>
-          <Picker
-            selectedValue={mealsBeforeWorkout}
-            onValueChange={(itemValue, itemIndex) => this.saveMealsBeforeWorkout(itemValue)}>
-            <Picker.Item label="0" value={0} />
-            <Picker.Item label="1" value={1} />
-            <Picker.Item label="2" value={2} />
-            <Picker.Item label="3" value={3} />
-            <Picker.Item label="4" value={4} />
           </Picker>
         </View>}
 
@@ -1957,7 +1925,17 @@ export default class LoginScreen extends React.Component {
           </View>
         </ScrollView>}
 
-        {this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
+        {this.state.showTemplateConfirmation && <ModalWindow
+          label="Template Confirmation"
+          currentModal="TEMPLATE_CONFIRMATION"
+          checkedTemplate1={this.state.checkedTemplate1}
+          checkedTemplate2={this.state.checkedTemplate2}
+          checkedTemplate3={this.state.checkedTemplate3}
+          checkedTemplate4={this.state.checkedTemplate4}
+          checkedTemplate5={this.state.checkedTemplate5}
+          checkedTemplate6={this.state.checkedTemplate6} />}
+
+        {/*{this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
           <TouchableHighlight
             underlayColor={Colors.white}
             onPress={() => { this.setState({
@@ -2085,7 +2063,7 @@ export default class LoginScreen extends React.Component {
 
           <Text></Text>
           <Text></Text>
-        </ScrollView>}
+        </ScrollView>}*/}
 
         {this.state.showStepSuccessMessage &&
           <ScrollView style={Styles.tooltip}>

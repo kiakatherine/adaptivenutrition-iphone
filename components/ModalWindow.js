@@ -22,23 +22,22 @@ import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
 import AboutModal from './modals/AboutModal';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
+import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 
 class ModalWindow extends React.Component {
    constructor(props) {
     super(props);
 
-    this.state = {
-      modalVisible: false
-    }
+    // this.state = {
+    //   isVisible: false
+    // }
 
-    this.toggleModal = this.toggleModal.bind(this);
+    // this.closeModal = this.closeModal.bind(this);
    }
-
-   toggleModal(visible) {
-     this.setState({
-       modalVisible: visible
-     });
-   }
+   //
+   // closeModal() {
+   //   this.setState({ isVisible: false });
+   // }
 
    render() {
      let modal = null;
@@ -61,7 +60,9 @@ class ModalWindow extends React.Component {
          toggleUnits={this.props.toggleUnits}
          showEnergyBalancePicker={this.props.showEnergyBalancePicker}
          clickNavPhase={this.props.clickNavPhase}
-         toggleModal={this.toggleModal} />;
+         closeModal={this.props.closeModal} />;
+     } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {
+       modal = <TemplateConfirmationModal />;
      }
 
      return (
@@ -69,7 +70,6 @@ class ModalWindow extends React.Component {
          <View style={styles.container}>
            <Modal animationType={"slide"}
             transparent={false}
-            visible={this.state.modalVisible}
             onRequestClose={() => { console.log("Modal has been closed.") } }>
 
             <ScrollView>
@@ -77,7 +77,7 @@ class ModalWindow extends React.Component {
                 <TouchableHighlight
                   style={styles.closeButton}
                   underlayColor={Colors.white}
-                  onPress={() => {this.toggleModal(!this.state.modalVisible)}}>
+                  onPress={this.props.closeModal}>
                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                      <FontAwesome
                        name='remove'
@@ -91,18 +91,6 @@ class ModalWindow extends React.Component {
 
            </Modal>
          </View>
-
-         <TouchableHighlight
-          style={this.props.style === 'button' ? Styles.buttonCircular : ''}
-          underlayColor={Colors.darkerPrimaryColor}
-          onPress={() => {this.toggleModal(true)}}>
-            <Text style={this.props.style === 'button' ? Styles.buttonCircularIcon : Styles.menuItem}>
-              <FontAwesome
-                name='gear'
-                size={20}
-              /> {this.props.label}
-            </Text>
-         </TouchableHighlight>
        </View>
      );
    }

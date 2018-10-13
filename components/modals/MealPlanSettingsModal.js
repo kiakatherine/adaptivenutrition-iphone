@@ -27,22 +27,22 @@ class MealPlanSettings extends React.Component {
 
   toggleView(viewAllMeals) {
     this.props.toggleView(viewAllMeals);
-    this.props.toggleModal(false);
+    this.props.closeModal();
   }
 
   toggleUnits(showInGrams) {
     this.props.toggleUnits(showInGrams);
-    this.props.toggleModal(false);
+    this.props.closeModal();
   }
 
   showEnergyBalancePicker() {
     this.props.showEnergyBalancePicker();
-    this.props.toggleModal(false);
+    this.props.closeModal();
   }
 
   clickNavPhase() {
     this.props.clickNavPhase(2);
-    this.props.toggleModal(false);
+    this.props.closeModal();
   }
 
    render() {
