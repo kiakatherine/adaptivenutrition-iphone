@@ -68,6 +68,7 @@ class ModalWindow extends React.Component {
           saveTemplateType={this.props.saveTemplateType} />;
       } else if(this.props.currentModal === 'MEAL_COMPLETION') {
         modal = <MealCompletionModal
+          phase={this.props.phase}
           date={this.props.date}
           mealNumber={this.props.mealNumber}
           completeMeal={this.props.completeMeal}/>;

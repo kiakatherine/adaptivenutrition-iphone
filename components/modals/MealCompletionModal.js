@@ -46,6 +46,27 @@ class MealCompletionModal extends React.Component {
         {this.state.showError &&
           <Text>{"Make sure everything's filled out!"}</Text>}
 
+
+        {this.props.phase === 2 &&
+          <View style={styles.phase2Inputs}>
+            <TextInput
+              style={Styles.forms.textInput}
+              placeholder={"Protein"}
+            />
+            <TextInput
+              style={Styles.forms.textInput}
+              placeholder={"Carbs"}
+            />
+            <TextInput
+              style={Styles.forms.textInput}
+              placeholder={"Fat"}
+            />
+            <TextInput
+              style={Styles.forms.textInput}
+              placeholder={"Veggies"}
+            />
+          </View>}
+
         <TouchableHighlight
           style={[Styles.button, styles.completeButton]}
           underlayColor={Colors.white}
@@ -58,7 +79,7 @@ class MealCompletionModal extends React.Component {
           </Text>
         </TouchableHighlight>
 
-        <TouchableHighlight
+        {this.props.phase !== 2 && <TouchableHighlight
           style={[Styles.button, styles.incompleteButton]}
           underlayColor={Colors.white}
           onPress={() => { this.completeMeal(2) }}>
@@ -68,7 +89,7 @@ class MealCompletionModal extends React.Component {
               size={16}
             />
           </Text>
-        </TouchableHighlight>
+        </TouchableHighlight>}
       </View>
     );
   }
@@ -105,5 +126,8 @@ const styles = StyleSheet.create({
   incompleteButtonText: {
     color: Colors.paleRed,
     textAlign: 'center'
+  },
+  phase2Inputs: {
+    marginTop: 20
   }
 });

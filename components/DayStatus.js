@@ -109,35 +109,44 @@ class DayStatus extends React.Component {
           <View style={styles.dayStatusMeals}>
             <Text style={styles.dayStatusDate}>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
 
-            <View style={[
+            <TouchableHighlight style={[
               styles.dayStatusMeal,
               day.meal1measurementsCompleted === 1 ? styles.dayStatusMealGood :
-              day.meal1measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
+              day.meal1measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}
+              onPress={() => { this.showPopup(1) }}>
+              <Text></Text>
+            </TouchableHighlight>
 
-            <View style={[
+            <TouchableHighlight style={[
               styles.dayStatusMeal,
               day.meal2measurementsCompleted === 1 ? styles.dayStatusMealGood :
-              day.meal2measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
+              day.meal2measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}
+              onPress={() => { this.showPopup(2) }}>
+              <Text></Text>
+            </TouchableHighlight>
 
-            <View style={[
+            <TouchableHighlight style={[
               styles.dayStatusMeal,
               day.meal3measurementsCompleted === 1 ? styles.dayStatusMealGood :
-              day.meal3measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
+              day.meal3measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}
+              onPress={() => { this.showPopup(3) }}>
+              <Text></Text>
+            </TouchableHighlight>
 
-            <View style={[
+            <TouchableHighlight style={[
               styles.dayStatusMeal,
               day.meal4measurementsCompleted === 1 ? styles.dayStatusMealGood :
-              day.meal4measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}>
-            </View>
+              day.meal4measurementsCompleted === 2 ? styles.dayStatusMealBad : '']}
+              onPress={() => { this.showPopup(4) }}>
+              <Text></Text>
+            </TouchableHighlight>
           </View>
         </View>}
 
         {this.state.showPopupModal &&
           <ModalWindow
             currentModal="MEAL_COMPLETION"
+            phase={phase}
             date={moment(day.fullDate).format('dddd MMM D')}
             mealNumber={this.state.mealNumber}
             completeMeal={this.completeMeal}
@@ -159,7 +168,8 @@ const styles = StyleSheet.create ({
   dayStatusMeal: {
     flex: 1,
     height: 20,
-    backgroundColor: Colors.lightGray
+    backgroundColor: Colors.lightGray,
+    marginRight: 2
   },
   dayStatusMealGood: {
     backgroundColor: Colors.paleGreen
