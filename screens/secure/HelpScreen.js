@@ -66,13 +66,60 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <ScrollView style={Styles.content}>
-          <Text style={Styles.menuItem}>How Do I Use the App?</Text>
-          <Text style={Styles.menuItemSubText}>Take a tour</Text>
+          <Text style={[Styles.bigTitle, Styles.pageTitle]}>Help</Text>
 
-          <Text style={Styles.menuItem}
-            onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
-          <Text style={Styles.menuItemSubText}
-            onPress={() => this.setState({ showBiometricSettings: true }) }>What we use to build your meal plan</Text>
+          <View style={styles.helpSection}>
+            <Text style={[Styles.h3, styles.h3]}>YOUR MEAL PLAN</Text>
+
+            <Text style={Styles.menuItem}>How Do I Use the App?</Text>
+            <Text style={Styles.menuItemSubText}>Take a tour</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => this.setState({ showBiometricSettings: true }) }>What we use to build your meal plan</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods</Text>
+          </View>
+
+          <View style={styles.helpSection}>
+            <Text style={[Styles.h3, styles.h3]}>RESOURCES</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>Success Checklist</Text>
+            <Text style={Styles.menuItemSubText}>If you stop seeing progress, check this list out to help pinpoint issues.</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
+            <Text style={Styles.menuItemSubText}>Meal prep, recipes, & more</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions</Text>
+          </View>
+
+          <View style={styles.helpSection}>
+            <Text style={[Styles.h3, styles.h3]}>OTHER</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Your Subscription</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Manage your subscription.</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => this.setState({ showContact: true }) }>Contact</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
+
+            <Text style={Styles.menuItem}
+              onPress={() => this.setState({ showAbout: true }) }>About</Text>
+            <Text style={Styles.menuItemSubText}
+              onPress={() => this.setState({ showAbout: true }) }>Who is Adaptive Nutrition?</Text>
+          </View>
 
           {this.state.showBiometricSettings &&
             <ModalWindow
@@ -80,38 +127,16 @@ export default class LoginScreen extends React.Component {
               data={this.state.client}
               closeModal={this.closeModal} />}
 
-          <Text style={Styles.menuItem}
-            onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
-          <Text style={Styles.menuItemSubText}
-            onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods</Text>
-
           {this.state.showFoodsToAvoid &&
             <ModalWindow
               currentModal="FOODS_TO_AVOID"
               data={this.state.client}
               closeModal={this.closeModal} />}
 
-          <Text style={Styles.menuItem}
-            onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
-          <Text style={Styles.menuItemSubText}>Meal prep, recipes, & more</Text>
-
-          <Text style={Styles.menuItem}
-            onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
-          <Text style={Styles.menuItemSubText}
-            onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions</Text>
-
-          <Text style={Styles.menuItem}
-            onPress={() => this.setState({ showContact: true }) }>Contact</Text>
-          <Text style={Styles.menuItemSubText}
-            onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
-
           {this.state.showContact &&
             <ModalWindow
               currentModal="CONTACT_US"
               closeModal={this.closeModal} />}
-
-          <Text style={Styles.menuItem}
-            onPress={() => this.setState({ showAbout: true }) }>About</Text>
 
           {this.state.showAbout &&
             <ModalWindow
@@ -123,3 +148,16 @@ export default class LoginScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  h3: {
+    marginTop: 20,
+    letterSpacing: 2
+  },
+  helpSection: {
+    marginBottom: 15,
+    paddingBottom: 25,
+    borderBottomWidth: 1,
+    borderColor: Colors.lightGray
+  }
+});
