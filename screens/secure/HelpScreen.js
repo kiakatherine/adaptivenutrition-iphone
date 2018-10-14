@@ -34,7 +34,8 @@ export default class LoginScreen extends React.Component {
       client: null,
       showBiometricSettings: false,
       showFoodsToAvoid: false,
-      showAbout: false
+      showAbout: false,
+      showContact: false
     }
 
     this.closeModal = this.closeModal.bind(this);
@@ -54,7 +55,8 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showBiometricSettings: false,
       showFoodsToAvoid: false,
-      showAbout: false
+      showAbout: false,
+      showContact: false
     });
   }
 
@@ -87,24 +89,35 @@ export default class LoginScreen extends React.Component {
             <ModalWindow
               currentModal="FOODS_TO_AVOID"
               data={this.state.client}
-              closeModal={this.closeModal}/>}
+              closeModal={this.closeModal} />}
 
-          <Text style={Styles.menuItem} onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
+          <Text style={Styles.menuItem}
+            onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
           <Text style={Styles.menuItemSubText}>Meal prep, recipes, & more</Text>
 
-          <Text style={Styles.menuItem} onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
-          <Text style={Styles.menuItemSubText}>Answers to our most frequently asked questions</Text>
+          <Text style={Styles.menuItem}
+            onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
+          <Text style={Styles.menuItemSubText}
+            onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions</Text>
 
-          <Text style={Styles.menuItem} onPress={() => Linking.openURL('mailto:support@adaptivenutrition.us')}>Email Us</Text>
-          <Text style={Styles.menuItemSubText}>Have a question or comment? Let us know!</Text>
+          <Text style={Styles.menuItem}
+            onPress={() => this.setState({ showContact: true }) }>Contact</Text>
+          <Text style={Styles.menuItemSubText}
+            onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
+
+          {this.state.showContact &&
+            <ModalWindow
+              currentModal="CONTACT_US"
+              closeModal={this.closeModal} />}
 
           <Text style={Styles.menuItem}
             onPress={() => this.setState({ showAbout: true }) }>About</Text>
+
           {this.state.showAbout &&
             <ModalWindow
               currentModal="ABOUT"
               data={this.state.client}
-              closeModal={this.closeModal}/>}
+              closeModal={this.closeModal} />}
         </ScrollView>
       </View>
     );

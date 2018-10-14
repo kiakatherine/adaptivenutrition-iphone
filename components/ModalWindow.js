@@ -25,6 +25,7 @@ import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 import MealCompletionModal from './modals/MealCompletionModal';
 import LessonQuizModal from './modals/LessonQuizModal';
+import ContactUsModal from './modals/ContactUsModal';
 
 class ModalWindow extends React.Component {
    constructor(props) {
@@ -78,6 +79,8 @@ class ModalWindow extends React.Component {
           lesson={this.props.lesson}
           timestamp={this.props.timestamp}
           closeModal={this.props.closeModal} />;
+      } else if(this.props.currentModal === 'CONTACT_US') {
+        modal = <ContactUsModal />;
       }
 
      return (
