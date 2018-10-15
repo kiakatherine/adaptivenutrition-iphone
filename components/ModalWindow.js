@@ -18,13 +18,21 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+// nutrition screen
+import WaketimeTooltip from './modals/WaketimeTooltip';
+import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
+import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
+
+// progress screen
+import MealCompletionModal from './modals/MealCompletionModal';
+
+// education screen
+import LessonQuizModal from './modals/LessonQuizModal';
+
+// help screen
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
 import AboutModal from './modals/AboutModal';
-import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
-import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
-import MealCompletionModal from './modals/MealCompletionModal';
-import LessonQuizModal from './modals/LessonQuizModal';
 import ContactUsModal from './modals/ContactUsModal';
 
 class ModalWindow extends React.Component {
@@ -81,6 +89,8 @@ class ModalWindow extends React.Component {
           closeModal={this.props.closeModal} />;
       } else if(this.props.currentModal === 'CONTACT_US') {
         modal = <ContactUsModal />;
+      } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
+        modal = <WaketimeTooltip />
       }
 
      return (

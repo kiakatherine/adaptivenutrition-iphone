@@ -47,7 +47,7 @@ export default class LoginScreen extends React.Component {
       // mealsBeforeWorkout: 3,
 
       showModal: false,
-      showTimeTooltip: false,
+      showWaketimeTooltip: false,
       showTrainingTooltip: false,
       showMealsTooltip: false,
       showWakeTimePicker: false,
@@ -950,7 +950,8 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showModal: false,
       showMealPlanSettings: false,
-      showTemplateConfirmation: false
+      showTemplateConfirmation: false,
+      showWaketimeTooltip: false
     });
   }
 
@@ -1295,7 +1296,7 @@ export default class LoginScreen extends React.Component {
           <Header />}
 
         {(this.state.phase === null) &&
-          <Text style={styles.loadingText}>Adaptive Nutrition</Text>}
+          <Text style={styles.loadingText}>adapt & thrive</Text>}
 
         {this.state.phase !== null && <ScrollView style={Styles.content}>
           <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
@@ -1305,7 +1306,7 @@ export default class LoginScreen extends React.Component {
             <TouchableHighlight
               style={styles.optionTooltip}
               underlayColor={Colors.white}
-              onPress={() => { this.setState({ showModal: true, showTimeTooltip: true }) }}>
+              onPress={() => { this.setState({ showModal: true, showWaketimeTooltip: true }) }}>
               <FontAwesome
                 style={styles.tooltipIcon}
                 name='info-circle'
@@ -1796,25 +1797,10 @@ export default class LoginScreen extends React.Component {
           </Picker>
         </View>}
 
-        {this.state.showTimeTooltip && <ScrollView style={Styles.tooltip}>
-          <View>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-            <Text style={Styles.tooltipHeader}>Wake Time</Text>
-            <Text style={Styles.tooltipParagraph}>Enter the time you woke up today, and the times to eat each meal will be shown in your meal plan.</Text>
-            <Text style={Styles.tooltipParagraph}>The guidelines for meal timing are to have breakfast within an hour of waking up, and to have subsequent meals 3-5 hours apart.</Text>
-            <Text style={Styles.tooltipParagraph}>Why is meal timing important? Protein is not stored in your body like fat and carbs are, so a constant stream of amino acids (the building blocks of protein) is necessary to maintain lean muscle mass (more lean muscle mass = faster metabolism!). It is almost important to keep blood sugar levels steady throughout the day so you can maintain even energy and avoid the dreaded afternoon slump.</Text>
-            <Text></Text>
-            <Text></Text>
-          </View>
-        </ScrollView>}
+        {this.state.showWaketimeTooltip &&
+          <ModalWindow
+            currentModal="WAKETIME_TOOLTIP"
+            closeModal={this.closeModal} />}
 
         {this.state.showTrainingTooltip && <ScrollView style={Styles.tooltip}>
           <View>
@@ -2169,7 +2155,7 @@ export default class LoginScreen extends React.Component {
           <ScrollView style={Styles.tooltip}>
             <TouchableHighlight
               underlayColor={Colors.white}
-              onPress={() => { this.setState({ showTimeTooltip: false, showModal: false }) }}>
+              onPress={() => { this.setState({ showWaketimeTooltip: false, showModal: false }) }}>
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
