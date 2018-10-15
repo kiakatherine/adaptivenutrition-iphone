@@ -10,8 +10,12 @@ export function toDate(dateStr) {
   return new Date(Number('20' + year), month - 1, day)
 }
 
+// export function formatBodyweightLogDate(d) {
+//   return d ? moment(d, 'MM-DD-YY').format('MMM D') : '-';
+// }
+
 export function formatBodyweightLogDate(d) {
-  return d ? moment(d, 'MM-DD-YY').format('MMM D') : '-';
+  return d ? moment(d).format('MMM D') : '-';
 }
 
 function hasVal(val) {

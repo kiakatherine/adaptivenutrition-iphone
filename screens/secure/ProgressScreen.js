@@ -69,9 +69,8 @@ export default class LoginScreen extends React.Component {
       clientResponse = snapshot.val();
 
       this.setState({
-        weight: clientResponse.latestBodyweight
-        // clientTimestamp: clientResponse.timestamp,
-        // clientPhase: clientResponse.phase
+        weight: clientResponse.latestBodyweight,
+        clientTimestamp: clientResponse.timestamp
       });
     });
 
@@ -120,69 +119,86 @@ export default class LoginScreen extends React.Component {
   }
 
   componentWillMount() {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
+    const clientId = firebase.auth().currentUser.uid;
+    // const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
 
-    client.on('value', snapshot => {
-      this.setState({
-        client: snapshot.val(),
-        clientTimestamp: snapshot.val().timestamp,
-        clientPhase: snapshot.val().phase
-      });
-    });
+    const weightsRef = firebase.database().ref('client-weights/' + clientId);
 
-    bodyweightRecords.on('value', snapshot => {
+    weightsRef.on('value', snapshot => {
       this.setState({ bodyweightData: snapshot.val() });
     });
   }
 
-  _submitWeight(w) {
-    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+  _submitWeight() {
     const date = this.state.date;
     const weight = this.state.weight;
-    const clientTimestamp = this.state.clientTimestamp;
+    const uid = firebase.auth().currentUser.uid;
 
-    this.setState({ weight });
+    // TO DO: check not already a record for that date
+    // use firebase.database().ref().child('weights').orderByValue() ?
 
-    bodyweightRecords.once('value', snapshot => {
-      const records = snapshot.val();
-      let duplicateEntry = false;
-      let filteredBodyweightRecords = [];
+    const bodyweightRecord = {
+      date: date,
+      weight: weight,
+      uid: uid
+    };
 
-      // check first that there is not already an entry for today - check timestamp and date
-      if(clientTimestamp) {
-        Object.keys(records).map(function(key) {
-          if(records[key].timestamp === clientTimestamp) {
-            filteredBodyweightRecords.push(records[key]);
-            if(records[key].date === moment(date).format('MM-DD-YY')) {
-              // alert('oh hey')
-              // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
-              // recordRef.remove();
-              duplicateEntry = true;
-            }
-          }
-        });
+    // Get a key for a new bodyweightRecord
+    const newRecordKey = firebase.database().ref().child('weights').push().key;
 
-        if(duplicateEntry === false) {
-          bodyweightRecords.push({
-            // date: moment(new Date).format('MM-DD-YY'),
-            date: moment(this.state.date).format('MM-DD-YY'),
-            timestamp: Number(this.state.clientTimestamp),
-            weight: Number(this.state.weight)
-          }).then(resp => {}, reason => {
-            alert('Could not save bodyweight');
-          });
-        } else {
-          alert('Oops! Looks like there is already an entry for that day.')
-        }
+    // Write the new record's data simultaneously
+    // in the bodyweightRecords list and the user's records list.
+    var updates = {};
+    updates['/weights/' + newRecordKey] = bodyweightRecord;
+    updates['/client-weights/' + uid + '/' + newRecordKey] = bodyweightRecord;
+
+    firebase.database().ref().update(updates, (error) => {
+      // TO DO: these aren't firing
+      if(error) {
+        alert('failed');
+      } else {
+        alert('success!');
       }
-
-      this.setState({
-        showAddBodyweight: false,
-        date: new Date(),
-        weight: ''
-      }, this._hideAll());
     });
+
+    this.setState({
+      showAddBodyweight: false,
+      date: new Date(),
+      weight
+    }, this._hideAll());
+
+    // bodyweightRecords.once('value', snapshot => {
+    //   const records = snapshot.val();
+    //   let duplicateEntry = false;
+    //   let filteredBodyweightRecords = [];
+    //
+    //   // check first that there is not already an entry for today - check timestamp and date
+    //   if(clientTimestamp) {
+    //     Object.keys(records).map(function(key) {
+    //       if(records[key].timestamp === clientTimestamp) {
+    //         filteredBodyweightRecords.push(records[key]);
+    //         if(records[key].date === moment(date).format('MM-DD-YY')) {
+    //           // alert('oh hey')
+    //           // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
+    //           // recordRef.remove();
+    //           duplicateEntry = true;
+    //         }
+    //       }
+    //     });
+    //
+    //     if(duplicateEntry === false) {
+    //       bodyweightRecords.push({
+    //         // date: moment(new Date).format('MM-DD-YY'),
+    //         date: moment(this.state.date).format('MM-DD-YY'),
+    //         timestamp: Number(this.state.clientTimestamp),
+    //         weight: Number(this.state.weight)
+    //       }).then(resp => {}, reason => {
+    //         alert('Could not save bodyweight');
+    //       });
+    //     } else {
+    //       alert('Oops! Looks like there is already an entry for that day.')
+    //     }
+    //   }
   }
 
   _clickProgressReportPhase1() {

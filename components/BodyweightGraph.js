@@ -145,47 +145,19 @@ class BodyweightGraph extends React.Component {
   }
 
    render() {
-      // const obj = this.props.data;
-      const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
-      const timestamp = Number(this.props.clientTimestamp);
-      let data = [];
-      let sortedData;
+     const data = this.props.data;
+     let sortedData = [];
 
-      bodyweightRecords.once('value', snapshot => {
-        d = snapshot.val();
-
-        Object.keys(d).map(function(key) {
-          if(Number(d[key].timestamp) === timestamp) {
-            // ref = firebase.database().ref('bodyweightRecords/' + key);
-            // ref.remove();
-
-            data.push({
-              date: d[key].date,
-              weight: d[key].weight,
-              key
-            });
-          }
-        });
-
-        // sort dates
-        data = data.sort(function compare(a, b) {
-          var dateA = toDate(a.date);
-          var dateB = toDate(b.date);
-
-          return dateB - dateA;
-        });
-
-        let dataArr = [];
-
-        sortedData = Object.keys(data).map(key => {
-          dataArr.push({
-            date: data[key].date,
-            weight: data[key].weight
-          });
-        });
-
-        sortedData = dataArr.reverse();
-      });
+     if(data) {
+       Object.keys(data).map((key) => {
+         sortedData.push({
+           date: data[key].date,
+           weight: data[key].weight,
+           key
+         });
+       });
+     }
+     sortedData = sortedData.reverse();
 
       return (
         <View>
