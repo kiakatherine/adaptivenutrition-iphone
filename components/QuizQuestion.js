@@ -31,11 +31,11 @@ class QuizQuestion extends React.Component {
      const answers = this.props.question.answers;
 
      return (
-       <View>
-        <Text>{question}</Text>
+       <View style={styles.quizQuestionWrapper}>
+        <Text style={styles.quizQuestionText}>{question}</Text>
 
         {answers.map((answer, i) =>
-          <Text key={i}>{answer.answer}</Text>)}
+          <Text style={styles.quizAnswerText} key={i}>{answer.answer}</Text>)}
        </View>
      );
    }
@@ -47,6 +47,16 @@ QuizQuestion.propTypes = {
 };
 
 const styles = StyleSheet.create ({
+  quizQuestionWrapper: {
+    marginBottom: 40
+  },
+  quizQuestionText: {
+    fontSize: 20,
+    marginBottom: 15
+  },
+  quizAnswerText: {
+    fontSize: 20
+  },
   lessonWrapper: {
     marginBottom: 20
   },

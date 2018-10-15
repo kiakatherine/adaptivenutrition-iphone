@@ -68,7 +68,7 @@ class Lesson extends React.Component {
           {this.state.showQuiz &&
             <ModalWindow
               currentModal="LESSON_QUIZ"
-              lesson={1}
+              lesson={lessonNumber}
               closeModal={this._closeModal} />}
        </View>
      );
