@@ -28,7 +28,7 @@ const WaketimeTooltip = props => {
       <Text style={Styles.h3}>To have better energy</Text>
       <Text style={Styles.paragraphText}>Eating four balanced meals 3-5 hours apart will help keep blood sugar levels steady throughout the day. This will help you maintain even energy and avoid that afternoon slump.</Text>
 
-      <Text style={Styles.h3}>To maintain lean muscle</Text>
+      <Text style={Styles.h3}>To have a fast metabolism</Text>
       <Text style={Styles.paragraphText}>Protein is not stored in your body like fat and carbs are, so a constant stream of amino acids (the building blocks of protein) is necessary to maintain lean muscle mass.</Text>
       <Text style={Styles.paragraphText}>Why do we want to retain our lean muscle mass? Because more lean muscle directly correlates to a faster metabolism!</Text>
 

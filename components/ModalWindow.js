@@ -20,10 +20,12 @@ import Styles from '../constants/Styles';
 
 // nutrition screen
 import WaketimeTooltip from './modals/WaketimeTooltip';
+import TrainingTooltip from './modals/TrainingTooltip';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 
 // progress screen
+import AddBodyweightModal from './modals/AddBodyweightModal';
 import MealCompletionModal from './modals/MealCompletionModal';
 
 // education screen
@@ -91,6 +93,15 @@ class ModalWindow extends React.Component {
         modal = <ContactUsModal />;
       } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
         modal = <WaketimeTooltip />
+      } else if(this.props.currentModal === 'TRAINING_TOOLTIP') {
+        modal = <TrainingTooltip phase={this.props.phase} />
+      } else if(this.props.currentModal === 'ADD_BODYWEIGHT') {
+        modal = <AddBodyweightModal
+          weight={this.props.weight}
+          date={this.props.date}
+          updateWeight={this.props.updateWeight}
+          setDate={this.props.setDate}
+          submitWeight={this.props.submitWeight} />
       }
 
      return (
@@ -135,7 +146,11 @@ const styles = StyleSheet.create ({
       flex: 1,
       alignItems: 'center',
       backgroundColor: '#FFF',
-      padding: 40
+      paddingTop: 40,
+      paddingBottom: 40,
+      paddingLeft: 20,
+      paddingRight: 20
+
    },
    closeButton: {
      padding: 20

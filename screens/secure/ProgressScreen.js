@@ -11,7 +11,6 @@ import moment from 'moment';
 
 import {
   Button,
-  DatePickerIOS,
   Image,
   Keyboard,
   ScrollView,
@@ -28,6 +27,7 @@ import subDays from 'date-fns/sub_days';
 
 import BodyweightGraph from '../../components/BodyweightGraph';
 import DayStatus from '../../components/DayStatus';
+import ModalWindow from '../../components/ModalWindow';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -39,9 +39,7 @@ export default class LoginScreen extends React.Component {
 
     this.state = {
       date: new Date(),
-      showModal: false,
-      showDatepicker: false,
-      showAddBodyweightModal: false,
+      showAddBodyweight: false,
       weight: null,
       clientTimestamp: null,
       showProgressPhase1: true,
@@ -54,9 +52,11 @@ export default class LoginScreen extends React.Component {
       yearlyView: false
     }
 
-    this._showDatepicker = this._showDatepicker.bind(this);
     this._hideAll = this._hideAll.bind(this);
     this._submitWeight = this._submitWeight.bind(this);
+    this._updateWeight = this._updateWeight.bind(this);
+    this._setDate = this._setDate.bind(this);
+    this._closeModal = this._closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -114,11 +114,6 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  _showDatepicker () {
-    Keyboard.dismiss();
-    this.setState({ showDatepicker: !this.state.showDatepicker });
-  }
-
   _hideAll () {
     Keyboard.dismiss();
     this.setState({ showDatepicker: false });
@@ -144,11 +139,10 @@ export default class LoginScreen extends React.Component {
   _submitWeight(w) {
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const date = this.state.date;
+    const weight = this.state.weight;
     const clientTimestamp = this.state.clientTimestamp;
 
-    this.setState({
-      weight: w
-    });
+    this.setState({ weight });
 
     bodyweightRecords.once('value', snapshot => {
       const records = snapshot.val();
@@ -184,9 +178,7 @@ export default class LoginScreen extends React.Component {
       }
 
       this.setState({
-        showAddBodyweightModal: false,
-        showDatepicker: false,
-        showModal: false,
+        showAddBodyweight: false,
         date: new Date(),
         weight: ''
       }, this._hideAll());
@@ -207,6 +199,22 @@ export default class LoginScreen extends React.Component {
 
   clickWeeklyView(pastWeekEntries) {
     this.setState({ bodyweightData: pastWeekEntries, weeklyView: true, monthlyView: false, yearlyView: false });
+  }
+
+  _updateWeight(weight, direction) {
+    if(direction === 'decrease') {
+      this.setState({ weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight });
+    } else {
+      this.setState({ weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight });
+    }
+  }
+
+  _setDate(date) {
+    this.setState({ date });
+  }
+
+  _closeModal() {
+    this.setState({ showAddBodyweight: false });
   }
 
   render() {
@@ -335,7 +343,7 @@ export default class LoginScreen extends React.Component {
                 <TouchableHighlight
                   underlayColor={Colors.darkerPrimaryColor}
                   style={Styles.buttonCircular}
-                  onPress={() => { this.setState({ showAddBodyweightModal: true, showModal: true }) }}>
+                  onPress={() => { this.setState({ showAddBodyweight: true }) }}>
                   <Text style={Styles.buttonCircularIcon}>
                     <FontAwesome
                       name='plus'
@@ -419,88 +427,15 @@ export default class LoginScreen extends React.Component {
           </View>
         </ScrollView>
 
-        {this.state.showModal &&
-          <View style={Styles.showModal}></View>}
-
-        {this.state.showAddBodyweightModal &&
-          <ScrollView style={[Styles.tooltip, styles.addBodyweightModal]}>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showAddBodyweightModal: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={36}
-              />
-            </TouchableHighlight>
-
-            <View style={[styles.bodyweightInput, styles.bodyweightDateInput]}>
-              <TouchableHighlight
-                underlayColor={Colors.lightGray}
-                onPress={this._showDatepicker}>
-                <Text style={styles.bodyweightDate}>
-                  {moment(this.state.date).format('MMMM D')} <FontAwesome
-                    name='pencil'
-                    size={24}
-                  />
-                </Text>
-              </TouchableHighlight>
-            </View>
-
-            {this.state.showDatepicker &&
-              <DatePickerIOS
-                style={styles.datePicker}
-                mode={'date'}
-                date={this.state.date}
-                maximumDate={new Date()}
-                onDateChange={date => this.setState({ date, showDatepicker: false })}
-              />}
-
-            <View style={[styles.progressSection]}>
-              <View style={[styles.bodyweightInputWrapper]}>
-                <TouchableHighlight
-                  underlayColor={Colors.darkerPrimaryColor}
-                  style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
-                  onPress={() => { this.setState({ weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight }) }}
-                  disabled={weight < 0}>
-                  <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
-                    <FontAwesome
-                      name='minus'
-                      size={16}
-                    />
-                  </Text>
-                </TouchableHighlight>
-
-                <Text style={styles.weight}>{weight}</Text>
-
-                <TouchableHighlight
-                  underlayColor={Colors.darkerPrimaryColor}
-                  style={[Styles.buttonCircular, Styles.buttonInverted, styles.weightButton]}
-                  onPress={() => { this.setState({ weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight }) }}
-                  disabled={weight < 0}>
-                  <Text style={[Styles.buttonCircularIcon, Styles.buttonInvertedText]}>
-                    <FontAwesome
-                      name='plus'
-                      size={16}
-                    />
-                  </Text>
-                </TouchableHighlight>
-              </View>
-
-              <TouchableHighlight
-                underlayColor={Colors.darkerPrimaryColor}
-                style={Styles.button}
-                onPress={this._submitWeight}
-                disabled={weight < 0}>
-                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
-                  <FontAwesome
-                    name='check'
-                    size={20}
-                  />
-                </Text>
-              </TouchableHighlight>
-            </View>
-          </ScrollView>}
+        {this.state.showAddBodyweight &&
+          <ModalWindow
+            currentModal="ADD_BODYWEIGHT"
+            weight={this.state.weight}
+            date={this.state.date}
+            updateWeight={this._updateWeight}
+            setDate={this._setDate}
+            submitWeight={this._submitWeight}
+            closeModal={this._closeModal} />}
       </View>
     );
   }
@@ -532,19 +467,6 @@ const styles = StyleSheet.create ({
     textAlign: 'left',
     marginBottom: 0
   },
-  bodyweightInputWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 30
-  },
-  weight: {
-    flex: 3,
-    textAlign: 'center',
-    fontSize: 36,
-    fontFamily: 'Futura',
-    color: Colors.black,
-    paddingTop: 7
-  },
   phaseHeader: {
     paddingTop: 15,
     marginBottom: 5,
@@ -562,12 +484,6 @@ const styles = StyleSheet.create ({
   phaseProgressWrapper: {
     marginTop: 10,
     marginBottom: 15
-  },
-  bodyweightDate: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 5
   },
   stats: {
     marginTop: 20,
