@@ -51,7 +51,6 @@ export default class LoginScreen extends React.Component {
   }
 
   _clickTakeQuiz(lessonNumber, timestamp) {
-    console.log('lessonNumber', lessonNumber);
     this.setState({
       showQuiz: true,
       selectedLessonNumber: lessonNumber

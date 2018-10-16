@@ -75,11 +75,25 @@ class LessonQuiz extends React.Component {
             <Text style={Styles.paragraphText}>Title</Text>
           </View>
 
-          {questions.map((lesson, i) => <View key={i} style={styles.slide}>
-            <QuizQuestion
-              key={i}
-              question={questions[i]} />
-            </View>)}
+          <View style={styles.slide}>
+            <QuizQuestion key={0} question={questions[0]} />
+          </View>
+
+          <View style={styles.slide}>
+            <QuizQuestion key={1} question={questions[1]} />
+          </View>
+
+          <View style={styles.slide}>
+            <QuizQuestion key={2} question={questions[2]} />
+          </View>
+
+          <View style={styles.slide}>
+            <QuizQuestion key={3} question={questions[3]} />
+          </View>
+
+          <View style={styles.slide}>
+            <QuizQuestion key={4} question={questions[4]} />
+          </View>
 
           <View style={styles.slide}>
             <TouchableHighlight
