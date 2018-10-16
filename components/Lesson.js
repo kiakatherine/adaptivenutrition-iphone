@@ -20,27 +20,26 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
-import ModalWindow from '../components/ModalWindow';
-
+// import ModalWindow from '../components/ModalWindow';
 
 class Lesson extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showQuiz: false
+      // showQuiz: false
     };
 
-    this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
-    this._closeModal = this._closeModal.bind(this);
+    // this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
+    // this._closeModal = this._closeModal.bind(this);
   }
 
-  _clickTakeQuiz(lessonNumber, timestamp) {
-    this.setState({ showQuiz: true });
-  }
+  // _clickTakeQuiz(lessonNumber, timestamp) {
+  //   this.setState({ showQuiz: true });
+  // }
 
-  _closeModal() {
-    this.setState({ showQuiz: false });
-  }
+  // _closeModal() {
+  //   this.setState({ showQuiz: false });
+  // }
 
    render() {
      const lessonNumber = this.props.lessonNumber;
@@ -60,16 +59,10 @@ class Lesson extends React.Component {
            <TouchableHighlight
              style={styles.optionTooltip}
              underlayColor={Colors.white}
-             onPress={() => { this._clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
+             onPress={() => { this.props.clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
              <Text style={styles.lessonText}>Take quiz</Text>
            </TouchableHighlight>
           </View>
-
-          {this.state.showQuiz &&
-            <ModalWindow
-              currentModal="LESSON_QUIZ"
-              lesson={lessonNumber}
-              closeModal={this._closeModal} />}
        </View>
      );
    }

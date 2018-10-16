@@ -47,9 +47,6 @@ QuizQuestion.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-  quizQuestionWrapper: {
-    marginBottom: 40
-  },
   quizQuestionText: {
     fontSize: 20,
     marginBottom: 15

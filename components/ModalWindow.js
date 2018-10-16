@@ -28,9 +28,6 @@ import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 import AddBodyweightModal from './modals/AddBodyweightModal';
 import MealCompletionModal from './modals/MealCompletionModal';
 
-// education screen
-import LessonQuizModal from './modals/LessonQuizModal';
-
 // help screen
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
@@ -84,11 +81,6 @@ class ModalWindow extends React.Component {
           date={this.props.date}
           mealNumber={this.props.mealNumber}
           completeMeal={this.props.completeMeal} />;
-      } else if(this.props.currentModal === 'LESSON_QUIZ') {
-        modal = <LessonQuizModal
-          lesson={this.props.lesson}
-          timestamp={this.props.timestamp}
-          closeModal={this.props.closeModal} />;
       } else if(this.props.currentModal === 'CONTACT_US') {
         modal = <ContactUsModal />;
       } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
@@ -111,7 +103,7 @@ class ModalWindow extends React.Component {
             transparent={false}
             onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-            <ScrollView>
+            <ScrollView scrollEnabled={this.props.currentModal === 'LESSON_QUIZ' ? false : true}>
               <View style={styles.modal}>
                 <TouchableHighlight
                   style={styles.closeButton}
@@ -150,7 +142,6 @@ const styles = StyleSheet.create ({
       paddingBottom: 40,
       paddingLeft: 20,
       paddingRight: 20
-
    },
    closeButton: {
      padding: 20

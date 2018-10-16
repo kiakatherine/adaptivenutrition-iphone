@@ -9,6 +9,7 @@ import Styles from '../../constants/Styles';
 
 import Header from '../../components/Header';
 import Lesson from '../../components/Lesson';
+import LessonQuiz from '../../components/LessonQuiz';
 
 import {
   Button,
@@ -30,8 +31,13 @@ export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      client: null
+      client: null,
+      showQuiz: false,
+      selectedLessonNumber: 1
     }
+
+    this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
+    this._closeQuiz = this._closeQuiz.bind(this);
   }
 
   componentWillMount() {
@@ -39,10 +45,21 @@ export default class LoginScreen extends React.Component {
 
     client.on('value', snapshot => {
       this.setState({
-        client: snapshot.val(),
-        showQuiz: false
+        client: snapshot.val()
       });
     });
+  }
+
+  _clickTakeQuiz(lessonNumber, timestamp) {
+    console.log('lessonNumber', lessonNumber);
+    this.setState({
+      showQuiz: true,
+      selectedLessonNumber: lessonNumber
+    });
+  }
+
+  _closeQuiz() {
+    this.setState({ showQuiz: false });
   }
 
   render() {
@@ -51,12 +68,20 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={Styles.body}>
         <ScrollView style={Styles.content}>
-          <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
+          {!this.state.showQuiz && <View>
+            <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
 
-          {lessons.map(i => <Lesson
-            key={i}
-            lessonNumber={i}
-            timestamp={this.state.client ? this.state.client : null} />)}
+            {lessons.map(i => <Lesson
+              key={i}
+              lessonNumber={i}
+              clickTakeQuiz={this._clickTakeQuiz}
+              timestamp={this.state.client ? this.state.client : null} />)}
+            </View>}
+
+          {this.state.showQuiz &&
+            <LessonQuiz
+              lesson={this.state.selectedLessonNumber}
+              closeQuiz={this._closeQuiz} />}
         </ScrollView>
       </View>
     );
