@@ -67,30 +67,49 @@ class BodyweightGraph extends React.Component {
    }
 
    clickDeleteDataPoint() {
+     const uid = firebase.auth().currentUser.uid;
      const records = this.props.data;
      let recordKey;
      const weight = this.state.weightToDelete;
      const date = this.state.dateToDelete;
+     let weightObjRef;
+     let clientWeightRef;
 
      Object.keys(records).map(key => {
-       const obj = records[key];
-       if(Number(obj.timestamp) === Number(this.props.clientTimestamp)) {
-         if(obj.date === date) {
-           recordKey = key;
-         }
+       if(records[key].date === date) {
+         recordKey = key;
        }
      });
 
-     const recordRef = firebase.database().ref('bodyweightRecords/' + recordKey);
-     recordRef.remove();
+     console.log('recordKey', recordKey)
 
-     this.setState({
-       showTooltip: false,
-       showConfirmDeleteEntry: false,
-       tooltipWeight: null,
-       tooltipDate: null,
-       tooltipX: null,
-       tooltipY: null
+     clientWeightRef = firebase.database().ref('/client/' + uid + '/weights/' + recordKey);
+     weightObjRef = firebase.database().ref('/weights/' + recordKey);
+
+     clientWeightRef.remove((error) => {
+       // TO DO: these aren't firing
+       if(error) {
+         alert('failed');
+       } else {
+         alert('success!');
+       }
+     });
+
+     weightObjRef.remove((error) => {
+       // TO DO: these aren't firing
+       if(error) {
+         alert('failed');
+       } else {
+         alert('success!');
+         this.setState({
+           showTooltip: false,
+           showConfirmDeleteEntry: false,
+           tooltipWeight: null,
+           tooltipDate: null,
+           tooltipX: null,
+           tooltipY: null
+         });
+       }
      });
    }
 
@@ -158,6 +177,8 @@ class BodyweightGraph extends React.Component {
        });
      }
      sortedData = sortedData.reverse();
+
+     // console.log('sortedData', sortedData);
 
       return (
         <View>

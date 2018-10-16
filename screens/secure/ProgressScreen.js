@@ -122,15 +122,16 @@ export default class LoginScreen extends React.Component {
     const clientId = firebase.auth().currentUser.uid;
     // const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
 
-    const weightsRef = firebase.database().ref('client-weights/' + clientId);
+    const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
 
-    weightsRef.on('value', snapshot => {
+    weightsRef.orderByChild('date').on('value', snapshot => {
+      console.log('snapshot', snapshot.val())
       this.setState({ bodyweightData: snapshot.val() });
     });
   }
 
   _submitWeight() {
-    const date = this.state.date;
+    const date = new Date(this.state.date);
     const weight = this.state.weight;
     const uid = firebase.auth().currentUser.uid;
 
@@ -150,7 +151,7 @@ export default class LoginScreen extends React.Component {
     // in the bodyweightRecords list and the user's records list.
     var updates = {};
     updates['/weights/' + newRecordKey] = bodyweightRecord;
-    updates['/client-weights/' + uid + '/' + newRecordKey] = bodyweightRecord;
+    updates['/client/' + uid + '/weights/' + newRecordKey] = bodyweightRecord;
 
     firebase.database().ref().update(updates, (error) => {
       // TO DO: these aren't firing
@@ -275,27 +276,32 @@ export default class LoginScreen extends React.Component {
 
     // seven day bodyweight average, initial weight
     let sevenDayAverage, initialWeight, pastWeekEntries = [];
-    const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
+    const clientId = firebase.auth().currentUser.uid;
+    const weights = firebase.database().ref('/client/' + clientId + '/weights');
     const clientTimestamp = this.state.clientTimestamp;
 
-    bodyweightRecords.once('value', snapshot => {
+    if(weights) {
+    weights.once('value', snapshot => {
       const records = snapshot.val();
-      let weight, clientBodyweightRecords = [];
+      let weight, recordsArr = [];
 
       // get client's bodyweight records
       // do this on server side
-      Object.keys(records).map(key => {
-        if(records[key].timestamp === clientTimestamp) {
-          clientBodyweightRecords.push(records[key]);
-        }
-      });
+      if(records) {
+        Object.keys(records).map(key => {
+          recordsArr.push(records[key]);
+        });
+      }
 
       // sort records by date
       // TO DO: fix sorting
-      let sortedBodyweightRecords = clientBodyweightRecords.sort((a,b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      let sortedBodyweightRecords = recordsArr.sort((a,b) => {
+        return new Date(a.date) - new Date(b.date);
       });
       sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+
+      // console.log('records', recordsArr);
 
       // set initial weight
       initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
@@ -327,6 +333,7 @@ export default class LoginScreen extends React.Component {
         sevenDayAverage = '---';
       }
     });
+  }
 
     return (
       <View style={Styles.body}>
