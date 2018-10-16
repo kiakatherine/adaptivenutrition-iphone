@@ -6,8 +6,12 @@ import AuthService from '../services/AuthService';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
+import Swiper from 'react-native-swiper';
+
 import {
   Button,
+  DatePickerIOS,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -27,7 +31,7 @@ export default class CreateAccountScreen extends React.Component {
       firstName: null,
       lastName: null,
       gender: null,
-      birthdate: null,
+      birthdate: new Date(),
       height: null,
       bodyweight: null,
       bodyfat: null,
@@ -35,13 +39,16 @@ export default class CreateAccountScreen extends React.Component {
       password: null,
 
       page: 1,
-      showError: false
+      showError: false,
+      showDatepicker: false
     };
 
     this.signUp = this.signUp.bind(this);
   }
 
   async signUp() {
+    console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, this.state.email, this.state.password);
+
     const { navigate } = this.props.navigation;
     await AuthService.signUp(this.state.email, this.state.password);
     const authenticated = await AuthService.isSignedIn();
@@ -49,157 +56,196 @@ export default class CreateAccountScreen extends React.Component {
     else this.setState({ unauthorized: true });
   }
 
-  navigatePage(page, navigateBack) {
-    if(navigateBack) {
-      this.setState({ page });
-      return;
-    }
-
-    console.log(this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat)
-
-    if(page === 2 && (this.state.firstName && this.state.lastName)) {
-      this.setState({ page, showError: false });
-    } else if(page === 3 && (this.state.gender && this.state.birthdate && this.state.height && this.state.bodyweight && this.state.bodyfat)) {
-      this.setState({ page, showError: false });
-    } else {
-      this.setState({ showError: true });
-    }
+  _showDatepicker () {
+    Keyboard.dismiss();
+    this.setState({ showDatepicker: !this.state.showDatepicker });
   }
 
   render() {
     return (
       <View style={Styles.body}>
-        <View>
-          <Text style={Styles.bigTitle}>Create Account</Text>
-        </View>
+        <Swiper style={styles.wrapper}
+            showsButtons={true}
+            loop={false}
+            index={1}>
+          <View style={styles.slide1}>
+            <Text style={Styles.bigTitle}>Create Account</Text>
+            <Text style={Styles.contentHeading}>
+              We just need a few things in order to build your meal plan...
+            </Text>
+          </View>
 
-        <View style={Styles.content}>
-          {this.state.page === 1 &&
-            <View>
-              <Text style={Styles.contentHeading}>
-                We need a few things in order to build your meal plan...
-              </Text>
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"First Name"}
-                autoFocus
-                onChangeText={firstName => this.setState({ firstName })}
-                value={this.state.firstName}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Last Name"}
-                autoFocus
-                onChangeText={lastName => this.setState({ lastName })}
-                value={this.state.lastName}
-              />
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"First name"}
+              onChangeText={firstName => this.setState({ firstName })}
+              value={this.state.firstName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder={"Last name"}
+              onChangeText={lastName => this.setState({ lastName })}
+              value={this.state.lastName}
+            />
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
 
-              {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
-
+          <View style={styles.slide1}>
+            <View style={styles.genderButtons}>
               <TouchableHighlight
-                style={Styles.button}
-                onPress={() => this.navigatePage(2) }>
-                  <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                style={[Styles.flexCol, styles.femaleButton]}
+                onPress={() => this.setState({ gender: 'F' }) }>
+                  <Text style={Styles.textCenter}>
                     <FontAwesome
-                      name='arrow-right'
-                      size={16}
-                    />
-                  </Text>
-              </TouchableHighlight>
-            </View>}
-
-          {this.state.page === 2 &&
-            <View>
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Gender"}
-                autoFocus
-                onChangeText={gender => this.setState({ gender })}
-                value={this.state.gender}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Birthdate"}
-                autoFocus
-                onChangeText={birthdate => this.setState({ birthdate })}
-                value={this.state.birthdate}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Height"}
-                keyboardType="numeric"
-                autoFocus
-                onChangeText={height => this.setState({ height })}
-                value={this.state.height}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Bodyweight"}
-                keyboardType="numeric"
-                autoFocus
-                onChangeText={bodyweight => this.setState({ bodyweight })}
-                value={this.state.bodyweight}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Body fat percentage"}
-                keyboardType="numeric"
-                autoFocus
-                onChangeText={bodyfat => this.setState({ bodyfat })}
-                value={this.state.bodyfat}
-              />
-
-              {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
-
-              <TouchableHighlight
-                style={Styles.button}
-                onPress={() => this.navigatePage(3) }>
-                  <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
-                    <FontAwesome
-                      name='arrow-right'
-                      size={16}
+                      name='female'
+                      size={36}
                     />
                   </Text>
               </TouchableHighlight>
 
               <TouchableHighlight
-                style={[Styles.button, Styles.buttonInverted]}
-                onPress={() => this.navigatePage(1, true) }>
-                  <Text style={Styles.buttonInvertedText}>Back</Text>
+                style={[Styles.flexCol]}
+                onPress={() => this.setState({ gender: 'M' }) }>
+                  <Text style={[Styles.textCenter]}>
+                  <FontAwesome
+                    name='male'
+                    size={36}
+                  />
+                </Text>
               </TouchableHighlight>
-            </View>}
+            </View>
 
-          {this.state.page === 3 &&
-            <View>
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Email Address"}
-                keyboardType="email-address"
-                autoFocus
-                onChangeText={email => this.setState({ email })}
-                value={this.state.email}
-              />
-              <TextInput
-                style={Styles.forms.textInput}
-                placeholder={"Password"}
-                onChangeText={password => this.setState({ password })}
-                value={this.state.password}
-              />
-              <TouchableHighlight
-                style={Styles.button}
-                disabled={!this.state.email.trim()}
-                onPress={this.signUp}>
-                <Text style={Styles.buttonText}>Create</Text>
-              </TouchableHighlight>
+            <Text style={[Styles.paragraphText, styles.blurb]}>Men and women vary in body fat percentage...</Text>
 
-              <TouchableHighlight
-                style={Styles.button}
-                onPress={() => this.navigatePage(2, true) }>
-                  <Text style={Styles.link}>Back</Text>
-              </TouchableHighlight>
-            </View>}
-        </View>
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Birthdate"}
+              blurOnSubmit={ false }
+              onFocus={birthdate => this._showDatepicker()}
+              value={this.state.birthdate}
+            />
+
+            {this.state.showDatepicker &&
+              <DatePickerIOS
+                style={styles.datePicker}
+                mode={'date'}
+                date={this.state.birthdate}
+                maximumDate={new Date()}
+                onDateChange={birthdate => this.setState({ birthdate: birthdate, showDatepicker: !this.state.showDatepicker }) }
+              />}
+
+            <Text style={[Styles.paragraphText, styles.blurb]}>Did you know that your protein needs vary by age?</Text>
+
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Height"}
+              keyboardType="numeric"
+              blurOnSubmit={ false }
+              onChangeText={height => this.setState({ height })}
+              value={this.state.height}
+            />
+
+            <Text style={[Styles.paragraphText, styles.blurb]}>Different sized people need different sized meals!</Text>
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Bodyweight"}
+              keyboardType="numeric"
+              blurOnSubmit={ false }
+              onChangeText={bodyweight => this.setState({ bodyweight })}
+              value={this.state.bodyweight}
+            />
+
+            <Text style={[Styles.paragraphText, styles.blurb]}>Your bodyweight will help determine what your portion sizes are.</Text>
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Body fat %"}
+              keyboardType="numeric"
+              onChangeText={bodyfat => this.setState({ bodyfat })}
+              value={this.state.bodyfat}
+            />
+
+            <Text style={[Styles.paragraphText, styles.blurb]}>Different sized people need different sized meals!</Text>
+
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Email address"}
+              keyboardType="email-address"
+              blurOnSubmit={ false }
+              onChangeText={email => this.setState({ email })}
+              value={this.state.email}
+            />
+          </View>
+
+          <View style={styles.slide1}>
+            <TextInput
+              style={styles.input}
+              placeholder={"Password"}
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
+            />
+
+            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
+
+            <TouchableHighlight
+              style={Styles.button}
+              disabled={!this.state.email.trim()}
+              onPress={this.signUp}>
+              <Text style={Styles.buttonText}>Create my account</Text>
+            </TouchableHighlight>
+          </View>
+        </Swiper>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.paleGreen,
+    padding: 40
+  },
+  genderButtons: {
+    marginBottom: 10,
+    flexDirection: 'row'
+  },
+  femaleButton: {
+    marginRight: 5
+  },
+  input: {
+    fontSize: 36,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.lightGray,
+    fontFamily: 'Futura-Medium',
+    marginBottom: 20
+  },
+  blurb: {
+    textAlign: 'center',
+    marginTop: 25
+  }
+});

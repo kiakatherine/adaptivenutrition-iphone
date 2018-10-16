@@ -63,9 +63,14 @@ export default {
   pillButtonTextSelected: {
     color: Colors.white
   },
+  buttonLink: {
+    padding: 12,
+    backgroundColor: Colors.white
+  },
   link: {
     color: Colors.primaryColor,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 18
   },
   content: {
     flex: 1,
