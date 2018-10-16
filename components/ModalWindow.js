@@ -18,6 +18,9 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+// header
+import PointsModal from './modals/PointsModal';
+
 // nutrition screen
 import WaketimeTooltip from './modals/WaketimeTooltip';
 import TrainingTooltip from './modals/TrainingTooltip';
@@ -94,6 +97,8 @@ class ModalWindow extends React.Component {
           updateWeight={this.props.updateWeight}
           setDate={this.props.setDate}
           submitWeight={this.props.submitWeight} />
+      } else if(this.props.currentModal === 'POINTS') {
+        modal = <PointsModal />
       }
 
      return (

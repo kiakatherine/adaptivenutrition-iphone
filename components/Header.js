@@ -21,20 +21,30 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
+import ModalWindow from '../components/ModalWindow';
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = {
+      showPoints: false
+    };
+
+    this._closeModal = this._closeModal.bind(this);
   }
 
-  componentWillMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+  // componentWillMount() {
+  //   var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+  //
+  //   client.on('value', snapshot => {
+  //     this.setState({
+  //       client: snapshot.val()
+  //     });
+  //   });
+  // }
 
-    client.on('value', snapshot => {
-      this.setState({
-        client: snapshot.val()
-      });
-    });
+  _closeModal() {
+    this.setState({ showPoints: false });
   }
 
    render() {
@@ -60,13 +70,22 @@ class Header extends React.Component {
              /> {"Today's Meals"}
            </Text>
 
-           <Text style={styles.headerItem}>
-             <MaterialCommunityIcons
-               name={'trophy'}
-               size={16}
-             /> Points
-           </Text>
+           <TouchableHighlight
+             underlayColor={Colors.primaryGreen}
+             onPress={() => { this.setState({ showPoints: true }) }}>
+              <Text style={styles.headerItem}>
+                <MaterialCommunityIcons
+                  name={'trophy'}
+                  size={16}
+                /> Points
+              </Text>
+           </TouchableHighlight>
          </View>
+
+         {this.state.showPoints &&
+            <ModalWindow
+              currentModal="POINTS"
+              closeModal={this._closeModal} /> }
       </View>
      );
    }
