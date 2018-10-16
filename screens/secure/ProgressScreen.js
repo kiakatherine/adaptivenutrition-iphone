@@ -125,7 +125,6 @@ export default class LoginScreen extends React.Component {
     const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
 
     weightsRef.orderByChild('date').on('value', snapshot => {
-      console.log('snapshot', snapshot.val())
       this.setState({ bodyweightData: snapshot.val() });
     });
   }

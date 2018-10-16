@@ -107,11 +107,10 @@ export default class LoginScreen extends React.Component {
                 onPress={this.login}
               />
             </View>
-            <View style={[Styles.button, styles.loginButton]}>
+            {/*<View style={[Styles.button, styles.loginButton]}>
               <Button
                 color={Colors.white}
                 title="Login with Facebook"
-                disabled={!this.state.email.trim() || !this.state.password.trim()}
                 onPress={this.loginWithFacebook}
               />
             </View>
@@ -119,10 +118,9 @@ export default class LoginScreen extends React.Component {
               <Button
                 color={Colors.white}
                 title="Login with Google"
-                disabled={!this.state.email.trim() || !this.state.password.trim()}
                 onPress={this.loginWithGoogle}
               />
-            </View>
+            </View>*/}
             <View>
               <Button
                 color={Colors.primaryColor}

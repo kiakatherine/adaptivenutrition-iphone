@@ -1,6 +1,7 @@
 import React from 'react';
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
+import moment from 'moment';
 
 import AuthService from '../services/AuthService';
 
@@ -39,14 +40,16 @@ export default class CreateAccountScreen extends React.Component {
       password: null,
 
       page: 1,
-      showError: false,
-      showDatepicker: false
+      showError: false
     };
+
+    console.log('date', this.state.birthdate)
 
     this.signUp = this.signUp.bind(this);
   }
 
   async signUp() {
+    // TO DO: if error, don't navigate to meal plan
     console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, this.state.email, this.state.password);
 
     const { navigate } = this.props.navigation;
@@ -54,11 +57,6 @@ export default class CreateAccountScreen extends React.Component {
     const authenticated = await AuthService.isSignedIn();
     if (authenticated) navigate('Authenticated');
     else this.setState({ unauthorized: true });
-  }
-
-  _showDatepicker () {
-    Keyboard.dismiss();
-    this.setState({ showDatepicker: !this.state.showDatepicker });
   }
 
   render() {
@@ -125,19 +123,14 @@ export default class CreateAccountScreen extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"Birthdate"}
-              blurOnSubmit={ false }
-              onFocus={birthdate => this._showDatepicker()}
-              value={this.state.birthdate}
-            />
+              value={moment(this.state.birthdate).format('MM-DD-YYYY')} />
 
-            {this.state.showDatepicker &&
-              <DatePickerIOS
-                style={styles.datePicker}
-                mode={'date'}
-                date={this.state.birthdate}
-                maximumDate={new Date()}
-                onDateChange={birthdate => this.setState({ birthdate: birthdate, showDatepicker: !this.state.showDatepicker }) }
-              />}
+            <DatePickerIOS
+              style={styles.datePicker}
+              mode={'date'}
+              date={this.state.birthdate}
+              maximumDate={new Date()}
+              onDateChange={birthdate => this.setState({ birthdate }) } />
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Did you know that your protein needs vary by age?</Text>
 
@@ -149,7 +142,6 @@ export default class CreateAccountScreen extends React.Component {
               style={styles.input}
               placeholder={"Height"}
               keyboardType="numeric"
-              blurOnSubmit={ false }
               onChangeText={height => this.setState({ height })}
               value={this.state.height}
             />
@@ -163,7 +155,6 @@ export default class CreateAccountScreen extends React.Component {
               style={styles.input}
               placeholder={"Bodyweight"}
               keyboardType="numeric"
-              blurOnSubmit={ false }
               onChangeText={bodyweight => this.setState({ bodyweight })}
               value={this.state.bodyweight}
             />
@@ -191,7 +182,6 @@ export default class CreateAccountScreen extends React.Component {
               style={styles.input}
               placeholder={"Email address"}
               keyboardType="email-address"
-              blurOnSubmit={ false }
               onChangeText={email => this.setState({ email })}
               value={this.state.email}
             />
@@ -208,10 +198,11 @@ export default class CreateAccountScreen extends React.Component {
             {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
 
             <TouchableHighlight
-              style={Styles.button}
+              style={Styles.linkButton}
               disabled={!this.state.email.trim()}
+              underlayColor={Colors.paleGreen}
               onPress={this.signUp}>
-              <Text style={Styles.buttonText}>Create my account</Text>
+              <Text style={[Styles.link, Styles.textCenter, Styles.whiteColor]}>CREATE MY ACCOUNT</Text>
             </TouchableHighlight>
           </View>
         </Swiper>
@@ -247,5 +238,9 @@ const styles = StyleSheet.create({
   blurb: {
     textAlign: 'center',
     marginTop: 25
+  },
+  datepicker: {
+    zIndex: 2,
+    backgroundColor: Colors.white
   }
 });
