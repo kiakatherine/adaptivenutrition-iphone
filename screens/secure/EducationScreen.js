@@ -39,7 +39,12 @@ export default class LoginScreen extends React.Component {
       question3: false,
       question4: false,
       question5: false,
-      quizPassed: false
+      quizPassed: false,
+      question1Selection: null,
+      question2Selection: null,
+      question3Selection: null,
+      question4Selection: null,
+      question5Selection: null
     }
 
     this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
@@ -48,13 +53,17 @@ export default class LoginScreen extends React.Component {
     this._closeQuiz = this._closeQuiz.bind(this);
   }
 
-  componentWillMount() {
-    var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+  componentDidMount() {
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/client/' + uid);
+    // var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
-    client.on('value', snapshot => {
+    clientRef.on('value', snapshot => {
       this.setState({
         client: snapshot.val()
       });
+      console.log('client', this.state.client);
+      console.log('client.quiz1', this.state.client.quiz1);
     });
   }
 
@@ -65,18 +74,27 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  _selectAnswer(questionNumber, isCorrect) {
+  _selectAnswer(questionNumber, isCorrect, index) {
     const q = 'question' + questionNumber;
-    this.setState({ [q]: isCorrect });
+    const s = 'question' + questionNumber + 'Selection';
+    this.setState({
+      [q]: isCorrect,
+      [s]: index
+    });
   }
 
   _checkQuizAnswers() {
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/client/' + uid);
+    const quiz = 'quiz' + this.state.selectedLessonNumber;
+
     if(this.state.question1 &&
       this.state.question2 &&
       this.state.question3 &&
       this.state.question4 &&
       this.state.question5) {
         this.setState({ quizPassed: true });
+        clientRef.set({ [quiz]: true });
       } else {
         this.setState({ quizPassed: false, showQuiz: false }, () => {
           // restart quiz
@@ -89,7 +107,12 @@ export default class LoginScreen extends React.Component {
         question2: false,
         question3: false,
         question4: false,
-        question5: false
+        question5: false,
+        question1Selection: null,
+        question2Selection: null,
+        question3Selection: null,
+        question4Selection: null,
+        question5Selection: null
       })
   }
 
@@ -98,10 +121,11 @@ export default class LoginScreen extends React.Component {
   }
 
   render() {
+    const client = this.state.client;
     const lessons = [1,2,3,4,5,6,7,8];
 
     return (
-      <View style={Styles.body}>
+      <View style={[Styles.body, styles.body]}>
         {!this.state.showQuiz && <ScrollView style={Styles.content}>
           <View>
             <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
@@ -109,6 +133,16 @@ export default class LoginScreen extends React.Component {
             {lessons.map(i => <Lesson
               key={i}
               lessonNumber={i}
+              quiz1={client ? client.quiz1 : false}
+              quiz2={client ? client.quiz2 : false}
+              quiz3={client ? client.quiz3 : false}
+              quiz4={client ? client.quiz4 : false}
+              quiz5={client ? client.quiz5 : false}
+              quiz6={client ? client.quiz6 : false}
+              quiz7={client ? client.quiz7 : false}
+              quiz8={client ? client.quiz8 : false}
+              quiz9={client ? client.quiz9 : false}
+              quiz10={client ? client.quiz1 : false}
               clickTakeQuiz={this._clickTakeQuiz}
               timestamp={this.state.client ? this.state.client : null} />)}
             </View>
@@ -117,6 +151,11 @@ export default class LoginScreen extends React.Component {
         {this.state.showQuiz &&
           <LessonQuiz
             lesson={this.state.selectedLessonNumber}
+            question1Selection={this.state.question1Selection}
+            question2Selection={this.state.question2Selection}
+            question3Selection={this.state.question3Selection}
+            question4Selection={this.state.question4Selection}
+            question5Selection={this.state.question5Selection}
             selectAnswer={this._selectAnswer}
             checkQuizAnswers={this._checkQuizAnswers}
             quizPassed={this.state.quizPassed}
@@ -127,5 +166,7 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
-
+  body: {
+    paddingBottom: 30
+  }
 });

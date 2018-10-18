@@ -1,5 +1,6 @@
 export const quizzes = {
   "lesson1": {
+    "name": "Week 1 Habit Building",
     "questions": [
       {
         "question": "If I ate lunch at noon, my next meal should be at…",
@@ -48,6 +49,7 @@ export const quizzes = {
     ]
   },
   "lesson2": {
+    "name": "Becoming a Meal Prep Boss",
     "questions": [
       {
         "question": "Having tasty meals prepared ahead of time is key to eating healthy.",
@@ -88,6 +90,7 @@ export const quizzes = {
     ]
   },
   "lesson3": {
+    "name": "Weighing & Measuring",
     "questions": [
       {
         "question": "The goal of Phase 2 is to:",
@@ -129,6 +132,7 @@ export const quizzes = {
     ]
   },
   "lesson4": {
+    "name": "What Does Sleep Have to Do With It?",
     "questions": [
       {
         "question": "If a client is eating right and exercising but still not seeing results, 9 times out of 10 the issue is:",
@@ -158,8 +162,8 @@ export const quizzes = {
       {
         "question": "Caffeine intake should end 4-6 hours before bedtime.",
         "answers": [
-          { "answer": "True" },
-          { "answer": "False", isCorrect: true }
+          { "answer": "True", isCorrect: true },
+          { "answer": "False" }
         ]
       },
       {
@@ -174,6 +178,7 @@ export const quizzes = {
     ]
   },
   "lesson5": {
+    "name": "How to Use Phase 3",
     "questions": [
       {
         "question": "Your Phase 3 meal plan is based on all of the following except:",
@@ -215,6 +220,7 @@ export const quizzes = {
     ]
   },
   "lesson6": {
+    "name": "All About Metabolism",
     "questions": [
       {
         "question": "If you’re gaining weight on Phase 3, it’s totally normal and means we are repairing your metabolism from undereating prior to the program.",
@@ -258,6 +264,7 @@ export const quizzes = {
     ]
   },
   "lesson7": {
+    "name": "Adjusting Your Meal Plan to Your Goal",
     "questions": [
       {
         "question": "I know I’m ready to move on to the next step in Phase 3 when:",
@@ -301,6 +308,7 @@ export const quizzes = {
     ]
   },
   "lesson8": {
+    "name": "Supplementation & Refueling from Exercise",
     "questions": [
       {
         "question": "Finding the right supplements for you is more important than eating anti-inflammatory foods, portion sizes, or meal timing.",

@@ -37,19 +37,20 @@ class LessonQuiz extends React.Component {
 
   render() {
     const lesson = this.props.lesson;
+    let title = null;
     let questions = [];
 
     if(lesson) {
-      if(lesson === 1) { questions = quizzes.quizzes.lesson1.questions; }
-      else if(lesson === 2) { questions = quizzes.quizzes.lesson2.questions; }
-      else if(lesson === 3) { questions = quizzes.quizzes.lesson3.questions; }
-      else if(lesson === 4) { questions = quizzes.quizzes.lesson4.questions; }
-      else if(lesson === 5) { questions = quizzes.quizzes.lesson5.questions; }
-      else if(lesson === 6) { questions = quizzes.quizzes.lesson6.questions; }
-      else if(lesson === 7) { questions = quizzes.quizzes.lesson7.questions; }
-      else if(lesson === 8) { questions = quizzes.quizzes.lesson8.questions; }
-      else if(lesson === 9) { questions = quizzes.quizzes.lesson9.questions; }
-      else if(lesson === 10) { questions = quizzes.quizzes.lesson10.questions; }
+      if(lesson === 1) { questions = quizzes.quizzes.lesson1.questions; title = quizzes.quizzes.lesson1.name; }
+      else if(lesson === 2) { questions = quizzes.quizzes.lesson2.questions; title = quizzes.quizzes.lesson2.name; }
+      else if(lesson === 3) { questions = quizzes.quizzes.lesson3.questions; title = quizzes.quizzes.lesson3.name; }
+      else if(lesson === 4) { questions = quizzes.quizzes.lesson4.questions; title = quizzes.quizzes.lesson4.name; }
+      else if(lesson === 5) { questions = quizzes.quizzes.lesson5.questions; title = quizzes.quizzes.lesson5.name; }
+      else if(lesson === 6) { questions = quizzes.quizzes.lesson6.questions; title = quizzes.quizzes.lesson6.name; }
+      else if(lesson === 7) { questions = quizzes.quizzes.lesson7.questions; title = quizzes.quizzes.lesson7.name; }
+      else if(lesson === 8) { questions = quizzes.quizzes.lesson8.questions; title = quizzes.quizzes.lesson8.name; }
+      else if(lesson === 9) { questions = quizzes.quizzes.lesson9.questions; title = quizzes.quizzes.lesson9.name; }
+      else if(lesson === 10) { questions = quizzes.quizzes.lesson10.questions; title = quizzes.quizzes.lesson10.name; }
     }
 
     return (
@@ -66,32 +67,77 @@ class LessonQuiz extends React.Component {
               <FontAwesome
                 style={[Styles.textCenter, Styles.tooltipClose]}
                 name='remove'
-                size={24}
+                size={28}
               />
             </TouchableHighlight>
 
             <Text style={[Styles.bigTitle, Styles.pageTitle]}>Quiz {this.props.lesson}</Text>
-            <Text style={Styles.paragraphText}>Title</Text>
+            <Text style={Styles.paragraphText}>{title}</Text>
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={0} questionNumber={1} question={questions[0]} selectAnswer={this.props.selectAnswer} />
+            <QuizQuestion
+              key={0}
+              questionNumber={1}
+              question={questions[0]}
+              question1Selection={this.props.question1Selection}
+              question2Selection={this.props.question2Selection}
+              question3Selection={this.props.question3Selection}
+              question4Selection={this.props.question4Selection}
+              question5Selection={this.props.question5Selection}
+              selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={1} questionNumber={2} question={questions[1]} selectAnswer={this.props.selectAnswer} />
+            <QuizQuestion
+              key={1}
+              questionNumber={2}
+              question={questions[1]}
+              question1Selection={this.props.question1Selection}
+              question2Selection={this.props.question2Selection}
+              question3Selection={this.props.question3Selection}
+              question4Selection={this.props.question4Selection}
+              question5Selection={this.props.question5Selection}
+              selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={2} questionNumber={3} question={questions[2]} selectAnswer={this.props.selectAnswer} />
+            <QuizQuestion
+              key={2}
+              questionNumber={3}
+              question={questions[2]}
+              question1Selection={this.props.question1Selection}
+              question2Selection={this.props.question2Selection}
+              question3Selection={this.props.question3Selection}
+              question4Selection={this.props.question4Selection}
+              question5Selection={this.props.question5Selection}
+              selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={3} questionNumber={4} question={questions[3]} selectAnswer={this.props.selectAnswer} />
+            <QuizQuestion
+              key={3}
+              questionNumber={4}
+              question={questions[3]}
+              question1Selection={this.props.question1Selection}
+              question2Selection={this.props.question2Selection}
+              question3Selection={this.props.question3Selection}
+              question4Selection={this.props.question4Selection}
+              question5Selection={this.props.question5Selection}
+              selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={4} questionNumber={5} question={questions[4]} selectAnswer={this.props.selectAnswer} />
+            <QuizQuestion
+              key={4}
+              questionNumber={5}
+              question={questions[4]}
+              question1Selection={this.props.question1Selection}
+              question2Selection={this.props.question2Selection}
+              question3Selection={this.props.question3Selection}
+              question4Selection={this.props.question4Selection}
+              question5Selection={this.props.question5Selection}
+              selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
@@ -103,9 +149,20 @@ class LessonQuiz extends React.Component {
             </TouchableHighlight>}
 
             {this.props.quizPassed &&
-              <View style={styles.congratsMessage}>
-                <Text>Great job!</Text>
-                <Text>+ 3 points</Text>
+              <View>
+                <TouchableHighlight
+                  underlayColor={Colors.paleGreen}
+                  onPress={this.props.closeQuiz}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={28}
+                  />
+                </TouchableHighlight>
+                <View style={styles.congratsMessage}>
+                  <Text style={styles.congratsMessageText}>Great job!</Text>
+                  <Text style={styles.congratsMessageText}>+3 points</Text>
+                </View>
               </View>}
           </View>
         </Swiper>
@@ -128,9 +185,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.paleGreen,
     padding: 40
   },
-  congratsMessage: {
+  congratsMessageText: {
+    fontFamily: 'Futura-Medium',
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 36,
     letterSpacing: 1
   }
 });
