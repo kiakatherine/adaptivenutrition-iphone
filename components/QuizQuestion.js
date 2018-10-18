@@ -26,6 +26,10 @@ class QuizQuestion extends React.Component {
     this.state = { };
   }
 
+  selectAnswer(questionNumber, isCorrect) {
+    this.props.selectAnswer(questionNumber, isCorrect);
+  }
+
    render() {
      const question = this.props.question.question;
      const answers = this.props.question.answers;
@@ -35,7 +39,12 @@ class QuizQuestion extends React.Component {
         <Text style={styles.quizQuestionText}>{question}</Text>
 
         {answers.map((answer, i) =>
-          <Text style={styles.quizAnswerText} key={i}>{answer.answer}</Text>)}
+          <TouchableHighlight
+            underlayColor={Colors.paleGreen}
+            key={i}
+            onPress={() => this.selectAnswer(this.props.questionNumber, answer.isCorrect)}>
+            <Text style={styles.quizAnswerText}>{answer.answer}</Text>
+          </TouchableHighlight>)}
        </View>
      );
    }
@@ -47,6 +56,10 @@ QuizQuestion.propTypes = {
 };
 
 const styles = StyleSheet.create ({
+  quizQuestionWrapper: {
+    paddingLeft: 30,
+    paddingRight: 30
+  },
   quizQuestionText: {
     fontSize: 20,
     marginBottom: 15

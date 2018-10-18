@@ -33,10 +33,18 @@ export default class LoginScreen extends React.Component {
     this.state = {
       client: null,
       showQuiz: false,
-      selectedLessonNumber: 1
+      selectedLessonNumber: 1,
+      question1: false,
+      question2: false,
+      question3: false,
+      question4: false,
+      question5: false,
+      quizPassed: false
     }
 
     this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
+    this._selectAnswer = this._selectAnswer.bind(this);
+    this._checkQuizAnswers = this._checkQuizAnswers.bind(this);
     this._closeQuiz = this._closeQuiz.bind(this);
   }
 
@@ -57,6 +65,34 @@ export default class LoginScreen extends React.Component {
     });
   }
 
+  _selectAnswer(questionNumber, isCorrect) {
+    const q = 'question' + questionNumber;
+    this.setState({ [q]: isCorrect });
+  }
+
+  _checkQuizAnswers() {
+    if(this.state.question1 &&
+      this.state.question2 &&
+      this.state.question3 &&
+      this.state.question4 &&
+      this.state.question5) {
+        this.setState({ quizPassed: true });
+      } else {
+        this.setState({ quizPassed: false, showQuiz: false }, () => {
+          // restart quiz
+          this.setState({ showQuiz: true });
+        });
+      }
+
+      this.setState({
+        question1: false,
+        question2: false,
+        question3: false,
+        question4: false,
+        question5: false
+      })
+  }
+
   _closeQuiz() {
     this.setState({ showQuiz: false });
   }
@@ -66,8 +102,8 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <ScrollView style={Styles.content}>
-          {!this.state.showQuiz && <View>
+        {!this.state.showQuiz && <ScrollView style={Styles.content}>
+          <View>
             <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
 
             {lessons.map(i => <Lesson
@@ -75,13 +111,16 @@ export default class LoginScreen extends React.Component {
               lessonNumber={i}
               clickTakeQuiz={this._clickTakeQuiz}
               timestamp={this.state.client ? this.state.client : null} />)}
-            </View>}
+            </View>
+        </ScrollView>}
 
-          {this.state.showQuiz &&
-            <LessonQuiz
-              lesson={this.state.selectedLessonNumber}
-              closeQuiz={this._closeQuiz} />}
-        </ScrollView>
+        {this.state.showQuiz &&
+          <LessonQuiz
+            lesson={this.state.selectedLessonNumber}
+            selectAnswer={this._selectAnswer}
+            checkQuizAnswers={this._checkQuizAnswers}
+            quizPassed={this.state.quizPassed}
+            closeQuiz={this._closeQuiz} />}
       </View>
     );
   }

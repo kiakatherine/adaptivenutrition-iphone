@@ -53,12 +53,11 @@ class LessonQuiz extends React.Component {
     }
 
     return (
-      <View>
-        {this.state.showSwiper && <Swiper
+      <Swiper
           style={styles.wrapper}
           showsButtons={true}
           loop={false}
-          index={1}>
+          index={0}>
 
           <View style={styles.slide}>
             <TouchableHighlight
@@ -76,41 +75,40 @@ class LessonQuiz extends React.Component {
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={0} question={questions[0]} />
+            <QuizQuestion key={0} questionNumber={1} question={questions[0]} selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={1} question={questions[1]} />
+            <QuizQuestion key={1} questionNumber={2} question={questions[1]} selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={2} question={questions[2]} />
+            <QuizQuestion key={2} questionNumber={3} question={questions[2]} selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={3} question={questions[3]} />
+            <QuizQuestion key={3} questionNumber={4} question={questions[3]} selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <QuizQuestion key={4} question={questions[4]} />
+            <QuizQuestion key={4} questionNumber={5} question={questions[4]} selectAnswer={this.props.selectAnswer} />
           </View>
 
           <View style={styles.slide}>
-            <TouchableHighlight
+            {!this.props.quizPassed && <TouchableHighlight
               style={Styles.button}
-              underlayColor={Colors.darkerPrimaryColor}>
-              <Text style={Styles.buttonText}>Check my answers</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-              style={[Styles.button, Styles.buttonInverted, styles.goBackButton]}
               underlayColor={Colors.darkerPrimaryColor}
-              onPress={() => navigate('Education')}>
-              <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>Go back to lessons</Text>
-            </TouchableHighlight>
+              onPress={this.props.checkQuizAnswers}>
+              <Text style={Styles.buttonText}>Check my answers</Text>
+            </TouchableHighlight>}
+
+            {this.props.quizPassed &&
+              <View style={styles.congratsMessage}>
+                <Text>Great job!</Text>
+                <Text>+ 3 points</Text>
+              </View>}
           </View>
-        </Swiper>}
-      </View>
+        </Swiper>
     );
   }
 };
@@ -119,18 +117,20 @@ export default LessonQuiz;
 
 const styles = StyleSheet.create({
   slide: {
-    // flex: 1,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: 0,
+    flex: 1,
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
+    // top: 0,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.paleGreen,
     padding: 40
   },
-  goBackButton: {
-    marginTop: 10
+  congratsMessage: {
+    textAlign: 'center',
+    fontSize: 24,
+    letterSpacing: 1
   }
 });
