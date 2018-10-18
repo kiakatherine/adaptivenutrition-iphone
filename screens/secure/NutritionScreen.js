@@ -570,7 +570,6 @@ export default class LoginScreen extends React.Component {
       todayRef = firebase.database().ref().child('dayStatuses/' + todayKey);
 
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
-        console.log('update phase 2 day status')
         // TO DO: congrats message
         const team = client.challengeGroupTeam;
 
@@ -663,7 +662,7 @@ export default class LoginScreen extends React.Component {
     } else {
       // save date and selected meal and whether completed or not
       // if(!today || today.phase !== this.state.phase) {
-        const dayStatuses = firebase.database().ref('dayStatuses');
+        const dayStatuses = firebase.database().ref('dayProgress');
         const newDayStatus = dayStatuses.push();
         newDayStatus.set({
           date: moment(new Date).format('MM-DD-YY'),
@@ -1421,10 +1420,18 @@ export default class LoginScreen extends React.Component {
             <View style={styles.progressSection}>
               {!viewAllMeals && phase !== 2 &&
                 <TouchableHighlight
-                  style={[Styles.buttonCircular, styles.progressButtonGood]}
+                  style={[Styles.buttonCircular, styles.progressButtonGood,
+                    (currentMeal === 0 && this.state.meal1 === 1) ? styles.completedMealButton :
+                    (currentMeal === 1 && this.state.meal2 === 1) ? styles.completedMealButton :
+                    (currentMeal === 2 && this.state.meal3 === 1) ? styles.completedMealButton :
+                    (currentMeal === 3 && this.state.meal4 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
                   underlayColor={Colors.darkerPrimaryColor}
                   onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                   <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
+                   <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                     (currentMeal === 0 && this.state.meal1 === 1) ? styles.completedMealButtonText :
+                     (currentMeal === 1 && this.state.meal2 === 1) ? styles.completedMealButtonText :
+                     (currentMeal === 2 && this.state.meal3 === 1) ? styles.completedMealButtonText :
+                     (currentMeal === 3 && this.state.meal4 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
                      <FontAwesome
                        style={styles.progressButtonGoodIcon}
                        name='check'
@@ -1434,16 +1441,25 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
 
               {!viewAllMeals && phase !== 2 &&
-                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad]}
+                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
+                  (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
+                  (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
+                  (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
+                  (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
+                  (currentMeal === 3 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
                   underlayColor={Colors.darkerRed}
                   onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText]}>
-                   <FontAwesome
-                     style={styles.progressButtonBadIcon}
-                     name='remove'
-                     size={16}
-                   />
-                 </Text>
+                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                    (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
+                    (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
+                    (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
+                    (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
+                    (currentMeal === 3 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
+                    <FontAwesome
+                      style={styles.progressButtonBadIcon}
+                      name='remove'
+                      size={16} />
+                </Text>
               </TouchableHighlight>}
 
               {!viewAllMeals && phase !== 1 && phase !== 3 && dayStatusesLoaded &&
@@ -2313,6 +2329,30 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
+  },
+  completedMealButton: {
+    backgroundColor: Colors.primaryColor
+  },
+  completedMealButtonText: {
+    color: Colors.white
+  },
+  completedMealButtonBad: {
+    backgroundColor: Colors.paleRed
+  },
+  completedMealButtonTextBad: {
+    color: Colors.white
+  },
+  incompleteMealButton: {
+    backgroundColor: Colors.darkGray
+  },
+  incompleteMealButtonBad: {
+    backgroundColor: Colors.darkGray
+  },
+  incompleteMealButtonText: {
+    color: Colors.darkGray
+  },
+  incompleteMealButtonTextBad: {
+    color: Colors.white
   },
   completedPhaseTwoMeal: {
     backgroundColor: Colors.primaryColor

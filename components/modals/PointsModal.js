@@ -22,12 +22,28 @@ class PointsModal extends React.Component {
     super(props);
 
     this.state = {
+      points: 20, // TO DO
+      teamPoints: 100
     }
   }
 
   render() {
+    const teams = [1,2,3,4,5];
+
     return (
-      <View style={Styles.modalContent}><Text>hi</Text></View>
+      <View style={Styles.modalContent}>
+        <Text>{this.state.points}</Text>
+        <Text>Your Points</Text>
+
+        <Text>{this.state.teamPoints}</Text>
+        <Text>Team Points</Text>
+
+        {teams.map((team, i) => {
+          <View key={i}>
+            <Text>Team {team}</Text>
+            <Text>10</Text>
+          </View>})}
+      </View>
     );
   }
 };
