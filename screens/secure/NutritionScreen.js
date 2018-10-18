@@ -117,14 +117,16 @@ export default class LoginScreen extends React.Component {
       const date = new Date();
       const dayStatuses = snapshot.val();
       let filteredDayStatuses = [];
+
       Object.keys(dayStatuses).map(key => {
         if(dayStatuses[key].timestamp === clientResponse.timestamp) {
           filteredDayStatuses.push(dayStatuses[key]);
         }
       });
+
       let today;
       filteredDayStatuses.forEach(day => {
-        if(day && day.date === moment(date).format('MM-DD-YY')) {
+        if((day && day.date === moment(date).format('MM-DD-YY')) && (day.phase === this.state.phase)) {
           today = day;
         }
       });
@@ -2135,7 +2137,7 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipParagraph}>The goal of Phase 1 is to get comfortable weighing and measuring your food intake. It can be a challenge at first if these habits are new, but it gets easier the more you do it!</Text>
 
             <View style={Styles.modalButtons}>
-              <TouchableHighlight style={Styles.modalButtonCancel}
+              <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
                 <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
@@ -2169,7 +2171,7 @@ export default class LoginScreen extends React.Component {
             <Text style={Styles.tooltipParagraph}>We recommend spending a minimum of one week on Phase 1 and one week on Phase 2 before moving to Phase 3. The purpose of Phase 2 is to ingrain the habit of weighing and measuring every meal at current portion sizes before applying specific portion sizes in Phase 3. While this may seem unnecessary, we find that skipping this week of the program lowers client success rates.</Text>
 
             <View style={Styles.modalButtons}>
-              <TouchableHighlight style={Styles.modalButtonCancel}
+              <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
                 <Text style={Styles.modalButtonCancelText}>Nevermind</Text>

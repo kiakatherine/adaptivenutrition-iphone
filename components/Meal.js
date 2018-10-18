@@ -50,7 +50,6 @@ class Meal extends React.Component {
    render() {
      let label;
      let time;
-     let bedtime = false;
      let pwo = false;
      let viewAllMeals = this.props.viewAllMeals;
 
@@ -72,22 +71,13 @@ class Meal extends React.Component {
        label = labels.x.low[this.props.currentMeal];
      }
 
-     // bedtime
-     if(this.props.trainingIntensity === 0 && this.props.currentMeal === 4) {
-       bedtime = true;
-     } else if(this.props.phase === 3 && this.props.trainingIntensity > 0 && this.props.currentMeal === 5) {
-       bedtime = true;
-     }
-
      // pwo
      if(this.props.pwo || label && label.indexOf('PWO') > -1) {
        pwo = true;
      }
 
      // timing
-     if(bedtime) {
-       time = 'Before bed';
-     } else if (pwo) {
+     if(pwo) {
        time = 'Post-workout';
      } else if(label === 'Breakfast') {
        time = this.props.breakfastTime;
@@ -138,10 +128,10 @@ class Meal extends React.Component {
             sources={this.props.proteins}
             trainingIntensity={this.props.trainingIntensity}
             mealsBeforeWorkout={this.props.mealsBeforeWorkout}
+            template={this.props.template}
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
             pwo={pwo}
-            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -175,7 +165,6 @@ class Meal extends React.Component {
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
             pwo={pwo}
-            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -200,8 +189,6 @@ class Meal extends React.Component {
         <View style={styles.mealRow}>
           <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
 
-          {pwo && <Text style={Styles.emptyMessage}>None</Text>}
-
           <FoodOptions style={styles.mealRowColLong}
             macro='fats'
             sources={this.props.fats}
@@ -211,7 +198,6 @@ class Meal extends React.Component {
             phase={this.props.phase}
             currentMeal={this.props.currentMeal}
             pwo={pwo}
-            bedtime={bedtime}
             age={this.props.age}
             gender={this.props.gender}
             height={this.props.height}
@@ -238,10 +224,21 @@ class Meal extends React.Component {
             <View>
               <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
 
-              {pwo && <Text style={Styles.emptyMessage}>None</Text>}
-
-              {!pwo && <FoodOptions style={styles.mealRowColLong}
-                macro='veggies'/>}
+              <FoodOptions style={styles.mealRowColLong}
+                macro='veggies'
+                sources={this.props.veggies}
+                trainingIntensity={this.props.trainingIntensity}
+                mealsBeforeWorkout={this.props.mealsBeforeWorkout}
+                template={this.props.template}
+                phase={this.props.phase}
+                currentMeal={this.props.currentMeal}
+                pwo={pwo}
+                age={this.props.age}
+                gender={this.props.gender}
+                height={this.props.height}
+                bodyweight={this.props.bodyweight}
+                bodyfat={this.props.bodyfat}
+                showInGrams={this.props.showInGrams} />
             </View>}
 
           {this.props.phase < 3 &&

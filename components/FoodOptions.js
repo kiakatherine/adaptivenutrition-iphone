@@ -39,55 +39,46 @@ class FoodOptions extends React.Component {
      const trainingIntensity = this.props.trainingIntensity;
      let hidePwoShakeArrows = false;
      let formattedOptions = [];
+     let formattedOptionsLength = 0;
      let i = 0;
 
-     if(macro !== 'veggies') {
-       let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+    if(macro !== 'veggies') {
+      let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
 
-       options.forEach(opt => {
+      if(options) {
+        options.forEach(opt => {
          const option = opt !== '---' ? opt.split('of ') : null;
 
-         if(option) {
-           formattedOptions.push({
-             amount: option[0],
-             food: option[1],
-             key: i
-           });
-         }
+          if(option) {
+            formattedOptions.push({
+              amount: option[0],
+              food: option[1],
+              key: i
+            });
+          }
 
-         i++;
-       });
-     } else {
-       formattedOptions.push({
-         amount: '1 cup',
-         food: 'veggies',
-         key: i
-       });
-     }
+          i++;
+        });
+      }
+    } else {
+      if(!this.props.pwo) {
+        formattedOptions.push({
+          amount: '1 cup',
+          food: 'veggies',
+          key: i
+        });
+      }
+    }
 
-     let content = null;
-     const currMeal = Number(currentMeal) + 1;
-     const string = macro + currMeal;
+    formattedOptionsLength = formattedOptions.length;
 
-     // if(Number.isInteger(currMeal)) {
-     //   if(selection) {
-     //     content = selection;
-     //   } else if(isPwoShake) {
-     //     hidePwoShakeArrows = (macro === 'fats' || macro === 'veggies') ? true : false;
-     //     content = sources[string + 'Grams'] + ' of whey protein';
-     //   } else if(showInGrams) {
-     //     content = sources[string + 'Grams'];
-     //   }
-     // }
-
-     // let optionsHtml = [];
-     // options.forEach((opt, i) => {
-     //   optionsHtml.push(<Picker.Item label={opt} value={opt} key={i} />)
-     // });
+    // if(macro === 'protein') {
+    //   console.log('formattedOptions', formattedOptions)
+    // }
 
     return (
       <View>
-        {!showInGrams &&
+        {!showInGrams && formattedOptionsLength > 0 &&
           <FlatList
             horizontal={true}
             style={styles.foodOptionsList}
@@ -110,6 +101,9 @@ class FoodOptions extends React.Component {
                     style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
               </View>)}
           />}
+
+        {!showInGrams && formattedOptionsLength === 0 &&
+          <Text style={[Styles.emptyMessage, styles.emptyMessage]}>No {macro} needed for this meal</Text>}
 
         {showInGrams && <Text style={styles.content}>{content}</Text>}
       </View>
@@ -160,5 +154,8 @@ const styles = StyleSheet.create ({
      fontSize: 18,
      letterSpacing: 1,
      color: Colors.black
+   },
+   emptyMessage: {
+     marginBottom: 30
    }
 });
