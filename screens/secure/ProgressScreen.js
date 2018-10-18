@@ -41,7 +41,6 @@ export default class LoginScreen extends React.Component {
       date: new Date(),
       showAddBodyweight: false,
       weight: null,
-      clientTimestamp: null,
       showProgressPhase1: true,
       showProgressPhase2: true,
       showProgressPhase3: true,
@@ -60,73 +59,69 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const dayStatuses = firebase.database().ref('dayStatuses');
     const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
-    client.on('value', snapshot => {
+    const clientId = firebase.auth().currentUser.uid;
+    const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
+
+    weightsRef.orderByChild('date').on('value', snapshot => {
+      console.log('bw data', snapshot.val())
+      this.setState({ bodyweightData: snapshot.val() });
+    });
+
+    firebase.database().ref('/client/' + clientId).on('value', snapshot => {
       clientResponse = snapshot.val();
 
       this.setState({
-        weight: clientResponse.latestBodyweight,
-        clientTimestamp: clientResponse.timestamp
+        weight: clientResponse.latestBodyweight
       });
     });
 
-    dayStatuses.on('value', snapshot => {
-      const date = new Date();
-      const dayStatuses = snapshot.val();
-      let filteredDayStatusesPhase1 = [];
-      let filteredDayStatusesPhase3 = [];
+    // dayStatuses.on('value', snapshot => {
+    //   const date = new Date();
+    //   const dayStatuses = snapshot.val();
+    //   let filteredDayStatusesPhase1 = [];
+    //   let filteredDayStatusesPhase3 = [];
+    //
+    //   Object.keys(dayStatuses).map(key => {
+    //     if(dayStatuses[key].timestamp === clientResponse.timestamp) {
+    //       if(dayStatuses[key].phase === 1) {
+    //         filteredDayStatusesPhase1.push(dayStatuses[key]);
+    //       } else if(dayStatuses[key].phase === 3) {
+    //         filteredDayStatusesPhase3.push(dayStatuses[key]);
+    //       }
+    //     }
+    //   });
+    //
+    //   this.setState({
+    //     filteredDayStatusesPhase1: filteredDayStatusesPhase1,
+    //     filteredDayStatusesPhase3: filteredDayStatusesPhase3
+    //   });
+    // });
 
-      Object.keys(dayStatuses).map(key => {
-        if(dayStatuses[key].timestamp === clientResponse.timestamp) {
-          if(dayStatuses[key].phase === 1) {
-            filteredDayStatusesPhase1.push(dayStatuses[key]);
-          } else if(dayStatuses[key].phase === 3) {
-            filteredDayStatusesPhase3.push(dayStatuses[key]);
-          }
-        }
-      });
-
-      this.setState({
-        filteredDayStatusesPhase1: filteredDayStatusesPhase1,
-        filteredDayStatusesPhase3: filteredDayStatusesPhase3
-      });
-    });
-
-    phaseTwoDayStatuses.on('value', snapshot => {
-      const date = new Date();
-      const phaseTwoDayStatuses = snapshot.val();
-      let filteredDayStatusesPhase2 = [];
-
-      Object.keys(phaseTwoDayStatuses).map(key => {
-        if(phaseTwoDayStatuses[key].timestamp === clientResponse.timestamp) {
-          filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
-        }
-      });
-
-      this.setState({
-        filteredDayStatusesPhase2: filteredDayStatusesPhase2
-      });
-    });
+    // phaseTwoDayStatuses.on('value', snapshot => {
+    //   const date = new Date();
+    //   const phaseTwoDayStatuses = snapshot.val();
+    //   let filteredDayStatusesPhase2 = [];
+    //
+    //   Object.keys(phaseTwoDayStatuses).map(key => {
+    //     if(phaseTwoDayStatuses[key].timestamp === clientResponse.timestamp) {
+    //       filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
+    //     }
+    //   });
+    //
+    //   this.setState({
+    //     filteredDayStatusesPhase2: filteredDayStatusesPhase2
+    //   });
+    // });
   }
 
   _hideAll () {
     Keyboard.dismiss();
     this.setState({ showDatepicker: false });
-  }
-
-  componentWillMount() {
-    const clientId = firebase.auth().currentUser.uid;
-    // const bodyweightRecords = firebase.database().ref().child('bodyweightRecords');
-
-    const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
-
-    weightsRef.orderByChild('date').on('value', snapshot => {
-      this.setState({ bodyweightData: snapshot.val() });
-    });
   }
 
   _submitWeight() {
@@ -164,7 +159,8 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showAddBodyweight: false,
       date: new Date(),
-      weight
+      weight,
+      latestRecordKey: newRecordKey
     }, this._hideAll());
 
     // bodyweightRecords.once('value', snapshot => {
@@ -199,6 +195,17 @@ export default class LoginScreen extends React.Component {
     //       alert('Oops! Looks like there is already an entry for that day.')
     //     }
     //   }
+  }
+
+  undoWeight() {
+    const clientId = firebase.auth().currentUser.uid;
+    const weightRef = firebase.database().ref('/weights/' + this.state.latestRecordKey);
+    const clientWeightRef = firebase.database().ref('/client/' + clientId + '/weights/' + this.state.latestRecordKey);
+
+    weightRef.remove();
+    clientWeightRef.remove();
+
+    this.setState({ latestRecordKey: null });
   }
 
   _clickProgressReportPhase1() {
@@ -278,7 +285,6 @@ export default class LoginScreen extends React.Component {
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientId = firebase.auth().currentUser.uid;
     const weights = firebase.database().ref('/client/' + clientId + '/weights');
-    const clientTimestamp = this.state.clientTimestamp;
 
     if(weights) {
     weights.once('value', snapshot => {
@@ -334,6 +340,8 @@ export default class LoginScreen extends React.Component {
     });
   }
 
+  console.log('weight', this.state.weight)
+
     return (
       <View style={Styles.body}>
         <ScrollView style={Styles.content}>
@@ -374,6 +382,19 @@ export default class LoginScreen extends React.Component {
                   </Text>
                 </TouchableHighlight>
 
+                {this.state.latestRecordKey &&
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={[Styles.buttonCircular, styles.undoButton]}
+                    onPress={() => { this.undoWeight() }}>
+                    <Text style={Styles.buttonCircularIcon}>
+                      <FontAwesome
+                        name='undo'
+                        size={16}
+                      />
+                    </Text>
+                  </TouchableHighlight>}
+
                 <View style={[Styles.flexRow, styles.pillButtons]}>
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
@@ -398,8 +419,7 @@ export default class LoginScreen extends React.Component {
                 </View>
 
                 <BodyweightGraph
-                  data={this.state.bodyweightData}
-                  clientTimestamp={this.state.clientTimestamp} />
+                  data={this.state.bodyweightData} />
               </View>}
 
             {this.state.showProgressReports &&
@@ -518,5 +538,8 @@ const styles = StyleSheet.create ({
   pillButtons: {
     marginTop: 50,
     alignItems: 'center'
+  },
+  undoButton: {
+    marginTop: 10
   }
 });
