@@ -36,22 +36,36 @@ class LessonQuiz extends React.Component {
   }
 
   render() {
-    const lesson = this.props.lesson;
+    const lessonNumber = this.props.lesson;
     let title = null;
     let questions = [];
+    let quizPassed = false;
 
-    if(lesson) {
-      if(lesson === 1) { questions = quizzes.quizzes.lesson1.questions; title = quizzes.quizzes.lesson1.name; }
-      else if(lesson === 2) { questions = quizzes.quizzes.lesson2.questions; title = quizzes.quizzes.lesson2.name; }
-      else if(lesson === 3) { questions = quizzes.quizzes.lesson3.questions; title = quizzes.quizzes.lesson3.name; }
-      else if(lesson === 4) { questions = quizzes.quizzes.lesson4.questions; title = quizzes.quizzes.lesson4.name; }
-      else if(lesson === 5) { questions = quizzes.quizzes.lesson5.questions; title = quizzes.quizzes.lesson5.name; }
-      else if(lesson === 6) { questions = quizzes.quizzes.lesson6.questions; title = quizzes.quizzes.lesson6.name; }
-      else if(lesson === 7) { questions = quizzes.quizzes.lesson7.questions; title = quizzes.quizzes.lesson7.name; }
-      else if(lesson === 8) { questions = quizzes.quizzes.lesson8.questions; title = quizzes.quizzes.lesson8.name; }
-      else if(lesson === 9) { questions = quizzes.quizzes.lesson9.questions; title = quizzes.quizzes.lesson9.name; }
-      else if(lesson === 10) { questions = quizzes.quizzes.lesson10.questions; title = quizzes.quizzes.lesson10.name; }
+    if(lessonNumber) {
+      if(lessonNumber === 1) { questions = quizzes.quizzes.lesson1.questions; title = quizzes.quizzes.lesson1.name; }
+      else if(lessonNumber === 2) { questions = quizzes.quizzes.lesson2.questions; title = quizzes.quizzes.lesson2.name; }
+      else if(lessonNumber === 3) { questions = quizzes.quizzes.lesson3.questions; title = quizzes.quizzes.lesson3.name; }
+      else if(lessonNumber === 4) { questions = quizzes.quizzes.lesson4.questions; title = quizzes.quizzes.lesson4.name; }
+      else if(lessonNumber === 5) { questions = quizzes.quizzes.lesson5.questions; title = quizzes.quizzes.lesson5.name; }
+      else if(lessonNumber === 6) { questions = quizzes.quizzes.lesson6.questions; title = quizzes.quizzes.lesson6.name; }
+      else if(lessonNumber === 7) { questions = quizzes.quizzes.lesson7.questions; title = quizzes.quizzes.lesson7.name; }
+      else if(lessonNumber === 8) { questions = quizzes.quizzes.lesson8.questions; title = quizzes.quizzes.lesson8.name; }
+      else if(lessonNumber === 9) { questions = quizzes.quizzes.lesson9.questions; title = quizzes.quizzes.lesson9.name; }
+      else if(lessonNumber === 10) { questions = quizzes.quizzes.lesson10.questions; title = quizzes.quizzes.lesson10.name; }
     }
+
+    if((lessonNumber === 1 && this.props.quiz1) ||
+     (lessonNumber === 2 && this.props.quiz2) ||
+     (lessonNumber === 3 && this.props.quiz3) ||
+     (lessonNumber === 4 && this.props.quiz4) ||
+     (lessonNumber === 5 && this.props.quiz5) ||
+     (lessonNumber === 6 && this.props.quiz6) ||
+     (lessonNumber === 7 && this.props.quiz7) ||
+     (lessonNumber === 8 && this.props.quiz8) ||
+     (lessonNumber === 9 && this.props.quiz9) ||
+     (lessonNumber === 10 && this.props.quiz10)) {
+       quizPassed = true;
+     }
 
     return (
       <Swiper
@@ -78,6 +92,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={0}
+              quizPassed={quizPassed}
               questionNumber={1}
               question={questions[0]}
               question1Selection={this.props.question1Selection}
@@ -91,6 +106,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={1}
+              quizPassed={quizPassed}
               questionNumber={2}
               question={questions[1]}
               question1Selection={this.props.question1Selection}
@@ -104,6 +120,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={2}
+              quizPassed={quizPassed}
               questionNumber={3}
               question={questions[2]}
               question1Selection={this.props.question1Selection}
@@ -117,6 +134,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={3}
+              quizPassed={quizPassed}
               questionNumber={4}
               question={questions[3]}
               question1Selection={this.props.question1Selection}
@@ -130,6 +148,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={4}
+              quizPassed={quizPassed}
               questionNumber={5}
               question={questions[4]}
               question1Selection={this.props.question1Selection}
@@ -141,14 +160,14 @@ class LessonQuiz extends React.Component {
           </View>
 
           <View style={styles.slide}>
-            {!this.props.quizPassed && <TouchableHighlight
+            {!quizPassed && <TouchableHighlight
               style={Styles.button}
               underlayColor={Colors.darkerPrimaryColor}
               onPress={this.props.checkQuizAnswers}>
               <Text style={Styles.buttonText}>Check my answers</Text>
             </TouchableHighlight>}
 
-            {this.props.quizPassed &&
+            {quizPassed &&
               <View>
                 <TouchableHighlight
                   underlayColor={Colors.paleGreen}
@@ -175,11 +194,6 @@ export default LessonQuiz;
 const styles = StyleSheet.create({
   slide: {
     flex: 1,
-    // position: 'absolute',
-    // left: 0,
-    // right: 0,
-    // bottom: 0,
-    // top: 0,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.paleGreen,

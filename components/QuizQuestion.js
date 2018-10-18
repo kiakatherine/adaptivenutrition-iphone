@@ -43,15 +43,15 @@ class QuizQuestion extends React.Component {
 
         {answers.map((answer, i) =>
           <TouchableHighlight
-            style={[styles.quizAnswerButton,
-              (questionNumber === 1 && this.props.question1Selection === i) ? styles.selected :
+            style={[styles.quizAnswerButton, this.props.quizPassed && answer.isCorrect ? styles.selected :
+              ((questionNumber === 1 && this.props.question1Selection === i) ? styles.selected :
               (questionNumber === 2 && this.props.question2Selection === i) ? styles.selected :
               (questionNumber === 3 && this.props.question3Selection === i) ? styles.selected :
               (questionNumber === 4 && this.props.question4Selection === i) ? styles.selected :
-              (questionNumber === 5 && this.props.question5Selection === i) ? styles.selected : null]}
+              (questionNumber === 5 && this.props.question5Selection === i) ? styles.selected : null)]}
             underlayColor={Colors.paleGreen}
             key={i}
-            onPress={() => this.selectAnswer(questionNumber, answer.isCorrect, i)}>
+            onPress={() => this.props.quizPassed ? null : this.selectAnswer(questionNumber, answer.isCorrect, i)}>
             <Text style={styles.quizAnswerText}>{answer.answer}</Text>
           </TouchableHighlight>)}
        </View>
@@ -66,8 +66,8 @@ QuizQuestion.propTypes = {
 
 const styles = StyleSheet.create ({
   quizQuestionWrapper: {
-    paddingLeft: 30,
-    paddingRight: 30
+    paddingLeft: 10,
+    paddingRight: 10
   },
   quizQuestionText: {
     fontFamily: 'Futura-Medium',
@@ -80,7 +80,7 @@ const styles = StyleSheet.create ({
     padding: 15
   },
   quizAnswerText: {
-    fontSize: 24
+    fontSize: 22
   },
   selected: {
     backgroundColor: Colors.white,

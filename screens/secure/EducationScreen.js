@@ -158,7 +158,16 @@ export default class LoginScreen extends React.Component {
             question5Selection={this.state.question5Selection}
             selectAnswer={this._selectAnswer}
             checkQuizAnswers={this._checkQuizAnswers}
-            quizPassed={this.state.quizPassed}
+            quiz1={client ? client.quiz1 : false}
+            quiz2={client ? client.quiz2 : false}
+            quiz3={client ? client.quiz3 : false}
+            quiz4={client ? client.quiz4 : false}
+            quiz5={client ? client.quiz5 : false}
+            quiz6={client ? client.quiz6 : false}
+            quiz7={client ? client.quiz7 : false}
+            quiz8={client ? client.quiz8 : false}
+            quiz9={client ? client.quiz9 : false}
+            quiz10={client ? client.quiz1 : false}
             closeQuiz={this._closeQuiz} />}
       </View>
     );
