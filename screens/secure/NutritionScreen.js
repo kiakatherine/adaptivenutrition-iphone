@@ -559,11 +559,6 @@ export default class LoginScreen extends React.Component {
       });
     });
 
-    console.log('today', today)
-    console.log('todayKey', todayKey)
-    console.log('today.phase', today.phase)
-    console.log('this.state.phase', this.state.phase)
-
     if(today && todayKey && today.phase === this.state.phase) {
       // set meal completed boolean
       if(today[mealToSave] === completion) {
@@ -1300,7 +1295,19 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {this.state.phase !== null &&
-          <Header />}
+          <Header
+            points={this.state.client.totalPoints}
+            phase={phase}
+            phase1meal1={this.state.phase1meal1}
+            phase1meal2={this.state.phase1meal2}
+            phase1meal3={this.state.phase1meal3}
+            phase1meal4={this.state.phase1meal4}
+            phase3meal1={this.state.phase3meal1}
+            phase3meal2={this.state.phase3meal2}
+            phase3meal3={this.state.phase3meal3}
+            phase3meal4={this.state.phase3meal4}
+            phase3meal5={this.state.phase3meal5}
+            phase3meal6={this.state.phase3meal6} />}
 
         {(this.state.phase === null) &&
           <Text style={styles.loadingText}>adapt & thrive</Text>}

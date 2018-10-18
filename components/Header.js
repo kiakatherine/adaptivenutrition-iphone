@@ -57,27 +57,82 @@ class Header extends React.Component {
            </Text>*/}
 
            <Text style={styles.headerItem}>
-           <MaterialCommunityIcons
-             name={'fire'}
-             size={16}
-           /> Streak
+             <FontAwesome
+               name={'fire'}
+               size={24} /> Streak
            </Text>
 
-           <Text style={styles.headerItem}>
-             <MaterialCommunityIcons
-               name={'silverware-fork'}
-               size={16}
-             /> {"Today's Meals"}
-           </Text>
+          {this.props.phase === 1 &&
+            <Text style={styles.headerItem}>
+              <FontAwesome
+                style={[styles.checkmark,
+                  this.props.phase1meal1 === 1 ? styles.complete :
+                  this.props.phase1meal1 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                name={'check'}
+                size={28} />
+              <FontAwesome
+                style={[styles.checkmark,
+                  this.props.phase1meal2 === 1 ? styles.complete :
+                  this.props.phase1meal2 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                name={'check'}
+                size={28} />
+              <FontAwesome
+                style={[styles.checkmark,
+                  this.props.phase1meal3 === 1 ? styles.complete :
+                  this.props.phase1meal3 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                name={'check'}
+                size={28} />
+              <FontAwesome
+                style={[styles.checkmark,
+                  this.props.phase1meal4 === 1 ? styles.complete :
+                  this.props.phase1meal4 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                name={'check'}
+                size={28} />
+             </Text>}
+
+           {this.props.phase === 3 &&
+             <Text style={styles.headerItem}>
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal1 === 1 ? styles.complete :
+                  this.props.phase3meal1 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal2 === 1 ? styles.complete :
+                  this.props.phase3meal2 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal3 === 1 ? styles.complete :
+                  this.props.phase3meal3 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal4 === 1 ? styles.complete :
+                  this.props.phase3meal4 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+              </Text>}
 
            <TouchableHighlight
              underlayColor={Colors.primaryGreen}
              onPress={() => { this.setState({ showPoints: true }) }}>
               <Text style={styles.headerItem}>
-                <MaterialCommunityIcons
+                <FontAwesome
                   name={'trophy'}
-                  size={16}
-                /> Points
+                  size={24} /> {this.props.points}
               </Text>
            </TouchableHighlight>
          </View>
@@ -100,32 +155,26 @@ const styles = StyleSheet.create ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: Colors.white,
     padding: 10
   },
   headerItem: {
     flex: 1,
-    color: Colors.white,
+    fontSize: 18,
+    fontFamily: 'Futura',
+    color: Colors.black,
     textAlign: 'center'
+  },
+  checkmark: {
+    marginRight: 5
+  },
+  complete: {
+    color: Colors.secondaryColor
+  },
+  completeBad: {
+    color: Colors.paleRed
+  },
+  incomplete: {
+    color: Colors.gray
   }
-  // nameHeader: {
-  //   backgroundColor: Colors.secondaryColor,
-  //   paddingTop: 10,
-  //   paddingBottom: 10
-  // },
-  // nameHeaderText: {
-  //   textAlign: 'center',
-  //   color: Colors.white
-  // },
-  // logo: {
-  //   width: 50,
-  //   height: 50
-  // },
-  // header: {
-  //   // backgroundColor: Colors.primaryColor,
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   height: 50
-  // }
 });

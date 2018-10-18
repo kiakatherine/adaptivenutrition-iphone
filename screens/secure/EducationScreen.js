@@ -56,14 +56,9 @@ export default class LoginScreen extends React.Component {
   componentDidMount() {
     const uid = firebase.auth().currentUser.uid;
     const clientRef = firebase.database().ref('/client/' + uid);
-    // var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
 
     clientRef.on('value', snapshot => {
-      this.setState({
-        client: snapshot.val()
-      });
-      console.log('client', this.state.client);
-      console.log('client.quiz1', this.state.client.quiz1);
+      this.setState({ client: snapshot.val() });
     });
   }
 
