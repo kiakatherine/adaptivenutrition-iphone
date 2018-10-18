@@ -557,6 +557,11 @@ export default class LoginScreen extends React.Component {
       });
     });
 
+    console.log('today', today)
+    console.log('todayKey', todayKey)
+    console.log('today.phase', today.phase)
+    console.log('this.state.phase', this.state.phase)
+
     if(today && todayKey && today.phase === this.state.phase) {
       // set meal completed boolean
       if(today[mealToSave] === completion) {
@@ -662,7 +667,7 @@ export default class LoginScreen extends React.Component {
     } else {
       // save date and selected meal and whether completed or not
       // if(!today || today.phase !== this.state.phase) {
-        const dayStatuses = firebase.database().ref('dayProgress');
+        const dayStatuses = firebase.database().ref('dayStatuses');
         const newDayStatus = dayStatuses.push();
         newDayStatus.set({
           date: moment(new Date).format('MM-DD-YY'),
@@ -677,7 +682,7 @@ export default class LoginScreen extends React.Component {
           [mealToSave]: completion,
           phase: client.phase
         }).then(resp => {
-          console.log('saved new phase 2 day status')
+          console.log('saved new phase day status')
           // TO DO: congrats message
         }, reason => {
           console.log('Could not save meal completion');
