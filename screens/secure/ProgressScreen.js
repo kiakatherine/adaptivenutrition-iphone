@@ -60,8 +60,8 @@ export default class LoginScreen extends React.Component {
 
   componentDidMount() {
     // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    const dayStatuses = firebase.database().ref('dayStatuses');
-    const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
+    // const dayStatuses = firebase.database().ref('dayStatuses');
+    // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
     const clientId = firebase.auth().currentUser.uid;
@@ -70,14 +70,17 @@ export default class LoginScreen extends React.Component {
 
     weightsRef.orderByChild('date').on('value', snapshot => {
       this.setState({ bodyweightData: snapshot.val() });
+      console.log('snapshot', snapshot.val())
     });
 
     clientRef.on('value', snapshot => {
       clientResponse = snapshot.val();
 
-      this.setState({
-        weight: clientResponse ? clientResponse.latestBodyweight : null
-      });
+      if(clientResponse) {
+        this.setState({
+          weight: clientResponse.latestBodyweight ? clientResponse.latestBodyweight : clientResponse.weight
+        });
+      }
     });
 
     // dayStatuses.on('value', snapshot => {
@@ -128,13 +131,19 @@ export default class LoginScreen extends React.Component {
     const date = new Date(this.state.date);
     const weight = this.state.weight;
     const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    let client;
+
+    clientRef.once('value', snapshot => {
+      client = snapshot.val();
+    });
 
     // TO DO: check not already a record for that date
     // use firebase.database().ref().child('weights').orderByValue() ?
 
     const bodyweightRecord = {
       date: date,
-      weight: weight,
+      weight: Number(weight),
       uid: uid
     };
 
@@ -145,7 +154,7 @@ export default class LoginScreen extends React.Component {
     // in the bodyweightRecords list and the user's records list.
     var updates = {};
     updates['/weights/' + newRecordKey] = bodyweightRecord;
-    updates['/client/' + uid + '/weights/' + newRecordKey] = bodyweightRecord;
+    updates['/clients/' + uid + '/weights/' + newRecordKey] = bodyweightRecord;
 
     firebase.database().ref().update(updates, (error) => {
       // TO DO: these aren't firing
@@ -155,6 +164,20 @@ export default class LoginScreen extends React.Component {
         alert('success!');
       }
     });
+
+    // save points to client
+    firebase.database().ref('/clients/' + uid).update({
+      weightPoints: Number(client.weightPoints) + 1,
+      totalPoints: Number(client.totalPoints) + 1
+    }, (error) => {
+      if(error) {
+        alert('failed');
+      } else {
+        alert('success!');
+      }
+    });
+
+    // TO DO: save points to team
 
     this.setState({
       showAddBodyweight: false,
@@ -242,43 +265,43 @@ export default class LoginScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
-    const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
-    const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
-    let dayStatusesPhase1 = [];
-    let dayStatusesPhase2 = [];
-    let dayStatusesPhase3 = [];
-    let weight = this.state.weight;
-
-    if(this.state.showProgressPhase1) {
-      if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
-        Object.keys(filteredDayStatusesPhase1).map((key, index) => {
-          dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
-        });
-      } else {
-        dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-      }
-    }
-
-    if(this.state.showProgressPhase2) {
-      if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
-        Object.keys(filteredDayStatusesPhase2).map((key, index) => {
-          dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
-        });
-      } else {
-        dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-      }
-    }
-
-    if(this.state.showProgressPhase3) {
-      if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
-        Object.keys(filteredDayStatusesPhase3).map((key, index) => {
-          dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
-        });
-      } else {
-        dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-      }
-    }
+    // const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
+    // const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
+    // const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
+    // let dayStatusesPhase1 = [];
+    // let dayStatusesPhase2 = [];
+    // let dayStatusesPhase3 = [];
+    // let weight = this.state.weight;
+    //
+    // if(this.state.showProgressPhase1) {
+    //   if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
+    //     Object.keys(filteredDayStatusesPhase1).map((key, index) => {
+    //       dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
+    //
+    // if(this.state.showProgressPhase2) {
+    //   if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
+    //     Object.keys(filteredDayStatusesPhase2).map((key, index) => {
+    //       dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
+    //
+    // if(this.state.showProgressPhase3) {
+    //   if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
+    //     Object.keys(filteredDayStatusesPhase3).map((key, index) => {
+    //       dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
 
     // seven day bodyweight average, initial weight
     let sevenDayAverage, initialWeight, pastWeekEntries = [];

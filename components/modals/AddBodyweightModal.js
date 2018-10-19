@@ -86,7 +86,7 @@ class AddBodyweightModal extends React.Component {
               </Text>
             </TouchableHighlight>
 
-            <Text style={styles.weight}>{weight}</Text>
+            <Text style={styles.weight}>{weight.toString()}</Text>
 
             <TouchableHighlight
               underlayColor={Colors.darkerPrimaryColor}

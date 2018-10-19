@@ -117,7 +117,7 @@ class ModalWindow extends React.Component {
             transparent={false}
             onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-            <ScrollView scrollEnabled={this.props.currentModal === 'LESSON_QUIZ' ? false : true}>
+            <ScrollView>
               <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
                 <TouchableHighlight
                   style={styles.closeButton}

@@ -39,7 +39,6 @@ class LessonQuiz extends React.Component {
     const lessonNumber = this.props.lesson;
     let title = null;
     let questions = [];
-    let quizPassed = false;
 
     if(lessonNumber) {
       if(lessonNumber === 1) { questions = quizzes.quizzes.lesson1.questions; title = quizzes.quizzes.lesson1.name; }
@@ -53,19 +52,6 @@ class LessonQuiz extends React.Component {
       else if(lessonNumber === 9) { questions = quizzes.quizzes.lesson9.questions; title = quizzes.quizzes.lesson9.name; }
       else if(lessonNumber === 10) { questions = quizzes.quizzes.lesson10.questions; title = quizzes.quizzes.lesson10.name; }
     }
-
-    if((lessonNumber === 1 && this.props.quiz1) ||
-     (lessonNumber === 2 && this.props.quiz2) ||
-     (lessonNumber === 3 && this.props.quiz3) ||
-     (lessonNumber === 4 && this.props.quiz4) ||
-     (lessonNumber === 5 && this.props.quiz5) ||
-     (lessonNumber === 6 && this.props.quiz6) ||
-     (lessonNumber === 7 && this.props.quiz7) ||
-     (lessonNumber === 8 && this.props.quiz8) ||
-     (lessonNumber === 9 && this.props.quiz9) ||
-     (lessonNumber === 10 && this.props.quiz10)) {
-       quizPassed = true;
-     }
 
     return (
       <Swiper
@@ -92,7 +78,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={0}
-              quizPassed={quizPassed}
+              quizPassed={this.props.quizPassed}
               questionNumber={1}
               question={questions[0]}
               question1Selection={this.props.question1Selection}
@@ -106,7 +92,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={1}
-              quizPassed={quizPassed}
+              quizPassed={this.props.quizPassed}
               questionNumber={2}
               question={questions[1]}
               question1Selection={this.props.question1Selection}
@@ -120,7 +106,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={2}
-              quizPassed={quizPassed}
+              quizPassed={this.props.quizPassed}
               questionNumber={3}
               question={questions[2]}
               question1Selection={this.props.question1Selection}
@@ -134,7 +120,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={3}
-              quizPassed={quizPassed}
+              quizPassed={this.props.quizPassed}
               questionNumber={4}
               question={questions[3]}
               question1Selection={this.props.question1Selection}
@@ -148,7 +134,7 @@ class LessonQuiz extends React.Component {
           <View style={styles.slide}>
             <QuizQuestion
               key={4}
-              quizPassed={quizPassed}
+              quizPassed={this.props.quizPassed}
               questionNumber={5}
               question={questions[4]}
               question1Selection={this.props.question1Selection}
@@ -160,14 +146,14 @@ class LessonQuiz extends React.Component {
           </View>
 
           <View style={styles.slide}>
-            {!quizPassed && <TouchableHighlight
+            {!this.props.quizPassed && <TouchableHighlight
               style={Styles.button}
               underlayColor={Colors.darkerPrimaryColor}
               onPress={this.props.checkQuizAnswers}>
               <Text style={Styles.buttonText}>Check my answers</Text>
             </TouchableHighlight>}
 
-            {quizPassed &&
+            {this.props.quizPassed &&
               <View>
                 <TouchableHighlight
                   underlayColor={Colors.paleGreen}

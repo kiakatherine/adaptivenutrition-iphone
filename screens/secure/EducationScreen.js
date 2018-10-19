@@ -55,7 +55,7 @@ export default class LoginScreen extends React.Component {
 
   componentDidMount() {
     const uid = firebase.auth().currentUser.uid;
-    const clientRef = firebase.database().ref('/client/' + uid);
+    const clientRef = firebase.database().ref('/clients/' + uid);
 
     clientRef.on('value', snapshot => {
       this.setState({ client: snapshot.val() });
@@ -80,8 +80,13 @@ export default class LoginScreen extends React.Component {
 
   _checkQuizAnswers() {
     const uid = firebase.auth().currentUser.uid;
-    const clientRef = firebase.database().ref('/client/' + uid);
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    let client;
     const quiz = 'quiz' + this.state.selectedLessonNumber;
+
+    clientRef.on('value', snapshot => {
+      client = snapshot.val();
+    });
 
     if(this.state.question1 &&
       this.state.question2 &&
@@ -89,7 +94,11 @@ export default class LoginScreen extends React.Component {
       this.state.question4 &&
       this.state.question5) {
         this.setState({ quizPassed: true });
-        clientRef.set({ [quiz]: true });
+        clientRef.update({
+          [quiz]: true,
+          quizPoints: Number(client.quizPoints) + 1,
+          totalPoints: Number(client.totalPoints) + 1,
+        });
       } else {
         this.setState({ quizPassed: false, showQuiz: false }, () => {
           // restart quiz
@@ -108,7 +117,7 @@ export default class LoginScreen extends React.Component {
         question3Selection: null,
         question4Selection: null,
         question5Selection: null
-      })
+      });
   }
 
   _closeQuiz() {
@@ -163,6 +172,7 @@ export default class LoginScreen extends React.Component {
             quiz8={client ? client.quiz8 : false}
             quiz9={client ? client.quiz9 : false}
             quiz10={client ? client.quiz1 : false}
+            quizPassed={this.state.quizPassed}
             closeQuiz={this._closeQuiz} />}
       </View>
     );
