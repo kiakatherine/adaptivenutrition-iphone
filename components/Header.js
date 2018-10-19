@@ -27,24 +27,24 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showPoints: false
+      showPoints: false,
+      showUserInfo: false
     };
 
     this._closeModal = this._closeModal.bind(this);
   }
 
-  // componentWillMount() {
-  //   var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-  //
-  //   client.on('value', snapshot => {
-  //     this.setState({
-  //       client: snapshot.val()
-  //     });
-  //   });
-  // }
+  componentDidMount() {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/client/' + uid);
+
+    clientWeightRef.on('value', snapshot => {
+      this.setState({ client: snapshot.val() });
+    });
+  }
 
   _closeModal() {
-    this.setState({ showPoints: false });
+    this.setState({ showPoints: false, showUserInfo: false });
   }
 
    render() {
@@ -56,11 +56,15 @@ class Header extends React.Component {
             {this.state.client ? this.state.client.name : ''} - Phase {this.state.client ? this.state.client.phase : ''} {(this.state.client && this.state.client.phase === 3) ? "- " + this.state.client.templateType : ''}
            </Text>*/}
 
-           <Text style={styles.headerItem}>
-             <FontAwesome
-               name={'fire'}
-               size={24} /> Streak
-           </Text>
+           <TouchableHighlight
+             underlayColor={Colors.white}
+             onPress={() => { this.setState({ showUserInfo: true }) }}>
+               <Text style={styles.headerItem}>
+                 <FontAwesome
+                   name={'user'}
+                   size={24} /> {this.state.client ? this.state.client.displayName : null}
+               </Text>
+           </TouchableHighlight>
 
           {this.props.phase === 1 &&
             <Text style={styles.headerItem}>
@@ -127,7 +131,7 @@ class Header extends React.Component {
               </Text>}
 
            <TouchableHighlight
-             underlayColor={Colors.primaryGreen}
+             underlayColor={Colors.white}
              onPress={() => { this.setState({ showPoints: true }) }}>
               <Text style={styles.headerItem}>
                 <FontAwesome
@@ -137,10 +141,16 @@ class Header extends React.Component {
            </TouchableHighlight>
          </View>
 
-         {this.state.showPoints &&
-            <ModalWindow
-              currentModal="POINTS"
-              closeModal={this._closeModal} /> }
+        {this.state.showPoints &&
+          <ModalWindow
+            currentModal="POINTS"
+            closeModal={this._closeModal} /> }
+
+        {this.state.showUserInfo &&
+          <ModalWindow
+            currentModal="USER"
+            client={this.state.client}
+            closeModal={this._closeModal} /> }
       </View>
      );
    }

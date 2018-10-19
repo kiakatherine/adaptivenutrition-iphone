@@ -19,6 +19,7 @@ import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 
 // header
+import UserModal from './modals/UserModal';
 import PointsModal from './modals/PointsModal';
 
 // nutrition screen
@@ -99,6 +100,8 @@ class ModalWindow extends React.Component {
           submitWeight={this.props.submitWeight} />
       } else if(this.props.currentModal === 'POINTS') {
         modal = <PointsModal />
+      } else if(this.props.currentModal === 'USER') {
+        modal = <UserModal />
       }
 
      return (
