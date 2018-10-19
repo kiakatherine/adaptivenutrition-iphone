@@ -88,7 +88,7 @@ class BiometricSettingsModal extends React.Component {
       <View style={Styles.modalContent}>
         <Text style={Styles.modalH1}>Biometric Settings</Text>
 
-        <Text style={Styles.paragraphText}>Your meal plan is based on the following biometrics.</Text>
+        <Text style={[Styles.paragraphText, Styles.textCenter]}>Your meal plan is built from your biometrics.</Text>
 
         <View style={Styles.biometricRow}>
           <Text style={Styles.h3}>Gender</Text>

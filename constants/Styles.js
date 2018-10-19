@@ -251,16 +251,26 @@ export default {
     color: Colors.gray,
     fontSize: 16
   },
+  menuItemWrapper: {
+    paddingTop: 20,
+    paddingBottom: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: Colors.lightGray,
+    borderBottomWidth: 1,
+    borderColor: Colors.white
+  },
   menuItem: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    backgroundColor: Colors.white,
     color: Colors.black,
-    paddingTop: 20
+    paddingTop: 20,
+    paddingBottom: 5,
+    letterSpacing: 1
   },
   menuItemSubText: {
-    fontSize: 15,
-    color: Colors.darkGray,
+    fontSize: 18,
+    color: Colors.black,
     marginBottom: 10
   },
   biometricRow: {
@@ -273,6 +283,35 @@ export default {
     fontSize: 14,
     color: Colors.gray,
     marginTop: 20
+  },
+  tabButtons: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    backgroundColor: Colors.gray,
+    paddingTop: 10
+  },
+  tabButton: {
+    flex: 1,
+    borderBottomWidth: 3,
+    borderColor: Colors.gray,
+    padding: 10
+  },
+  tabButtonActive: {
+    borderBottomWidth: 3,
+    borderColor: Colors.black,
+    paddingBottom: 15
+  },
+  tabButtonText: {
+    textAlign: 'center',
+    color: Colors.black,
+    fontSize: 16,
+    letterSpacing: 1
+  },
+  tabButtonTextActive: {
+    textAlign: 'center',
+    color: Colors.black,
+    fontSize: 16,
+    letterSpacing: 1
   },
   flexRow: {
     alignSelf: 'stretch',

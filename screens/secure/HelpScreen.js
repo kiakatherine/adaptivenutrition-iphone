@@ -32,6 +32,9 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       client: null,
+      showMealPlanList: true,
+      showResourcesList: false,
+      showOtherList: false,
       showBiometricSettings: false,
       showFoodsToAvoid: false,
       showAbout: false,
@@ -65,61 +68,97 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <ScrollView style={Styles.content}>
-          <Text style={[Styles.bigTitle, Styles.pageTitle]}>Help</Text>
+        <Text style={[Styles.bigTitle, Styles.pageTitle]}>Help</Text>
 
-          <View style={styles.helpSection}>
-            <Text style={[Styles.h3, styles.h3]}>YOUR MEAL PLAN</Text>
+        <View style={Styles.tabButtons}>
+          <TouchableHighlight
+            underlayColor={Colors.gray}
+            style={[Styles.tabButton, this.state.showMealPlanList ? Styles.tabButtonActive : Styles.tabButton]}
+            onPress={() => this.setState({ showMealPlanList: true, showResourcesList: false, showOtherList: false })}>
+            <Text style={this.state.showMealPlanList ? Styles.tabButtonTextActive : Styles.tabButtonText}>MEAL PLAN</Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={Colors.gray}
+            style={[Styles.tabButton, this.state.showResourcesList ? Styles.tabButtonActive : Styles.tabButton]}
+            onPress={() => this.setState({ showMealPlanList: false, showResourcesList: true, showOtherList: false })}>
+            <Text style={this.state.showResourcesList ? Styles.tabButtonTextActive : Styles.tabButtonText}>RESOURCES</Text>
+          </TouchableHighlight>
 
-            <Text style={Styles.menuItem}>How Do I Use the App?</Text>
-            <Text style={Styles.menuItemSubText}>Take a tour</Text>
+          <TouchableHighlight
+            underlayColor={Colors.gray}
+            style={[Styles.tabButton, this.state.showOtherList ? Styles.tabButtonActive : Styles.tabButton]}
+            onPress={() => this.setState({ showMealPlanList: false, showResourcesList: false, showOtherList: true })}>
+            <Text style={this.state.showOtherList ? Styles.tabButtonTextActive : Styles.tabButtonText}>OTHER</Text>
+          </TouchableHighlight>
+        </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => this.setState({ showBiometricSettings: true }) }>What we use to build your meal plan</Text>
+        <ScrollView>
+          {this.state.showMealPlanList && <View style={styles.helpSection}>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}>How Do I Use the App?</Text>
+              <Text style={Styles.menuItemSubText}>Take a tour!</Text>
+            </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods</Text>
-          </View>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => this.setState({ showBiometricSettings: true }) }>Settings used to create your meal plan.</Text>
+            </View>
 
-          <View style={styles.helpSection}>
-            <Text style={[Styles.h3, styles.h3]}>RESOURCES</Text>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods to remove for 6 weeks.</Text>
+            </View>
+          </View>}
 
-            <Text style={Styles.menuItem}
-              onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>Success Checklist</Text>
-            <Text style={Styles.menuItemSubText}>If you stop seeing progress, check this list out to help pinpoint issues.</Text>
+          {this.state.showResourcesList && <View style={styles.helpSection}>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>Success Checklist</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>If you stop seeing progress, use this list to help pinpoint issues.</Text>
+            </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
-            <Text style={Styles.menuItemSubText}>Meal prep, recipes, & more</Text>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Meal prep, recipes, & more.</Text>
+            </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions</Text>
-          </View>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions.</Text>
+            </View>
+          </View>}
 
-          <View style={styles.helpSection}>
-            <Text style={[Styles.h3, styles.h3]}>OTHER</Text>
+          {this.state.showOtherList && <View style={styles.helpSection}>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Your Subscription</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Manage your subscription.</Text>
+            </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Your Subscription</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Manage your subscription.</Text>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => this.setState({ showContact: true }) }>Contact</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
+            </View>
 
-            <Text style={Styles.menuItem}
-              onPress={() => this.setState({ showContact: true }) }>Contact</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
-
-            <Text style={Styles.menuItem}
-              onPress={() => this.setState({ showAbout: true }) }>About</Text>
-            <Text style={Styles.menuItemSubText}
-              onPress={() => this.setState({ showAbout: true }) }>Who is Adaptive Nutrition?</Text>
-          </View>
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => this.setState({ showAbout: true }) }>About</Text>
+              <Text style={Styles.menuItemSubText}
+                onPress={() => this.setState({ showAbout: true }) }>Who is Adaptive Nutrition?</Text>
+            </View>
+          </View>}
 
           {this.state.showBiometricSettings &&
             <ModalWindow
@@ -149,15 +188,4 @@ export default class LoginScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  h3: {
-    marginTop: 20,
-    letterSpacing: 2
-  },
-  helpSection: {
-    marginBottom: 15,
-    paddingBottom: 25,
-    borderBottomWidth: 1,
-    borderColor: Colors.lightGray
-  }
-});
+const styles = StyleSheet.create({ });

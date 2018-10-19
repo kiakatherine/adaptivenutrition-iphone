@@ -22,12 +22,12 @@ const FoodsToAvoidModal = props => {
 
       <View style={Styles.listItem}>
         <Text style={Styles.h3}>Gluten (includes beer)</Text>
-        <Text style={Styles.paragraphText}>Gluten is problematic for most people causing gut permeability and irritating the digestive tract. While most people are not celiac or gluten intolerant (these are specific medical diagnoses), we have not yet had a client that did not report major improvements in gut health from removing gluten.</Text>
+        <Text style={Styles.paragraphText}>Gluten is problematic for most people, causing gut permeability and irritating the digestive tract. While most people are not celiac or gluten intolerant, major improvements in gut health are often made when removing gluten.</Text>
       </View>
 
       <View style={Styles.listItem}>
         <Text style={Styles.h3}>Dairy (cheese, milk, yogurt)</Text>
-        <Text style={Styles.paragraphText}>Most dairy products cause an increase in mucus production and exacerbate or cause auto-immune conditions. Some plain, sugar free, fermented dairy, such as greek yogurt or skyr, is often tolerated well. Milk should not be a part of anyone’s diet.</Text>
+        <Text style={Styles.paragraphText}>Most dairy products cause an increase in mucus production and exacerbate or cause auto-immune conditions. Some plain, sugar free, fermented dairy, such as greek yogurt or skyr, is often tolerated well.</Text>
       </View>
 
       <View style={Styles.listItem}>
@@ -37,7 +37,7 @@ const FoodsToAvoidModal = props => {
 
       <View style={Styles.listItem}>
         <Text style={Styles.h3}>Alcohol</Text>
-        <Text style={Styles.paragraphText}>Alcohol is inflammatory, irritates the gut, and disrupts sleep rhythms. It can negatively affect hormone profiles and reduce testosterone levels.</Text>
+        <Text style={Styles.paragraphText}>Alcohol irritates the gut and disrupts sleep. It can negatively affect hormone profiles and reduce testosterone levels.</Text>
       </View>
 
       <View style={Styles.listItem}>
@@ -47,7 +47,7 @@ const FoodsToAvoidModal = props => {
 
       <View style={Styles.listItem}>
         <Text style={Styles.h3}>Legumes (beans, chickpeas, hummus)</Text>
-        <Text style={Styles.paragraphText}>Legumes have been linked to leaky gut and digestive system irritation.</Text>
+        <Text style={Styles.paragraphText}>Unless soaked adequately in water beforehand, legumes have been linked to leaky gut and digestive system irritation.</Text>
       </View>
 
       <View style={Styles.listItem}>
