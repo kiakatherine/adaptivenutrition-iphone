@@ -51,12 +51,13 @@ class UserModal extends React.Component {
   }
 
   render() {
-    const name = this.props.client ? this.props.client.displayName : null;
+    const name = this.props.client ? this.props.client.firstName : null;
     const gender = this.props.client ? this.props.client.gender : 'Female';
     const height = this.props.client ? this.props.client.height.toString() : null;
     const bodyweight = this.props.client ? this.props.client.bodyweight.toString() : null;
     const bodyfat = this.props.client ? this.props.client.bodyfat.toString() : null;
     const birthdate = this.props.client ? this.props.client.birthdate : new Date();
+    const phase = this.props.client ? this.props.client.phase : 1;
 
     // TO DO: not hardcoded
     const template = 'Lose weight (Step 2)';

@@ -20,9 +20,8 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vect
 
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
-import * as templates from '../constants/Templates';
 
-import { convertTemplateToNumber, createFoodMenu } from '../utils/helpers';
+import { createFoodMenu } from '../utils/helpers';
 
 class FoodOptions extends React.Component {
    state = { }

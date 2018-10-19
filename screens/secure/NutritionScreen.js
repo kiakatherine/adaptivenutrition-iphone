@@ -15,7 +15,7 @@ import moment from 'moment';
 import format from 'date-fns/format';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
-import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, format12Hour, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, format12Hour, getAge, setMealTimes } from '../../utils/helpers';
 
 const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
 
@@ -966,7 +966,10 @@ export default class LoginScreen extends React.Component {
   _onChangeBirthdate(text) {
     const uid = firebase.auth().currentUser.uid;
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
-    clientWeightRef.update({ birthdate: format(text, 'YYYY-MM-DD') });
+    clientWeightRef.update({
+      birthdate: format(text, 'YYYY-MM-DD'),
+      age: getAge(text)
+    });
   }
 
   closeModal() {

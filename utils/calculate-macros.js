@@ -402,22 +402,22 @@ function calculateDifference(gender, age, height, weight2, bmr, bodyweight, temp
   const bmrProxyRevDiet1 = calculateBmrProxyRevDiet1(bmrProxyNewBmr, bmrProxyLeaningOut);
   const bmrProxyRevDiet2 = calculateBmrProxyRevDiet2(bmrProxyNewBmr, bmrProxyLeaningOut);
 
-  if(templateType === templates[0]) {
+  if(templateType === 0) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D9
     return calculateBmrProxyMetabolicTest(bmr) - bmr;
-  } else if(templateType === templates[1]) {
+  } else if(templateType === 1) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - B9
     return calculateBmrProxyBuildingMass(bmr, bodyweight) - bmr;
-  } else if(templateType === templates[2]) {
+  } else if(templateType === 2) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - C9
     return bmrProxyLeaningOut - bmr;
-  } else if(templateType === templates[3]) {
+  } else if(templateType === 3) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - E9
     return bmrProxyRevDiet1 - bmr;
-  } else if(templateType === templates[4]) {
+  } else if(templateType === 4) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - F9
     return bmrProxyRevDiet2 - bmr;
-  } else if(templateType === templates[5]) {
+  } else if(templateType === 5) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - G9
     return bmrProxyNewBmr - bmr;
   }
