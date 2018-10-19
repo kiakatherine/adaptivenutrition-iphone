@@ -101,7 +101,12 @@ class ModalWindow extends React.Component {
       } else if(this.props.currentModal === 'POINTS') {
         modal = <PointsModal />
       } else if(this.props.currentModal === 'USER') {
-        modal = <UserModal />
+        modal = <UserModal
+          onChangeGender={this.props.onChangeGender}
+          onChangeBodyweight={this.props.onChangeBodyweight}
+          onChangeHeight={this.props.onChangeHeight}
+          onChangeBodyfat={this.props.onChangeBodyfat}
+          onChangeBirthdate={this.props.onChangeBirthdate}/>
       }
 
      return (
@@ -112,7 +117,7 @@ class ModalWindow extends React.Component {
             onRequestClose={() => { console.log("Modal has been closed.") } }>
 
             <ScrollView scrollEnabled={this.props.currentModal === 'LESSON_QUIZ' ? false : true}>
-              <View style={styles.modal}>
+              <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
                 <TouchableHighlight
                   style={styles.closeButton}
                   underlayColor={Colors.white}
@@ -150,6 +155,10 @@ const styles = StyleSheet.create ({
       paddingBottom: 40,
       paddingLeft: 20,
       paddingRight: 20
+   },
+   modalWide: {
+     paddingLeft: 0,
+     paddingRight: 0
    },
    closeButton: {
      padding: 20

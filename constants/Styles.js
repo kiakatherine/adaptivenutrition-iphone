@@ -90,13 +90,14 @@ export default {
   forms: {
     textInput: {
       fontFamily: 'Futura-Medium',
-      fontSize: 20,
-      marginBottom: 10,
+      fontSize: 28,
+      // marginBottom: 10,
       padding: 15,
-      backgroundColor: Colors.lightGray,
-      borderRadius: 1,
-      borderBottomColor: Colors.lightGray,
-      borderBottomWidth: 1
+      // backgroundColor: Colors.lightGray,
+      // borderRadius: 1,
+      // borderBottomColor: Colors.lightGray,
+      // borderBottomWidth: 2,
+      textAlign: 'center'
     }
   },
   listItem: {
@@ -193,7 +194,8 @@ export default {
   },
   modalButtonText: {
     color: Colors.white,
-    letterSpacing: 1,
+    fontSize: 16,
+    letterSpacing: 2,
     fontWeight: 'bold',
     textAlign: 'center'
   },
@@ -222,7 +224,8 @@ export default {
   },
   modalButtonCancelText: {
     color: Colors.primaryColor,
-    letterSpacing: 1,
+    letterSpacing: 2,
+    fontSize: 16,
     fontWeight: 'bold'
   },
   modalButtonDisabled: {
@@ -243,9 +246,9 @@ export default {
     marginBottom: 10
   },
   h3: {
-    fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    letterSpacing: 2
   },
   loadingMessage: {
     color: Colors.gray,
@@ -274,10 +277,17 @@ export default {
     marginBottom: 10
   },
   biometricRow: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
+    // alignSelf: 'stretch',
+    // flexDirection: 'row',
+    paddingTop: 35,
+    paddingBottom: 15,
+    borderBottomWidth: 2,
     borderBottomColor: Colors.lightGray
+  },
+  inputLabel: {
+    fontSize: 16,
+    letterSpacing: 2,
+    marginBottom: 10
   },
   finePrint: {
     fontSize: 14,
@@ -288,7 +298,8 @@ export default {
     alignSelf: 'stretch',
     flexDirection: 'row',
     backgroundColor: Colors.gray,
-    paddingTop: 10
+    paddingTop: 10,
+    marginBottom: 20
   },
   tabButton: {
     flex: 1,

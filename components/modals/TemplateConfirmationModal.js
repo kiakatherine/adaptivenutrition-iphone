@@ -113,7 +113,7 @@ class TemplateConfirmationModal extends React.Component {
             this.state.checkedTemplate4 &&
             this.state.checkedTemplate5 &&
             this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabledText]}>
-            Confirm</Text>
+            CONFIRM</Text>
         </TouchableHighlight>
       </View>
     );

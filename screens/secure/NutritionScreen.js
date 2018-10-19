@@ -2147,13 +2147,13 @@ export default class LoginScreen extends React.Component {
               <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
-                <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
+                <Text style={Styles.modalButtonCancelText}>NEVERMIND</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={Styles.modalButton}
                 underlayColor={Colors.white}
                 onPress={() => { this.movePhase(2) }}>
-                <Text style={Styles.modalButtonText}>I am ready!</Text>
+                <Text style={Styles.modalButtonText}>{"I'M READY!"}</Text>
               </TouchableHighlight>
             </View>
 
@@ -2181,13 +2181,13 @@ export default class LoginScreen extends React.Component {
               <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
-                <Text style={Styles.modalButtonCancelText}>Nevermind</Text>
+                <Text style={Styles.modalButtonCancelText}>NEVERMIND</Text>
               </TouchableHighlight>
 
               <TouchableHighlight style={Styles.modalButton}
                 underlayColor={Colors.white}
                 onPress={() => { this.movePhase(3) }}>
-                <Text style={Styles.modalButtonText}>I am ready!</Text>
+                <Text style={Styles.modalButtonText}>{"I'M READY!"}</Text>
               </TouchableHighlight>
             </View>
 
@@ -2215,7 +2215,7 @@ export default class LoginScreen extends React.Component {
               style={Styles.modalButton}
               underlayColor={Colors.white}
               onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
-              <Text style={Styles.modalButtonText}>Got it!</Text>
+              <Text style={Styles.modalButtonText}>GOT IT!</Text>
             </TouchableHighlight>
 
             <View style={styles.checkboxRow}>

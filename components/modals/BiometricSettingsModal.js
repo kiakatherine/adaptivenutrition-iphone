@@ -154,7 +154,7 @@ class BiometricSettingsModal extends React.Component {
         <TouchableHighlight
           style={Styles.modalButton}
           onPress={() => { this.clickSave() } }>
-            <Text style={Styles.modalButtonText}>Save</Text>
+            <Text style={Styles.modalButtonText}>SAVE</Text>
         </TouchableHighlight>
       </View>
       // <ModalWrapper

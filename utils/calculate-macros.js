@@ -429,9 +429,9 @@ function calculateProteinPercentage(gender, bodyfat, macroRatios) {
     if(bodyfat >= 25) {
       return macroRatios.maleRatios.maleProtein1;
     } else if(bodyfat > 15) {
-      return maleProtein2;
+      return macroRatios.maleRatios.maleProtein2;
     } else {
-      return maleProtein3;
+      return macroRatios.maleRatios.maleProtein3;
     }
   } else if(gender === 'Female') {
     if(bodyfat >= 35) {
