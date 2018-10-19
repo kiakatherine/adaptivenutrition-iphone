@@ -1322,9 +1322,8 @@ export default class LoginScreen extends React.Component {
               underlayColor={Colors.white}
               onPress={() => { this.setState({ showModal: true, showWaketimeTooltip: true }) }}>
               <FontAwesome
-                style={styles.tooltipIcon}
                 name='info-circle'
-                size={16}
+                size={20}
               />
             </TouchableHighlight>
           </View>
@@ -1345,9 +1344,8 @@ export default class LoginScreen extends React.Component {
               underlayColor={Colors.white}
               onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
               <FontAwesome
-                style={styles.tooltipIcon}
                 name='info-circle'
-                size={16}
+                size={20}
               />
             </TouchableHighlight>
           </View>
@@ -2267,6 +2265,10 @@ const styles = StyleSheet.create({
     marginRight: 3,
     marginBottom: 20,
     textAlign: 'center'
+  },
+  optionTooltip: {
+    marginLeft: 3,
+    marginBottom: 20
   },
   optionButton: {
     flex: 1,
