@@ -70,7 +70,7 @@ export default class LoginScreen extends React.Component {
 
     weightsRef.orderByChild('date').on('value', snapshot => {
       this.setState({ bodyweightData: snapshot.val() });
-      console.log('snapshot', snapshot.val())
+      console.log('weight data', snapshot.val())
     });
 
     clientRef.on('value', snapshot => {

@@ -1039,12 +1039,13 @@ export default class LoginScreen extends React.Component {
     if(this.state.client) {
       const client = this.state.client;
 
-      bodyweight = client.bodyweight;
+      bodyweight = client.weight;
       bodyfat = client.bodyfat;
       age = client.age;
       gender = client.gender;
       height = client.height;
       leanMass = client.leanMass;
+
       proteinDelta = leanMass > 150 ? 25 :
         (leanMass < 150 && leanMass > 100) ? 20 : 15;
       carbDelta = leanMass > 150 ? 50 :

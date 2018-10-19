@@ -71,10 +71,6 @@ class FoodOptions extends React.Component {
 
     formattedOptionsLength = formattedOptions.length;
 
-    // if(macro === 'protein') {
-    //   console.log('formattedOptions', formattedOptions)
-    // }
-
     return (
       <View>
         {!showInGrams && formattedOptionsLength > 0 &&
