@@ -24,13 +24,25 @@ class PointsModal extends React.Component {
     super(props);
 
     this.state = {
-      points: 20, // TO DO
+      // points: 20, // TO DO
       teamPoints: 100,
       team: 'Orange'
     }
   }
 
+  componentDidMount() {
+    const joinDate = this.props.client.joinDate;
+
+    const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+    const firstDate = new Date(joinDate);
+    const secondDate = new Date;
+    const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+
+    this.setState({ totalDays: diffDays });
+  }
+
   render() {
+    const client = this.props.client;
     const teams = [
       { name: 'Apple', points: 500 },
       { name: 'Banana', points: 400 },
@@ -39,8 +51,8 @@ class PointsModal extends React.Component {
       { name: 'Orange', points: 100 }
     ];
 
+    const totalDays = this.state.totalDays;
     // TO DO: not hardcoded
-    const totalDays = 25;
     const totalAvailableQuizzes = 3;
 
     return (
@@ -51,29 +63,29 @@ class PointsModal extends React.Component {
             size={48} />
         </Text>
 
-        <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{this.state.points}</Text>
+        <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{client.totalPoints}</Text>
         <Text style={[Styles.textCenter, styles.pointsDescription]}>Your Points</Text>
 
         <View style={Styles.flexRow}>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{5}</Text>
+            <Text style={styles.specificPoints}>{client.mealPoints}</Text>
             <Text style={styles.specificTotal}>out of {totalDays}</Text>
-            <Text style={styles.specificPointsDescription}>Meals</Text>
+            <Text style={styles.specificPointsDescription}>meals</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{3}</Text>
+            <Text style={styles.specificPoints}>{client.weightPoints}</Text>
             <Text style={styles.specificTotal}>out of {totalDays}</Text>
-            <Text style={styles.specificPointsDescription}>Weight</Text>
+            <Text style={styles.specificPointsDescription}>weight</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{3}</Text>
+            <Text style={styles.specificPoints}>{client.quizPoints}</Text>
             <Text style={styles.specificTotal}>out of {totalAvailableQuizzes}</Text>
-            <Text style={styles.specificPointsDescription}>Quizzes</Text>
+            <Text style={styles.specificPointsDescription}>quizzes</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{0}</Text>
+            <Text style={styles.specificPoints}>{client.socialPoints}</Text>
             <Text style={styles.specificTotal}>{' '}</Text>
-            <Text style={styles.specificPointsDescription}>Social</Text>
+            <Text style={styles.specificPointsDescription}>social</Text>
           </View>
         </View>
 

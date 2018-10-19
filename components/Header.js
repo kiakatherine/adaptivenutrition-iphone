@@ -135,6 +135,7 @@ class Header extends React.Component {
         {this.state.showPoints &&
           <ModalWindow
             currentModal="POINTS"
+            client={this.props.client ? this.props.client : null}
             closeModal={this._closeModal} /> }
 
         {this.state.showUserInfo &&

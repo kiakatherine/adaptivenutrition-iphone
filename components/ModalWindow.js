@@ -99,7 +99,8 @@ class ModalWindow extends React.Component {
           setDate={this.props.setDate}
           submitWeight={this.props.submitWeight} />
       } else if(this.props.currentModal === 'POINTS') {
-        modal = <PointsModal />
+        modal = <PointsModal
+          client={this.props.client} />
       } else if(this.props.currentModal === 'USER') {
         modal = <UserModal
           client={this.props.client}

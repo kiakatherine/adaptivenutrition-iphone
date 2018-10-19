@@ -272,7 +272,7 @@ export default Meal;
 Meal.propTypes = {
   // trainingIntensity: PropTypes.number,
   mealsBeforeWorkout: PropTypes.number,
-  template: PropTypes.string,
+  template: PropTypes.number,
   currentMeal: PropTypes.number,
   age: PropTypes.number,
   gender: PropTypes.string,
