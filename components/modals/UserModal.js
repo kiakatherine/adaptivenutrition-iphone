@@ -27,8 +27,6 @@ class UserModal extends React.Component {
     super(props);
 
     this.state = {
-      date: new Date(),
-      birthdate: this.props.client ? this.props.client.birthdate : new Date(),
       showDatePicker: false,
       showTemplateInfo: true,
       showBiometricSettings: false
@@ -48,51 +46,24 @@ class UserModal extends React.Component {
     this.setState({ showDatePicker: false });
   }
 
-  // onChangeGender(g) {
-  //   var client = this.props.client;
-  //   client.update({ gender: g });
-  // }
-  //
-  // onChangeBodyweight(text) {
-  //   var client = this.props.client;
-  //   client.update({ bodyweight: Number(text) });
-  // }
-  //
-  // onChangeHeight(text) {
-  //   var client = this.props.client;
-  //   client.update({ height: Number(text) });
-  // }
-  //
-  // onChangeBodyfat(text) {
-  //   var client = this.props.client;
-  //   client.update({ bodyfat: Number(text) });
-  // }
-  //
-  // onChangeBirthdate(text) {
-  //   var client = this.props.client;
-  //   client.update({ birthdate: format(text, "MMMM D, YYYY") });
-  //   this.setState({ birthdate: format(text, "MMMM D, YYYY") });
-  //   this._showDatePicker();
-  // }
-
   clickSave() {
     alert('Saved!');
   }
 
   render() {
-    // TO DO: not hardcoded
-    const name = this.props.client ? this.props.client.displayName : 'Kia';
+    const name = this.props.client ? this.props.client.displayName : null;
     const gender = this.props.client ? this.props.client.gender : 'Female';
-    const height = this.props.client ? this.props.client.height : 62;
-    const bodyweight = this.props.client ? this.props.client.bodyweight : 128;
-    const bodyfat = this.props.client ? this.props.client.bodyfat : 18;
-    const birthdate = this.state.birthdate;
+    const height = this.props.client ? this.props.client.height.toString() : null;
+    const bodyweight = this.props.client ? this.props.client.bodyweight.toString() : null;
+    const bodyfat = this.props.client ? this.props.client.bodyfat.toString() : null;
+    const birthdate = this.props.client ? this.props.client.birthdate : new Date();
 
+    // TO DO: not hardcoded
     const template = 'Lose weight (Step 2)';
     const templateStartDate = 'October 1, 2018';
     const nextTemplate = 'Lock in results (Step 3)';
     const nextTemplateStartDate = 'December 1, 2018';
-    // console.log('client', this.props.client)
+
     return (
       <View style={[Styles.modalContent, styles.modalContent]}>
         <Text style={Styles.bigTitle}>{name}</Text>
@@ -131,7 +102,7 @@ class UserModal extends React.Component {
           </View>}
 
           {this.state.showBiometricSettings && <View style={styles.biometricSettingsWrapper}>
-            <Text style={[Styles.paragraphText, Styles.textCenter]}>Your meal plan is built from your biometrics below.</Text>
+            <Text style={[Styles.paragraphText, Styles.textCenter, styles.blurb]}>Your meal plan is built from your biometric settings below.</Text>
 
             <View style={Styles.biometricRow}>
               <Text style={[Styles.inputLabel, Styles.textCenter]}>GENDER</Text>
@@ -153,25 +124,28 @@ class UserModal extends React.Component {
               <Text style={[Styles.inputLabel, Styles.textCenter]}>WEIGHT</Text>
               <TextInput
                 style={[Styles.forms.textInput]}
-                keyboardType='numeric'
+                keyboardType='decimal-pad'
+                maxLength={3}
                 onChangeText={(text) => this.props.onChangeBodyweight(text)}
-                value={bodyweight.toString()} />
+                value={bodyweight} />
             </View>
 
             <View style={Styles.biometricRow}>
               <Text style={[Styles.inputLabel, Styles.textCenter]}>BIRTHDAY</Text>
 
               <View style={Styles.flexCol}>
-                <Button
-                  title={format(birthdate, 'MMMM DD, YYYY')}
-                  onPress={this._showDatePicker}/>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  style={Styles.linkButton}
+                  onPress={this._showDatePicker}>
+                    <Text style={Styles.forms.textInput}>{format(birthdate, 'MMMM DD, YYYY')}</Text>
+                </TouchableHighlight>
 
                 {this.state.showDatePicker &&
                   <DatePickerIOS
                     mode={'date'}
                     date={new Date(birthdate)}
-                    onDateChange={date => this.props.onChangeBirthdate(date)}
-                  />}
+                    onDateChange={date => this.props.onChangeBirthdate(date)} />}
               </View>
             </View>
 
@@ -179,18 +153,20 @@ class UserModal extends React.Component {
               <Text style={[Styles.inputLabel, Styles.textCenter]}>HEIGHT (IN INCHES)</Text>
               <TextInput
                 style={[Styles.forms.textInput]}
-                value={height.toString()}
+                value={height}
+                maxLength={2}
                 onChangeText={(text) => this.props.onChangeHeight(text)}
-                keyboardType='numeric' />
+                keyboardType='decimal-pad' />
             </View>
 
-            <View style={Styles.biometricRow}>
+            <View style={[Styles.biometricRow, styles.noBorder]}>
               <Text style={[Styles.inputLabel, Styles.textCenter]}>BODY FAT %</Text>
               <TextInput
                 style={[Styles.forms.textInput]}
-                value={bodyfat.toString()}
+                value={bodyfat}
+                maxLength={2}
                 onChangeText={(text) => this.props.onChangeBodyfat(text)}
-                keyboardType='numeric' />
+                keyboardType='decimal-pad' />
             </View>
 
             <TouchableHighlight
@@ -242,5 +218,17 @@ const styles = StyleSheet.create ({
     fontSize: 18,
     letterSpacing: 1,
     color: Colors.gray
+  },
+  birthdate: {
+    fontSize: 28
+  },
+  noBorder: {
+    borderBottomWidth: 0
+  },
+  blurb: {
+    fontSize: 20,
+    marginTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20
   }
 });

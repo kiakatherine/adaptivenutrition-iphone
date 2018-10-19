@@ -12,6 +12,7 @@ import * as labels from '../../constants/MealLabels';
 import * as templates from '../../constants/Templates';
 import * as macroRatios from '../../constants/MacroRatios';
 import moment from 'moment';
+import format from 'date-fns/format';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
 import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, format12Hour, setMealTimes } from '../../utils/helpers';
@@ -82,146 +83,140 @@ export default class LoginScreen extends React.Component {
     this.saveMeasurement = this.saveMeasurement.bind(this);
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
+
+    this._onChangeGender = this._onChangeGender.bind(this);
+    this._onChangeBodyweight = this._onChangeBodyweight.bind(this);
+    this._onChangeHeight = this._onChangeHeight.bind(this);
+    this._onChangeBodyfat = this._onChangeBodyfat.bind(this);
+    this._onChangeBirthdate = this._onChangeBirthdate.bind(this);
   }
 
-  // componentWillMount() {
-  //   var client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-  //
-  //   // client.on('value', snapshot => {
-  //   //   this.setState({
-  //   //     client: snapshot.val(),
-  //   //     phase: snapshot.val().phase
-  //   //   });
-  //   // });
-  //
-  //   client.update({ templateType: 'Home (Step 1)'});
-  //   console.log('updating')
-  // }
-
-  componentWillMount() {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    const dayStatuses = firebase.database().ref('dayStatuses');
-    const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
+  componentDidMount() {
+    // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    // const dayStatuses = firebase.database().ref('dayStatuses');
+    // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
-    client.on('value', snapshot => {
+    clientWeightRef.on('value', snapshot => {
       clientResponse = snapshot.val();
 
       this.setState({
-        client: snapshot.val(),
-        phase: snapshot.val().phase
+        client: clientResponse,
+        phase: clientResponse && clientResponse.phase ? clientResponse.phase : 1
       });
     });
 
-    dayStatuses.on('value', snapshot => {
-      const date = new Date();
-      const dayStatuses = snapshot.val();
-      let filteredDayStatuses = [];
-
-      Object.keys(dayStatuses).map(key => {
-        if(dayStatuses[key].timestamp === clientResponse.timestamp) {
-          filteredDayStatuses.push(dayStatuses[key]);
-        }
-      });
-
-      let today;
-      filteredDayStatuses.forEach(day => {
-        if((day && day.date === moment(date).format('MM-DD-YY')) && (day.phase === this.state.phase)) {
-          today = day;
-        }
-      });
-
-      let phase1meal1 = null;
-      let phase1meal2 = null;
-      let phase1meal3 = null;
-      let phase1meal4 = null;
-      let phase3meal1 = null;
-      let phase3meal2 = null;
-      let phase3meal3 = null;
-      let phase3meal4 = null;
-      let phase3meal5 = null;
-      let phase3meal6 = null;
-
-      if(today) {
-        const phase = today.phase;
-
-        phase1meal1 = (phase === 1 ? today.meal1 : null);
-        phase1meal2 = (phase === 1 ? today.meal2 : null);
-        phase1meal3 = (phase === 1 ? today.meal3 : null);
-        phase1meal4 = (phase === 1 ? today.meal4 : null);
-
-        phase3meal1 = (phase === 3 ? today.meal1 : null);
-        phase3meal2 = (phase === 3 ? today.meal2 : null);
-        phase3meal3 = (phase === 3 ? today.meal3 : null);
-        phase3meal4 = (phase === 3 ? today.meal4 : null);
-        phase3meal5 = (phase === 3 ? today.meal5 : null);
-        phase3meal6 = (phase === 3 ? today.meal6 : null);
-      }
-
-      this.setState({
-        dayStatuses: snapshot.val(),
-        phase1meal1: phase1meal1,
-        phase1meal2: phase1meal2,
-        phase1meal3: phase1meal3,
-        phase1meal4: phase1meal4,
-        phase3meal1: phase3meal1,
-        phase3meal2: phase3meal2,
-        phase3meal3: phase3meal3,
-        phase3meal4: phase3meal4,
-        phase3meal5: phase3meal5,
-        phase3meal6: phase3meal6
-      });
-    });
-
-    phaseTwoDayStatuses.on('value', snapshot => {
-      const phaseTwoDayStatusesRef = snapshot.val();
-      const date = new Date;
-      let today;
-
-      if(clientResponse) {
-        if(clientResponse.timestamp) {
-          Object.keys(phaseTwoDayStatusesRef).map(key => {
-            if(phaseTwoDayStatusesRef[key].timestamp === clientResponse.timestamp) {
-              if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
-                today = phaseTwoDayStatusesRef[key];
-              }
-            }
-          });
-
-          this.setState({
-            meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
-            meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
-            meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
-            meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null,
-
-            meal1proteinMeasurement: today ? today.meal1proteinMeasurement : null,
-            meal2proteinMeasurement: today ? today.meal2proteinMeasurement : null,
-            meal3proteinMeasurement: today ? today.meal3proteinMeasurement : null,
-            meal4proteinMeasurement: today ? today.meal4proteinMeasurement : null,
-
-            meal1carbsMeasurement: today ? today.meal1carbsMeasurement : null,
-            meal2carbsMeasurement: today ? today.meal2carbsMeasurement : null,
-            meal3carbsMeasurement: today ? today.meal3carbsMeasurement : null,
-            meal4carbsMeasurement: today ? today.meal4carbsMeasurement : null,
-
-            meal1fatsMeasurement: today ? today.meal1fatsMeasurement : null,
-            meal2fatsMeasurement: today ? today.meal2fatsMeasurement : null,
-            meal3fatsMeasurement: today ? today.meal3fatsMeasurement : null,
-            meal4fatsMeasurement: today ? today.meal4fatsMeasurement : null,
-
-            meal1veggiesMeasurement: today ? today.meal1veggiesMeasurement : null,
-            meal2veggiesMeasurement: today ? today.meal2veggiesMeasurement : null,
-            meal3veggiesMeasurement: today ? today.meal3veggiesMeasurement : null,
-            meal4veggiesMeasurement: today ? today.meal4veggiesMeasurement : null,
-
-            meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
-            meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
-            meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
-            meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null
-          });
-        }
-      }
-    });
+    // dayStatuses.on('value', snapshot => {
+    //   const date = new Date();
+    //   const dayStatuses = snapshot.val();
+    //   let filteredDayStatuses = [];
+    //
+    //   Object.keys(dayStatuses).map(key => {
+    //     if(dayStatuses[key].timestamp === clientResponse.timestamp) {
+    //       filteredDayStatuses.push(dayStatuses[key]);
+    //     }
+    //   });
+    //
+    //   let today;
+    //   filteredDayStatuses.forEach(day => {
+    //     if((day && day.date === moment(date).format('MM-DD-YY')) && (day.phase === this.state.phase)) {
+    //       today = day;
+    //     }
+    //   });
+    //
+    //   let phase1meal1 = null;
+    //   let phase1meal2 = null;
+    //   let phase1meal3 = null;
+    //   let phase1meal4 = null;
+    //   let phase3meal1 = null;
+    //   let phase3meal2 = null;
+    //   let phase3meal3 = null;
+    //   let phase3meal4 = null;
+    //   let phase3meal5 = null;
+    //   let phase3meal6 = null;
+    //
+    //   if(today) {
+    //     const phase = today.phase;
+    //
+    //     phase1meal1 = (phase === 1 ? today.meal1 : null);
+    //     phase1meal2 = (phase === 1 ? today.meal2 : null);
+    //     phase1meal3 = (phase === 1 ? today.meal3 : null);
+    //     phase1meal4 = (phase === 1 ? today.meal4 : null);
+    //
+    //     phase3meal1 = (phase === 3 ? today.meal1 : null);
+    //     phase3meal2 = (phase === 3 ? today.meal2 : null);
+    //     phase3meal3 = (phase === 3 ? today.meal3 : null);
+    //     phase3meal4 = (phase === 3 ? today.meal4 : null);
+    //     phase3meal5 = (phase === 3 ? today.meal5 : null);
+    //     phase3meal6 = (phase === 3 ? today.meal6 : null);
+    //   }
+    //
+    //   this.setState({
+    //     dayStatuses: snapshot.val(),
+    //     phase1meal1: phase1meal1,
+    //     phase1meal2: phase1meal2,
+    //     phase1meal3: phase1meal3,
+    //     phase1meal4: phase1meal4,
+    //     phase3meal1: phase3meal1,
+    //     phase3meal2: phase3meal2,
+    //     phase3meal3: phase3meal3,
+    //     phase3meal4: phase3meal4,
+    //     phase3meal5: phase3meal5,
+    //     phase3meal6: phase3meal6
+    //   });
+    // });
+    //
+    // phaseTwoDayStatuses.on('value', snapshot => {
+    //   const phaseTwoDayStatusesRef = snapshot.val();
+    //   const date = new Date;
+    //   let today;
+    //
+    //   if(clientResponse) {
+    //     if(clientResponse.timestamp) {
+    //       Object.keys(phaseTwoDayStatusesRef).map(key => {
+    //         if(phaseTwoDayStatusesRef[key].timestamp === clientResponse.timestamp) {
+    //           if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
+    //             today = phaseTwoDayStatusesRef[key];
+    //           }
+    //         }
+    //       });
+    //
+    //       this.setState({
+    //         meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
+    //         meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
+    //         meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
+    //         meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null,
+    //
+    //         meal1proteinMeasurement: today ? today.meal1proteinMeasurement : null,
+    //         meal2proteinMeasurement: today ? today.meal2proteinMeasurement : null,
+    //         meal3proteinMeasurement: today ? today.meal3proteinMeasurement : null,
+    //         meal4proteinMeasurement: today ? today.meal4proteinMeasurement : null,
+    //
+    //         meal1carbsMeasurement: today ? today.meal1carbsMeasurement : null,
+    //         meal2carbsMeasurement: today ? today.meal2carbsMeasurement : null,
+    //         meal3carbsMeasurement: today ? today.meal3carbsMeasurement : null,
+    //         meal4carbsMeasurement: today ? today.meal4carbsMeasurement : null,
+    //
+    //         meal1fatsMeasurement: today ? today.meal1fatsMeasurement : null,
+    //         meal2fatsMeasurement: today ? today.meal2fatsMeasurement : null,
+    //         meal3fatsMeasurement: today ? today.meal3fatsMeasurement : null,
+    //         meal4fatsMeasurement: today ? today.meal4fatsMeasurement : null,
+    //
+    //         meal1veggiesMeasurement: today ? today.meal1veggiesMeasurement : null,
+    //         meal2veggiesMeasurement: today ? today.meal2veggiesMeasurement : null,
+    //         meal3veggiesMeasurement: today ? today.meal3veggiesMeasurement : null,
+    //         meal4veggiesMeasurement: today ? today.meal4veggiesMeasurement : null,
+    //
+    //         meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
+    //         meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
+    //         meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
+    //         meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   clickTemplateType(template) {
@@ -724,9 +719,6 @@ export default class LoginScreen extends React.Component {
     const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const direction = this.state.phase < phase ? 'forward' : 'backward';
 
-    console.log('state phase', this.state.phase)
-    console.log('phase', phase)
-
     client.update({ phase: direction === 'forward' ? phase : phase - 1 });
     this.setState({
       phase: direction === 'forward' ? phase : phase - 1,
@@ -947,6 +939,36 @@ export default class LoginScreen extends React.Component {
     });
   }
 
+  _onChangeGender(g) {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    clientWeightRef.update({ gender: g });
+  }
+
+  _onChangeBodyweight(text) {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    clientWeightRef.update({ bodyweight: Number(text) });
+  }
+
+  _onChangeHeight(text) {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    clientWeightRef.update({ height: Number(text) });
+  }
+
+  _onChangeBodyfat(text) {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    clientWeightRef.update({ bodyfat: Number(text) });
+  }
+
+  _onChangeBirthdate(text) {
+    const uid = firebase.auth().currentUser.uid;
+    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    clientWeightRef.update({ birthdate: format(text, 'YYYY-MM-DD') });
+  }
+
   closeModal() {
     this.setState({
       showModal: false,
@@ -971,7 +993,7 @@ export default class LoginScreen extends React.Component {
       template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity,
       showInGrams, viewAllMeals, isPwoMeal, wakeTime,
       complete1, complete2, complete3, complete4, complete5, complete6,
-      enablePhase2, enablePhase3, showRestDay, customMacros, customRestDayProtein,
+      enablePhase2, enablePhase3, totalPoints, showRestDay, customMacros, customRestDayProtein,
       customRestDayCarbs, customRestDayFat, customModerateDayProtein,
       customModerateDayCarbs, customModerateDayFat, customHeavyDayProtein,
       customHeavyDayCarbs, customHeavyDayFat;
@@ -998,6 +1020,8 @@ export default class LoginScreen extends React.Component {
       trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
+
+      totalPoints = client.totalPoints ? client.totalPoints: 0;
 
       if(phase === 3) {
         mealsBeforeWorkout = convertTrainingTime(client.trainingTime);
@@ -1296,7 +1320,8 @@ export default class LoginScreen extends React.Component {
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {this.state.phase !== null &&
           <Header
-            points={this.state.client.totalPoints}
+            client={this.state.client}
+            points={totalPoints}
             phase={phase}
             phase1meal1={this.state.phase1meal1}
             phase1meal2={this.state.phase1meal2}
@@ -1307,7 +1332,12 @@ export default class LoginScreen extends React.Component {
             phase3meal3={this.state.phase3meal3}
             phase3meal4={this.state.phase3meal4}
             phase3meal5={this.state.phase3meal5}
-            phase3meal6={this.state.phase3meal6} />}
+            phase3meal6={this.state.phase3meal6}
+            onChangeGender={this._onChangeGender}
+            onChangeBodyweight={this._onChangeBodyweight}
+            onChangeHeight={this._onChangeHeight}
+            onChangeBodyfat={this._onChangeBodyfat}
+            onChangeBirthdate={this._onChangeBirthdate} />}
 
         {(this.state.phase === null) &&
           <Text style={styles.loadingText}>adapt & thrive</Text>}

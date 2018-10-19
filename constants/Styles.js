@@ -91,6 +91,7 @@ export default {
     textInput: {
       fontFamily: 'Futura-Medium',
       fontSize: 28,
+      color: Colors.black,
       // marginBottom: 10,
       padding: 15,
       // backgroundColor: Colors.lightGray,

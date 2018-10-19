@@ -31,50 +31,7 @@ class Header extends React.Component {
       showUserInfo: false
     };
 
-    this._onChangeGender = this._onChangeGender.bind(this);
-    this._onChangeBodyweight = this._onChangeBodyweight.bind(this);
-    this._onChangeHeight = this._onChangeHeight.bind(this);
-    this._onChangeBodyfat = this._onChangeBodyfat.bind(this);
-    this._onChangeBirthdate = this._onChangeBirthdate.bind(this);
     this._closeModal = this._closeModal.bind(this);
-  }
-
-  componentDidMount() {
-    const clientId = firebase.auth().currentUser.uid;
-    const clientRef = firebase.database().ref('/client/' + clientId);
-    console.log('currentuser', firebase.auth().currentUser);
-    clientRef.on('value', snapshot => {
-      console.log('snapshot', snapshot.val())
-      this.setState({ client: snapshot.val() });
-    });
-  }
-
-  _onChangeGender(g) {
-    const clientId = firebase.auth().currentUser.uid;
-    const clientRef = firebase.database().ref('/client/' + clientId);
-    clientRef.update({ gender: g });
-  }
-
-  _onChangeBodyweight(text) {
-    var client = this.state.client;
-    client.update({ bodyweight: Number(text) });
-  }
-
-  _onChangeHeight(text) {
-    var client = this.state.client;
-    client.update({ height: Number(text) });
-  }
-
-  _onChangeBodyfat(text) {
-    var client = this.state.client;
-    client.update({ bodyfat: Number(text) });
-  }
-
-  _onChangeBirthdate(text) {
-    var client = this.state.client;
-    client.update({ birthdate: format(text, "MMMM D, YYYY") });
-    this.setState({ birthdate: format(text, "MMMM D, YYYY") });
-    this._showDatePicker();
   }
 
   _closeModal() {
@@ -96,7 +53,7 @@ class Header extends React.Component {
                <Text style={styles.headerItem}>
                  <FontAwesome
                    name={'user'}
-                   size={24} /> {this.state.client ? this.state.client.displayName : null}
+                   size={24} /> {this.props.client ? this.props.client.displayName : null}
                </Text>
            </TouchableHighlight>
 
@@ -183,12 +140,12 @@ class Header extends React.Component {
         {this.state.showUserInfo &&
           <ModalWindow
             currentModal="USER"
-            onChangeGender={this._onChangeGender}
-            onChangeBodyweight={this._onChangeBodyweight}
-            onChangeHeight={this._onChangeHeight}
-            onChangeBodyfat={this._onChangeBodyfat}
-            onChangeBirthdate={this._onChangeBirthdate}
-            client={this.state.client ? this.state.client : null}
+            onChangeGender={this.props.onChangeGender}
+            onChangeBodyweight={this.props.onChangeBodyweight}
+            onChangeHeight={this.props.onChangeHeight}
+            onChangeBodyfat={this.props.onChangeBodyfat}
+            onChangeBirthdate={this.props.onChangeBirthdate}
+            client={this.props.client ? this.props.client : null}
             wide={true}
             closeModal={this._closeModal} /> }
       </View>

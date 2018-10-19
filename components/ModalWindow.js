@@ -102,6 +102,7 @@ class ModalWindow extends React.Component {
         modal = <PointsModal />
       } else if(this.props.currentModal === 'USER') {
         modal = <UserModal
+          client={this.props.client}
           onChangeGender={this.props.onChangeGender}
           onChangeBodyweight={this.props.onChangeBodyweight}
           onChangeHeight={this.props.onChangeHeight}

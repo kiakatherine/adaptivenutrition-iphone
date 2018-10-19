@@ -65,18 +65,18 @@ export default class LoginScreen extends React.Component {
     let clientResponse = null;
 
     const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
     const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
 
     weightsRef.orderByChild('date').on('value', snapshot => {
-      console.log('bw data', snapshot.val())
       this.setState({ bodyweightData: snapshot.val() });
     });
 
-    firebase.database().ref('/client/' + clientId).on('value', snapshot => {
+    clientRef.on('value', snapshot => {
       clientResponse = snapshot.val();
 
       this.setState({
-        weight: clientResponse.latestBodyweight
+        weight: clientResponse ? clientResponse.latestBodyweight : null
       });
     });
 
@@ -339,8 +339,6 @@ export default class LoginScreen extends React.Component {
       }
     });
   }
-
-  console.log('weight', this.state.weight)
 
     return (
       <View style={Styles.body}>

@@ -52,6 +52,8 @@ export default class CreateAccountScreen extends React.Component {
     // TO DO: if error, don't navigate to meal plan
     console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, this.state.email, this.state.password);
 
+    // TO DO: default settings
+    // phase, latestBodyweight
     const { navigate } = this.props.navigation;
     await AuthService.signUp(this.state.email, this.state.password);
     const authenticated = await AuthService.isSignedIn();
