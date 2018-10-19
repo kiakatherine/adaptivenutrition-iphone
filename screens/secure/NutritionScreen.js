@@ -529,10 +529,13 @@ export default class LoginScreen extends React.Component {
 
   completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
     const dayStatusesRef = firebase.database().ref().child('dayStatuses');
     const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
     let todayKey, todayRef, today;
+    const clientTimestamp = 1539184566736;
 
     // 1 = completed good
     // 2 = completed bad
@@ -543,7 +546,7 @@ export default class LoginScreen extends React.Component {
       const ds = snapshot.val();
 
       Object.keys(ds).map(key => {
-        if(ds[key].timestamp === client.timestamp) {
+        if(ds[key].timestamp === clientTimestamp) {
           if(ds[key].date === moment(date).format('MM-DD-YY')) {
             todayKey = key;
             today = ds[key];
@@ -569,67 +572,80 @@ export default class LoginScreen extends React.Component {
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
         // TO DO: congrats message
         const team = client.challengeGroupTeam;
+        const meal1 = today.meal1 < 3 ? true : false;
+        const meal2 = today.meal2 < 3 ? true : false;
+        const meal3 = today.meal3 < 3 ? true : false;
+        const meal4 = today.meal4 < 3 ? true : false;
+        const meal5 = today.meal5 < 3 ? true : false;
+        const meal6 = today.meal6 < 3 ? true : false;
+        let numberOfMealsToComplete = 4;
+        let mealsCompleted = false;
 
-        if(team) {
-          const meal1 = today.meal1 < 3 ? true : false;
-          const meal2 = today.meal2 < 3 ? true : false;
-          const meal3 = today.meal3 < 3 ? true : false;
-          const meal4 = today.meal4 < 3 ? true : false;
-          const meal5 = today.meal5 < 3 ? true : false;
-          const meal6 = today.meal6 < 3 ? true : false;
-          let numberOfMealsToComplete = 4;
-          let mealsCompleted = false;
-
-          if(phase === 3) {
-            if(client.trainingIntensity === 0) {
-              numberOfMealsToComplete = numberOfMealsToComplete + 1;
-            } else {
-              numberOfMealsToComplete = numberOfMealsToComplete + 2;
-            }
+        if(phase === 3) {
+          if(client.trainingIntensity === 0) {
+            numberOfMealsToComplete = numberOfMealsToComplete + 1;
+          } else {
+            numberOfMealsToComplete = numberOfMealsToComplete + 2;
           }
+        }
 
-          if(numberOfMealsToComplete === 4 && meal1 && meal2 && meal3 && meal4) {
-            mealsCompleted = true;
-          } else if(numberOfMealsToComplete === 5 && meal1 && meal2 && meal3 && meal4 && meal5) {
-            mealsCompleted = true;
-          } else if(numberOfMealsToComplete === 6 && meal1 && meal2 && meal3 && meal4 && meal5 && meal6) {
-            mealsCompleted = true;
-          }
+        if(numberOfMealsToComplete === 4 && meal1 && meal2 && meal3 && meal4) {
+          mealsCompleted = true;
+        } else if(numberOfMealsToComplete === 5 && meal1 && meal2 && meal3 && meal4 && meal5) {
+          mealsCompleted = true;
+        } else if(numberOfMealsToComplete === 6 && meal1 && meal2 && meal3 && meal4 && meal5 && meal6) {
+          mealsCompleted = true;
+        }
 
-          const todayMealsCompleted = today.allMealsCompleted;
-          if(todayMealsCompleted && today.meal1 === 3 ||
-           todayMealsCompleted && today.meal2 === 3 ||
-           todayMealsCompleted && today.meal3 === 3 ||
-           todayMealsCompleted && today.meal4 === 3 ||
-           todayMealsCompleted && today.meal5 === 3 ||
-           todayMealsCompleted && today.meal6 === 3) {
-             // clean up code
-             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
-             let teamKey;
+        const todayMealsCompleted = today.allMealsCompleted;
+        if(todayMealsCompleted && today.meal1 === 3 ||
+         todayMealsCompleted && today.meal2 === 3 ||
+         todayMealsCompleted && today.meal3 === 3 ||
+         todayMealsCompleted && today.meal4 === 3 ||
+         todayMealsCompleted && today.meal5 === 3 ||
+         todayMealsCompleted && today.meal6 === 3) {
+          // clean up code
+          if(team) {
+            const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
+            let teamKey;
 
-             challengeGroupTeamsRef.on('value', snapshot => {
-               const teams = snapshot.val();
+            challengeGroupTeamsRef.on('value', snapshot => {
+             const teams = snapshot.val();
 
-               Object.keys(teams).map(key => {
-                 if(teams[key].name === team) {
-                   teamKey = key;
-                   return teams[key];
-                 }
-               });
-
-               if(teamKey) {
-                 const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
-                 const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
-                 challengeGroupTeamRef.update({ points: (points - 1) > -1 ? (points - 1) : 0 });
-                 todayRef.update({ allMealsCompleted: false });
+             Object.keys(teams).map(key => {
+               if(teams[key].name === team) {
+                 teamKey = key;
+                 return teams[key];
                }
              });
 
-             return;
-          }
+             if(teamKey) {
+               const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
+               const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
+               challengeGroupTeamRef.update({ points: (points - 1) > -1 ? (points - 1) : 0 });
+               todayRef.update({ allMealsCompleted: false });
+             }
+            });
 
-          if(mealsCompleted) {
-            // clean up code
+            return;
+          }
+        }
+
+        if(mealsCompleted) {
+          // save points to client
+          firebase.database().ref('/clients/' + uid).update({
+            mealPoints: Number(client.mealPoints) + 1,
+            totalPoints: Number(client.totalPoints) + 1
+          }, (error) => {
+            if(error) {
+              alert('failed');
+            } else {
+              alert('success!');
+            }
+          });
+
+          // clean up code
+          if(team) {
             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
             let teamKey;
 
@@ -650,8 +666,8 @@ export default class LoginScreen extends React.Component {
                 todayRef.update({ allMealsCompleted: true });
               }
             });
-            return;
           }
+          return;
         }
       }, reason => {
         alert('uh oh...');
@@ -664,7 +680,7 @@ export default class LoginScreen extends React.Component {
         newDayStatus.set({
           date: moment(new Date).format('MM-DD-YY'),
           fullDate: new Date,
-          timestamp: Number(client.timestamp),
+          timestamp: Number(clientTimestamp),
           meal1: 3,
           meal2: 3,
           meal3: 3,
@@ -679,6 +695,18 @@ export default class LoginScreen extends React.Component {
         }, reason => {
           console.log('Could not save meal completion');
           // TO DO: error message
+        });
+
+        // save points to client
+        firebase.database().ref('/clients/' + uid).update({
+          mealPoints: Number(client.mealPoints) + 1,
+          totalPoints: Number(client.totalPoints) + 1
+        }, (error) => {
+          if(error) {
+            alert('failed');
+          } else {
+            alert('success!');
+          }
         });
       // }
     }
