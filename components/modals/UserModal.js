@@ -27,6 +27,7 @@ class UserModal extends React.Component {
   }
 
   render() {
+    // console.log('client', this.props.client)
     return (
       <View style={[Styles.modalContent, styles.wrapper]}>
       <Text>Hi</Text>

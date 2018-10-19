@@ -35,12 +35,7 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
-    const uid = firebase.auth().currentUser.uid;
-    const clientWeightRef = firebase.database().ref('/client/' + uid);
-
-    clientWeightRef.on('value', snapshot => {
-      this.setState({ client: snapshot.val() });
-    });
+    this.setState({ client: firebase.auth().currentUser });
   }
 
   _closeModal() {
@@ -149,7 +144,7 @@ class Header extends React.Component {
         {this.state.showUserInfo &&
           <ModalWindow
             currentModal="USER"
-            client={this.state.client}
+            client={this.state.client ? this.state.client : null}
             closeModal={this._closeModal} /> }
       </View>
      );
