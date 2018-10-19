@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
+import { convertTemplateToString } from '../../utils/helpers';
 
 import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
@@ -88,7 +89,7 @@ class MealPlanSettings extends React.Component {
             underlayColor={Colors.darkerPrimaryColor}
             style={Styles.modalButton}
             onPress={() => { this.showEnergyBalancePicker() }}>
-              <Text style={Styles.buttonText}>Adjust goal - {template}</Text>
+              <Text style={Styles.buttonText}>Adjust goal - {convertTemplateToString(template)}</Text>
            </TouchableHighlight>
 
            <TouchableHighlight

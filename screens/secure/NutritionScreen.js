@@ -15,7 +15,7 @@ import moment from 'moment';
 import format from 'date-fns/format';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
-import { changeUnit, convertTrainingIntensity, convertTrainingIntensityToString, convertTrainingTime, convertTrainingTimeToString, format12Hour, getAge, setMealTimes } from '../../utils/helpers';
+import { changeUnit, convertTrainingTimeToString, format12Hour, getAge, setMealTimes } from '../../utils/helpers';
 
 const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
 
@@ -225,9 +225,12 @@ export default class LoginScreen extends React.Component {
     // if moving to lose weight step 2 or lock in results 3, moveToLockInResults() saves template type and weight1/weight2
 
     const currentTemplate = this.state.client.templateType;
-    const clientRef = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
 
     // if click on current template
+    console.log('template', template)
+    console.log('currentTemplate', currentTemplate)
     if(template === currentTemplate) {
       this.setState({
         showEnergyBalancePicker: false,
@@ -422,14 +425,15 @@ export default class LoginScreen extends React.Component {
 
   saveTemplateType() {
     const template = this.state.potentialTemplate;
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
 
     let t = template;
 
     if(template === TEMPLATE_TYPES[3]) {
       this.moveToLockInResults(template);
     } else {
-      client.update({ templateType: t });
+      clientRef.update({ templateType: t });
     }
 
     this.setState({
@@ -442,8 +446,9 @@ export default class LoginScreen extends React.Component {
   }
 
   saveWakeTime(time) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ wakeTime: time });
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    clientRef.update({ wakeTime: time });
     this.setState({
       showModal: false,
       showWakeTimePicker: false
@@ -451,45 +456,46 @@ export default class LoginScreen extends React.Component {
   }
 
   saveTrainingIntensity(intensity) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    let val = 'rest';
-
-    if(intensity === 1) {
-      val = 'moderate';
-    } else if(intensity === 2) {
-      val = 'heavy';
-    }
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    // let val = 'rest';
+    //
+    // if(intensity === 1) {
+    //   val = 'moderate';
+    // } else if(intensity === 2) {
+    //   val = 'heavy';
+    // }
 
     if(this.state.phase === 3) {
-      client.update({ trainingIntensity: val });
+      clientRef.update({ trainingIntensity: intensity });
     } else {
-      client.update({ phase1training: intensity });
+      clientRef.update({ phase1training: intensity });
     }
   }
 
   saveMealsBeforeWorkout(numberOfMeals) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-
-    client.update({ trainingTime: convertTrainingTimeToString(numberOfMeals) });
-
-    this.setState({
-      mealsBeforeWorkout: numberOfMeals
-    });
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    clientRef.update({ trainingTime: numberOfMeals });
+    this.setState({ mealsBeforeWorkout: numberOfMeals });
   }
 
   saveCurrentMeal(meal) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ selectedMeal: meal });
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    clientRef.update({ selectedMeal: meal });
   }
 
   toggleView(viewAllMeals) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ viewAllMeals: !viewAllMeals });
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    clientRef.update({ viewAllMeals: !viewAllMeals });
   }
 
   toggleUnits(showInGrams) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({ showInGrams: !showInGrams });
+    const clientId = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    clientRef.update({ showInGrams: !showInGrams });
   }
 
   completePhaseTwoMeal(currentMeal) {
@@ -531,7 +537,8 @@ export default class LoginScreen extends React.Component {
     const client = this.state.client;
     const uid = firebase.auth().currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + uid);
-    const dayStatusesRef = firebase.database().ref().child('dayStatuses');
+    // const dayStatusesRef = firebase.database().ref().child('dayStatuses');
+    const dayStatusesRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses');
     const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
     let todayKey, todayRef, today;
@@ -546,13 +553,11 @@ export default class LoginScreen extends React.Component {
       const ds = snapshot.val();
 
       Object.keys(ds).map(key => {
-        if(ds[key].timestamp === clientTimestamp) {
-          if(ds[key].date === moment(date).format('MM-DD-YY')) {
-            todayKey = key;
-            today = ds[key];
-            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
-            // todayRef.remove();
-          }
+        if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
+          todayKey = key;
+          today = ds[key];
+          // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+          // todayRef.remove();
         }
       });
     });
@@ -567,7 +572,7 @@ export default class LoginScreen extends React.Component {
         this.setState({ [mealToSave]: completion });
       }
 
-      todayRef = firebase.database().ref().child('dayStatuses/' + todayKey);
+      todayRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses/' + todayKey);
 
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
         // TO DO: congrats message
@@ -577,10 +582,10 @@ export default class LoginScreen extends React.Component {
         const meal3 = today.meal3 < 3 ? true : false;
         const meal4 = today.meal4 < 3 ? true : false;
         const meal5 = today.meal5 < 3 ? true : false;
-        const meal6 = today.meal6 < 3 ? true : false;
         let numberOfMealsToComplete = 4;
         let mealsCompleted = false;
 
+        // check number of meals to complete in phase 3
         if(phase === 3) {
           if(client.trainingIntensity === 0) {
             numberOfMealsToComplete = numberOfMealsToComplete + 1;
@@ -589,14 +594,17 @@ export default class LoginScreen extends React.Component {
           }
         }
 
-        if(numberOfMealsToComplete === 4 && meal1 && meal2 && meal3 && meal4) {
+        // check that all meals complete
+        const fourMealsCompleted = meal1 && meal2 && meal3 && meal4;
+        const fiveMealsCompleted = meal1 && meal2 && meal3 && meal4 && meal5;
+
+        if(numberOfMealsToComplete === 4 && fourMealsCompleted) {
           mealsCompleted = true;
-        } else if(numberOfMealsToComplete === 5 && meal1 && meal2 && meal3 && meal4 && meal5) {
-          mealsCompleted = true;
-        } else if(numberOfMealsToComplete === 6 && meal1 && meal2 && meal3 && meal4 && meal5 && meal6) {
+        } else if(numberOfMealsToComplete === 5 && fiveMealsCompleted) {
           mealsCompleted = true;
         }
 
+        // if meal changed to incomplete, undo adding points
         const todayMealsCompleted = today.allMealsCompleted;
         if(todayMealsCompleted && today.meal1 === 3 ||
          todayMealsCompleted && today.meal2 === 3 ||
@@ -604,6 +612,18 @@ export default class LoginScreen extends React.Component {
          todayMealsCompleted && today.meal4 === 3 ||
          todayMealsCompleted && today.meal5 === 3 ||
          todayMealsCompleted && today.meal6 === 3) {
+          // save points to client
+          firebase.database().ref('/clients/' + uid).update({
+            mealPoints: Number(client.mealPoints) - 1,
+            totalPoints: Number(client.totalPoints) - 1
+          }, (error) => {
+            if(error) {
+              alert('failed');
+            } else {
+              alert('success!');
+            }
+          });
+
           // clean up code
           if(team) {
             const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
@@ -674,41 +694,26 @@ export default class LoginScreen extends React.Component {
       });
     } else {
       // save date and selected meal and whether completed or not
-      // if(!today || today.phase !== this.state.phase) {
-        const dayStatuses = firebase.database().ref('dayStatuses');
-        const newDayStatus = dayStatuses.push();
-        newDayStatus.set({
-          date: moment(new Date).format('MM-DD-YY'),
-          fullDate: new Date,
-          timestamp: Number(clientTimestamp),
-          meal1: 3,
-          meal2: 3,
-          meal3: 3,
-          meal4: 3,
-          meal5: 3,
-          meal6: 3,
-          [mealToSave]: completion,
-          phase: client.phase
-        }).then(resp => {
-          console.log('saved new phase day status')
-          // TO DO: congrats message
-        }, reason => {
-          console.log('Could not save meal completion');
-          // TO DO: error message
-        });
-
-        // save points to client
-        firebase.database().ref('/clients/' + uid).update({
-          mealPoints: Number(client.mealPoints) + 1,
-          totalPoints: Number(client.totalPoints) + 1
-        }, (error) => {
-          if(error) {
-            alert('failed');
-          } else {
-            alert('success!');
-          }
-        });
-      // }
+      // const dayStatuses = firebase.database().ref('dayStatuses');
+      const newDayStatus = dayStatusesRef.push();
+      newDayStatus.set({
+        date: moment(new Date).format('YYYY-MM-DD'),
+        fullDate: new Date(),
+        meal1: 3,
+        meal2: 3,
+        meal3: 3,
+        meal4: 3,
+        meal5: 3,
+        meal6: 3,
+        [mealToSave]: completion,
+        phase: client.phase
+      }).then(resp => {
+        console.log('saved new phase day status')
+        // TO DO: congrats message
+      }, reason => {
+        console.log('Could not save meal completion');
+        // TO DO: error message
+      });
     }
   }
 
@@ -1048,14 +1053,14 @@ export default class LoginScreen extends React.Component {
       template = client.templateType;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
-      trainingIntensity = phase === 3 ? convertTrainingIntensity(client.trainingIntensity) : client.phase1training;
+      trainingIntensity = phase === 3 ? client.trainingIntensity : client.phase1training;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
 
       totalPoints = client.totalPoints ? client.totalPoints: 0;
 
       if(phase === 3) {
-        mealsBeforeWorkout = convertTrainingTime(client.trainingTime);
+        mealsBeforeWorkout = client.trainingTime;
         showInGrams = client.showInGrams;
         viewAllMeals = client.viewAllMeals;
         isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
@@ -1964,12 +1969,12 @@ export default class LoginScreen extends React.Component {
             style={styles.picker}
             selectedValue={template}
             onValueChange={(itemValue, itemIndex) => this.clickTemplateType(itemValue)}>
-            <Picker.Item label="Home (Step 1)" value={"Home (Step 1)"} />
-            <Picker.Item label="Build muscle (Step 2)" value={"Build muscle (Step 2)"} />
-            <Picker.Item label="Lose weight (Step 2)" value={"Lose weight (Step 2)"} />
-            <Picker.Item label="Lock in results (Step 3)" value={"Lock in results (Step 3)"} />
-            <Picker.Item label="Lock in results (Step 4)" value={"Lock in results (Step 4)"} />
-            <Picker.Item label="New home (Step 5)" value={"New home (Step 5)"} />
+            <Picker.Item label="Home (Step 1)" value={0} />
+            <Picker.Item label="Build muscle (Step 2)" value={1} />
+            <Picker.Item label="Lose weight (Step 2)" value={2} />
+            <Picker.Item label="Lock in results (Step 3)" value={3} />
+            <Picker.Item label="Lock in results (Step 4)" value={4} />
+            <Picker.Item label="New home (Step 5)" value={5} />
           </Picker>
         </View>}
 

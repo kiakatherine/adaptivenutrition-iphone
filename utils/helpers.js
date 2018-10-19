@@ -297,6 +297,22 @@ export function convertTrainingIntensityToString(num) {
   }
 }
 
+export function convertTemplateToString(num) {
+  if(num === 0) {
+    return 'Home (Step 1)';
+  } else if(num === 1) {
+    return 'Build muscle (Step 2)';
+  } else if(num === 2) {
+    return 'Lose weight (Step 2)';
+  } else if(num === 3) {
+    return 'Lock in results (Step 3)';
+  } else if(num === 4) {
+    return 'Lock in results (Step 4)';
+  } else {
+    return 'New home';
+  }
+}
+
 export function convertTrainingTime(string) {
   if(string.indexOf('firstThing') > -1) {
     return 0;
