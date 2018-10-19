@@ -121,7 +121,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={[Styles.body, styles.body]}>
-        {!this.state.showQuiz && <ScrollView style={Styles.content}>
+        {!this.state.showQuiz && <ScrollView style={[Styles.content, styles.content]}>
           <View>
             <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
 
@@ -172,5 +172,8 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create ({
   body: {
     paddingBottom: 30
+  },
+  content: {
+    padding: 0
   }
 });

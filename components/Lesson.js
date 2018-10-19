@@ -84,8 +84,7 @@ Lesson.propTypes = {
 
 const styles = StyleSheet.create ({
   completed: {
-    backgroundColor: Colors.primaryColor,
-    borderColor: Colors.primaryColor,
+    backgroundColor: Colors.primaryColor
   },
   lessonNumberCompleted: {
     color: Colors.white
@@ -98,9 +97,9 @@ const styles = StyleSheet.create ({
     marginBottom: 10
   },
   lessonWrapper: {
-    borderWidth: 2,
-    borderColor: Colors.paleGreen,
-    marginBottom: 20,
+    backgroundColor: Colors.lightGray,
+    borderBottomWidth: 2,
+    borderColor: Colors.white,
     padding: 30,
     borderRadius: 3
   },

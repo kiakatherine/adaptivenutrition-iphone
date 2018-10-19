@@ -226,6 +226,9 @@ const styles = StyleSheet.create ({
   genderIconSelected: {
     color: Colors.primaryColor
   },
+  templatesWrapper: {
+    marginTop: 20
+  },
   templateWrapper: {
     marginBottom: 40
   },

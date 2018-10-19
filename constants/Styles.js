@@ -298,8 +298,7 @@ export default {
     alignSelf: 'stretch',
     flexDirection: 'row',
     backgroundColor: Colors.gray,
-    paddingTop: 10,
-    marginBottom: 20
+    paddingTop: 10
   },
   tabButton: {
     flex: 1,
