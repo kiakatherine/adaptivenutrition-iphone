@@ -78,6 +78,7 @@ export default class LoginScreen extends React.Component {
       phaseTwoMealComplete: false
     };
 
+    this.movePhase = this.movePhase.bind(this);
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
     this.saveMeasurement = this.saveMeasurement.bind(this);
@@ -749,10 +750,11 @@ export default class LoginScreen extends React.Component {
   }
 
   movePhase(phase) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
     const direction = this.state.phase < phase ? 'forward' : 'backward';
 
-    client.update({ phase: direction === 'forward' ? phase : phase - 1 });
+    clientRef.update({ phase: direction === 'forward' ? phase : phase - 1 });
     this.setState({
       phase: direction === 'forward' ? phase : phase - 1,
       showModal: false,
@@ -2012,136 +2014,6 @@ export default class LoginScreen extends React.Component {
           saveTemplateType={this.saveTemplateType}
           closeModal={this.closeModal} />}
 
-        {/*{this.state.showTemplateConfirmation && <ScrollView style={Styles.tooltip}>
-          <TouchableHighlight
-            underlayColor={Colors.white}
-            onPress={() => { this.setState({
-              showTemplateConfirmation: false,
-              showModal: false,
-              checkedTemplate1: false,
-              checkedTemplate2: false,
-              checkedTemplate3: false,
-              checkedTemplate4: false,
-              checkedTemplate5: false,
-              checkedTemplate6: false
-             })
-          }}>
-            <FontAwesome
-              style={[Styles.textCenter, Styles.tooltipClose]}
-              name='remove'
-              size={24}
-            />
-          </TouchableHighlight>
-
-          <Text style={Styles.tooltipHeader}>Confirm</Text>
-
-          <Text style={Styles.tooltipParagraph}>Before moving to the next step, confirm you have followed the tasks below 90% or more of the time.</Text>
-          <Text style={Styles.tooltipParagraph}>Ignoring any one of these variables may prevent you from seeing progress.</Text>
-
-          <View>
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate1 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate1: !this.state.checkedTemplate1 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on {this.state.client.templateType} for at least 1 week.</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate2 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate2: !this.state.checkedTemplate2 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate2: !this.state.checkedTemplate2 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate2 ? styles.checkedText : styles.uncheckedText]}>I have gotten all my meals in each day.</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate3 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate3: !this.state.checkedTemplate3 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate3 ? styles.checkedText : styles.uncheckedText]}>I have eaten according to the food options in the app.</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate4 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate4: !this.state.checkedTemplate4 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate4 ? styles.checkedText : styles.uncheckedText]}>I have spaced my meals out according to the app.</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate5 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate5: !this.state.checkedTemplate5 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate5 ? styles.checkedText : styles.uncheckedText]}>I have gotten 7+ hours of sleep each night.</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.checkedTemplate6 ? styles.checked : '']}
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate6: !this.state.checkedTemplate6 }) }}>
-                <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={ () => { this.setState({ showEnergyBalancePicker: false, checkedTemplate6: !this.state.checkedTemplate6 }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.checkedTemplate6 ? styles.checkedText : styles.uncheckedText]}>My body weight has been relatively consistent for the past 5+ days.</Text>
-              </TouchableHighlight>
-            </View>
-
-          </View>
-
-          <TouchableHighlight
-            style={[Styles.modalButton,
-              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
-              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabled]}
-            underlayColor={Colors.white}
-            onPress={ () => {
-              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
-              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? this.saveTemplateType() : null
-            }}>
-            <Text style={[Styles.modalButtonText,
-              this.state.checkedTemplate1 && this.state.checkedTemplate2 && this.state.checkedTemplate3
-              && this.state.checkedTemplate4 && this.state.checkedTemplate5 && this.state.checkedTemplate6 ? '' : Styles.modalButtonDisabledText]}>
-              Confirm</Text>
-          </TouchableHighlight>
-
-          <Text></Text>
-          <Text></Text>
-        </ScrollView>}*/}
-
         {this.state.showStepSuccessMessage &&
           <ScrollView style={Styles.tooltip}>
             <TouchableHighlight
@@ -2190,42 +2062,11 @@ export default class LoginScreen extends React.Component {
               <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
             </ScrollView>}
 
-        {this.state.showNavToPhase2Modal && <ScrollView style={Styles.tooltip}>
-          <View>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-
-            <Text style={Styles.tooltipHeader}>Ready to move to Phase 2?</Text>
-            <Text style={Styles.tooltipParagraph}>A minimum of one successful week following Phase 1 before moving to Phase 2 is strongly encouraged.</Text>
-            <Text style={Styles.tooltipParagraph}>The goal of Phase 1 is to establish consistent timing of meals (every 4 hours) and high quality of food intake by sticking to only those listed.</Text>
-            <Text style={Styles.tooltipParagraph}>Phase 1 is the most important phase of the Adaptive Nutrition program - success with these basic habits means much greater success as you progress with the meal plan.</Text>
-            <Text style={Styles.tooltipParagraph}>The goal of Phase 1 is to get comfortable weighing and measuring your food intake. It can be a challenge at first if these habits are new, but it gets easier the more you do it!</Text>
-
-            <View style={Styles.modalButtons}>
-              <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
-                underlayColor={Colors.white}
-                onPress={() => { this.setState({ showNavToPhase2Modal: false, showModal: false }) }}>
-                <Text style={Styles.modalButtonCancelText}>NEVERMIND</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={Styles.modalButton}
-                underlayColor={Colors.white}
-                onPress={() => { this.movePhase(2) }}>
-                <Text style={Styles.modalButtonText}>{"I'M READY!"}</Text>
-              </TouchableHighlight>
-            </View>
-
-            <Text></Text>
-            <Text></Text>
-          </View>
-        </ScrollView>}
+        {this.state.showNavToPhase2Modal &&
+          <ModalWindow
+            currentModal="PHASE_CONFIRMATION"
+            currentPhase={this.state.phase}
+            movePhase={this.movePhase} />}
 
         {this.state.showNavToPhase3Modal && <ScrollView style={Styles.tooltip}>
           <View>

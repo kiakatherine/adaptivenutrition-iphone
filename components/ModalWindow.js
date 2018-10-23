@@ -27,6 +27,7 @@ import WaketimeTooltip from './modals/WaketimeTooltip';
 import TrainingTooltip from './modals/TrainingTooltip';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
+import PhaseConfirmationModal from './modals/PhaseConfirmationModal';
 
 // progress screen
 import AddBodyweightModal from './modals/AddBodyweightModal';
@@ -79,6 +80,10 @@ class ModalWindow extends React.Component {
         modal = <TemplateConfirmationModal
           currentTemplate={this.props.currentTemplate}
           saveTemplateType={this.props.saveTemplateType} />;
+      } else if(this.props.currentModal === 'PHASE_CONFIRMATION') {
+        modal = <PhaseConfirmationModal
+          currentPhase={this.props.currentPhase}
+          movePhase={this.props.movePhase} />;
       } else if(this.props.currentModal === 'MEAL_COMPLETION') {
         modal = <MealCompletionModal
           phase={this.props.phase}

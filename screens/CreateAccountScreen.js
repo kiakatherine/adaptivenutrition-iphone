@@ -54,6 +54,7 @@ export default class CreateAccountScreen extends React.Component {
 
     // TO DO: default settings
     // phase, templateType (as number), latestBodyweight, weightPoints, mealPoints, socialPoints, quizPoints, totalPoints, leanMass
+
     const { navigate } = this.props.navigation;
     await AuthService.signUp(this.state.email, this.state.password);
     const authenticated = await AuthService.isSignedIn();
@@ -79,12 +80,14 @@ export default class CreateAccountScreen extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"First name"}
+              maxLength={20}
               onChangeText={firstName => this.setState({ firstName })}
               value={this.state.firstName}
             />
             <TextInput
               style={styles.input}
               placeholder={"Last name"}
+              maxLength={20}
               onChangeText={lastName => this.setState({ lastName })}
               value={this.state.lastName}
             />
@@ -142,8 +145,9 @@ export default class CreateAccountScreen extends React.Component {
           <View style={styles.slide1}>
             <TextInput
               style={styles.input}
-              placeholder={"Height"}
-              keyboardType="numeric"
+              placeholder={"Height (in inches)"}
+              keyboardType={"decimal-pad"}
+              maxLength={2}
               onChangeText={height => this.setState({ height })}
               value={this.state.height}
             />
@@ -155,8 +159,9 @@ export default class CreateAccountScreen extends React.Component {
           <View style={styles.slide1}>
             <TextInput
               style={styles.input}
-              placeholder={"Bodyweight"}
-              keyboardType="numeric"
+              placeholder={"Weight"}
+              keyboardType={"decimal-pad"}
+              maxLength={3}
               onChangeText={bodyweight => this.setState({ bodyweight })}
               value={this.state.bodyweight}
             />
@@ -169,7 +174,8 @@ export default class CreateAccountScreen extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"Body fat %"}
-              keyboardType="numeric"
+              keyboardType={"decimal-pad"}
+              maxLength={2}
               onChangeText={bodyfat => this.setState({ bodyfat })}
               value={this.state.bodyfat}
             />
@@ -183,7 +189,8 @@ export default class CreateAccountScreen extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"Email address"}
-              keyboardType="email-address"
+              keyboardType={"email-address"}
+              maxLength={30}
               onChangeText={email => this.setState({ email })}
               value={this.state.email}
             />
@@ -193,6 +200,7 @@ export default class CreateAccountScreen extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"Password"}
+              maxLength={20}
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
             />
