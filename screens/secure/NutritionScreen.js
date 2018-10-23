@@ -60,6 +60,7 @@ export default class LoginScreen extends React.Component {
       showStepSuccessMessage: false,
       showMacrosWarning: false,
       showMealPlanSettings: false,
+      showNavPhase: false,
 
       potentialTemplate: null,
       phase: null,
@@ -719,26 +720,22 @@ export default class LoginScreen extends React.Component {
   }
 
   clickNavPhase(phase) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    console.log('phase', phase)
+    console.log('current phase', this.state.phase)
 
     if((phase === 1 && this.state.phase === 2) ||
       (phase === 2 && this.state.phase === 3)) {
         // save phase if going backwards
-      client.update({ phase: phase });
+      clientRef.update({ phase: phase });
       this.setState({ phase: phase });
     } else {
       // show confirmation modal before saving
-      if(phase === 2) {
-        this.setState({
-          showModal: true,
-          showNavToPhase2Modal: true
-        });
-      } else {
-        this.setState({
-          showModal: true,
-          showNavToPhase3Modal: true
-        });
-      }
+      this.setState({
+        showModal: true,
+        showNavPhase: true
+      });
     }
   }
 
@@ -758,8 +755,7 @@ export default class LoginScreen extends React.Component {
     this.setState({
       phase: direction === 'forward' ? phase : phase - 1,
       showModal: false,
-      showNavToPhase2Modal: false,
-      showNavToPhase3Modal: false
+      showNavPhase: false
     });
   }
 
@@ -1013,7 +1009,8 @@ export default class LoginScreen extends React.Component {
       showMealPlanSettings: false,
       showTemplateConfirmation: false,
       showWaketimeTooltip: false,
-      showTrainingTooltip: false
+      showTrainingTooltip: false,
+      showNavPhase: false
     });
   }
 
@@ -1770,41 +1767,6 @@ export default class LoginScreen extends React.Component {
               </TouchableHighlight>}
           </View>
 
-          {/*<View>
-            {(!viewAllMeals && this.state.phase === 1) &&
-              <ProgressBar
-                complete1={this.state.phase1meal1}
-                complete2={this.state.phase1meal2}
-                complete3={this.state.phase1meal3}
-                complete4={this.state.phase1meal4}
-                phase={1}
-                enablePhase2={enablePhase2}
-                enablePhase3={enablePhase3}
-                trainingIntensity={trainingIntensity} />}
-            {(!viewAllMeals && this.state.phase === 2) &&
-              <ProgressBar
-                complete1={this.state.meal1measurementsCompleted}
-                complete2={this.state.meal2measurementsCompleted}
-                complete3={this.state.meal3measurementsCompleted}
-                complete4={this.state.meal4measurementsCompleted}
-                phase={2}
-                enablePhase2={enablePhase2}
-                enablePhase3={enablePhase3}
-                trainingIntensity={trainingIntensity} />}
-            {(!viewAllMeals && this.state.phase === 3) &&
-              <ProgressBar
-                complete1={this.state.phase3meal1}
-                complete2={this.state.phase3meal2}
-                complete3={this.state.phase3meal3}
-                complete4={this.state.phase3meal4}
-                complete5={this.state.phase3meal5}
-                complete6={this.state.phase3meal6}
-                phase={3}
-                enablePhase2={enablePhase2}
-                enablePhase3={enablePhase3}
-                trainingIntensity={trainingIntensity} />}
-          </View>*/}
-
           <TouchableHighlight
            style={Styles.buttonCircular}
            underlayColor={Colors.darkerPrimaryColor}
@@ -2062,45 +2024,12 @@ export default class LoginScreen extends React.Component {
               <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
             </ScrollView>}
 
-        {this.state.showNavToPhase2Modal &&
+        {this.state.showNavPhase &&
           <ModalWindow
             currentModal="PHASE_CONFIRMATION"
             currentPhase={this.state.phase}
-            movePhase={this.movePhase} />}
-
-        {this.state.showNavToPhase3Modal && <ScrollView style={Styles.tooltip}>
-          <View>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-
-            <Text style={Styles.tooltipHeader}>Ready to move to Phase 3?</Text>
-            <Text style={Styles.tooltipParagraph}>We recommend spending a minimum of one week on Phase 1 and one week on Phase 2 before moving to Phase 3. The purpose of Phase 2 is to ingrain the habit of weighing and measuring every meal at current portion sizes before applying specific portion sizes in Phase 3. While this may seem unnecessary, we find that skipping this week of the program lowers client success rates.</Text>
-
-            <View style={Styles.modalButtons}>
-              <TouchableHighlight style={[Styles.button, Styles.modalButtonCancel]}
-                underlayColor={Colors.white}
-                onPress={() => { this.setState({ showNavToPhase3Modal: false, showModal: false }) }}>
-                <Text style={Styles.modalButtonCancelText}>NEVERMIND</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight style={Styles.modalButton}
-                underlayColor={Colors.white}
-                onPress={() => { this.movePhase(3) }}>
-                <Text style={Styles.modalButtonText}>{"I'M READY!"}</Text>
-              </TouchableHighlight>
-            </View>
-
-            <Text></Text>
-            <Text></Text>
-          </View>
-        </ScrollView>}
+            movePhase={this.movePhase}
+            closeModal={this.closeModal} />}
 
         {this.state.showMacrosWarning &&
           <ScrollView style={Styles.tooltip}>

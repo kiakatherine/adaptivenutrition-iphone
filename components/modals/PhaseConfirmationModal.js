@@ -27,7 +27,13 @@ class PhaseConfirmationModal extends React.Component {
       checkedPhaseOne2: false,
       checkedPhaseOne3: false,
       checkedPhaseOne4: false,
-      checkedPhaseOne5: false
+      checkedPhaseOne5: false,
+
+      checkedPhaseTwo1: false,
+      checkedPhaseTwo2: false,
+      checkedPhaseTwo3: false,
+      checkedPhaseTwo4: false,
+      checkedPhaseTwo5: false
     };
   }
 
@@ -40,7 +46,7 @@ class PhaseConfirmationModal extends React.Component {
         <Text style={Styles.modalParagraph}>{"Check off the items below to confirm you're ready to move forward."}</Text>
         <Text style={Styles.modalParagraph}>{"If you're unsure about any of them, no worries. We recommend spending a few more days on the current phase nailing these down before moving on."}</Text>
 
-        <View>
+        {this.props.currentPhase === 1 && <View>
           <View style={[styles.checkboxRow, this.state.checkedPhaseOne1 ? styles.checked : '']}>
             <TouchableHighlight
               underlayColor={Colors.secondaryColor}
@@ -79,30 +85,94 @@ class PhaseConfirmationModal extends React.Component {
               <Text style={[Styles.modalParagraph, this.state.checkedPhaseOne5 ? styles.checkedText : styles.uncheckedText]}>I have eaten the portions according to the app.</Text>
             </TouchableHighlight>
           </View>
-        </View>
 
-        <TouchableHighlight
-          style={[Styles.modalButton,
-            this.state.checkedPhaseOne1 &&
-            this.state.checkedPhaseOne2 &&
-            this.state.checkedPhaseOne3 &&
-            this.state.checkedPhaseOne4 &&
-            this.state.checkedPhaseOne5 ? null : Styles.modalButtonDisabled]}
-          underlayColor={Colors.primaryColor}
-          onPress={() => {
-            this.state.checkedPhaseOne1 &&
-            this.state.checkedPhaseOne2 &&
-            this.state.checkedPhaseOne3 &&
-            this.state.checkedPhaseOne4 &&
-            this.state.checkedPhaseOne5 ? this.props.movePhase(2) : null}}>
-          <Text style={[Styles.modalButtonText,
-            this.state.checkedPhaseOne1 &&
-            this.state.checkedPhaseOne2 &&
-            this.state.checkedPhaseOne3 &&
-            this.state.checkedPhaseOne4 &&
-            this.state.checkedPhaseOne5 ? null : Styles.modalButtonDisabledText]}>
-            {"I'M READY!"}</Text>
-        </TouchableHighlight>
+          <TouchableHighlight
+            style={[Styles.modalButton,
+              this.state.checkedPhaseOne1 &&
+              this.state.checkedPhaseOne2 &&
+              this.state.checkedPhaseOne3 &&
+              this.state.checkedPhaseOne4 &&
+              this.state.checkedPhaseOne5 ? null : Styles.modalButtonDisabled]}
+            underlayColor={Colors.primaryColor}
+            onPress={() => {
+              this.state.checkedPhaseOne1 &&
+              this.state.checkedPhaseOne2 &&
+              this.state.checkedPhaseOne3 &&
+              this.state.checkedPhaseOne4 &&
+              this.state.checkedPhaseOne5 ? this.props.movePhase(2) : null}}>
+            <Text style={[Styles.modalButtonText,
+              this.state.checkedPhaseOne1 &&
+              this.state.checkedPhaseOne2 &&
+              this.state.checkedPhaseOne3 &&
+              this.state.checkedPhaseOne4 &&
+              this.state.checkedPhaseOne5 ? null : Styles.modalButtonDisabledText]}>
+              {"I'M READY!"}</Text>
+          </TouchableHighlight>
+        </View>}
+
+        {this.props.currentPhase === 2 && <View>
+          <View style={[styles.checkboxRow, this.state.checkedPhaseTwo1 ? styles.checked : '']}>
+            <TouchableHighlight
+              underlayColor={Colors.secondaryColor}
+              onPress={ () => { this.setState({ checkedPhaseTwo1: !this.state.checkedPhaseTwo1 }); }}>
+              <Text style={[Styles.modalParagraph, this.state.checkedPhaseTwo1 ? styles.checkedText : styles.uncheckedText]}>I have stayed on Phase {this.props.currentPhase} for at least 1 week.</Text>
+            </TouchableHighlight>
+          </View>
+
+          <View style={[styles.checkboxRow, this.state.checkedPhaseTwo2 ? styles.checked : '']}>
+            <TouchableHighlight
+              onPress={ () => { this.setState({ checkedPhaseTwo2: !this.state.checkedPhaseTwo2 }); }}>
+              <Text style={[Styles.modalParagraph, this.state.checkedPhaseTwo2 ? styles.checkedText : styles.uncheckedText]}>I have gotten all my meals in each day.</Text>
+            </TouchableHighlight>
+          </View>
+
+          <View style={[styles.checkboxRow, this.state.checkedPhaseTwo3 ? styles.checked : '']}>
+            <TouchableHighlight
+              underlayColor={Colors.secondaryColor}
+              onPress={ () => { this.setState({ checkedPhaseTwo3: !this.state.checkedPhaseTwo3 }); }}>
+              <Text style={[Styles.modalParagraph, this.state.checkedPhaseTwo3 ? styles.checkedText : styles.uncheckedText]}>I have eaten according to the food options in the app.</Text>
+            </TouchableHighlight>
+          </View>
+
+          <View style={[styles.checkboxRow, this.state.checkedPhaseTwo4 ? styles.checked : '']}>
+            <TouchableHighlight
+              underlayColor={Colors.secondaryColor}
+              onPress={ () => { this.setState({ checkedPhaseTwo4: !this.state.checkedPhaseTwo4 }); }}>
+              <Text style={[Styles.modalParagraph, this.state.checkedPhaseTwo4 ? styles.checkedText : styles.uncheckedText]}>I have spaced my meals out according to the app.</Text>
+            </TouchableHighlight>
+          </View>
+
+          <View style={[styles.checkboxRow, this.state.checkedPhaseTwo5 ? styles.checked : '']}>
+            <TouchableHighlight
+              underlayColor={Colors.secondaryColor}
+              onPress={ () => { this.setState({ checkedPhaseTwo5: !this.state.checkedPhaseTwo5 }); }}>
+              <Text style={[Styles.modalParagraph, this.state.checkedPhaseTwo5 ? styles.checkedText : styles.uncheckedText]}>I have weighed and measured my meals.</Text>
+            </TouchableHighlight>
+          </View>
+
+          <TouchableHighlight
+            style={[Styles.modalButton,
+              this.state.checkedPhaseTwo1 &&
+              this.state.checkedPhaseTwo2 &&
+              this.state.checkedPhaseTwo3 &&
+              this.state.checkedPhaseTwo4 &&
+              this.state.checkedPhaseTwo5 ? null : Styles.modalButtonDisabled]}
+            underlayColor={Colors.primaryColor}
+            onPress={() => {
+              this.state.checkedPhaseTwo1 &&
+              this.state.checkedPhaseTwo2 &&
+              this.state.checkedPhaseTwo3 &&
+              this.state.checkedPhaseTwo4 &&
+              this.state.checkedPhaseTwo5 ? this.props.movePhase(3) : null}}>
+            <Text style={[Styles.modalButtonText,
+              this.state.checkedPhaseTwo1 &&
+              this.state.checkedPhaseTwo2 &&
+              this.state.checkedPhaseTwo3 &&
+              this.state.checkedPhaseTwo4 &&
+              this.state.checkedPhaseTwo5 ? null : Styles.modalButtonDisabledText]}>
+              {"I'M READY!"}</Text>
+          </TouchableHighlight>
+        </View>}
       </View>
     );
   }
