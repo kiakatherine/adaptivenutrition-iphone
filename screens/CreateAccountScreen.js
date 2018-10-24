@@ -65,10 +65,12 @@ export default class CreateAccountScreen extends React.Component {
   render() {
     return (
       <View style={Styles.body}>
-        <Swiper style={styles.wrapper}
-            showsButtons={true}
-            loop={false}
-            index={1}>
+        <Swiper
+          style={styles.wrapper}
+          onIndexChanged={index => this.indexChanged(index)}
+          showsButtons={true}
+          loop={false}
+          index={1}>
           <View style={styles.slide1}>
             <Text style={Styles.bigTitle}>Create Account</Text>
             <Text style={Styles.contentHeading}>

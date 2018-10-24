@@ -31,9 +31,12 @@ export default {
     textAlign: 'center'
   },
   paragraphText: {
-    fontSize: 18,
+    fontSize: 20,
     lineHeight: 26,
     marginBottom: 25
+  },
+  paragraphTextNote: {
+    color: Colors.darkGray
   },
   center: {
     alignItems: 'center',

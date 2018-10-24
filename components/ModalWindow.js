@@ -36,6 +36,7 @@ import MealCompletionModal from './modals/MealCompletionModal';
 // help screen
 import BiometricSettingsModal from './modals/BiometricSettingsModal';
 import FoodsToAvoidModal from './modals/FoodsToAvoidModal';
+import SuccessChecklistModal from './modals/SuccessChecklistModal';
 import AboutModal from './modals/AboutModal';
 import ContactUsModal from './modals/ContactUsModal';
 
@@ -114,6 +115,8 @@ class ModalWindow extends React.Component {
           onChangeHeight={this.props.onChangeHeight}
           onChangeBodyfat={this.props.onChangeBodyfat}
           onChangeBirthdate={this.props.onChangeBirthdate}/>
+      } else if(this.props.currentModal === 'SUCCESS_CHECKLIST') {
+        modal = <SuccessChecklistModal />
       }
 
      return (

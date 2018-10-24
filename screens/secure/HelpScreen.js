@@ -36,6 +36,7 @@ export default class LoginScreen extends React.Component {
       showResourcesList: false,
       showOtherList: false,
       showBiometricSettings: false,
+      showSuccessChecklist: false,
       showFoodsToAvoid: false,
       showAbout: false,
       showContact: false
@@ -58,6 +59,7 @@ export default class LoginScreen extends React.Component {
     this.setState({
       showBiometricSettings: false,
       showFoodsToAvoid: false,
+      showSuccessChecklist: false,
       showAbout: false,
       showContact: false
     });
@@ -117,9 +119,9 @@ export default class LoginScreen extends React.Component {
           {this.state.showResourcesList && <View style={styles.helpSection}>
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>Success Checklist</Text>
+                onPress={() => this.setState({ showSuccessChecklist: true }) }>Success Checklist</Text>
               <Text style={Styles.menuItemSubText}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/success-checklist')}>If you stop seeing progress, use this list to help pinpoint issues.</Text>
+                onPress={() => this.setState({ showSuccessChecklist: true }) }>If you stop seeing progress, use this list to help pinpoint issues.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
@@ -170,6 +172,11 @@ export default class LoginScreen extends React.Component {
             <ModalWindow
               currentModal="FOODS_TO_AVOID"
               data={this.state.client}
+              closeModal={this.closeModal} />}
+
+          {this.state.showSuccessChecklist &&
+            <ModalWindow
+              currentModal="SUCCESS_CHECKLIST"
               closeModal={this.closeModal} />}
 
           {this.state.showContact &&

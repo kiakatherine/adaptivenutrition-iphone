@@ -19,11 +19,25 @@ const AboutModal = props => {
     <View style={Styles.modalContent}>
       <Text style={Styles.modalH1}>About</Text>
 
-      <Text style={Styles.paragraphText}>Our mission is to provide our clients with sustainable nutritional and lifestyle tools necessary to meet and exceed their fitness goals.</Text>
+      <Text style={Styles.paragraphText}>Our goal is to help people feel knowledgeable and in control of how food impacts their health, appearance, and quality of life.</Text>
 
-      <Text style={Styles.paragraphText}>Growing up, we aren’t taught how to appropriately fuel our bodies for health and activity. As adults, different fad diets vie for our attention. We know first-hand how difficult it is to navigate all of this information to get the results we want.</Text>
+      <Text style={Styles.paragraphText}>We were frustrated with the lack of education around personal nutrition, as well as the lack of sustainability and scientific support for many diets.</Text>
 
-      <Text style={Styles.paragraphText}>Eventually, we realized it’s not rocket science…but it is science. We have found what’s been proven to work for people from all different health backgrounds and fitness levels, and we are hoping to share them with you in order to help you find your success. We meet you where you are and build you up to your goals and beyond.</Text>
+      <Text style={Styles.h3}>At Adaptive Nutrition, we:</Text>
+
+      <Text style={Styles.paragraphText}>Aim to provide facts on what works and what doesn’t.</Text>
+
+      <Text style={Styles.paragraphText}>Distill complex concepts into simple tools and guidelines.</Text>
+
+      <Text style={Styles.paragraphText}>Know the effects of nutrition are far-reaching - everything from skin to mood, from alertness to training performance.</Text>
+
+      <Text style={Styles.paragraphText}>Believe that nutrition is important when addressing the root of many health problems.</Text>
+
+      <Text style={Styles.paragraphText}>Understand that while food is important for your health, it is more than just fuel - it’s a cultural and social fabric.</Text>
+
+      <Text style={Styles.paragraphText}>Teach how to align your enjoyment of food with your health, training, and/or aesthetic goals.</Text>
+
+      <Text style={Styles.paragraphText}>{"We're excited that you're here and hope these tools will help you be the best version of yourself."}</Text>
 
       <Text style={Styles.paragraphText}>Learn more at <Text style={Styles.link} onPress={() => Linking.openURL('http://adaptivenutrition.us')}>adaptivenutrition.us</Text>.</Text>
     </View>
