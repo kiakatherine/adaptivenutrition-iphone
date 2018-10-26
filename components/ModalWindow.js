@@ -74,7 +74,7 @@ class ModalWindow extends React.Component {
          doNotShowMacroWarning={this.props.doNotShowMacroWarning}
          toggleView={this.props.toggleView}
          toggleUnits={this.props.toggleUnits}
-         showEnergyBalancePicker={this.props.showEnergyBalancePicker}
+         showTemplatePicker={this.props.showTemplatePicker}
          clickNavPhase={this.props.clickNavPhase}
          closeModal={this.props.closeModal} />;
       } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {

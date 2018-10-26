@@ -89,6 +89,8 @@ class Meal extends React.Component {
        time = this.props.dinnerTime;
      }
 
+     console.log('this.props.trainingIntensity', this.props.trainingIntensity)
+
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
@@ -121,7 +123,11 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>
+          <View style={Styles.flexRow}>
+            <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>
+            {this.props.phase < 3 && <Image source={require('../assets/icons/protein.png')}
+              style={{ width: 60, height: 60, resizeMode: 'contain', alignItems: 'flex-start' }} />}
+          </View>
 
           <FoodOptions style={styles.mealRowColLong}
             macro='protein'
@@ -154,7 +160,15 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>
+          <View style={Styles.flexRow}>
+            <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>
+            {this.props.phase < 3 && this.props.trainingIntensity === 1 &&
+              <Image source={require('../assets/icons/carbs-training.png')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
+            {this.props.phase < 3 && this.props.trainingIntensity === 0 &&
+              <Image source={require('../assets/icons/carbs-rest.png')}
+                style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
+          </View>
 
           <FoodOptions style={styles.mealRowColLong}
             macro='carbs'
@@ -187,7 +201,11 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.mealRow}>
-          <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
+          <View style={Styles.flexRow}>
+            <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
+            {this.props.phase < 3 && <Image source={require('../assets/icons/fats.png')}
+              style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
+          </View>
 
           <FoodOptions style={styles.mealRowColLong}
             macro='fats'
@@ -311,6 +329,7 @@ const styles = StyleSheet.create ({
   mealRowColPhase3: {
     color: Colors.black,
     letterSpacing: 2,
+    paddingTop: 20,
     marginBottom: 10
   },
   mealRowHeader: {

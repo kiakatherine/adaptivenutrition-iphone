@@ -1,4 +1,5 @@
 import React from 'react';
+import Swiper from 'react-native-swiper';
 
 import firebase from '../../services/FirebaseService';
 
@@ -13,11 +14,15 @@ import * as templates from '../../constants/Templates';
 import * as macroRatios from '../../constants/MacroRatios';
 import moment from 'moment';
 import format from 'date-fns/format';
+import TemplatePicker from '../../components/TemplatePicker';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
 import { changeUnit, convertTrainingTimeToString, format12Hour, getAge, setMealTimes } from '../../utils/helpers';
 
 const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
+
+const MessageBarAlert = require('react-native-message-bar').MessageBar;
+const MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
 import {
   Alert,
@@ -54,7 +59,7 @@ export default class LoginScreen extends React.Component {
       showWakeTimePicker: false,
       showTrainingIntensityPicker: false,
       showMealsBeforeWorkoutPicker: false,
-      showEnergyBalancePicker: false,
+      showTemplatePicker: false,
       showNeedBodyweightEntries: false,
       showTemplateConfirmation: false,
       showStepSuccessMessage: false,
@@ -69,6 +74,12 @@ export default class LoginScreen extends React.Component {
       phase1meal2: null,
       phase1meal3: null,
       phase1meal4: null,
+
+      phase2meal1: null,
+      phase2meal2: null,
+      phase2meal3: null,
+      phase2meal4: null,
+
       phase3meal1: null,
       phase3meal2: null,
       phase3meal3: null,
@@ -81,7 +92,7 @@ export default class LoginScreen extends React.Component {
 
     this.movePhase = this.movePhase.bind(this);
     this.clickNavPhase = this.clickNavPhase.bind(this);
-    this.showEnergyBalancePicker = this.showEnergyBalancePicker.bind(this);
+    this.showTemplatePicker = this.showTemplatePicker.bind(this);
     this.saveMeasurement = this.saveMeasurement.bind(this);
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -94,6 +105,11 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
+    // Register the alert located on this master page
+    // This MessageBar will be accessible from the current (same) component, and from its child component
+    // The MessageBar is then declared only once, in your main component.
+    MessageBarManager.registerMessageBar(this.refs.alert);
+
     // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const uid = firebase.auth().currentUser.uid;
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
@@ -221,6 +237,11 @@ export default class LoginScreen extends React.Component {
     // });
   }
 
+  componentWillUnmount() {
+    // Remove the alert located on this master page from the manager
+    MessageBarManager.unregisterMessageBar();
+  }
+
   clickTemplateType(template) {
     // show confirmation or error message
     // if need confirmation first, saveTemplateType() actually saves template type
@@ -235,37 +256,42 @@ export default class LoginScreen extends React.Component {
     console.log('currentTemplate', currentTemplate)
     if(template === currentTemplate) {
       this.setState({
-        showEnergyBalancePicker: false,
-        showModal: false
+        showTemplatePicker: false
       });
       return;
     }
 
-    if(currentTemplate === TEMPLATE_TYPES[0]) {
+    if(currentTemplate === 0) {
       // if currentTemplate is step 1
       // show error if template is step 3, 4, 5
       // else show confirmation modal
-      if(template === TEMPLATE_TYPES[3] || template === TEMPLATE_TYPES[4] || template === TEMPLATE_TYPES[5]) {
-        alert('showTemplateNavError1')
+      if(template === 3 || template === 4 || template === 5) {
+        MessageBarManager.showAlert({
+          title: 'Oops!',
+          message: 'cant go here yet!',
+          alertType: 'warning',
+          // See Properties section for full customization
+          // Or check `index.ios.js` or `index.android.js` for a complete example
+        });
         this.setState({ showTemplateNavError1: true, showModal: true });
         return;
       } else {
         this.setState({
-          showEnergyBalancePicker: false,
+          showTemplatePicker: false,
           showTemplateConfirmation: true,
           potentialTemplate: template
         });
       }
-    } else if(currentTemplate === TEMPLATE_TYPES[1] || currentTemplate === TEMPLATE_TYPES[2]) {
+    } else if(currentTemplate === 1 || currentTemplate === 2) {
       // if currentTemplate is step 2
       // show error if template is step 4, 5
       // else update without confirmation
-      if(template === TEMPLATE_TYPES[4] || template === TEMPLATE_TYPES[5]) {
+      if(template === 4 || template === 5) {
         alert('showTemplateNavError2') // can't move there yet!
         this.setState({ showTemplateNavError2: true, showModal: true });
         return;
       } else {
-        if(template === TEMPLATE_TYPES[3]) {
+        if(template === 3) {
           // if moving to lock in results step 3
           this.moveToLockInResults(template);
         } else {
@@ -275,17 +301,17 @@ export default class LoginScreen extends React.Component {
             console.log('saved template type', template);
 
             this.setState({
-              showEnergyBalancePicker: false,
+              showTemplatePicker: false,
               showTemplateConfirmation: false
             });
           });
         }
       }
-    } else if(currentTemplate === TEMPLATE_TYPES[3]) {
+    } else if(currentTemplate === 3) {
       // if currentTemplate is lock in results step 3
       // show error if template is step 2 or 5
       // else update without confirmation
-      if(template === TEMPLATE_TYPES[5]) {
+      if(template === 5) {
         alert('showTemplateNavError3')
         this.setState({ showTemplateNavError3: true, showModal: true });
         return;
@@ -296,12 +322,12 @@ export default class LoginScreen extends React.Component {
           console.log('saved template type', template);
 
           this.setState({
-            showEnergyBalancePicker: false,
+            showTemplatePicker: false,
             showTemplateConfirmation: false
           });
         });
       }
-    } else if(currentTemplate === TEMPLATE_TYPES[4]) {
+    } else if(currentTemplate === 4) {
       // if currentTemplate is lock in results step 4
       // confirm if template is going back to step 1, 2, 3
       // else update without confirmation
@@ -310,27 +336,25 @@ export default class LoginScreen extends React.Component {
       }).then(() => {
         console.log('saved template type', template);
 
-        if(template === TEMPLATE_TYPES[5]) {
+        if(template === 5) {
           this.setState({
-            showEnergyBalancePicker: false,
-            showModal: true,
+            showTemplatePicker: false,
             showStepSuccessMessage: true
           });
         } else {
           this.setState({
-            showEnergyBalancePicker: false,
+            showTemplatePicker: false,
             showTemplateConfirmation: false
           });
         }
       });
-    } else if(currentTemplate === TEMPLATE_TYPES[5]) {
-      if(template === TEMPLATE_TYPES[0] || template === TEMPLATE_TYPES[1] || template === TEMPLATE_TYPES[2]) {
+    } else if(currentTemplate === 5) {
+      if(template === 0 || template === 1 || template === 2) {
         clientRef.update({
           templateType: template
         }).then(() => {
           this.setState({
-            showEnergyBalancePicker: false,
-            showModal: true,
+            showTemplatePicker: false,
             showUpdateBiometricsReminder: true
           });
         });
@@ -380,14 +404,14 @@ export default class LoginScreen extends React.Component {
         sortedBodyweightRecords[2].date < oneWeekAgo)) {
           hasBodyweightEntries = false;
           this.setState({
-            showEnergyBalancePicker: false,
+            showTemplatePicker: false,
             showNeedBodyweightEntries: true
           });
           return;
       } else if (sortedBodyweightRecords.length < 3) {
         hasBodyweightEntries = false;
         this.setState({
-          showEnergyBalancePicker: false,
+          showTemplatePicker: false,
           showNeedBodyweightEntries: true
         });
         return;
@@ -417,8 +441,7 @@ export default class LoginScreen extends React.Component {
 
           // TO DO: add confirmation before saving?
           this.setState({
-            showEnergyBalancePicker: false,
-            showModal: false
+            showTemplatePicker: false
           });
         });
       }
@@ -439,11 +462,10 @@ export default class LoginScreen extends React.Component {
     }
 
     this.setState({
-      showEnergyBalancePicker: false,
+      showTemplatePicker: false,
       showTemplateConfirmation: false,
       template: template,
-      potentialTemplate: null,
-      showModal: false
+      potentialTemplate: null
     });
   }
 
@@ -471,7 +493,7 @@ export default class LoginScreen extends React.Component {
     if(this.state.phase === 3) {
       clientRef.update({ trainingIntensity: intensity });
     } else {
-      clientRef.update({ phase1training: intensity });
+      clientRef.update({ phase1TrainingIntensity: intensity });
     }
   }
 
@@ -532,6 +554,13 @@ export default class LoginScreen extends React.Component {
       // show congrats message
     } else {
       alert('make sure to fill out all portions!');
+      MessageBarManager.showAlert({
+        // title: 'Your alert title goes here',
+        message: 'make sure to fill out all portions!',
+        alertType: 'warning',
+        // See Properties section for full customization
+        // Or check `index.ios.js` or `index.android.js` for a complete example
+      });
     }
   }
 
@@ -722,8 +751,6 @@ export default class LoginScreen extends React.Component {
   clickNavPhase(phase) {
     const uid = firebase.auth().currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + uid);
-    console.log('phase', phase)
-    console.log('current phase', this.state.phase)
 
     if((phase === 1 && this.state.phase === 2) ||
       (phase === 2 && this.state.phase === 3)) {
@@ -739,10 +766,9 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  showEnergyBalancePicker() {
+  showTemplatePicker() {
     this.setState({
-      showEnergyBalancePicker: true,
-      showModal: true
+      showTemplatePicker: !this.state.showTemplatePicker
     });
   }
 
@@ -1053,7 +1079,7 @@ export default class LoginScreen extends React.Component {
       template = client.templateType;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
-      trainingIntensity = phase === 3 ? client.trainingIntensity : client.phase1training;
+      trainingIntensity = phase === 3 ? client.trainingIntensity : client.phase1TrainingIntensity;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
 
@@ -1330,14 +1356,10 @@ export default class LoginScreen extends React.Component {
           veggies6: veggies[5]
         };
       } else {
-        proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Lean pork', 'Game meat'];
+        proteins = ['Chicken', 'Turkey', 'Lean beef', 'Fish', 'Shellfish', 'Lean pork', 'Game meat'];
         carbs = ['White rice', 'Brown rice', 'White potatoes', 'Sweet potatoes',
           'Rolled oats', 'Quinoa', 'Acorn squash', 'Butternut squash'];
-        fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nut butter'];
-        veggies = ['Spinach', 'Broccoli', 'Lettuce', 'Onions', 'Asparagus', 'Kale',
-          'Bell peppers', 'Cabbage', 'Cauliflower', 'Celery', 'Cucumbers', 'Mushrooms',
-          'Yellow squash', 'Zucchini', 'Mixed veggies', 'Brussels sprouts',
-          'Swiss chard', 'Carrots'];
+        fats = ['Avocado', 'Grass-fed butter', 'Olive oil', 'Coconut oil', 'Nuts', 'Nut butter', 'Olives'];
       }
     }
 
@@ -1354,7 +1376,8 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
-        {this.state.phase !== null &&
+        {!this.state.showTemplatePicker &&
+          <ScrollView style={[Styles.content, styles.content]}>{this.state.phase !== null &&
           <Header
             client={this.state.client}
             points={totalPoints}
@@ -1363,6 +1386,10 @@ export default class LoginScreen extends React.Component {
             phase1meal2={this.state.phase1meal2}
             phase1meal3={this.state.phase1meal3}
             phase1meal4={this.state.phase1meal4}
+            phase2meal1={this.state.phase2meal1}
+            phase2meal2={this.state.phase2meal2}
+            phase2meal3={this.state.phase2meal3}
+            phase2meal4={this.state.phase2meal4}
             phase3meal1={this.state.phase3meal1}
             phase3meal2={this.state.phase3meal2}
             phase3meal3={this.state.phase3meal3}
@@ -1375,707 +1402,713 @@ export default class LoginScreen extends React.Component {
             onChangeBodyfat={this._onChangeBodyfat}
             onChangeBirthdate={this._onChangeBirthdate} />}
 
-        {(this.state.phase === null) &&
-          <Text style={styles.loadingText}>adapt & thrive</Text>}
+            {(this.state.phase === null) &&
+              <Text style={styles.loadingText}>adapt & thrive</Text>}
 
-        {this.state.phase !== null && <ScrollView style={Styles.content}>
-          <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
+            {this.state.phase !== null && <ScrollView style={Styles.content}>
+              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
 
-          <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
-            <TouchableHighlight
-              style={styles.optionTooltip}
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showModal: true, showWaketimeTooltip: true }) }}>
-              <FontAwesome
-                name='info-circle'
-                size={20}
-              />
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.optionSection}>
-            <TouchableHighlight
-              style={styles.optionButton}
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
-              <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.optionWrapper}>
-            <Text style={styles.optionTitle}>ARE YOU WORKING OUT TODAY?</Text>
-            <TouchableHighlight
-              style={styles.optionTooltip}
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
-              <FontAwesome
-                name='info-circle'
-                size={20}
-              />
-            </TouchableHighlight>
-          </View>
-
-          {this.state.phase < 3 && <View style={styles.optionSection}>
-            <TouchableHighlight style={styles.optionButton}
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
-              <Text style={styles.optionButtonText}>{trainingIntensity ? 'Yes' : 'No'}</Text>
-            </TouchableHighlight>
-          </View>}
-
-          {this.state.phase === 3 && <View style={styles.optionSection}>
-              <TouchableHighlight
-                style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
-                underlayColor={Colors.white}
-                onPress={() => { this.saveTrainingIntensity(0) }}>
-                <Text style={[styles.optionButtonText, trainingIntensity === 0 ? styles.optionButtonTextActive : null]}>
-                  Rest or low-intensity
-                </Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight
-                style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
-                underlayColor={Colors.white}
-                onPress={() => { this.saveTrainingIntensity(1) }}>
-                <Text style={[styles.optionButtonText, trainingIntensity === 1 ? styles.optionButtonTextActive : null]}>
-                  {'< 90 min high-intensity'}
-                </Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight
-                style={[styles.optionButton, trainingIntensity === 2 ? styles.optionButtonActive : null]}
-                underlayColor={Colors.white}
-                onPress={() => { this.saveTrainingIntensity(2) }}>
-                <Text style={[styles.optionButtonText, trainingIntensity === 2 ? styles.optionButtonTextActive : null]}>
-                  {'> 90 min high-intensity'}
-                </Text>
-              </TouchableHighlight>
-            </View>}
-
-          <View>
-            {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
-              <Text style={styles.optionTitle}>HOW MANY MEALS BEFORE YOUR WORKOUT?</Text></View>
+              <View style={styles.optionWrapper}>
+                <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
+                <TouchableHighlight
+                  style={styles.optionTooltip}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showModal: true, showWaketimeTooltip: true }) }}>
+                  <FontAwesome
+                    name='info-circle'
+                    size={20}
+                  />
+                </TouchableHighlight>
+              </View>
 
               <View style={styles.optionSection}>
                 <TouchableHighlight
-                  style={[styles.optionButton, mealsBeforeWorkout === 0 ? styles.optionButtonActive : null]}
+                  style={styles.optionButton}
                   underlayColor={Colors.white}
-                  onPress={() => { this.saveMealsBeforeWorkout(0) }}>
-                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 0 ? styles.optionButtonTextActive : null]}>0</Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  style={[styles.optionButton, mealsBeforeWorkout === 1 ? styles.optionButtonActive : null]}
-                  underlayColor={Colors.white}
-                  onPress={() => { this.saveMealsBeforeWorkout(1) }}>
-                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 1 ? styles.optionButtonTextActive : null]}>1</Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  style={[styles.optionButton, mealsBeforeWorkout === 2 ? styles.optionButtonActive : null]}
-                  underlayColor={Colors.white}
-                  onPress={() => { this.saveMealsBeforeWorkout(2) }}>
-                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 2 ? styles.optionButtonTextActive : null]}>2</Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  style={[styles.optionButton, mealsBeforeWorkout === 3 ? styles.optionButtonActive : null]}
-                  underlayColor={Colors.white}
-                  onPress={() => { this.saveMealsBeforeWorkout(3) }}>
-                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 3 ? styles.optionButtonTextActive : null]}>3</Text>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                  style={[styles.optionButton, mealsBeforeWorkout === 4 ? styles.optionButtonActive : null]}
-                  underlayColor={Colors.white}
-                  onPress={() => { this.saveMealsBeforeWorkout(4) }}>
-                  <Text style={[styles.optionButtonText, mealsBeforeWorkout === 4 ? styles.optionButtonTextActive : null]}>4</Text>
+                  onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
+                  <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
                 </TouchableHighlight>
               </View>
-            </View>}
 
-            <View style={styles.progressSection}>
-              {!viewAllMeals && phase === 1 &&
+              <View style={styles.optionWrapper}>
+                <Text style={styles.optionTitle}>ARE YOU WORKING OUT TODAY?</Text>
                 <TouchableHighlight
-                  style={[Styles.buttonCircular, styles.progressButtonGood,
-                    (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButton :
-                    (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButton :
-                    (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButton :
-                    (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
-                  underlayColor={Colors.darkerPrimaryColor}
-                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                   <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                     (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButtonText :
-                     (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButtonText :
-                     (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButtonText :
-                     (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
-                     <FontAwesome
-                       style={styles.progressButtonGoodIcon}
-                       name='check'
-                       size={16}
-                     />
-                   </Text>
-              </TouchableHighlight>}
+                  style={styles.optionTooltip}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showModal: true, showTrainingTooltip: true }) }}>
+                  <FontAwesome
+                    name='info-circle'
+                    size={20}
+                  />
+                </TouchableHighlight>
+              </View>
 
-              {!viewAllMeals && phase === 1 &&
-                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
-                  (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
-                  underlayColor={Colors.darkerRed}
-                  onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                    (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
-                    <FontAwesome
-                      style={styles.progressButtonBadIcon}
-                      name='remove'
-                      size={16} />
-                </Text>
-              </TouchableHighlight>}
+              {this.state.phase < 3 && <View style={styles.optionSection}>
+                <TouchableHighlight style={styles.optionButton}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
+                  <Text style={styles.optionButtonText}>{trainingIntensity ? 'Yes' : 'No'}</Text>
+                </TouchableHighlight>
+              </View>}
 
-              {!viewAllMeals && phase === 3 &&
-                <TouchableHighlight
-                  style={[Styles.buttonCircular, styles.progressButtonGood,
-                    (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButton :
-                    (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButton :
-                    (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButton :
-                    (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButton :
-                    (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
-                  underlayColor={Colors.darkerPrimaryColor}
-                  onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                   <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                      (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButtonText :
-                      (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButtonText :
-                      (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButtonText :
-                      (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButtonText :
-                      (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
-                     <FontAwesome
-                       style={styles.progressButtonGoodIcon}
-                       name='check'
-                       size={16}
-                     />
-                   </Text>
-              </TouchableHighlight>}
+              {this.state.phase === 3 && <View style={styles.optionSection}>
+                  <TouchableHighlight
+                    style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveTrainingIntensity(0) }}>
+                    <Text style={[styles.optionButtonText, trainingIntensity === 0 ? styles.optionButtonTextActive : null]}>
+                      Rest or low-intensity
+                    </Text>
+                  </TouchableHighlight>
 
-              {!viewAllMeals && phase === 3 &&
-                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
-                  (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
-                  (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
-                  underlayColor={Colors.darkerRed}
-                  onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                    (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
-                    (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
-                    <FontAwesome
-                      style={styles.progressButtonBadIcon}
-                      name='remove'
-                      size={16} />
-                </Text>
-              </TouchableHighlight>}
+                  <TouchableHighlight
+                    style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveTrainingIntensity(1) }}>
+                    <Text style={[styles.optionButtonText, trainingIntensity === 1 ? styles.optionButtonTextActive : null]}>
+                      {'< 90 min high-intensity'}
+                    </Text>
+                  </TouchableHighlight>
 
-              {!viewAllMeals && phase === 2 && dayStatusesLoaded &&
-                <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
-                  (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                  (currentMeal === 1 && this.state.meal2measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                  (currentMeal === 2 && this.state.meal3measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                  (currentMeal === 3 && this.state.meal4measurementsCompleted === 1) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
-                  underlayColor={Colors.darkerPrimaryColor}
-                  onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
-                 <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
-                   <FontAwesome
-                     style={styles.progressButtonGoodIcon}
-                     name='check'
-                     size={16}
-                   />
-                 </Text>
-              </TouchableHighlight>}
-            </View>
-
-            <View style={styles.mealPlanSection}>
-              {!viewAllMeals && <Meal
-                trainingIntensity={trainingIntensity}
-                mealsBeforeWorkout={mealsBeforeWorkout}
-                template={template}
-                phase={phase}
-                currentMeal={currentMeal}
-                breakfastTime={mealTimes['breakfastTime']}
-                earlyLunchTime={mealTimes['earlyLunchTime']}
-                lateLunchTime={mealTimes['lateLunchTime']}
-                dinnerTime={mealTimes['dinnerTime']}
-                meal1proteinMeasurement={this.state.meal1proteinMeasurement}
-                meal2proteinMeasurement={this.state.meal2proteinMeasurement}
-                meal3proteinMeasurement={this.state.meal3proteinMeasurement}
-                meal4proteinMeasurement={this.state.meal4proteinMeasurement}
-                meal1carbsMeasurement={this.state.meal1carbsMeasurement}
-                meal2carbsMeasurement={this.state.meal2carbsMeasurement}
-                meal3carbsMeasurement={this.state.meal3carbsMeasurement}
-                meal4carbsMeasurement={this.state.meal4carbsMeasurement}
-                meal1fatsMeasurement={this.state.meal1fatsMeasurement}
-                meal2fatsMeasurement={this.state.meal2fatsMeasurement}
-                meal3fatsMeasurement={this.state.meal3fatsMeasurement}
-                meal4fatsMeasurement={this.state.meal4fatsMeasurement}
-                meal1veggiesMeasurement={this.state.meal1veggiesMeasurement}
-                meal2veggiesMeasurement={this.state.meal2veggiesMeasurement}
-                meal3veggiesMeasurement={this.state.meal3veggiesMeasurement}
-                meal4veggiesMeasurement={this.state.meal4veggiesMeasurement}
-                age={age}
-                gender={gender}
-                height={height}
-                bodyweight={bodyweight}
-                bodyfat={bodyfat}
-                proteins={proteins}
-                carbs={carbs}
-                fats={fats}
-                veggies={veggies}
-                viewAllMeals={viewAllMeals}
-                showInGrams={showInGrams}
-                updateMeasurement={this.saveMeasurement}
-                changeMeal={this.saveCurrentMeal} />}
-
-              {(this.state.phase === 3 && viewAllMeals) && <View>
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={0}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={1}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={2}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={3}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
-                <Meal
-                  trainingIntensity={trainingIntensity}
-                  mealsBeforeWorkout={mealsBeforeWorkout}
-                  template={template}
-                  phase={phase}
-                  currentMeal={4}
-                  breakfastTime={mealTimes['breakfastTime']}
-                  earlyLunchTime={mealTimes['earlyLunchTime']}
-                  lateLunchTime={mealTimes['lateLunchTime']}
-                  dinnerTime={mealTimes['dinnerTime']}
-                  age={age}
-                  gender={gender}
-                  height={height}
-                  bodyweight={bodyweight}
-                  bodyfat={bodyfat}
-                  proteins={proteins}
-                  carbs={carbs}
-                  fats={fats}
-                  veggies={veggies}
-                  pwo={isPwoMeal}
-                  viewAllMeals={viewAllMeals}
-                  showInGrams={showInGrams} />
+                  <TouchableHighlight
+                    style={[styles.optionButton, trainingIntensity === 2 ? styles.optionButtonActive : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveTrainingIntensity(2) }}>
+                    <Text style={[styles.optionButtonText, trainingIntensity === 2 ? styles.optionButtonTextActive : null]}>
+                      {'> 90 min high-intensity'}
+                    </Text>
+                  </TouchableHighlight>
                 </View>}
-            </View>
-          </View>
 
-          <View>
-            {viewAllMeals &&
+              <View>
+                {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
+                  <Text style={styles.optionTitle}>HOW MANY MEALS BEFORE YOUR WORKOUT?</Text></View>
+
+                  <View style={styles.optionSection}>
+                    <TouchableHighlight
+                      style={[styles.optionButton, mealsBeforeWorkout === 0 ? styles.optionButtonActive : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveMealsBeforeWorkout(0) }}>
+                      <Text style={[styles.optionButtonText, mealsBeforeWorkout === 0 ? styles.optionButtonTextActive : null]}>0</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight
+                      style={[styles.optionButton, mealsBeforeWorkout === 1 ? styles.optionButtonActive : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveMealsBeforeWorkout(1) }}>
+                      <Text style={[styles.optionButtonText, mealsBeforeWorkout === 1 ? styles.optionButtonTextActive : null]}>1</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight
+                      style={[styles.optionButton, mealsBeforeWorkout === 2 ? styles.optionButtonActive : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveMealsBeforeWorkout(2) }}>
+                      <Text style={[styles.optionButtonText, mealsBeforeWorkout === 2 ? styles.optionButtonTextActive : null]}>2</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight
+                      style={[styles.optionButton, mealsBeforeWorkout === 3 ? styles.optionButtonActive : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveMealsBeforeWorkout(3) }}>
+                      <Text style={[styles.optionButtonText, mealsBeforeWorkout === 3 ? styles.optionButtonTextActive : null]}>3</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight
+                      style={[styles.optionButton, mealsBeforeWorkout === 4 ? styles.optionButtonActive : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveMealsBeforeWorkout(4) }}>
+                      <Text style={[styles.optionButtonText, mealsBeforeWorkout === 4 ? styles.optionButtonTextActive : null]}>4</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>}
+
+                <View style={styles.progressSection}>
+                  {!viewAllMeals && phase === 1 &&
+                    <TouchableHighlight
+                      style={[Styles.buttonCircular, styles.progressButtonGood,
+                        (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButton :
+                        (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButton :
+                        (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButton :
+                        (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
+                      underlayColor={Colors.darkerPrimaryColor}
+                      onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
+                       <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                         (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButtonText :
+                         (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButtonText :
+                         (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButtonText :
+                         (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
+                         <FontAwesome
+                           style={styles.progressButtonGoodIcon}
+                           name='check'
+                           size={16}
+                         />
+                       </Text>
+                  </TouchableHighlight>}
+
+                  {!viewAllMeals && phase === 1 &&
+                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
+                      (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
+                      underlayColor={Colors.darkerRed}
+                      onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
+                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                        (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
+                        <FontAwesome
+                          style={styles.progressButtonBadIcon}
+                          name='remove'
+                          size={16} />
+                    </Text>
+                  </TouchableHighlight>}
+
+                  {!viewAllMeals && phase === 3 &&
+                    <TouchableHighlight
+                      style={[Styles.buttonCircular, styles.progressButtonGood,
+                        (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButton :
+                        (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButton :
+                        (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButton :
+                        (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButton :
+                        (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
+                      underlayColor={Colors.darkerPrimaryColor}
+                      onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
+                       <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                          (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButtonText :
+                          (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButtonText :
+                          (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButtonText :
+                          (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButtonText :
+                          (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
+                         <FontAwesome
+                           style={styles.progressButtonGoodIcon}
+                           name='check'
+                           size={16}
+                         />
+                       </Text>
+                  </TouchableHighlight>}
+
+                  {!viewAllMeals && phase === 3 &&
+                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
+                      (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
+                      (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
+                      underlayColor={Colors.darkerRed}
+                      onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
+                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
+                        (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
+                        (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
+                        <FontAwesome
+                          style={styles.progressButtonBadIcon}
+                          name='remove'
+                          size={16} />
+                    </Text>
+                  </TouchableHighlight>}
+
+                  {!viewAllMeals && phase === 2 && dayStatusesLoaded &&
+                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
+                      (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                      (currentMeal === 1 && this.state.meal2measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                      (currentMeal === 2 && this.state.meal3measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
+                      (currentMeal === 3 && this.state.meal4measurementsCompleted === 1) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
+                      underlayColor={Colors.darkerPrimaryColor}
+                      onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
+                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
+                       <FontAwesome
+                         style={styles.progressButtonGoodIcon}
+                         name='check'
+                         size={16}
+                       />
+                     </Text>
+                  </TouchableHighlight>}
+                </View>
+
+                <View style={styles.mealPlanSection}>
+                  {!viewAllMeals && <Meal
+                    trainingIntensity={trainingIntensity}
+                    mealsBeforeWorkout={mealsBeforeWorkout}
+                    template={template}
+                    phase={phase}
+                    currentMeal={currentMeal}
+                    breakfastTime={mealTimes['breakfastTime']}
+                    earlyLunchTime={mealTimes['earlyLunchTime']}
+                    lateLunchTime={mealTimes['lateLunchTime']}
+                    dinnerTime={mealTimes['dinnerTime']}
+                    meal1proteinMeasurement={this.state.meal1proteinMeasurement}
+                    meal2proteinMeasurement={this.state.meal2proteinMeasurement}
+                    meal3proteinMeasurement={this.state.meal3proteinMeasurement}
+                    meal4proteinMeasurement={this.state.meal4proteinMeasurement}
+                    meal1carbsMeasurement={this.state.meal1carbsMeasurement}
+                    meal2carbsMeasurement={this.state.meal2carbsMeasurement}
+                    meal3carbsMeasurement={this.state.meal3carbsMeasurement}
+                    meal4carbsMeasurement={this.state.meal4carbsMeasurement}
+                    meal1fatsMeasurement={this.state.meal1fatsMeasurement}
+                    meal2fatsMeasurement={this.state.meal2fatsMeasurement}
+                    meal3fatsMeasurement={this.state.meal3fatsMeasurement}
+                    meal4fatsMeasurement={this.state.meal4fatsMeasurement}
+                    meal1veggiesMeasurement={this.state.meal1veggiesMeasurement}
+                    meal2veggiesMeasurement={this.state.meal2veggiesMeasurement}
+                    meal3veggiesMeasurement={this.state.meal3veggiesMeasurement}
+                    meal4veggiesMeasurement={this.state.meal4veggiesMeasurement}
+                    age={age}
+                    gender={gender}
+                    height={height}
+                    bodyweight={bodyweight}
+                    bodyfat={bodyfat}
+                    proteins={proteins}
+                    carbs={carbs}
+                    fats={fats}
+                    veggies={veggies}
+                    viewAllMeals={viewAllMeals}
+                    showInGrams={showInGrams}
+                    updateMeasurement={this.saveMeasurement}
+                    changeMeal={this.saveCurrentMeal} />}
+
+                  {(this.state.phase === 3 && viewAllMeals) && <View>
+                    <Meal
+                      trainingIntensity={trainingIntensity}
+                      mealsBeforeWorkout={mealsBeforeWorkout}
+                      template={template}
+                      phase={phase}
+                      currentMeal={0}
+                      breakfastTime={mealTimes['breakfastTime']}
+                      earlyLunchTime={mealTimes['earlyLunchTime']}
+                      lateLunchTime={mealTimes['lateLunchTime']}
+                      dinnerTime={mealTimes['dinnerTime']}
+                      age={age}
+                      gender={gender}
+                      height={height}
+                      bodyweight={bodyweight}
+                      bodyfat={bodyfat}
+                      proteins={proteins}
+                      carbs={carbs}
+                      fats={fats}
+                      veggies={veggies}
+                      pwo={isPwoMeal}
+                      viewAllMeals={viewAllMeals}
+                      showInGrams={showInGrams} />
+                    <Meal
+                      trainingIntensity={trainingIntensity}
+                      mealsBeforeWorkout={mealsBeforeWorkout}
+                      template={template}
+                      phase={phase}
+                      currentMeal={1}
+                      breakfastTime={mealTimes['breakfastTime']}
+                      earlyLunchTime={mealTimes['earlyLunchTime']}
+                      lateLunchTime={mealTimes['lateLunchTime']}
+                      dinnerTime={mealTimes['dinnerTime']}
+                      age={age}
+                      gender={gender}
+                      height={height}
+                      bodyweight={bodyweight}
+                      bodyfat={bodyfat}
+                      proteins={proteins}
+                      carbs={carbs}
+                      fats={fats}
+                      veggies={veggies}
+                      pwo={isPwoMeal}
+                      viewAllMeals={viewAllMeals}
+                      showInGrams={showInGrams} />
+                    <Meal
+                      trainingIntensity={trainingIntensity}
+                      mealsBeforeWorkout={mealsBeforeWorkout}
+                      template={template}
+                      phase={phase}
+                      currentMeal={2}
+                      breakfastTime={mealTimes['breakfastTime']}
+                      earlyLunchTime={mealTimes['earlyLunchTime']}
+                      lateLunchTime={mealTimes['lateLunchTime']}
+                      dinnerTime={mealTimes['dinnerTime']}
+                      age={age}
+                      gender={gender}
+                      height={height}
+                      bodyweight={bodyweight}
+                      bodyfat={bodyfat}
+                      proteins={proteins}
+                      carbs={carbs}
+                      fats={fats}
+                      veggies={veggies}
+                      pwo={isPwoMeal}
+                      viewAllMeals={viewAllMeals}
+                      showInGrams={showInGrams} />
+                    <Meal
+                      trainingIntensity={trainingIntensity}
+                      mealsBeforeWorkout={mealsBeforeWorkout}
+                      template={template}
+                      phase={phase}
+                      currentMeal={3}
+                      breakfastTime={mealTimes['breakfastTime']}
+                      earlyLunchTime={mealTimes['earlyLunchTime']}
+                      lateLunchTime={mealTimes['lateLunchTime']}
+                      dinnerTime={mealTimes['dinnerTime']}
+                      age={age}
+                      gender={gender}
+                      height={height}
+                      bodyweight={bodyweight}
+                      bodyfat={bodyfat}
+                      proteins={proteins}
+                      carbs={carbs}
+                      fats={fats}
+                      veggies={veggies}
+                      pwo={isPwoMeal}
+                      viewAllMeals={viewAllMeals}
+                      showInGrams={showInGrams} />
+                    <Meal
+                      trainingIntensity={trainingIntensity}
+                      mealsBeforeWorkout={mealsBeforeWorkout}
+                      template={template}
+                      phase={phase}
+                      currentMeal={4}
+                      breakfastTime={mealTimes['breakfastTime']}
+                      earlyLunchTime={mealTimes['earlyLunchTime']}
+                      lateLunchTime={mealTimes['lateLunchTime']}
+                      dinnerTime={mealTimes['dinnerTime']}
+                      age={age}
+                      gender={gender}
+                      height={height}
+                      bodyweight={bodyweight}
+                      bodyfat={bodyfat}
+                      proteins={proteins}
+                      carbs={carbs}
+                      fats={fats}
+                      veggies={veggies}
+                      pwo={isPwoMeal}
+                      viewAllMeals={viewAllMeals}
+                      showInGrams={showInGrams} />
+                    </View>}
+                </View>
+              </View>
+
+              <View>
+                {viewAllMeals &&
+                  <TouchableHighlight
+                    style={[Styles.center, styles.completionMessage]}
+                    onPress={() => this.toggleView(viewAllMeals) }>
+                    <Text style={Styles.textCenter}>View by single meal to see meal completion buttons</Text>
+                  </TouchableHighlight>}
+              </View>
+
               <TouchableHighlight
-                style={[Styles.center, styles.completionMessage]}
-                onPress={() => this.toggleView(viewAllMeals) }>
-                <Text style={Styles.textCenter}>View by single meal to see meal completion buttons</Text>
-              </TouchableHighlight>}
-          </View>
-
-          <TouchableHighlight
-           style={Styles.buttonCircular}
-           underlayColor={Colors.darkerPrimaryColor}
-           onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
-             <Text style={Styles.buttonCircularIcon}>
-               <FontAwesome
-                 name='gear'
-                 size={20}
-               /> {this.props.label}
-             </Text>
-          </TouchableHighlight>
-
-          {this.state.phase === 3 && this.state.showMealPlanSettings &&
-            <ModalWindow
-              currentModal="MEAL_PLAN_SETTINGS"
-              style="button"
-              data={this.state.client}
-              template={template}
-              viewAllMeals={viewAllMeals}
-              showInGrams={showInGrams}
-              doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
-              toggleView={this.toggleView}
-              toggleUnits={this.toggleUnits}
-              showEnergyBalancePicker={this.showEnergyBalancePicker}
-              clickNavPhase={this.clickNavPhase}
-              closeModal={this.closeModal} />}
-
-          <View style={styles.phaseNavButtons}>
-            {(this.state.phase === 2) &&
-              <TouchableHighlight
-                style={[Styles.button, Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
-                underlayColor={Colors.darkerPrimaryColor}
-                onPress={() => { this.clickNavPhase(1) }}>
-                <Text style={[Styles.buttonText, Styles.buttonInvertedText, Styles.buttonWithIconText]}>
-                  <FontAwesome
-                    style={styles.phaseNavButtonIconLeft}
-                    name='arrow-left'
-                    size={24}
-                  />
-                  {'  '}Phase 1
-                </Text>
-              </TouchableHighlight>}
-
-            {(this.state.phase === 2) &&
-              <TouchableHighlight
-                style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
-                underlayColor={Colors.darkerPrimaryColor}
-                onPress={() => { this.clickNavPhase(3) }}>
-                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
-                Phase 3{'  '}
-                <FontAwesome
-                  style={styles.phaseNavButtonIconRight}
-                  name='arrow-right'
-                  size={24}
-                />
-                </Text>
-              </TouchableHighlight>}
-
-            {(this.state.phase === 1) &&
-              <TouchableHighlight
-                style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
-                underlayColor={Colors.darkerPrimaryColor}
-                onPress={() => { this.clickNavPhase(2) }}>
-                <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
-                  Phase 2{'  '}
-                  <FontAwesome
-                    style={styles.phaseNavButtonIconRight}
-                    name='arrow-right'
-                    size={24}
-                  />
-                </Text>
-              </TouchableHighlight>}
-          </View>
-        </ScrollView>}
-
-        {this.state.showModal &&
-          <View style={Styles.showModal}></View>}
-
-        {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
-          <Picker
-            selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
-            onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
-            <Picker.Item label="12:00 am" value="12:00 am" />
-            <Picker.Item label="12:30 am" value="12:30 am" />
-            <Picker.Item label="1:00 am" value="1:00 am" />
-            <Picker.Item label="1:30 am" value="1:30 am" />
-            <Picker.Item label="2:00 am" value="2:00 am" />
-            <Picker.Item label="2:30 am" value="2:30 am" />
-            <Picker.Item label="3:00 am" value="3:00 am" />
-            <Picker.Item label="3:30 am" value="3:30 am" />
-            <Picker.Item label="4:00 am" value="4:00 am" />
-            <Picker.Item label="4:30 am" value="4:30 am" />
-            <Picker.Item label="5:00 am" value="5:00 am" />
-            <Picker.Item label="5:30 am" value="6:30 am" />
-            <Picker.Item label="6:00 am" value="6:00 am" />
-            <Picker.Item label="6:30 am" value="6:30 am" />
-            <Picker.Item label="7:00 am" value="7:00 am" />
-            <Picker.Item label="7:30 am" value="7:30 am" />
-            <Picker.Item label="8:00 am" value="8:00 am" />
-            <Picker.Item label="8:30 am" value="8:30 am" />
-            <Picker.Item label="9:00 am" value="9:00 am" />
-            <Picker.Item label="9:30 am" value="9:30 am" />
-            <Picker.Item label="10:00 am" value="10:00 am" />
-            <Picker.Item label="10:30 am" value="10:30 am" />
-            <Picker.Item label="11:00 am" value="11:00 am" />
-            <Picker.Item label="11:30 am" value="11:30 am" />
-
-            <Picker.Item label="12:00 pm" value="12:00 pm" />
-            <Picker.Item label="12:30 pm" value="12:30 pm" />
-            <Picker.Item label="1:00 pm" value="1:00 pm" />
-            <Picker.Item label="1:30 pm" value="1:30 pm" />
-            <Picker.Item label="2:00 pm" value="2:00 pm" />
-            <Picker.Item label="2:30 pm" value="2:30 pm" />
-            <Picker.Item label="3:00 pm" value="3:00 pm" />
-            <Picker.Item label="3:30 pm" value="3:30 pm" />
-            <Picker.Item label="4:00 pm" value="4:00 pm" />
-            <Picker.Item label="4:30 pm" value="4:30 pm" />
-            <Picker.Item label="5:00 pm" value="5:00 pm" />
-            <Picker.Item label="5:30 pm" value="5:30 pm" />
-            <Picker.Item label="6:00 pm" value="6:00 pm" />
-            <Picker.Item label="6:30 pm" value="6:30 pm" />
-            <Picker.Item label="7:00 pm" value="7:00 pm" />
-            <Picker.Item label="7:30 pm" value="7:30 pm" />
-            <Picker.Item label="8:00 pm" value="8:00 pm" />
-            <Picker.Item label="8:30 pm" value="8:30 pm" />
-            <Picker.Item label="9:00 pm" value="9:00 pm" />
-            <Picker.Item label="9:30 pm" value="9:30 pm" />
-            <Picker.Item label="10:00 pm" value="10:00 pm" />
-            <Picker.Item label="10:30 pm" value="10:30 pm" />
-            <Picker.Item label="11:00 pm" value="11:00 pm" />
-            <Picker.Item label="11:30 pm" value="11:30 pm" />
-          </Picker>
-        </View>}
-
-        {this.state.showWaketimeTooltip &&
-          <ModalWindow
-            currentModal="WAKETIME_TOOLTIP"
-            closeModal={this.closeModal} />}
-
-        {this.state.showTrainingTooltip &&
-          <ModalWindow
-            currentModal="TRAINING_TOOLTIP"
-            phase={this.state.phase}
-            closeModal={this.closeModal} />}
-
-        {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
-          <View>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-            <Text style={Styles.tooltipHeader}>Number of Meals Before Your Workout</Text>
-            <Text style={Styles.tooltipParagraph}>This option indicates how many meals you will have eaten before your workout of the day. Keep in mind that meals should be spaced 3-5 hours apart, with breakfast being within an hour of waking.</Text>
-            <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
-          </View>
-        </ScrollView>}
-
-        {this.state.showEnergyBalancePicker && <View>
-          <Picker
-            style={styles.picker}
-            selectedValue={template}
-            onValueChange={(itemValue, itemIndex) => this.clickTemplateType(itemValue)}>
-            <Picker.Item label="Home (Step 1)" value={0} />
-            <Picker.Item label="Build muscle (Step 2)" value={1} />
-            <Picker.Item label="Lose weight (Step 2)" value={2} />
-            <Picker.Item label="Lock in results (Step 3)" value={3} />
-            <Picker.Item label="Lock in results (Step 4)" value={4} />
-            <Picker.Item label="New home (Step 5)" value={5} />
-          </Picker>
-        </View>}
-
-        {this.state.showNeedBodyweightEntries && <ScrollView style={Styles.tooltip}>
-          <View>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showNeedBodyweightEntries: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-            <Text style={Styles.tooltipHeader}>
-              <FontAwesome
-                style={[Styles.textCenter]}
-                name='lock'
-                size={36}
-              />
-            </Text>
-            <Text style={Styles.tooltipHeader}>
-              Uh oh!
-            </Text>
-            <Text style={Styles.tooltipParagraph}>{"Make sure you've entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step."}</Text>
-            <Text></Text>
-            <Text></Text>
-          </View>
-        </ScrollView>}
-
-        {this.state.showTemplateConfirmation && <ModalWindow
-          currentModal="TEMPLATE_CONFIRMATION"
-          currentTemplate={this.state.client.templateType}
-          saveTemplateType={this.saveTemplateType}
-          closeModal={this.closeModal} />}
-
-        {this.state.showStepSuccessMessage &&
-          <ScrollView style={Styles.tooltip}>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({
-                showStepSuccessMessage: false,
-                showModal: false
-               })
-            }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
-
-            <Text style={Styles.tooltipHeader}>Congratulations!</Text>
-
-            <Text style={Styles.tooltipParagraph}>{"You're almost done with the program!"}</Text>
-            <Text style={Styles.tooltipParagraph}>What happens next?</Text>
-            <Text style={Styles.tooltipParagraph}>After 4 weeks on this step, you may choose to maintain your new weight at Step 1.</Text>
-            <Text style={Styles.tooltipParagraph}>{"If you'd like to continue losing weight or building lean muscle, you can skip over Step 1 and go to Step 2 and do the process again from there. Just be sure to update your biometric settings with your new bodyweight and body fat percentage."}</Text>
-            <Text style={Styles.tooltipParagraph}>Keep up the great work!</Text>
-          </ScrollView>}
-
-          {this.state.showUpdateBiometricsReminder &&
-            <ScrollView style={Styles.tooltip}>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={() => { this.setState({
-                  showUpdateBiometricsReminder: false,
-                  showModal: false
-                 })
-              }}>
-                <FontAwesome
-                  style={[Styles.textCenter, Styles.tooltipClose]}
-                  name='remove'
-                  size={24}
-                />
+               style={Styles.buttonCircular}
+               underlayColor={Colors.darkerPrimaryColor}
+               onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
+                 <Text style={Styles.buttonCircularIcon}>
+                   <FontAwesome
+                     name='gear'
+                     size={20}
+                   /> {this.props.label}
+                 </Text>
               </TouchableHighlight>
 
-              <Text style={Styles.tooltipHeader}>Congrats!</Text>
+              {this.state.phase === 3 && this.state.showMealPlanSettings &&
+                <ModalWindow
+                  currentModal="MEAL_PLAN_SETTINGS"
+                  style="button"
+                  data={this.state.client}
+                  template={template}
+                  viewAllMeals={viewAllMeals}
+                  showInGrams={showInGrams}
+                  doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
+                  toggleView={this.toggleView}
+                  toggleUnits={this.toggleUnits}
+                  showTemplatePicker={this.showTemplatePicker}
+                  clickNavPhase={this.clickNavPhase}
+                  closeModal={this.closeModal} />}
 
-              <Text style={Styles.tooltipParagraph}>{"Great work making it all the way through the program!"}</Text>
-              <Text style={Styles.tooltipParagraph}>A quick reminder</Text>
-              <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
+              <View style={styles.phaseNavButtons}>
+                {(this.state.phase === 2) &&
+                  <TouchableHighlight
+                    style={[Styles.button, Styles.buttonInverted, styles.phaseNavButton, styles.phaseNavButtonLeft]}
+                    underlayColor={Colors.darkerPrimaryColor}
+                    onPress={() => { this.clickNavPhase(1) }}>
+                    <Text style={[Styles.buttonText, Styles.buttonInvertedText, Styles.buttonWithIconText]}>
+                      <FontAwesome
+                        style={styles.phaseNavButtonIconLeft}
+                        name='arrow-left'
+                        size={24}
+                      />
+                      {'  '}Phase 1
+                    </Text>
+                  </TouchableHighlight>}
+
+                {(this.state.phase === 2) &&
+                  <TouchableHighlight
+                    style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+                    underlayColor={Colors.darkerPrimaryColor}
+                    onPress={() => { this.clickNavPhase(3) }}>
+                    <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                    Phase 3{'  '}
+                    <FontAwesome
+                      style={styles.phaseNavButtonIconRight}
+                      name='arrow-right'
+                      size={24}
+                    />
+                    </Text>
+                  </TouchableHighlight>}
+
+                {(this.state.phase === 1) &&
+                  <TouchableHighlight
+                    style={[Styles.button, styles.phaseNavButton, styles.phaseNavButtonRight]}
+                    underlayColor={Colors.darkerPrimaryColor}
+                    onPress={() => { this.clickNavPhase(2) }}>
+                    <Text style={[Styles.buttonText, Styles.buttonWithIconText]}>
+                      Phase 2{'  '}
+                      <FontAwesome
+                        style={styles.phaseNavButtonIconRight}
+                        name='arrow-right'
+                        size={24}
+                      />
+                    </Text>
+                  </TouchableHighlight>}
+              </View>
             </ScrollView>}
 
-        {this.state.showNavPhase &&
-          <ModalWindow
-            currentModal="PHASE_CONFIRMATION"
-            currentPhase={this.state.phase}
-            movePhase={this.movePhase}
-            closeModal={this.closeModal} />}
+            {this.state.showModal &&
+              <View style={Styles.showModal}></View>}
 
-        {this.state.showMacrosWarning &&
-          <ScrollView style={Styles.tooltip}>
-            <TouchableHighlight
-              underlayColor={Colors.white}
-              onPress={() => { this.setState({ showWaketimeTooltip: false, showModal: false }) }}>
-              <FontAwesome
-                style={[Styles.textCenter, Styles.tooltipClose]}
-                name='remove'
-                size={24}
-              />
-            </TouchableHighlight>
+            {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
+              <Picker
+                selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
+                onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
+                <Picker.Item label="12:00 am" value="12:00 am" />
+                <Picker.Item label="12:30 am" value="12:30 am" />
+                <Picker.Item label="1:00 am" value="1:00 am" />
+                <Picker.Item label="1:30 am" value="1:30 am" />
+                <Picker.Item label="2:00 am" value="2:00 am" />
+                <Picker.Item label="2:30 am" value="2:30 am" />
+                <Picker.Item label="3:00 am" value="3:00 am" />
+                <Picker.Item label="3:30 am" value="3:30 am" />
+                <Picker.Item label="4:00 am" value="4:00 am" />
+                <Picker.Item label="4:30 am" value="4:30 am" />
+                <Picker.Item label="5:00 am" value="5:00 am" />
+                <Picker.Item label="5:30 am" value="6:30 am" />
+                <Picker.Item label="6:00 am" value="6:00 am" />
+                <Picker.Item label="6:30 am" value="6:30 am" />
+                <Picker.Item label="7:00 am" value="7:00 am" />
+                <Picker.Item label="7:30 am" value="7:30 am" />
+                <Picker.Item label="8:00 am" value="8:00 am" />
+                <Picker.Item label="8:30 am" value="8:30 am" />
+                <Picker.Item label="9:00 am" value="9:00 am" />
+                <Picker.Item label="9:30 am" value="9:30 am" />
+                <Picker.Item label="10:00 am" value="10:00 am" />
+                <Picker.Item label="10:30 am" value="10:30 am" />
+                <Picker.Item label="11:00 am" value="11:00 am" />
+                <Picker.Item label="11:30 am" value="11:30 am" />
 
-            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
-            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
+                <Picker.Item label="12:00 pm" value="12:00 pm" />
+                <Picker.Item label="12:30 pm" value="12:30 pm" />
+                <Picker.Item label="1:00 pm" value="1:00 pm" />
+                <Picker.Item label="1:30 pm" value="1:30 pm" />
+                <Picker.Item label="2:00 pm" value="2:00 pm" />
+                <Picker.Item label="2:30 pm" value="2:30 pm" />
+                <Picker.Item label="3:00 pm" value="3:00 pm" />
+                <Picker.Item label="3:30 pm" value="3:30 pm" />
+                <Picker.Item label="4:00 pm" value="4:00 pm" />
+                <Picker.Item label="4:30 pm" value="4:30 pm" />
+                <Picker.Item label="5:00 pm" value="5:00 pm" />
+                <Picker.Item label="5:30 pm" value="5:30 pm" />
+                <Picker.Item label="6:00 pm" value="6:00 pm" />
+                <Picker.Item label="6:30 pm" value="6:30 pm" />
+                <Picker.Item label="7:00 pm" value="7:00 pm" />
+                <Picker.Item label="7:30 pm" value="7:30 pm" />
+                <Picker.Item label="8:00 pm" value="8:00 pm" />
+                <Picker.Item label="8:30 pm" value="8:30 pm" />
+                <Picker.Item label="9:00 pm" value="9:00 pm" />
+                <Picker.Item label="9:30 pm" value="9:30 pm" />
+                <Picker.Item label="10:00 pm" value="10:00 pm" />
+                <Picker.Item label="10:30 pm" value="10:30 pm" />
+                <Picker.Item label="11:00 pm" value="11:00 pm" />
+                <Picker.Item label="11:30 pm" value="11:30 pm" />
+              </Picker>
+            </View>}
 
-            <TouchableHighlight
-              style={Styles.modalButton}
-              underlayColor={Colors.white}
-              onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
-              <Text style={Styles.modalButtonText}>GOT IT!</Text>
-            </TouchableHighlight>
+            {this.state.showWaketimeTooltip &&
+              <ModalWindow
+                currentModal="WAKETIME_TOOLTIP"
+                closeModal={this.closeModal} />}
 
-            <View style={styles.checkboxRow}>
-              <TouchableHighlight
-                style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
-                onPress={() => { this.doNotShowMacroWarning() }}>
+            {this.state.showTrainingTooltip &&
+              <ModalWindow
+                currentModal="TRAINING_TOOLTIP"
+                phase={this.state.phase}
+                closeModal={this.closeModal} />}
+
+            {this.state.showTrainingIntensityPicker &&
+              <Picker
+                selectedValue={trainingIntensity ? 'Yes' : 'No'}
+                onValueChange={(itemValue) => this.saveTrainingIntensity(itemValue)}>
+                <Picker.Item label="Yes" value={0} />
+                <Picker.Item label="No" value={1} />
+              </Picker>
+            }
+
+            {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
+              <View>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={24}
+                  />
+                </TouchableHighlight>
+                <Text style={Styles.tooltipHeader}>Number of Meals Before Your Workout</Text>
+                <Text style={Styles.tooltipParagraph}>This option indicates how many meals you will have eaten before your workout of the day. Keep in mind that meals should be spaced 3-5 hours apart, with breakfast being within an hour of waking.</Text>
+                <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
+              </View>
+            </ScrollView>}
+
+            {this.state.showNeedBodyweightEntries && <ScrollView style={Styles.tooltip}>
+              <View>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showNeedBodyweightEntries: false, showModal: false }) }}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={24}
+                  />
+                </TouchableHighlight>
+                <Text style={Styles.tooltipHeader}>
+                  <FontAwesome
+                    style={[Styles.textCenter]}
+                    name='lock'
+                    size={36}
+                  />
+                </Text>
+                <Text style={Styles.tooltipHeader}>
+                  Uh oh!
+                </Text>
+                <Text style={Styles.tooltipParagraph}>{"Make sure you've entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step."}</Text>
                 <Text></Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                underlayColor={Colors.white}
-                onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
-              </TouchableHighlight>
-            </View>
+                <Text></Text>
+              </View>
+            </ScrollView>}
 
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-          </ScrollView>}
+            {this.state.showTemplateConfirmation && <ModalWindow
+              currentModal="TEMPLATE_CONFIRMATION"
+              currentTemplate={this.state.client.templateType}
+              saveTemplateType={this.saveTemplateType}
+              closeModal={this.closeModal} />}
+
+            {this.state.showStepSuccessMessage &&
+              <ScrollView style={Styles.tooltip}>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({
+                    showStepSuccessMessage: false,
+                    showModal: false
+                   })
+                }}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={24}
+                  />
+                </TouchableHighlight>
+
+                <Text style={Styles.tooltipHeader}>Congratulations!</Text>
+
+                <Text style={Styles.tooltipParagraph}>{"You're almost done with the program!"}</Text>
+                <Text style={Styles.tooltipParagraph}>What happens next?</Text>
+                <Text style={Styles.tooltipParagraph}>After 4 weeks on this step, you may choose to maintain your new weight at Step 1.</Text>
+                <Text style={Styles.tooltipParagraph}>{"If you'd like to continue losing weight or building lean muscle, you can skip over Step 1 and go to Step 2 and do the process again from there. Just be sure to update your biometric settings with your new bodyweight and body fat percentage."}</Text>
+                <Text style={Styles.tooltipParagraph}>Keep up the great work!</Text>
+              </ScrollView>}
+
+              {this.state.showUpdateBiometricsReminder &&
+                <ScrollView style={Styles.tooltip}>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={() => { this.setState({
+                      showUpdateBiometricsReminder: false,
+                      showModal: false
+                     })
+                  }}>
+                    <FontAwesome
+                      style={[Styles.textCenter, Styles.tooltipClose]}
+                      name='remove'
+                      size={24}
+                    />
+                  </TouchableHighlight>
+
+                  <Text style={Styles.tooltipHeader}>Congrats!</Text>
+
+                  <Text style={Styles.tooltipParagraph}>{"Great work making it all the way through the program!"}</Text>
+                  <Text style={Styles.tooltipParagraph}>A quick reminder</Text>
+                  <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
+                </ScrollView>}
+
+            {this.state.showNavPhase &&
+              <ModalWindow
+                currentModal="PHASE_CONFIRMATION"
+                currentPhase={this.state.phase}
+                movePhase={this.movePhase}
+                closeModal={this.closeModal} />}
+
+            {this.state.showMacrosWarning &&
+              <ScrollView style={Styles.tooltip}>
+                <TouchableHighlight
+                  underlayColor={Colors.white}
+                  onPress={() => { this.setState({ showWaketimeTooltip: false, showModal: false }) }}>
+                  <FontAwesome
+                    style={[Styles.textCenter, Styles.tooltipClose]}
+                    name='remove'
+                    size={24}
+                  />
+                </TouchableHighlight>
+
+                <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
+                <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
+
+                <TouchableHighlight
+                  style={Styles.modalButton}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
+                  <Text style={Styles.modalButtonText}>GOT IT!</Text>
+                </TouchableHighlight>
+
+                <View style={styles.checkboxRow}>
+                  <TouchableHighlight
+                    style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
+                    onPress={() => { this.doNotShowMacroWarning() }}>
+                    <Text></Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    underlayColor={Colors.white}
+                    onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
+                    <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
+                  </TouchableHighlight>
+                </View>
+
+                <Text></Text>
+                <Text></Text>
+                <Text></Text>
+              </ScrollView>}
+              </ScrollView>}
+
+        {this.state.showTemplatePicker &&
+          <TemplatePicker
+            template={template}
+            closeTemplatePicker={this.showTemplatePicker} />}
+
+        <MessageBarAlert ref="alert" />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  content: {
+    padding: 0
+  },
   clientName: {
     fontWeight: 'bold',
     color: Colors.white

@@ -36,8 +36,8 @@ class MealPlanSettings extends React.Component {
     this.props.closeModal();
   }
 
-  showEnergyBalancePicker() {
-    this.props.showEnergyBalancePicker();
+  showTemplatePicker() {
+    this.props.showTemplatePicker();
     this.props.closeModal();
   }
 
@@ -88,7 +88,7 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
             style={Styles.modalButton}
-            onPress={() => { this.showEnergyBalancePicker() }}>
+            onPress={() => { this.showTemplatePicker() }}>
               <Text style={Styles.buttonText}>Adjust goal - {convertTemplateToString(template)}</Text>
            </TouchableHighlight>
 

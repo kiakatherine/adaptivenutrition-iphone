@@ -89,6 +89,38 @@ class Header extends React.Component {
                 size={28} />
              </Text>}
 
+           {this.props.phase === 2 &&
+             <Text style={styles.headerItem}>
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase2meal1 === 1 ? styles.complete :
+                  this.props.phase2meal1 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase2meal2 === 1 ? styles.complete :
+                  this.props.phase2meal2 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase2meal3 === 1 ? styles.complete :
+                  this.props.phase2meal3 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+               <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase2meal4 === 1 ? styles.complete :
+                  this.props.phase2meal4 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+              </Text>}
+
            {this.props.phase === 3 &&
              <Text style={styles.headerItem}>
                <FontAwesome

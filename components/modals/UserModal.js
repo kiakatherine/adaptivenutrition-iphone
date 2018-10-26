@@ -74,7 +74,7 @@ class UserModal extends React.Component {
             underlayColor={Colors.gray}
             style={[Styles.tabButton, this.state.showTemplateInfo ? Styles.tabButtonActive : Styles.tabButton]}
             onPress={() => this.setState({ showTemplateInfo: true, showBiometricSettings: false })}>
-            <Text style={this.state.showTemplateInfo ? Styles.tabButtonTextActive : Styles.tabButtonText}>TEMPLATE</Text>
+            <Text style={this.state.showTemplateInfo ? Styles.tabButtonTextActive : Styles.tabButtonText}>MEAL PLAN</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
@@ -90,13 +90,13 @@ class UserModal extends React.Component {
             <View style={styles.templatesWrapper}>
               <View style={styles.templateWrapper}>
                 <Text style={[Styles.textCenter, Styles.h3]}>CURRENT</Text>
-                <Text style={[Styles.textCenter, styles.template]}>{template}</Text>
+                <Text style={[Styles.textCenter, styles.template]}>{phase === 3 ? template : 'Phase ' + phase}</Text>
                 <Text style={[Styles.textCenter, styles.templateStartDate]}>Started {templateStartDate}</Text>
               </View>
 
               <View style={styles.templateWrapper}>
                 <Text style={[Styles.textCenter, Styles.h3]}>NEXT UP</Text>
-                <Text style={[Styles.textCenter, styles.template]}>{nextTemplate}</Text>
+                <Text style={[Styles.textCenter, styles.template]}>{phase === 3 ? nextTemplate : phase === 2 ? 'Phase 3' : phase === 1 ? 'Phase 2' : null}</Text>
                 <Text style={[Styles.textCenter, styles.templateStartDate]}>Switch on {nextTemplateStartDate}</Text>
               </View>
             </View>

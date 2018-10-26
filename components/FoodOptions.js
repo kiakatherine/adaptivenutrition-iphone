@@ -82,18 +82,6 @@ class FoodOptions extends React.Component {
               <View style={styles.foodOption} key={item.key}>
                 <Text style={styles.foodOptionAmount}>{item.amount}</Text>
                 <Text style={styles.foodOptionFood}>{item.food}</Text>
-                {(phase < 3 && macro === 'protein') &&
-                  <Image source={require('../assets/icons/protein.png')}
-                    style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
-                {(phase < 3 && macro === 'carbs' && trainingIntensity === true) &&
-                  <Image source={require('../assets/icons/carbs-training.png')}
-                    style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
-                {(phase < 3 && macro === 'carbs' && trainingIntensity === false) &&
-                  <Image source={require('../assets/icons/carbs-rest.png')}
-                    style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
-                {(phase < 3 && macro === 'fats') &&
-                  <Image source={require('../assets/icons/fats.png')}
-                    style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
               </View>)}
           />}
 
