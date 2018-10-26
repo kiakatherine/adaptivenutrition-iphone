@@ -17,7 +17,6 @@ export default {
     fontFamily: 'Futura',
     fontWeight: '700',
     fontSize: 32,
-    // fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center'
   },
@@ -155,7 +154,8 @@ export default {
     color: Colors.white,
     fontWeight: 'bold',
     fontSize: 18,
-    textAlign: 'center'
+    textAlign: 'center',
+    letterSpacing: 1
   },
   buttonInvertedText: {
     color: Colors.primaryColor,

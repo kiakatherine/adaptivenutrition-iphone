@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   View
 } from 'react-native';
 
@@ -35,12 +36,10 @@ export default class ResetPasswordScreen extends React.Component {
   render() {
     return (
       <View style={Styles.body}>
-        <View style={Styles.title}>
-          <Text style={Styles.titleText}>Forgot Your Password?</Text>
-        </View>
+        <Text style={[Styles.bigTitle, Styles.pageTitle, styles.pageTitle]}>Forgot Your Password?</Text>
         <View style={Styles.content}>
-          <Text style={Styles.contentHeading}>
-            Enter your email address below and we will send you a new password.
+          <Text style={[Styles.paragraphText, Styles.textCenter]}>
+            {"No worries! Enter your email address below and we'll send you a new password."}
           </Text>
           <TextInput
             style={Styles.forms.textInput}
@@ -49,15 +48,24 @@ export default class ResetPasswordScreen extends React.Component {
             onChangeText={email => this.setState({ email })}
             value={this.state.email}
           />
-          <View style={{backgroundColor: Colors.primaryColor, margin: 5}}>
-            <Button
-              title="Reset Password"
-              disabled={!this.state.email.trim()}
-              onPress={this.resetPassword}
-            />
-          </View>
+          <TouchableHighlight
+            style={[Styles.button, styles.button]}
+            underlayColor={Colors.white}
+            onPress={() => { !this.state.email.trim() ? this.resetPassword : null }}>
+            <Text style={Styles.buttonText}>RESET</Text>
+          </TouchableHighlight>
         </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  pageTitle: {
+    marginTop: 40,
+    fontSize: 24
+  },
+  button: {
+    marginTop: 20
+  }
+});
