@@ -1425,10 +1425,66 @@ export default class LoginScreen extends React.Component {
                 <TouchableHighlight
                   style={styles.optionButton}
                   underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showModal: true, showWakeTimePicker: true }) }}>
+                  onPress={() => { this.setState({ showWakeTimePicker: true }) }}>
                   <Text style={styles.optionButtonText}>{wakeTime ? wakeTime : '7:00 a.m.'}</Text>
                 </TouchableHighlight>
               </View>
+
+              {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
+                <Picker
+                  selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
+                  onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
+                  <Picker.Item label="12:00 am" value="12:00 am" />
+                  <Picker.Item label="12:30 am" value="12:30 am" />
+                  <Picker.Item label="1:00 am" value="1:00 am" />
+                  <Picker.Item label="1:30 am" value="1:30 am" />
+                  <Picker.Item label="2:00 am" value="2:00 am" />
+                  <Picker.Item label="2:30 am" value="2:30 am" />
+                  <Picker.Item label="3:00 am" value="3:00 am" />
+                  <Picker.Item label="3:30 am" value="3:30 am" />
+                  <Picker.Item label="4:00 am" value="4:00 am" />
+                  <Picker.Item label="4:30 am" value="4:30 am" />
+                  <Picker.Item label="5:00 am" value="5:00 am" />
+                  <Picker.Item label="5:30 am" value="6:30 am" />
+                  <Picker.Item label="6:00 am" value="6:00 am" />
+                  <Picker.Item label="6:30 am" value="6:30 am" />
+                  <Picker.Item label="7:00 am" value="7:00 am" />
+                  <Picker.Item label="7:30 am" value="7:30 am" />
+                  <Picker.Item label="8:00 am" value="8:00 am" />
+                  <Picker.Item label="8:30 am" value="8:30 am" />
+                  <Picker.Item label="9:00 am" value="9:00 am" />
+                  <Picker.Item label="9:30 am" value="9:30 am" />
+                  <Picker.Item label="10:00 am" value="10:00 am" />
+                  <Picker.Item label="10:30 am" value="10:30 am" />
+                  <Picker.Item label="11:00 am" value="11:00 am" />
+                  <Picker.Item label="11:30 am" value="11:30 am" />
+
+                  <Picker.Item label="12:00 pm" value="12:00 pm" />
+                  <Picker.Item label="12:30 pm" value="12:30 pm" />
+                  <Picker.Item label="1:00 pm" value="1:00 pm" />
+                  <Picker.Item label="1:30 pm" value="1:30 pm" />
+                  <Picker.Item label="2:00 pm" value="2:00 pm" />
+                  <Picker.Item label="2:30 pm" value="2:30 pm" />
+                  <Picker.Item label="3:00 pm" value="3:00 pm" />
+                  <Picker.Item label="3:30 pm" value="3:30 pm" />
+                  <Picker.Item label="4:00 pm" value="4:00 pm" />
+                  <Picker.Item label="4:30 pm" value="4:30 pm" />
+                  <Picker.Item label="5:00 pm" value="5:00 pm" />
+                  <Picker.Item label="5:30 pm" value="5:30 pm" />
+                  <Picker.Item label="6:00 pm" value="6:00 pm" />
+                  <Picker.Item label="6:30 pm" value="6:30 pm" />
+                  <Picker.Item label="7:00 pm" value="7:00 pm" />
+                  <Picker.Item label="7:30 pm" value="7:30 pm" />
+                  <Picker.Item label="8:00 pm" value="8:00 pm" />
+                  <Picker.Item label="8:30 pm" value="8:30 pm" />
+                  <Picker.Item label="9:00 pm" value="9:00 pm" />
+                  <Picker.Item label="9:30 pm" value="9:30 pm" />
+                  <Picker.Item label="10:00 pm" value="10:00 pm" />
+                  <Picker.Item label="10:30 pm" value="10:30 pm" />
+                  <Picker.Item label="11:00 pm" value="11:00 pm" />
+                  <Picker.Item label="11:30 pm" value="11:30 pm" />
+                </Picker>
+              </View>}
 
               <View style={styles.optionWrapper}>
                 <Text style={styles.optionTitle}>ARE YOU WORKING OUT TODAY?</Text>
@@ -1871,62 +1927,6 @@ export default class LoginScreen extends React.Component {
 
             {this.state.showModal &&
               <View style={Styles.showModal}></View>}
-
-            {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
-              <Picker
-                selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
-                onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
-                <Picker.Item label="12:00 am" value="12:00 am" />
-                <Picker.Item label="12:30 am" value="12:30 am" />
-                <Picker.Item label="1:00 am" value="1:00 am" />
-                <Picker.Item label="1:30 am" value="1:30 am" />
-                <Picker.Item label="2:00 am" value="2:00 am" />
-                <Picker.Item label="2:30 am" value="2:30 am" />
-                <Picker.Item label="3:00 am" value="3:00 am" />
-                <Picker.Item label="3:30 am" value="3:30 am" />
-                <Picker.Item label="4:00 am" value="4:00 am" />
-                <Picker.Item label="4:30 am" value="4:30 am" />
-                <Picker.Item label="5:00 am" value="5:00 am" />
-                <Picker.Item label="5:30 am" value="6:30 am" />
-                <Picker.Item label="6:00 am" value="6:00 am" />
-                <Picker.Item label="6:30 am" value="6:30 am" />
-                <Picker.Item label="7:00 am" value="7:00 am" />
-                <Picker.Item label="7:30 am" value="7:30 am" />
-                <Picker.Item label="8:00 am" value="8:00 am" />
-                <Picker.Item label="8:30 am" value="8:30 am" />
-                <Picker.Item label="9:00 am" value="9:00 am" />
-                <Picker.Item label="9:30 am" value="9:30 am" />
-                <Picker.Item label="10:00 am" value="10:00 am" />
-                <Picker.Item label="10:30 am" value="10:30 am" />
-                <Picker.Item label="11:00 am" value="11:00 am" />
-                <Picker.Item label="11:30 am" value="11:30 am" />
-
-                <Picker.Item label="12:00 pm" value="12:00 pm" />
-                <Picker.Item label="12:30 pm" value="12:30 pm" />
-                <Picker.Item label="1:00 pm" value="1:00 pm" />
-                <Picker.Item label="1:30 pm" value="1:30 pm" />
-                <Picker.Item label="2:00 pm" value="2:00 pm" />
-                <Picker.Item label="2:30 pm" value="2:30 pm" />
-                <Picker.Item label="3:00 pm" value="3:00 pm" />
-                <Picker.Item label="3:30 pm" value="3:30 pm" />
-                <Picker.Item label="4:00 pm" value="4:00 pm" />
-                <Picker.Item label="4:30 pm" value="4:30 pm" />
-                <Picker.Item label="5:00 pm" value="5:00 pm" />
-                <Picker.Item label="5:30 pm" value="5:30 pm" />
-                <Picker.Item label="6:00 pm" value="6:00 pm" />
-                <Picker.Item label="6:30 pm" value="6:30 pm" />
-                <Picker.Item label="7:00 pm" value="7:00 pm" />
-                <Picker.Item label="7:30 pm" value="7:30 pm" />
-                <Picker.Item label="8:00 pm" value="8:00 pm" />
-                <Picker.Item label="8:30 pm" value="8:30 pm" />
-                <Picker.Item label="9:00 pm" value="9:00 pm" />
-                <Picker.Item label="9:30 pm" value="9:30 pm" />
-                <Picker.Item label="10:00 pm" value="10:00 pm" />
-                <Picker.Item label="10:30 pm" value="10:30 pm" />
-                <Picker.Item label="11:00 pm" value="11:00 pm" />
-                <Picker.Item label="11:30 pm" value="11:30 pm" />
-              </Picker>
-            </View>}
 
             {this.state.showWaketimeTooltip &&
               <ModalWindow

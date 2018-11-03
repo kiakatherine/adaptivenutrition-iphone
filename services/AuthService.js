@@ -48,16 +48,16 @@ class AuthService {
       '424797598049653',
       { permissions: ['public_profile'] }
     );
-    
+
     if (type === 'success') {
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
-  
+
       firebase.auth().signInWithCredential(credential).catch((error) => {
 
       });
     }
   }
-  
+
   async resetPassword (email) {
     try {
       await firebase.auth().re;
@@ -91,9 +91,35 @@ class AuthService {
     }
   }
 
-  async signUp(email, password) {
+  async signUp(email, password, firstName, lastName, gender, birthdate, height, bodyweight, bodyfat) {
     try {
       await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+      // VERIFY
+      firebase.auth().currentUser.update({
+        firstName: firstName,
+        lastName: lastName,
+        gender: gender,
+        birthdate: birthdate,
+        height: height,
+        bodyweight: bodyweight,
+        bodyfat: bodyfat,
+        leanMass: bodyweight && bodyfat ? Math.round(bodyweight * (1 - (bodyfat/100))) : null,
+        latestBodyweight: bodyweight,
+        phase: 1,
+        templateType: 0, // as number
+        weightPoints: 0,
+        mealPoints: 0,
+        socialPoints: 0,
+        quizPoints: 0,
+        totalPoints: 0
+      }, function(error) {
+        if (error) {
+          // The write failed...
+        } else {
+          // Data saved successfully!
+        }
+      });
     } catch (err) {
       console.log(err);
     }

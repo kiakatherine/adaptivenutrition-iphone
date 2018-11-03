@@ -56,7 +56,7 @@ export default class CreateAccountScreen extends React.Component {
     // phase, templateType (as number), latestBodyweight, weightPoints, mealPoints, socialPoints, quizPoints, totalPoints, leanMass
 
     const { navigate } = this.props.navigation;
-    await AuthService.signUp(this.state.email, this.state.password);
+    await AuthService.signUp(this.state.email, this.state.password, this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat);
     const authenticated = await AuthService.isSignedIn();
     if (authenticated) navigate('Authenticated');
     else this.setState({ unauthorized: true });
@@ -67,7 +67,6 @@ export default class CreateAccountScreen extends React.Component {
       <View style={Styles.body}>
         <Swiper
           style={styles.wrapper}
-          onIndexChanged={index => this.indexChanged(index)}
           showsButtons={true}
           loop={false}
           index={1}>
