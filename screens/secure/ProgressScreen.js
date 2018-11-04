@@ -9,6 +9,9 @@ import Styles from '../../constants/Styles';
 import Header from '../../components/Header';
 import moment from 'moment';
 
+const MessageBarAlert = require('react-native-message-bar').MessageBar;
+const MessageBarManager = require('react-native-message-bar').MessageBarManager;
+
 import {
   Button,
   Image,
@@ -66,9 +69,10 @@ export default class LoginScreen extends React.Component {
 
     const clientId = firebase.auth().currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + clientId);
-    const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
+    const weightsRef = firebase.database().ref('/clients/' + clientId + '/weights');
+    const dayStatuses = firebase.database().ref('/clients/' + clientId + '/day-statuses');
 
-    weightsRef.orderByChild('date').on('value', snapshot => {
+    weightsRef.on('value', snapshot => {
       this.setState({ bodyweightData: snapshot.val() });
       console.log('weight data', snapshot.val())
     });
@@ -81,6 +85,40 @@ export default class LoginScreen extends React.Component {
           weight: clientResponse.latestBodyweight ? clientResponse.latestBodyweight : clientResponse.weight
         });
       }
+    });
+
+    dayStatuses.on('value', snapshot => {
+      const date = new Date();
+      const dayStatuses = snapshot.val();
+      let today;
+      let filteredDayStatusesPhase1 = [];
+      let filteredDayStatusesPhase2 = [];
+      let filteredDayStatusesPhase3 = [];
+
+      if(dayStatuses) {
+        Object.keys(dayStatuses).map(key => {
+          if(dayStatuses[key].date === moment(date).format('YYYY-MM-DD')) {
+            todayKey = key;
+            today = dayStatuses[key];
+            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+            // todayRef.remove();
+
+            if(dayStatuses[key].phase === 1) {
+              filteredDayStatusesPhase1.push(dayStatuses[key]);
+            } else if(dayStatuses[key].phase === 2) {
+              filteredDayStatusesPhase2.push(dayStatuses[key]);
+            } else if(dayStatuses[key].phase === 3) {
+              filteredDayStatusesPhase3.push(dayStatuses[key]);
+            }
+          }
+        });
+      }
+
+      this.setState({
+        filteredDayStatusesPhase1: filteredDayStatusesPhase1,
+        filteredDayStatusesPhase2: filteredDayStatusesPhase2,
+        filteredDayStatusesPhase3: filteredDayStatusesPhase3
+      });
     });
 
     // dayStatuses.on('value', snapshot => {
@@ -105,21 +143,12 @@ export default class LoginScreen extends React.Component {
     //   });
     // });
 
-    // phaseTwoDayStatuses.on('value', snapshot => {
-    //   const date = new Date();
-    //   const phaseTwoDayStatuses = snapshot.val();
-    //   let filteredDayStatusesPhase2 = [];
-    //
-    //   Object.keys(phaseTwoDayStatuses).map(key => {
-    //     if(phaseTwoDayStatuses[key].timestamp === clientResponse.timestamp) {
-    //       filteredDayStatusesPhase2.push(phaseTwoDayStatuses[key]);
-    //     }
-    //   });
-    //
-    //   this.setState({
-    //     filteredDayStatusesPhase2: filteredDayStatusesPhase2
-    //   });
-    // });
+    MessageBarManager.registerMessageBar(this.refs.alert);
+  }
+
+  componentWillUnmount() {
+    // Remove the alert located on this master page from the manager
+    MessageBarManager.unregisterMessageBar();
   }
 
   _hideAll () {
@@ -156,6 +185,7 @@ export default class LoginScreen extends React.Component {
     updates['/weights/' + newRecordKey] = bodyweightRecord;
     updates['/clients/' + uid + '/weights/' + newRecordKey] = bodyweightRecord;
 
+
     firebase.database().ref().update(updates, (error) => {
       // TO DO: these aren't firing
       if(error) {
@@ -168,7 +198,8 @@ export default class LoginScreen extends React.Component {
     // save points to client
     firebase.database().ref('/clients/' + uid).update({
       weightPoints: Number(client.weightPoints) + 1,
-      totalPoints: Number(client.totalPoints) + 1
+      totalPoints: Number(client.totalPoints) + 1,
+      latestBodyweight: Number(weight)
     }, (error) => {
       if(error) {
         alert('failed');
@@ -223,12 +254,18 @@ export default class LoginScreen extends React.Component {
   undoWeight() {
     const clientId = firebase.auth().currentUser.uid;
     const weightRef = firebase.database().ref('/weights/' + this.state.latestRecordKey);
-    const clientWeightRef = firebase.database().ref('/client/' + clientId + '/weights/' + this.state.latestRecordKey);
+    const clientWeightRef = firebase.database().ref('/clients/' + clientId + '/weights/' + this.state.latestRecordKey);
 
     weightRef.remove();
     clientWeightRef.remove();
 
     this.setState({ latestRecordKey: null });
+
+    MessageBarManager.showAlert({
+      // title: 'Oops!',
+      message: 'Entry removed',
+      alertType: 'success'
+    });
   }
 
   _clickProgressReportPhase1() {
@@ -391,30 +428,36 @@ export default class LoginScreen extends React.Component {
                   </View>
                 </View>
 
-                <TouchableHighlight
-                  underlayColor={Colors.darkerPrimaryColor}
-                  style={Styles.buttonCircular}
-                  onPress={() => { this.setState({ showAddBodyweight: true }) }}>
-                  <Text style={Styles.buttonCircularIcon}>
-                    <FontAwesome
-                      name='plus'
-                      size={16}
-                    />
-                  </Text>
-                </TouchableHighlight>
+                <View style={Styles.flexRow}>
+                  <View style={Styles.flexCol}>
+                    <TouchableHighlight
+                      underlayColor={Colors.darkerPrimaryColor}
+                      style={Styles.buttonCircular}
+                      onPress={() => { this.setState({ showAddBodyweight: true }) }}>
+                      <Text style={Styles.buttonCircularIcon}>
+                        <FontAwesome
+                          name='plus'
+                          size={16}
+                        />
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
 
-                {this.state.latestRecordKey &&
-                  <TouchableHighlight
-                    underlayColor={Colors.darkerPrimaryColor}
-                    style={[Styles.buttonCircular, styles.undoButton]}
-                    onPress={() => { this.undoWeight() }}>
-                    <Text style={Styles.buttonCircularIcon}>
-                      <FontAwesome
-                        name='undo'
-                        size={16}
-                      />
-                    </Text>
-                  </TouchableHighlight>}
+                    {this.state.latestRecordKey &&
+                      <View style={Styles.flexCol}>
+                        <TouchableHighlight
+                          underlayColor={Colors.darkerPrimaryColor}
+                          style={[Styles.buttonCircular, styles.undoButton, Styles.flexCol]}
+                          onPress={() => { this.undoWeight() }}>
+                          <Text style={Styles.buttonCircularIcon}>
+                            <FontAwesome
+                              name='undo'
+                              size={16}
+                            />
+                          </Text>
+                        </TouchableHighlight>
+                    </View>}
+                </View>
 
                 <View style={[Styles.flexRow, styles.pillButtons]}>
                   <TouchableHighlight
@@ -499,6 +542,8 @@ export default class LoginScreen extends React.Component {
             setDate={this._setDate}
             submitWeight={this._submitWeight}
             closeModal={this._closeModal} />}
+
+        <MessageBarAlert ref="alert" />
       </View>
     );
   }
@@ -561,6 +606,6 @@ const styles = StyleSheet.create ({
     alignItems: 'center'
   },
   undoButton: {
-    marginTop: 10
+    marginLeft: 15
   }
 });

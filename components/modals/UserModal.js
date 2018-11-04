@@ -97,7 +97,7 @@ class UserModal extends React.Component {
               <View style={styles.templateWrapper}>
                 <Text style={[Styles.textCenter, Styles.h3]}>NEXT UP</Text>
                 <Text style={[Styles.textCenter, styles.template]}>{phase === 3 ? nextTemplate : phase === 2 ? 'Phase 3' : phase === 1 ? 'Phase 2' : null}</Text>
-                <Text style={[Styles.textCenter, styles.templateStartDate]}>Switch on {nextTemplateStartDate}</Text>
+                <Text style={[Styles.textCenter, styles.templateStartDate]}>Begins {nextTemplateStartDate}</Text>
               </View>
             </View>
           </View>}

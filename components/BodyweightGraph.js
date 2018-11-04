@@ -81,19 +81,10 @@ class BodyweightGraph extends React.Component {
        }
      });
 
-     console.log('recordKey', recordKey)
-
-     clientWeightRef = firebase.database().ref('/client/' + uid + '/weights/' + recordKey);
+     clientWeightRef = firebase.database().ref('/clients/' + uid + '/weights/' + recordKey);
      weightObjRef = firebase.database().ref('/weights/' + recordKey);
 
-     clientWeightRef.remove((error) => {
-       // TO DO: these aren't firing
-       if(error) {
-         alert('failed');
-       } else {
-         alert('success!');
-       }
-     });
+     clientWeightRef.remove();
 
      weightObjRef.remove((error) => {
        // TO DO: these aren't firing
