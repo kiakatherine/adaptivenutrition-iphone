@@ -264,7 +264,8 @@ export default class LoginScreen extends React.Component {
     MessageBarManager.showAlert({
       // title: 'Oops!',
       message: 'Entry removed',
-      alertType: 'success'
+      alertType: 'success',
+      // stylesheetInfo : {{ backgroundColor : '#1f8964', messageColor: '#ffffff' }}
     });
   }
 
@@ -302,49 +303,49 @@ export default class LoginScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    // const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
-    // const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
-    // const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
-    // let dayStatusesPhase1 = [];
-    // let dayStatusesPhase2 = [];
-    // let dayStatusesPhase3 = [];
-    // let weight = this.state.weight;
-    //
-    // if(this.state.showProgressPhase1) {
-    //   if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
-    //     Object.keys(filteredDayStatusesPhase1).map((key, index) => {
-    //       dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
-    //     });
-    //   } else {
-    //     dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-    //   }
-    // }
-    //
-    // if(this.state.showProgressPhase2) {
-    //   if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
-    //     Object.keys(filteredDayStatusesPhase2).map((key, index) => {
-    //       dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
-    //     });
-    //   } else {
-    //     dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-    //   }
-    // }
-    //
-    // if(this.state.showProgressPhase3) {
-    //   if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
-    //     Object.keys(filteredDayStatusesPhase3).map((key, index) => {
-    //       dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
-    //     });
-    //   } else {
-    //     dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-    //   }
-    // }
+    const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
+    const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
+    const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
+    let dayStatusesPhase1 = [];
+    let dayStatusesPhase2 = [];
+    let dayStatusesPhase3 = [];
+    let weight = this.state.weight;
+
+    if(this.state.showProgressPhase1) {
+      if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
+        Object.keys(filteredDayStatusesPhase1).map((key, index) => {
+          dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
+        });
+      } else {
+        dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+      }
+    }
+
+    if(this.state.showProgressPhase2) {
+      if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
+        Object.keys(filteredDayStatusesPhase2).map((key, index) => {
+          dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
+        });
+      } else {
+        dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+      }
+    }
+
+    if(this.state.showProgressPhase3) {
+      if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
+        Object.keys(filteredDayStatusesPhase3).map((key, index) => {
+          dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
+        });
+      } else {
+        dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+      }
+    }
 
     // seven day bodyweight average, initial weight
     let sevenDayAverage, initialWeight, pastWeekEntries = [];
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientId = firebase.auth().currentUser.uid;
-    const weights = firebase.database().ref('/client/' + clientId + '/weights');
+    const weights = firebase.database().ref('/clients/' + clientId + '/weights');
 
     if(weights) {
     weights.once('value', snapshot => {
@@ -383,6 +384,8 @@ export default class LoginScreen extends React.Component {
           pastWeekEntries.push(rec);
         }
       });
+
+      console.log('pastWeekEntries', pastWeekEntries)
 
       if(pastWeekEntries.length) {
         sevenDayAverage = (

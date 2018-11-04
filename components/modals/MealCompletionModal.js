@@ -1,6 +1,6 @@
 import React from 'react';
 
-// import ModalWrapper from '../ModalWrapper.jsx';
+import moment from 'moment';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
@@ -34,13 +34,13 @@ class MealCompletionModal extends React.Component {
 
   completeMeal(completion) {
     // 1 = complete; 2 = incomplete
-    this.props.completeMeal(completion);
+    this.props.completeMeal(completion, this.props.date, this.props.mealNumber);
   }
 
   render() {
     return (
       <View style={Styles.modalContent}>
-        <Text style={styles.h1}>{this.props.date}</Text>
+        <Text style={styles.h1}>{moment(this.props.date).format('dddd MMM D')}</Text>
         <Text style={styles.h1}>Meal {this.props.mealNumber}</Text>
 
         {this.state.showError &&

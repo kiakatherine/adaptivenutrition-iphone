@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import firebase from '../services/FirebaseService';
+
 import {
   Button,
   Keyboard,
@@ -35,7 +37,7 @@ class DayStatus extends React.Component {
     };
 
     this.completeMeal = this.completeMeal.bind(this);
-    this.showPopup = this.showPopup.bind(this);
+    // this.showPopup = this.showPopup.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
@@ -47,10 +49,37 @@ class DayStatus extends React.Component {
     this.setState({ showPopupModal: false });
   }
 
-  completeMeal(completion) {
+  completeMeal(completion, date, mealNumber) {
     // TO DO: show success message before closing
-    alert(completion);
-    this.setState({ showPopupModal: false });
+    // alert(completion);
+    const clientId = firebase.auth().currentUser.uid;
+    const dayStatusesRef = firebase.database().ref('/clients/' + clientId + '/day-statuses');
+    let today, todayKey;
+
+    dayStatusesRef.on('value', snapshot => {
+      const dayStatuses = snapshot.val();
+      Object.keys(dayStatuses).map(key => {
+        if(dayStatuses[key].date === moment(date).format('YYYY-MM-DD')) {
+          todayKey = key;
+          today = dayStatuses[key];
+        }
+      });
+
+      if(today && todayKey) {
+        const recordClientRef = firebase.database().ref('/clients/' + clientId + '/day-statuses/' + todayKey);
+        const recordRef = firebase.database().ref('/day-statuses/' + todayKey);
+
+        recordClientRef.update({
+          ['meal' + mealNumber]: completion
+        });
+
+        recordRef.update({
+          ['meal' + mealNumber]: completion
+        });
+
+        this.setState({ showPopupModal: false });
+      }
+    });
   }
 
   render() {
@@ -147,7 +176,7 @@ class DayStatus extends React.Component {
           <ModalWindow
             currentModal="MEAL_COMPLETION"
             phase={phase}
-            date={moment(day.fullDate).format('dddd MMM D')}
+            date={day.fullDate}
             mealNumber={this.state.mealNumber}
             completeMeal={this.completeMeal}
             closeModal={this.closeModal} />}

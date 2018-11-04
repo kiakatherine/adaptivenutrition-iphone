@@ -90,7 +90,8 @@ class ModalWindow extends React.Component {
           phase={this.props.phase}
           date={this.props.date}
           mealNumber={this.props.mealNumber}
-          completeMeal={this.props.completeMeal} />;
+          completeMeal={this.props.completeMeal}
+          closeModal={this.props.closeModal} />;
       } else if(this.props.currentModal === 'CONTACT_US') {
         modal = <ContactUsModal />;
       } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
