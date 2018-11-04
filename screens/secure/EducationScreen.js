@@ -96,8 +96,8 @@ export default class LoginScreen extends React.Component {
         this.setState({ quizPassed: true });
         clientRef.update({
           [quiz]: true,
-          quizPoints: Number(client.quizPoints) + 1,
-          totalPoints: Number(client.totalPoints) + 1,
+          quizPoints: Number(client.quizPoints) + 3,
+          totalPoints: Number(client.totalPoints) + 3,
         });
       } else {
         this.setState({ quizPassed: false, showQuiz: false }, () => {

@@ -32,7 +32,7 @@ export default class CreateAccountScreen extends React.Component {
       firstName: null,
       lastName: null,
       gender: null,
-      birthdate: new Date(),
+      birthdate: null,
       height: null,
       bodyweight: null,
       bodyfat: null,
@@ -128,15 +128,14 @@ export default class CreateAccountScreen extends React.Component {
           <View style={styles.slide1}>
             <TextInput
               style={styles.input}
-              placeholder={"Birthdate"}
-              value={moment(this.state.birthdate).format('MM-DD-YYYY')} />
+              placeholder={"MM-DD-YYYY"}
+              value={this.state.birthdate ? moment(this.state.birthdate).format('MM-DD-YYYY') : null} />
 
-            <DatePickerIOS
-              style={styles.datePicker}
+            {/*<DatePickerIOS
               mode={'date'}
               date={this.state.birthdate}
               maximumDate={new Date()}
-              onDateChange={birthdate => this.setState({ birthdate }) } />
+              onDateChange={birthdate => this.setState({ birthdate }) } /> */}
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Did you know that your protein needs vary by age?</Text>
 
@@ -160,7 +159,7 @@ export default class CreateAccountScreen extends React.Component {
           <View style={styles.slide1}>
             <TextInput
               style={styles.input}
-              placeholder={"Weight"}
+              placeholder={"Weight (in pounds)"}
               keyboardType={"decimal-pad"}
               maxLength={3}
               onChangeText={bodyweight => this.setState({ bodyweight })}
@@ -249,9 +248,5 @@ const styles = StyleSheet.create({
   blurb: {
     textAlign: 'center',
     marginTop: 25
-  },
-  datepicker: {
-    zIndex: 2,
-    backgroundColor: Colors.white
   }
 });
