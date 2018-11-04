@@ -62,7 +62,7 @@ class MeasurementInput extends React.Component {
 
     updatedInput = updatedInput > 0 ? updatedInput : 0;
     this.setState({ measurementInput: updatedInput });
-    this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
+    this.props.updateMeasurement(2, this.props.currentMeal, updatedInput, this.props.macro);
   }
 
   increaseMeasurement() {
@@ -85,7 +85,7 @@ class MeasurementInput extends React.Component {
 
     updatedInput = updatedInput > 0 ? updatedInput : 0;
     this.setState({ measurementInput: updatedInput });
-    this.props.updateMeasurement(this.props.currentMeal, this.props.macro, updatedInput);
+    this.props.updateMeasurement(2, this.props.currentMeal, updatedInput, this.props.macro);
   }
 
    render() {

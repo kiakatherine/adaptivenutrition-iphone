@@ -93,7 +93,7 @@ export default class LoginScreen extends React.Component {
     this.movePhase = this.movePhase.bind(this);
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showTemplatePicker = this.showTemplatePicker.bind(this);
-    this.saveMeasurement = this.saveMeasurement.bind(this);
+    this.completeMeal = this.completeMeal.bind(this);
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
@@ -113,7 +113,7 @@ export default class LoginScreen extends React.Component {
     // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     const uid = firebase.auth().currentUser.uid;
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
-    // const dayStatuses = firebase.database().ref('dayStatuses');
+    const dayStatuses = firebase.database().ref('/clients/' + uid + '/day-statuses');
     // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
 
@@ -126,66 +126,64 @@ export default class LoginScreen extends React.Component {
       });
     });
 
-    // dayStatuses.on('value', snapshot => {
-    //   const date = new Date();
-    //   const dayStatuses = snapshot.val();
-    //   let filteredDayStatuses = [];
-    //
-    //   Object.keys(dayStatuses).map(key => {
-    //     if(dayStatuses[key].timestamp === clientResponse.timestamp) {
-    //       filteredDayStatuses.push(dayStatuses[key]);
-    //     }
-    //   });
-    //
-    //   let today;
-    //   filteredDayStatuses.forEach(day => {
-    //     if((day && day.date === moment(date).format('MM-DD-YY')) && (day.phase === this.state.phase)) {
-    //       today = day;
-    //     }
-    //   });
-    //
-    //   let phase1meal1 = null;
-    //   let phase1meal2 = null;
-    //   let phase1meal3 = null;
-    //   let phase1meal4 = null;
-    //   let phase3meal1 = null;
-    //   let phase3meal2 = null;
-    //   let phase3meal3 = null;
-    //   let phase3meal4 = null;
-    //   let phase3meal5 = null;
-    //   let phase3meal6 = null;
-    //
-    //   if(today) {
-    //     const phase = today.phase;
-    //
-    //     phase1meal1 = (phase === 1 ? today.meal1 : null);
-    //     phase1meal2 = (phase === 1 ? today.meal2 : null);
-    //     phase1meal3 = (phase === 1 ? today.meal3 : null);
-    //     phase1meal4 = (phase === 1 ? today.meal4 : null);
-    //
-    //     phase3meal1 = (phase === 3 ? today.meal1 : null);
-    //     phase3meal2 = (phase === 3 ? today.meal2 : null);
-    //     phase3meal3 = (phase === 3 ? today.meal3 : null);
-    //     phase3meal4 = (phase === 3 ? today.meal4 : null);
-    //     phase3meal5 = (phase === 3 ? today.meal5 : null);
-    //     phase3meal6 = (phase === 3 ? today.meal6 : null);
-    //   }
-    //
-    //   this.setState({
-    //     dayStatuses: snapshot.val(),
-    //     phase1meal1: phase1meal1,
-    //     phase1meal2: phase1meal2,
-    //     phase1meal3: phase1meal3,
-    //     phase1meal4: phase1meal4,
-    //     phase3meal1: phase3meal1,
-    //     phase3meal2: phase3meal2,
-    //     phase3meal3: phase3meal3,
-    //     phase3meal4: phase3meal4,
-    //     phase3meal5: phase3meal5,
-    //     phase3meal6: phase3meal6
-    //   });
-    // });
-    //
+    dayStatuses.on('value', snapshot => {
+      const date = new Date();
+      const dayStatuses = snapshot.val();
+      let today;
+
+      if(dayStatuses) {
+        Object.keys(dayStatuses).map(key => {
+          if(dayStatuses[key].date === moment(date).format('YYYY-MM-DD')) {
+            todayKey = key;
+            today = dayStatuses[key];
+            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+            // todayRef.remove();
+          }
+        });
+      }
+
+      let phase1meal1 = null;
+      let phase1meal2 = null;
+      let phase1meal3 = null;
+      let phase1meal4 = null;
+      let phase3meal1 = null;
+      let phase3meal2 = null;
+      let phase3meal3 = null;
+      let phase3meal4 = null;
+      let phase3meal5 = null;
+      let phase3meal6 = null;
+
+      if(today) {
+        const phase = today.phase;
+
+        phase1meal1 = (phase === 1 ? today.meal1 : null);
+        phase1meal2 = (phase === 1 ? today.meal2 : null);
+        phase1meal3 = (phase === 1 ? today.meal3 : null);
+        phase1meal4 = (phase === 1 ? today.meal4 : null);
+
+        phase3meal1 = (phase === 3 ? today.meal1 : null);
+        phase3meal2 = (phase === 3 ? today.meal2 : null);
+        phase3meal3 = (phase === 3 ? today.meal3 : null);
+        phase3meal4 = (phase === 3 ? today.meal4 : null);
+        phase3meal5 = (phase === 3 ? today.meal5 : null);
+        phase3meal6 = (phase === 3 ? today.meal6 : null);
+      }
+
+      this.setState({
+        dayStatuses: snapshot.val(),
+        phase1meal1: phase1meal1,
+        phase1meal2: phase1meal2,
+        phase1meal3: phase1meal3,
+        phase1meal4: phase1meal4,
+        phase3meal1: phase3meal1,
+        phase3meal2: phase3meal2,
+        phase3meal3: phase3meal3,
+        phase3meal4: phase3meal4,
+        phase3meal5: phase3meal5,
+        phase3meal6: phase3meal6
+      });
+    });
+
     // phaseTwoDayStatuses.on('value', snapshot => {
     //   const phaseTwoDayStatusesRef = snapshot.val();
     //   const date = new Date;
@@ -252,8 +250,6 @@ export default class LoginScreen extends React.Component {
     const clientRef = firebase.database().ref('/clients/' + clientId);
 
     // if click on current template
-    console.log('template', template)
-    console.log('currentTemplate', currentTemplate)
     if(template === currentTemplate) {
       this.setState({
         showTemplatePicker: false
@@ -564,7 +560,7 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  completeMeal(phase, currentMeal, completion) {
+  completeMeal(phase, currentMeal, completion, macro) {
     const client = this.state.client;
     const uid = firebase.auth().currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + uid);
@@ -583,17 +579,21 @@ export default class LoginScreen extends React.Component {
     dayStatusesRef.once('value', snapshot => {
       const ds = snapshot.val();
 
-      Object.keys(ds).map(key => {
-        if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
-          todayKey = key;
-          today = ds[key];
-          // todayRef = firebase.database().ref().child('dayStatuses/' + key);
-          // todayRef.remove();
-        }
-      });
+      console.log('ds', ds)
+
+      if(ds) {
+        Object.keys(ds).map(key => {
+          if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
+            todayKey = key;
+            today = ds[key];
+            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+            // todayRef.remove();
+          }
+        });
+      }
     });
 
-    if(today && todayKey && today.phase === this.state.phase) {
+    if(today && todayKey && phase !== 2 && today.phase === this.state.phase) {
       // set meal completed boolean
       if(today[mealToSave] === completion) {
         today[mealToSave] = 3;
@@ -607,7 +607,7 @@ export default class LoginScreen extends React.Component {
 
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
         // TO DO: congrats message
-        const team = client.challengeGroupTeam;
+        // const team = client.challengeGroupTeam;
         const meal1 = today.meal1 < 3 ? true : false;
         const meal2 = today.meal2 < 3 ? true : false;
         const meal3 = today.meal3 < 3 ? true : false;
@@ -696,34 +696,116 @@ export default class LoginScreen extends React.Component {
           });
 
           // clean up code
-          if(team) {
-            const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
-            let teamKey;
-
-            challengeGroupTeamsRef.on('value', snapshot => {
-              const teams = snapshot.val();
-
-              Object.keys(teams).map(key => {
-                if(teams[key].name === team) {
-                  teamKey = key;
-                  return teams[key];
-                }
-              });
-
-              if(teamKey) {
-                const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
-                const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
-                challengeGroupTeamRef.update({ points: (points + 1) });
-                todayRef.update({ allMealsCompleted: true });
-              }
-            });
-          }
+          // if(team) {
+          //   const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
+          //   let teamKey;
+          //
+          //   challengeGroupTeamsRef.on('value', snapshot => {
+          //     const teams = snapshot.val();
+          //
+          //     Object.keys(teams).map(key => {
+          //       if(teams[key].name === team) {
+          //         teamKey = key;
+          //         return teams[key];
+          //       }
+          //     });
+          //
+          //     if(teamKey) {
+          //       const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
+          //       const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
+          //       challengeGroupTeamRef.update({ points: (points + 1) });
+          //       todayRef.update({ allMealsCompleted: true });
+          //     }
+          //   });
+          // }
           return;
         }
       }, reason => {
         alert('uh oh...');
       });
-    } else {
+    } else if(today && todayKey && this.state.phase === 2 && today.phase === this.state.phase) {
+      // set meal completed boolean
+      todayRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses/' + todayKey);
+      todayRef.update({ [key]: value });
+
+      todayRef.on('value', snapshot => {
+        const today = snapshot.val();
+        // update progress bar
+        let mealNumber, p, c, f, v;
+
+        if(key.indexOf('1') > -1) {
+          mealNumber = 1;
+          p = today.meal1proteinMeasurement !== '' ? today.meal1proteinMeasurement : null;
+          c = today.meal1carbsMeasurement !== '' ? today.meal1carbsMeasurement : null;
+          f = today.meal1fatsMeasurement !== '' ? today.meal1fatsMeasurement : null;
+          v = today.meal1veggiesMeasurement !== '' ? today.meal1veggiesMeasurement : null;
+        } else if(key.indexOf('2') > -1) {
+          mealNumber = 2;
+          p = today.meal2proteinMeasurement !== '' ? today.meal2proteinMeasurement : null;
+          c = today.meal2carbsMeasurement !== '' ? today.meal2carbsMeasurement : null;
+          f = today.meal2fatsMeasurement !== '' ? today.meal2fatsMeasurement : null;
+          v = today.meal2veggiesMeasurement !== '' ? today.meal2veggiesMeasurement : null;
+        } else if(key.indexOf('3') > -1) {
+          mealNumber = 3;
+          p = today.meal3proteinMeasurement !== '' ? today.meal3proteinMeasurement : null;
+          c = today.meal3carbsMeasurement !== '' ? today.meal3carbsMeasurement : null;
+          f = today.meal3fatsMeasurement !== '' ? today.meal3fatsMeasurement : null;
+          v = today.meal3veggiesMeasurement !== '' ? today.meal3veggiesMeasurement : null;
+        } else if(key.indexOf('4') > -1) {
+          mealNumber = 4;
+          p = today.meal4proteinMeasurement !== '' ? today.meal4proteinMeasurement : null;
+          c = today.meal4carbsMeasurement !== '' ? today.meal4carbsMeasurement : null;
+          f = today.meal4fatsMeasurement !== '' ? today.meal4fatsMeasurement : null;
+          v = today.meal4veggiesMeasurement !== '' ? today.meal4veggiesMeasurement : null;
+        }
+
+        if(p && c && f && v) {
+          todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
+            console.log('updated meal measurements completed');
+            this.setState({ ['meal' + mealNumber + 'measurementsCompleted'] : 1 });
+            // check if all measurements have been entered for each meal
+            if(today.meal1proteinMeasurement &&
+              today.meal1carbsMeasurement &&
+              today.meal1fatsMeasurement &&
+              today.meal1veggiesMeasurement &&
+              today.meal2proteinMeasurement &&
+              today.meal2carbsMeasurement &&
+              today.meal2fatsMeasurement &&
+              today.meal2veggiesMeasurement &&
+              today.meal3proteinMeasurement &&
+              today.meal3carbsMeasurement &&
+              today.meal3fatsMeasurement &&
+              today.meal3veggiesMeasurement &&
+              today.meal4proteinMeasurement &&
+              today.meal4carbsMeasurement &&
+              today.meal4fatsMeasurement &&
+              today.meal4veggiesMeasurement &&
+              today.allMealsCompleted === false) {
+                todayRef.update({ allMealsCompleted: true });
+            } else if(today.meal1measurementsCompleted === 1 &&
+              today.meal2measurementsCompleted === 1 &&
+              today.meal3measurementsCompleted === 1 &&
+              today.meal4measurementsCompleted === 1 &&
+              today.allMealsCompleted) {
+                // if all meals already marked as completed and measurement
+                // is simply changing value, don't add points to team score
+                return;
+            }
+          }, reason => {
+            alert('Could not save meal completion')
+          });
+        } else {
+          // mark meal measurements as incomplete
+          todayRef.update({
+            ['meal' + mealNumber + 'measurementsCompleted']: 3
+          });
+
+          if(today.allMealsCompleted) {
+            // update individual score
+          }
+        }
+      });
+    } else if(this.state.phase !== 2) {
       // save date and selected meal and whether completed or not
       // const dayStatuses = firebase.database().ref('dayStatuses');
       const newDayStatus = dayStatusesRef.push();
@@ -743,6 +825,27 @@ export default class LoginScreen extends React.Component {
         // TO DO: congrats message
       }, reason => {
         console.log('Could not save meal completion');
+        // TO DO: error message
+      });
+    } else if(this.state.phase === 2) {
+      // save date and selected meal and whether completed or not
+      // const dayStatuses = firebase.database().ref('dayStatuses');
+      const newDayStatus = dayStatusesRef.push();
+      newDayStatus.set({
+        date: moment(new Date).format('YYYY-MM-DD'),
+        fullDate: new Date(),
+        meal1measurementsCompleted: 3,
+        meal2measurementsCompleted: 3,
+        meal3measurementsCompleted: 3,
+        meal4measurementsCompleted: 3,
+        // [mealToSave]: completion,
+        [key]: value,
+        phase: client.phase
+      }).then(resp => {
+        console.log('saved new phase day status')
+        // TO DO: congrats message
+      }, reason => {
+        console.log('Could not save measurement');
         // TO DO: error message
       });
     }
@@ -786,48 +889,67 @@ export default class LoginScreen extends React.Component {
   }
 
   doNotShowMacroWarning() {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    clientRef.update({
       doNotShowMacroWarning: true
     });
     this.setState({ doNotShowMacroWarning: true });
   }
 
   saveMeasurement(currentMeal, macro, value) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const uid = firebase.auth().currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    const dayStatusesRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses');
     const key = 'meal' + (Number(currentMeal) + 1) + macro + 'Measurement';
 
-    client.on('value', snapshot => {
-      clientRef = snapshot.val();
+
+
+    clientRef.on('value', snapshot => {
+      client = snapshot.val();
 
       if(key) {
         const date = new Date();
         const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
         let today, todayKey;
 
-        phaseTwoDayStatuses.once('value', snapshot => {
-          const phaseTwoDayStatusesRef = snapshot.val();
+        // check if a dayStatus exists with timestamp and today's date
+        dayStatusesRef.once('value', snapshot => {
+          const ds = snapshot.val();
 
-          // check whether day recorded yet
-          if(clientRef.timestamp) {
-            Object.keys(phaseTwoDayStatusesRef).map(phaseTwoDayKey => {
-              if(phaseTwoDayKey && (phaseTwoDayStatusesRef[phaseTwoDayKey].timestamp === clientRef.timestamp)) {
-                if(phaseTwoDayStatusesRef[phaseTwoDayKey].date === moment(date).format('MM-DD-YY')) {
-                  todayKey = phaseTwoDayKey;
-                  today = phaseTwoDayStatusesRef[phaseTwoDayKey];
-                }
-                // todayRef = firebase.database().ref().child('phaseTwoDays/' + phaseTwoDayKey);
-                // todayRef.remove();
-              } else {
-                // alert('day has not yet been recorded')
-              }
-            });
-          }
+          Object.keys(ds).map(key => {
+            if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
+              todayKey = key;
+              today = ds[key];
+              // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+              // todayRef.remove();
+            }
+          });
+        // });
+
+        // phaseTwoDayStatuses.once('value', snapshot => {
+        //   const phaseTwoDayStatusesRef = snapshot.val();
+        //
+        //   // check whether day recorded yet
+        //   if(client.timestamp) {
+        //     Object.keys(phaseTwoDayStatusesRef).map(phaseTwoDayKey => {
+        //       if(phaseTwoDayKey && (phaseTwoDayStatusesRef[phaseTwoDayKey].timestamp === client.timestamp)) {
+        //         if(phaseTwoDayStatusesRef[phaseTwoDayKey].date === moment(date).format('MM-DD-YY')) {
+        //           todayKey = phaseTwoDayKey;
+        //           today = phaseTwoDayStatusesRef[phaseTwoDayKey];
+        //         }
+        //         // todayRef = firebase.database().ref().child('phaseTwoDays/' + phaseTwoDayKey);
+        //         // todayRef.remove();
+        //       } else {
+        //         // alert('day has not yet been recorded')
+        //       }
+        //     });
+        //   }
 
           // if day already recorded...
           if(todayKey) {
             // set meal completed boolean
-            todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
+            todayRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses/' + todayKey);
             todayRef.update({ [key]: value });
 
             todayRef.on('value', snapshot => {
@@ -886,31 +1008,31 @@ export default class LoginScreen extends React.Component {
 
                     todayRef.update({ allMealsCompleted: true });
 
-                    const clientTeam = clientRef.challengeGroupTeam;
-
-                    // update team score
-                    if(clientTeam) {
-                      const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
-
-                      challengeGroupTeams.once('value', snapshot => {
-                        const challengeGroupTeamsRef = snapshot.val();
-                        let points;
-
-                        Object.keys(challengeGroupTeamsRef).map(key => {
-                          if(challengeGroupTeamsRef[key].name === clientTeam) {
-                            teamKey = key;
-                            points = challengeGroupTeamsRef[key].points;
-                          }
-                        });
-
-                        if(teamKey) {
-                          const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
-
-                          teamRef.update({ points: Number(points) + 1 });
-                          todayRef.update({ allMealsCompleted: true });
-                        }
-                      });
-                    }
+                    // const clientTeam = client.challengeGroupTeam;
+                    //
+                    // // update team score
+                    // if(clientTeam) {
+                    //   const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
+                    //
+                    //   challengeGroupTeams.once('value', snapshot => {
+                    //     const challengeGroupTeamsRef = snapshot.val();
+                    //     let points;
+                    //
+                    //     Object.keys(challengeGroupTeamsRef).map(key => {
+                    //       if(challengeGroupTeamsRef[key].name === clientTeam) {
+                    //         teamKey = key;
+                    //         points = challengeGroupTeamsRef[key].points;
+                    //       }
+                    //     });
+                    //
+                    //     if(teamKey) {
+                    //       const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
+                    //
+                    //       teamRef.update({ points: Number(points) + 1 });
+                    //       todayRef.update({ allMealsCompleted: true });
+                    //     }
+                    //   });
+                    // }
                   } else if(today.meal1measurementsCompleted === 1 &&
                     today.meal2measurementsCompleted === 1 &&
                     today.meal3measurementsCompleted === 1 &&
@@ -941,31 +1063,31 @@ export default class LoginScreen extends React.Component {
                 });
 
                 if(today.allMealsCompleted) {
-                  const clientTeam = clientRef.challengeGroupTeam;
-
-                  // update team score
-                  if(clientTeam) {
-                    const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
-
-                    challengeGroupTeams.once('value', snapshot => {
-                      const challengeGroupTeamsRef = snapshot.val();
-                      let points;
-
-                      Object.keys(challengeGroupTeamsRef).map(key => {
-                        if(challengeGroupTeamsRef[key].name === clientTeam) {
-                          teamKey = key;
-                          points = challengeGroupTeamsRef[key].points;
-                        }
-                      });
-
-                      if(teamKey) {
-                        const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
-
-                        teamRef.update({ points: Number(points) - 1 });
-                        todayRef.update({ allMealsCompleted: false });
-                      }
-                    });
-                  }
+                  // const clientTeam = clientRef.challengeGroupTeam;
+                  //
+                  // // update team score
+                  // if(clientTeam) {
+                  //   const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
+                  //
+                  //   challengeGroupTeams.once('value', snapshot => {
+                  //     const challengeGroupTeamsRef = snapshot.val();
+                  //     let points;
+                  //
+                  //     Object.keys(challengeGroupTeamsRef).map(key => {
+                  //       if(challengeGroupTeamsRef[key].name === clientTeam) {
+                  //         teamKey = key;
+                  //         points = challengeGroupTeamsRef[key].points;
+                  //       }
+                  //     });
+                  //
+                  //     if(teamKey) {
+                  //       const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
+                  //
+                  //       teamRef.update({ points: Number(points) - 1 });
+                  //       todayRef.update({ allMealsCompleted: false });
+                  //     }
+                  //   });
+                  // }
                 }
               }
             });
@@ -975,17 +1097,38 @@ export default class LoginScreen extends React.Component {
             // TO DO: check which meal measurements completed
             console.log('new phase two day');
             if(!today) {
-              phaseTwoDayStatuses.push({
-                date: moment(new Date).format('MM-DD-YY'),
-                fullDate: new Date,
-                timestamp: Number(clientRef.timestamp),
-                [key]: value,
+              // phaseTwoDayStatuses.push({
+              //   date: moment(new Date).format('MM-DD-YY'),
+              //   fullDate: new Date,
+              //   // timestamp: Number(client.timestamp),
+              //   [key]: value,
+              //   meal1measurementsCompleted: 3,
+              //   meal2measurementsCompleted: 3,
+              //   meal3measurementsCompleted: 3,
+              //   meal4measurementsCompleted: 3
+              // }).then(resp => {}, reason => {
+              //   alert('Could not save measurement');
+              // });
+
+              // save date and selected meal and whether completed or not
+              // const dayStatuses = firebase.database().ref('dayStatuses');
+              const newDayStatus = dayStatusesRef.push();
+              newDayStatus.set({
+                date: moment(new Date).format('YYYY-MM-DD'),
+                fullDate: new Date(),
                 meal1measurementsCompleted: 3,
                 meal2measurementsCompleted: 3,
                 meal3measurementsCompleted: 3,
-                meal4measurementsCompleted: 3
-              }).then(resp => {}, reason => {
-                alert('Could not save measurement');
+                meal4measurementsCompleted: 3,
+                // [mealToSave]: completion,
+                [key]: value,
+                phase: client.phase
+              }).then(resp => {
+                console.log('saved new phase day status')
+                // TO DO: congrats message
+              }, reason => {
+                console.log('Could not save measurement');
+                // TO DO: error message
               });
             }
           }
@@ -1374,6 +1517,8 @@ export default class LoginScreen extends React.Component {
       this.state.meal3measurementsCompleted < 4 &&
       this.state.meal4measurementsCompleted < 4;
 
+      console.log('dayStatusesLoaded', dayStatusesLoaded)
+
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {!this.state.showTemplatePicker &&
@@ -1667,7 +1812,7 @@ export default class LoginScreen extends React.Component {
                     </Text>
                   </TouchableHighlight>}
 
-                  {!viewAllMeals && phase === 2 && dayStatusesLoaded &&
+                  {!viewAllMeals && phase === 2 &&
                     <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
                       (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
                       (currentMeal === 1 && this.state.meal2measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
@@ -1723,7 +1868,7 @@ export default class LoginScreen extends React.Component {
                     veggies={veggies}
                     viewAllMeals={viewAllMeals}
                     showInGrams={showInGrams}
-                    updateMeasurement={this.saveMeasurement}
+                    updateMeasurement={this.completeMeal}
                     changeMeal={this.saveCurrentMeal} />}
 
                   {(this.state.phase === 3 && viewAllMeals) && <View>
