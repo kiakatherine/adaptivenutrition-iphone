@@ -43,9 +43,7 @@ export default class LoginScreen extends React.Component {
     else this.setState({ unauthorized: true });
   }
 
-  async loginWithFacebook() {
-    const { navigate } = this.props.navigation;
-
+  async loginWithFacebook(navigate) {    
     await AuthService.loginWithFacebook();
 
     const authenticated = await AuthService.isSignedIn();
@@ -53,9 +51,7 @@ export default class LoginScreen extends React.Component {
     else this.setState({ unauthorized: true });
   }
 
-  async loginWithGoogle() {
-    const { navigate } = this.props.navigation;
-
+  async loginWithGoogle(navigate) {
     await AuthService.loginWithGoogle();
 
     const authenticated = await AuthService.isSignedIn();
@@ -99,7 +95,7 @@ export default class LoginScreen extends React.Component {
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
             />
-            <View style={[Styles.button, styles.loginButton]}>
+            <View style={[Styles.button, styles.loginButton, {marginTop: 8}]}>
               <Button
                 color={Colors.white}
                 title="Login"
@@ -107,20 +103,20 @@ export default class LoginScreen extends React.Component {
                 onPress={this.login}
               />
             </View>
-            {/*<View style={[Styles.button, styles.loginButton]}>
+            <View style={[Styles.button, styles.loginButton, {marginTop: 8}]}>
               <Button
                 color={Colors.white}
                 title="Login with Facebook"
-                onPress={this.loginWithFacebook}
+                onPress={()=> { this.loginWithFacebook(navigate) }}
               />
             </View>
-            <View style={[Styles.button, styles.loginButton]}>
+            <View style={[Styles.button, styles.loginButton, {marginTop: 8}]}>
               <Button
                 color={Colors.white}
                 title="Login with Google"
-                onPress={this.loginWithGoogle}
+                onPress={()=>{this.loginWithGoogle(navigate)}}
               />
-            </View>*/}
+            </View>
             <View>
               <Button
                 color={Colors.primaryColor}
@@ -148,7 +144,7 @@ const styles = StyleSheet.create({
   },
   title: {
     alignItems: 'center',
-    marginTop: 20
+    // marginTop: 20
   },
   logo: {
     width: 75,
@@ -174,12 +170,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Futura-Medium',
     fontSize: 20,
     margin: 5,
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: Colors.lightGray,
   },
-  loginButton: {
-    marginTop: 10,
-    marginBottom: 20,
+  loginButton: {    
     marginRight: 5,
     marginLeft: 5
   }

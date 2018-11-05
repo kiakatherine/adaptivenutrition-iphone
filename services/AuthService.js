@@ -6,16 +6,17 @@ import firebase from 'firebase';
 class AuthService {
   async login (email, password) {
     try {
-      const user = firebase.auth().currentUser;
       await firebase.auth().signInWithEmailAndPassword(email.trim().toLowerCase(), password);
-      console.log('User is: ', user);
+
+      const user = firebase.auth().currentUser;
+      await AsyncStorage.setItem("user", JSON.stringify(user))
       // TODO: Check isEmailVerified, if not firebase.auth().signOut()
       // if(!user.emailVerified) {
       //   await firebase.auth().signOut();
       // }
       // await AsyncStorage.setItem(ADAPTIVE_SESSION_KEY, "true");
     } catch(err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 
@@ -29,14 +30,10 @@ class AuthService {
       if (result.type === 'success') {
         const { idToken, accessToken } = result;
         const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-        firebase
-        .auth()
-        .signInAndRetrieveDataWithCredential(credential)
-        .then(res => {
-        })
-        .catch(error => {
-          console.log("firebase cred err:", error);
-        });
+        await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+
+        const user = firebase.auth().currentUser;
+        await AsyncStorage.setItem("user", JSON.stringify(user))
       }
     } catch(e) {
 
@@ -52,76 +49,67 @@ class AuthService {
     if (type === 'success') {
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
 
-      firebase.auth().signInWithCredential(credential).catch((error) => {
+      firebase.auth().signInWithCredential(credential);
 
-      });
+      const user = firebase.auth().currentUser;
+      await AsyncStorage.setItem("user", JSON.stringify(user))
+    } else {
+
     }
   }
 
   async resetPassword (email) {
     try {
-      await firebase.auth().re;
+//      await firebase.auth().re;
       // await AsyncStorage.removeItem(ADAPTIVE_SESSION_KEY);
       // await firebase.auth().signOut();
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 
   async logout () {
     try {
       await firebase.auth().signOut();
-      // await AsyncStorage.removeItem(ADAPTIVE_SESSION_KEY);
+      await AsyncStorage.removeItem("user");
       // await firebase.auth().signOut();
     } catch (err) {
       console.log(err);
     }
   }
 
-  currentUser () { return firebase.auth().currentUser; }
-
   async isSignedIn () {
     try {
-      // const isLoggedIn = await AsyncStorage.getItem(ADAPTIVE_SESSION_KEY);
-      return !!firebase.auth().currentUser;
-      return isLoggedIn !== null
+      // await AsyncStorage.removeItem("user")
+      let userData = await AsyncStorage.getItem("user")
+      let currentUser = JSON.parse(userData)
+      // console.log(currentUser)
+      if(currentUser){
+        return true
+      }else{
+        return false
+      }
+
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       return false;
     }
   }
 
   async signUp(email, password, firstName, lastName, gender, birthdate, height, bodyweight, bodyfat) {
     try {
+      const user = firebase.auth().currentUser;
       await firebase.auth().createUserWithEmailAndPassword(email, password);
-
-      // VERIFY
-      firebase.auth().currentUser.update({
-        firstName: firstName,
-        lastName: lastName,
-        gender: gender,
-        birthdate: birthdate,
-        height: height,
-        bodyweight: bodyweight,
-        bodyfat: bodyfat,
-        leanMass: bodyweight && bodyfat ? Math.round(bodyweight * (1 - (bodyfat/100))) : null,
-        latestBodyweight: bodyweight,
-        phase: 1,
-        templateType: 0, // as number
-        weightPoints: 0,
-        mealPoints: 0,
-        socialPoints: 0,
-        quizPoints: 0,
-        totalPoints: 0
-      }, function(error) {
-        if (error) {
-          // The write failed...
-        } else {
-          // Data saved successfully!
-        }
-      });
+      await AsyncStorage.setItem("user", JSON.stringify(user))
+      return {
+        success: true,
+        data: user
+      }
     } catch (err) {
-      console.log(err);
+      return {
+        success: false,
+        data: err.message
+      }
     }
   }
 }

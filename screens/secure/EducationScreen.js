@@ -1,4 +1,5 @@
 import React from 'react';
+import { AsyncStorage } from 'react-native';
 
 import firebase from '../../services/FirebaseService';
 
@@ -53,13 +54,20 @@ export default class LoginScreen extends React.Component {
     this._closeQuiz = this._closeQuiz.bind(this);
   }
 
-  componentDidMount() {
-    const uid = firebase.auth().currentUser.uid;
+  async getSnapshot() {
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
 
     clientRef.on('value', snapshot => {
       this.setState({ client: snapshot.val() });
     });
+  }
+
+  componentDidMount() {
+    // const uid = firebase.auth().currentUser.uid;
+    this.getSnapshot()
   }
 
   _clickTakeQuiz(lessonNumber, timestamp) {
@@ -78,8 +86,11 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  _checkQuizAnswers() {
-    const uid = firebase.auth().currentUser.uid;
+  async _checkQuizAnswers() {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
     let client;
     const quiz = 'quiz' + this.state.selectedLessonNumber;

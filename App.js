@@ -7,7 +7,7 @@ import AuthService from './services/AuthService';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-
+    console.disableYellowBox = true;
     this.state = { authenticated: false };
   }
 

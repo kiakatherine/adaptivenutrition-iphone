@@ -34,12 +34,19 @@ class Header extends React.Component {
     this._closeModal = this._closeModal.bind(this);
   }
 
-  _closeModal() {
-    this.setState({ showPoints: false, showUserInfo: false });
+  _closeModal(page) {
+    this.setState({ 
+      showPoints: false, 
+      showUserInfo: false 
+    }, () => {
+      if(page == "logout") {
+        this.props.logout()
+      }
+    });
   }
 
    render() {
-     return (
+     return ( 
        <View>
          <View style={styles.header}>
            {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />
@@ -168,7 +175,7 @@ class Header extends React.Component {
           <ModalWindow
             currentModal="POINTS"
             client={this.props.client ? this.props.client : null}
-            closeModal={this._closeModal} /> }
+            closeModal={(page)=> this._closeModal(page)} /> }
 
         {this.state.showUserInfo &&
           <ModalWindow
@@ -180,7 +187,8 @@ class Header extends React.Component {
             onChangeBirthdate={this.props.onChangeBirthdate}
             client={this.props.client ? this.props.client : null}
             wide={true}
-            closeModal={this._closeModal} /> }
+            closeModal={(page)=> this._closeModal(page)} 
+            /> }
       </View>
      );
    }

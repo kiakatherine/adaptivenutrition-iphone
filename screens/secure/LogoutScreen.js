@@ -4,7 +4,8 @@ import {
   Button,
   Image,
   Text,
-  View
+  View,
+  Modal
 } from 'react-native';
 
 import AuthService from '../../services/AuthService';
@@ -23,25 +24,30 @@ export default class LogoutScreen extends React.Component {
     this._logout = this._logout.bind(this);
   }
 
-  async _logout() {
-    const { navigate } = this.props.navigation;
-    await AuthService.logout();
-    navigate('Login');
+  _logout() {
+    this.props.closeLogoutModal()
+    
   }
 
   render() {
     return (
       <View style={Styles.body}>
-        <View style={Styles.title}>
-          <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
-        </View>
-        <View style={Styles.content}>
-          <Text style={Styles.contentHeading}>Are you sure you want to logout?</Text>
-          <Button
-            title="Yep!"
-            onPress={this._logout}
-          />
-        </View>
+        <Modal animationType={"slide"}
+          transparent={false}
+          onRequestClose={() => { console.log("Modal has been closed.") } }>
+          <View style={Styles.title}>
+            <Image source={require('../../assets/an_logo.png')} style={{ width: 75, height: 75 }} />
+          </View>
+          <View style={Styles.content}>
+            <Text style={Styles.contentHeading}>Are you sure you want to logout?</Text>
+            <Button
+              title="Yep!"
+              onPress={()=> {
+                this.props.closeLogoutModal()
+              }}
+            />
+          </View>
+        </Modal>
       </View>
     )
   }

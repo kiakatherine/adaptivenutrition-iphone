@@ -1,4 +1,5 @@
 import React from 'react';
+import { AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 
 import firebase from '../services/FirebaseService';
@@ -45,8 +46,12 @@ class BodyweightGraph extends React.Component {
      });
    }
 
-   clickDeleteDataPoint() {
-     const uid = firebase.auth().currentUser.uid;
+   async clickDeleteDataPoint() {
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    console.log(currentUser)
+    const uid = currentUser.uid
+    //  const uid = firebase.auth().currentUser.uid;
      const records = this.props.data;
      let recordKey;
      const weight = this.state.weightToDelete;

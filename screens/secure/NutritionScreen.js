@@ -1,4 +1,5 @@
 import React from 'react';
+import { AsyncStorage } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import firebase from '../../services/FirebaseService';
@@ -104,14 +105,10 @@ export default class LoginScreen extends React.Component {
     this._onChangeBirthdate = this._onChangeBirthdate.bind(this);
   }
 
-  componentDidMount() {
-    // Register the alert located on this master page
-    // This MessageBar will be accessible from the current (same) component, and from its child component
-    // The MessageBar is then declared only once, in your main component.
-    MessageBarManager.registerMessageBar(this.refs.alert);
-
-    // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    const uid = firebase.auth().currentUser.uid;
+  async getClientData() {
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     const dayStatuses = firebase.database().ref('/clients/' + uid + '/day-statuses');
     // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
@@ -119,7 +116,6 @@ export default class LoginScreen extends React.Component {
 
     clientWeightRef.on('value', snapshot => {
       clientResponse = snapshot.val();
-
       this.setState({
         client: clientResponse,
         phase: clientResponse && clientResponse.phase ? clientResponse.phase : 1
@@ -234,19 +230,33 @@ export default class LoginScreen extends React.Component {
     //   }
     // });
   }
+  componentDidMount() {
+    // Register the alert located on this master page
+    // This MessageBar will be accessible from the current (same) component, and from its child component
+    // The MessageBar is then declared only once, in your main component.
+    MessageBarManager.registerMessageBar(this.refs.alert);
+
+    // const uid = firebase.auth().currentUser.uid;
+    this.getClientData()
+
+
+  }
 
   componentWillUnmount() {
     // Remove the alert located on this master page from the manager
     MessageBarManager.unregisterMessageBar();
   }
 
-  clickTemplateType(template) {
+  async clickTemplateType(template) {
     // show confirmation or error message
     // if need confirmation first, saveTemplateType() actually saves template type
     // if moving to lose weight step 2 or lock in results 3, moveToLockInResults() saves template type and weight1/weight2
 
     const currentTemplate = this.state.client.templateType;
-    const clientId = firebase.auth().currentUser.uid;
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
 
     // if click on current template
@@ -444,9 +454,12 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  saveTemplateType() {
+  async saveTemplateType() {
     const template = this.state.potentialTemplate;
-    const clientId = firebase.auth().currentUser.uid;
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
 
     let t = template;
@@ -465,8 +478,11 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  saveWakeTime(time) {
-    const clientId = firebase.auth().currentUser.uid;
+  async saveWakeTime(time) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     clientRef.update({ wakeTime: time });
     this.setState({
@@ -475,8 +491,11 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  saveTrainingIntensity(intensity) {
-    const clientId = firebase.auth().currentUser.uid;
+  async saveTrainingIntensity(intensity) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     // let val = 'rest';
     //
@@ -493,27 +512,39 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  saveMealsBeforeWorkout(numberOfMeals) {
-    const clientId = firebase.auth().currentUser.uid;
+  async saveMealsBeforeWorkout(numberOfMeals) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     clientRef.update({ trainingTime: numberOfMeals });
     this.setState({ mealsBeforeWorkout: numberOfMeals });
   }
 
-  saveCurrentMeal(meal) {
-    const clientId = firebase.auth().currentUser.uid;
+  async saveCurrentMeal(meal) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     clientRef.update({ selectedMeal: meal });
   }
 
-  toggleView(viewAllMeals) {
-    const clientId = firebase.auth().currentUser.uid;
+  async toggleView(viewAllMeals) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     clientRef.update({ viewAllMeals: !viewAllMeals });
   }
 
-  toggleUnits(showInGrams) {
-    const clientId = firebase.auth().currentUser.uid;
+  async toggleUnits(showInGrams) {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     clientRef.update({ showInGrams: !showInGrams });
   }
@@ -560,9 +591,12 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  completeMeal(phase, currentMeal, completion, macro) {
+  async completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
-    const uid = firebase.auth().currentUser.uid;
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
     // const dayStatusesRef = firebase.database().ref().child('dayStatuses');
     const dayStatusesRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses');
@@ -851,8 +885,11 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  clickNavPhase(phase) {
-    const uid = firebase.auth().currentUser.uid;
+  async clickNavPhase(phase) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
 
     if((phase === 1 && this.state.phase === 2) ||
@@ -875,8 +912,11 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  movePhase(phase) {
-    const uid = firebase.auth().currentUser.uid;
+  async movePhase(phase) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
     const direction = this.state.phase < phase ? 'forward' : 'backward';
 
@@ -1139,37 +1179,58 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  _onChangeGender(g) {
-    const uid = firebase.auth().currentUser.uid;
+  async _onChangeGender(g) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     clientWeightRef.update({ gender: g });
   }
 
-  _onChangeBodyweight(text) {
-    const uid = firebase.auth().currentUser.uid;
+  async _onChangeBodyweight(text) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     clientWeightRef.update({ bodyweight: Number(text) });
   }
 
-  _onChangeHeight(text) {
-    const uid = firebase.auth().currentUser.uid;
+  async _onChangeHeight(text) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     clientWeightRef.update({ height: Number(text) });
   }
 
-  _onChangeBodyfat(text) {
-    const uid = firebase.auth().currentUser.uid;
+  async _onChangeBodyfat(text) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     clientWeightRef.update({ bodyfat: Number(text) });
   }
 
-  _onChangeBirthdate(text) {
-    const uid = firebase.auth().currentUser.uid;
+  async _onChangeBirthdate(text) {
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     clientWeightRef.update({
       birthdate: format(text, 'YYYY-MM-DD'),
       age: getAge(text)
     });
+  }
+
+  async logout() {
+    const { navigate } = this.props.navigation;
+    await AuthService.logout();
+    navigate('Login');
   }
 
   closeModal() {
@@ -1517,8 +1578,6 @@ export default class LoginScreen extends React.Component {
       this.state.meal3measurementsCompleted < 4 &&
       this.state.meal4measurementsCompleted < 4;
 
-      console.log('dayStatusesLoaded', dayStatusesLoaded)
-
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {!this.state.showTemplatePicker &&
@@ -1545,7 +1604,9 @@ export default class LoginScreen extends React.Component {
             onChangeBodyweight={this._onChangeBodyweight}
             onChangeHeight={this._onChangeHeight}
             onChangeBodyfat={this._onChangeBodyfat}
-            onChangeBirthdate={this._onChangeBirthdate} />}
+            onChangeBirthdate={this._onChangeBirthdate}
+            logout={() => this.logout()}
+            />}
 
             {(this.state.phase === null) &&
               <Text style={styles.loadingText}>adapt & thrive</Text>}
