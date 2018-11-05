@@ -26,9 +26,6 @@ import Styles from '../constants/Styles';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
-// onPressIn, onPressOut, and onMove from
-// https://github.com/FormidableLabs/victory-native/issues/25
-
 class BodyweightGraph extends React.Component {
    constructor(props) {
     super(props);
@@ -38,24 +35,6 @@ class BodyweightGraph extends React.Component {
       showAllData: false,
       showConfirmDeleteEntry: false
     }
-   }
-
-   clickDataPoint(value, x, y, index, dates) {
-     // alert(index)
-     this.setState({
-       showTooltip: true,
-       tooltipWeight: value,
-       tooltipDate: dates[index],
-       tooltipX: x(index),
-       tooltipY: y(index)
-     });
-   }
-
-   clickShowAllData() {
-     this.setState({
-       showAllData: !this.state.showAllData,
-       showTooltip: false
-     });
    }
 
    confirmDeleteEntry(weight, date) {
@@ -119,8 +98,6 @@ class BodyweightGraph extends React.Component {
      }
      sortedData = sortedData.reverse();
 
-     // console.log('sortedData', sortedData);
-
       return (
         <View>
         {this.state.showTooltip &&
@@ -147,31 +124,6 @@ class BodyweightGraph extends React.Component {
                 this.scrollView.scrollToEnd({animated: true});
             }}
             >
-            {/*<LineChart
-              style={{ width: (this.state.showAllData ? weights.length*10 : '100%'), minWidth: '100%', height: 200 }}
-              data={weights}
-              svg={{
-                stroke: Colors.paleGreen,
-                strokeWidth: 3,
-              }}
-              contentInset={{ top: 20, bottom: 20 }}
-              curve={shape.curveLinear}
-              showGrid={false}
-              renderDecorator={({ x, y, index, value }) => (
-                <G
-                  onResponderMove={this.onMove}
-                  onPressIn={this.onPressIn}
-                  onPressOut={this.onPressOut.bind(this, index)}
-                  onPress={() => {this.clickDataPoint(value, x, y, index, dates)}} key={index}>
-                  <Circle
-                    cx={x(index)}
-                    cy={y(value)}
-                    r={this.state.showAllData ? 10 : 0}
-                    fill={Colors.paleGreen}
-                  />
-                </G>
-              )}
-            />*/}
             {sortedData && sortedData.map((rec, i) =>
               <View style={styles.bodyweightLogWrapper} key={i}>
                 <Text>{rec.weight}</Text>
@@ -212,11 +164,6 @@ class BodyweightGraph extends React.Component {
                 <Text style={Styles.buttonText}>Yes</Text>
               </TouchableHighlight>
             </ScrollView>}
-
-          {/*{this.props.data &&
-            <TouchableHighlight style={Styles.button} onPress={() => { this.clickShowAllData(); }}>
-              <Text style={Styles.buttonText}>{this.state.showAllData ? 'Zoom out' : 'Zoom in'}</Text>
-            </TouchableHighlight>} */}
         </View>
       );
    }

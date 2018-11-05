@@ -367,15 +367,13 @@ export default class LoginScreen extends React.Component {
       });
       sortedBodyweightRecords = sortedBodyweightRecords.reverse();
 
-      // console.log('records', recordsArr);
-
       // set initial weight
       initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
 
       // get date from 1 week ago
       let oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
+      oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
 
       // find entries within past week
       // let pastWeekEntries = [];
@@ -384,8 +382,6 @@ export default class LoginScreen extends React.Component {
           pastWeekEntries.push(rec);
         }
       });
-
-      console.log('pastWeekEntries', pastWeekEntries)
 
       if(pastWeekEntries.length) {
         sevenDayAverage = (
