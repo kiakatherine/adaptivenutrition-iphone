@@ -22,6 +22,9 @@
           "reservedClientId": "com.googleusercontent.apps.665936865751-vlq2i4bcek37mkhb38h8tm0958iu3crp"
         }
       },
+      "facebookScheme": "fb424797598049653",
+      "facebookDisplayName": "AdaptiveNutrition",
+      "facebookAppId": "424797598049653",
       "supportsTablet": true
     }
   }
