@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+  Alert
+} from 'react-native'
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 import moment from 'moment';
@@ -56,10 +59,32 @@ export default class CreateAccountScreen extends React.Component {
     // phase, templateType (as number), latestBodyweight, weightPoints, mealPoints, socialPoints, quizPoints, totalPoints, leanMass
 
     const { navigate } = this.props.navigation;
-    await AuthService.signUp(this.state.email, this.state.password);
-    const authenticated = await AuthService.isSignedIn();
-    if (authenticated) navigate('Authenticated');
-    else this.setState({ unauthorized: true });
+    let data = await AuthService.signUp(this.state.email, this.state.password);
+    if(data) {
+      if(data.success) {
+        const authenticated = await AuthService.isSignedIn();
+        if (authenticated) navigate('Authenticated');
+        else this.setState({ unauthorized: true });
+      }else{
+        this.showAlert(data.data)
+      }
+    }    
+    
+  }
+
+  indexChanged(idx) {
+    
+  }
+
+  showAlert(msg) {
+    Alert.alert(
+      'Warning!',
+      msg,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      { cancelable: false }
+    )
   }
 
   render() {

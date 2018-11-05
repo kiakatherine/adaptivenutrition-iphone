@@ -6,8 +6,9 @@ export default {
     backgroundColor: Colors.white
   },
   title: {
-    paddingTop: 10,
-    backgroundColor: Colors.primaryColor
+    paddingTop: 20,
+    backgroundColor: Colors.primaryColor,
+    alignItems: 'center'
   },
   titleText: {
     color: "#FFFFFF",

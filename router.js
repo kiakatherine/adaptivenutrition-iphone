@@ -2,6 +2,7 @@ import React from 'react';
 
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
+// import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import CreateAccountScreen from './screens/CreateAccountScreen';
@@ -34,9 +35,9 @@ export const AuthenticatedScreen = TabNavigator(
     Help: {
       screen: HelpScreen
     },
-    Logout: {
-      screen: LogoutScreen
-    }
+    // Logout: {
+    //   screen: LogoutScreen
+    // }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -47,9 +48,10 @@ export const AuthenticatedScreen = TabNavigator(
           return (
             <Ionicons
               name={`ios-checkmark${focused ? '' : '-outline'}`}
-              size={48}
+              size={28}
               style={{ marginBottom: -3 }}
-              color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+              // color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+              color='green'
             />
           )
         }

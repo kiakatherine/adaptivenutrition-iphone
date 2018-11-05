@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { AsyncStorage } from 'react-native';
 import firebase from '../../services/FirebaseService';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
@@ -48,7 +48,8 @@ export default class LoginScreen extends React.Component {
       showProgressReports: false,
       weeklyView: true,
       monthlyView: false,
-      yearlyView: false
+      yearlyView: false,
+      clientId: null
     }
 
     this._hideAll = this._hideAll.bind(this);
@@ -58,13 +59,14 @@ export default class LoginScreen extends React.Component {
     this._closeModal = this._closeModal.bind(this);
   }
 
-  componentDidMount() {
+  async getClientData() {
     // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
     // const dayStatuses = firebase.database().ref('dayStatuses');
     // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
     let clientResponse = null;
-
-    const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
     const weightsRef = firebase.database().ref('/client/' + clientId + '/weights');
 
@@ -78,11 +80,11 @@ export default class LoginScreen extends React.Component {
 
       if(clientResponse) {
         this.setState({
-          weight: clientResponse.latestBodyweight ? clientResponse.latestBodyweight : clientResponse.weight
+          weight: clientResponse.latestBodyweight ? clientResponse.latestBodyweight : clientResponse.weight,
+          clientId: clientId
         });
       }
     });
-
     // dayStatuses.on('value', snapshot => {
     //   const date = new Date();
     //   const dayStatuses = snapshot.val();
@@ -122,15 +124,25 @@ export default class LoginScreen extends React.Component {
     // });
   }
 
+  componentDidMount() {
+    
+
+    this.getClientData()
+
+  }
+
   _hideAll () {
     Keyboard.dismiss();
     this.setState({ showDatepicker: false });
   }
 
-  _submitWeight() {
+  async _submitWeight() {
     const date = new Date(this.state.date);
     const weight = this.state.weight;
-    const uid = firebase.auth().currentUser.uid;
+    // const uid = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const uid = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + uid);
     let client;
 
@@ -220,8 +232,11 @@ export default class LoginScreen extends React.Component {
     //   }
   }
 
-  undoWeight() {
-    const clientId = firebase.auth().currentUser.uid;
+  async undoWeight() {
+    // const clientId = firebase.auth().currentUser.uid;
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
     const weightRef = firebase.database().ref('/weights/' + this.state.latestRecordKey);
     const clientWeightRef = firebase.database().ref('/client/' + clientId + '/weights/' + this.state.latestRecordKey);
 
@@ -264,7 +279,7 @@ export default class LoginScreen extends React.Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation;
+    const { navigate } = this.props.navigation;   
     // const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
     // const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
     // const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
@@ -302,66 +317,64 @@ export default class LoginScreen extends React.Component {
     //     dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
     //   }
     // }
-
-    // seven day bodyweight average, initial weight
-    let sevenDayAverage, initialWeight, pastWeekEntries = [];
-    // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
-    const clientId = firebase.auth().currentUser.uid;
-    const weights = firebase.database().ref('/client/' + clientId + '/weights');
+    // seven day bodyweight average, initial weight 
+    let sevenDayAverage, initialWeight, pastWeekEntries = []; 
+    // const bodyweightRecords = firebase.database().ref('bodyweightRecords'); 
+    const weights = firebase.database().ref('/client/' + this.state.clientId + '/weights');
 
     if(weights) {
-    weights.once('value', snapshot => {
-      const records = snapshot.val();
-      let weight, recordsArr = [];
+      weights.once('value', snapshot => {
+        const records = snapshot.val();
+        let weight, recordsArr = [];
 
-      // get client's bodyweight records
-      // do this on server side
-      if(records) {
-        Object.keys(records).map(key => {
-          recordsArr.push(records[key]);
+        // get client's bodyweight records
+        // do this on server side
+        if(records) {
+          Object.keys(records).map(key => {
+            recordsArr.push(records[key]);
+          });
+        }
+
+        // sort records by date
+        // TO DO: fix sorting
+        let sortedBodyweightRecords = recordsArr.sort((a,b) => {
+          return new Date(a.date) - new Date(b.date);
         });
-      }
+        sortedBodyweightRecords = sortedBodyweightRecords.reverse();
 
-      // sort records by date
-      // TO DO: fix sorting
-      let sortedBodyweightRecords = recordsArr.sort((a,b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
-      sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+        // console.log('records', recordsArr);
 
-      // console.log('records', recordsArr);
+        // set initial weight
+        initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
 
-      // set initial weight
-      initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
+        // get date from 1 week ago
+        let oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
 
-      // get date from 1 week ago
-      let oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      oneWeekAgo = moment(oneWeekAgo).format('MM-DD-YY');
+        // find entries within past week
+        // let pastWeekEntries = [];
+        sortedBodyweightRecords.forEach(rec => {
+          if(rec.date > oneWeekAgo) {
+            pastWeekEntries.push(rec);
+          }
+        });
 
-      // find entries within past week
-      // let pastWeekEntries = [];
-      sortedBodyweightRecords.forEach(rec => {
-        if(rec.date > oneWeekAgo) {
-          pastWeekEntries.push(rec);
+        if(pastWeekEntries.length) {
+          sevenDayAverage = (
+            (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
+            (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
+            (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
+            (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
+            (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
+            (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
+            (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
+          sevenDayAverage = sevenDayAverage.toFixed(1);
+        } else {
+          sevenDayAverage = '---';
         }
       });
-
-      if(pastWeekEntries.length) {
-        sevenDayAverage = (
-          (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
-          (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
-          (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
-          (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
-          (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
-          (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
-          (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
-        sevenDayAverage = sevenDayAverage.toFixed(1);
-      } else {
-        sevenDayAverage = '---';
-      }
-    });
-  }
+    }
 
     return (
       <View style={Styles.body}>
