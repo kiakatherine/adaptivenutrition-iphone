@@ -138,7 +138,7 @@ class ModalWindow extends React.Component {
               <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
                 <View style={styles.header}>
                   <TouchableHighlight
-                    style={styles.closeButton}
+                    style={[styles.closeButton, Styles.textCenter]}
                     underlayColor={Colors.white}
                     onPress={()=>this.props.closeModal('')}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
@@ -148,12 +148,14 @@ class ModalWindow extends React.Component {
                       />
                     </Text>
                   </TouchableHighlight>
-                  <TouchableHighlight
+
+                  {(this.props.currentModal === 'USER') && <TouchableHighlight
                     style={styles.logoutButton}
                     underlayColor={Colors.white}
                     onPress={()=> {this.setState({isLogout: true})}}>
                     <Text style={{ fontSize: 24, fontWeight: '500' }}>Logout</Text>
-                  </TouchableHighlight>
+                  </TouchableHighlight>}
+
                 </View>
                  {modal}
                </View>
@@ -197,10 +199,7 @@ const styles = StyleSheet.create ({
      paddingRight: 0
    },
    closeButton: {
-    //  padding: 20
-    width: '50%',
-    paddingTop: 20,
-    alignItems: 'flex-end'
+    paddingTop: 20
    },
    logoutButton: {
     width: '50%',

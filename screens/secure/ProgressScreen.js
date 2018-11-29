@@ -7,6 +7,7 @@ import Colors from '../../constants/Colors';
 import Styles from '../../constants/Styles';
 
 import Header from '../../components/Header';
+import Alert from '../../components/Alert';
 import moment from 'moment';
 
 const MessageBarAlert = require('react-native-message-bar').MessageBar;
@@ -49,6 +50,7 @@ export default class LoginScreen extends React.Component {
       showProgressPhase3: true,
       showBodyweightLog: true,
       showProgressReports: false,
+      showAlertWeightAdded: false,
       weeklyView: true,
       monthlyView: false,
       yearlyView: false,
@@ -60,6 +62,7 @@ export default class LoginScreen extends React.Component {
     this._updateWeight = this._updateWeight.bind(this);
     this._setDate = this._setDate.bind(this);
     this._closeModal = this._closeModal.bind(this);
+    this._closeAlert = this._closeAlert.bind(this);
   }
 
   async getClientData() {
@@ -76,7 +79,6 @@ export default class LoginScreen extends React.Component {
 
     weightsRef.on('value', snapshot => {
       this.setState({ bodyweightData: snapshot.val() });
-      console.log('weight data', snapshot.val())
     });
 
     clientRef.on('value', snapshot => {
@@ -155,10 +157,7 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount() {
-
-
     this.getClientData()
-
   }
 
   _hideAll () {
@@ -172,7 +171,7 @@ export default class LoginScreen extends React.Component {
     // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
-    const clientId = currentUser.uid
+    const clientId = currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + clientId);
     let client;
 
@@ -185,6 +184,7 @@ export default class LoginScreen extends React.Component {
 
     const bodyweightRecord = {
       date: date,
+      timestamp: Date.parse(date),
       weight: Number(weight),
       clientId: clientId
     };
@@ -198,36 +198,33 @@ export default class LoginScreen extends React.Component {
     updates['/weights/' + newRecordKey] = bodyweightRecord;
     updates['/clients/' + clientId + '/weights/' + newRecordKey] = bodyweightRecord;
 
-
+    // save
     firebase.database().ref().update(updates, (error) => {
       // TO DO: these aren't firing
       if(error) {
         alert('failed');
       } else {
-        this.setState({ showAddBodyweight: false });
-        MessageBarManager.showAlert({
-          message: 'Successfully added',
-          alertType: 'success',
-          // See Properties section for full customization
-          // Or check `index.ios.js` or `index.android.js` for a complete example
+        this.setState({
+          showAddBodyweight: false,
+          showAlertWeightAdded: true
         });
       }
     });
 
     // save points to client
-    firebase.database().ref('/clients/' + clientId).update({
+    // not working
+    clientRef.update({
       weightPoints: Number(client.weightPoints) + 1,
       totalPoints: Number(client.totalPoints) + 1,
       latestBodyweight: Number(weight)
     }, (error) => {
+      console.log('whoa')
       if(error) {
         alert('failed');
       } else {
         alert('success!');
       }
     });
-
-    // TO DO: save points to team
 
     this.setState({
       showAddBodyweight: false,
@@ -309,9 +306,15 @@ export default class LoginScreen extends React.Component {
 
   _updateWeight(weight, direction) {
     if(direction === 'decrease') {
-      this.setState({ weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight });
+      this.setState({
+        weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight,
+        showAddBodyweight: false
+      });
     } else {
-      this.setState({ weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight });
+      this.setState({
+        weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight,
+        showAddBodyweight: false
+      });
     }
   }
 
@@ -321,6 +324,10 @@ export default class LoginScreen extends React.Component {
 
   _closeModal() {
     this.setState({ showAddBodyweight: false });
+  }
+
+  _closeAlert() {
+    this.setState({ showAlertWeightAdded: false });
   }
 
   render() {
@@ -367,7 +374,7 @@ export default class LoginScreen extends React.Component {
     let sevenDayAverage, initialWeight, pastWeekEntries = [];
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientId = firebase.auth().currentUser.uid;
-    const weights = firebase.database().ref('/clients/' + clientId + '/weights');
+    const weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByChild('timestamp');
     let records;
 
     if(weights) {
@@ -375,8 +382,6 @@ export default class LoginScreen extends React.Component {
         records = snapshot.val();
         let weight, recordsArr = [];
 
-        // get client's bodyweight records
-        // do this on server side
         if(records) {
           Object.keys(records).map(key => {
             recordsArr.push(records[key]);
@@ -389,8 +394,6 @@ export default class LoginScreen extends React.Component {
           return new Date(a.date) - new Date(b.date);
         });
         sortedBodyweightRecords = sortedBodyweightRecords.reverse();
-
-        // console.log('records', recordsArr);
 
       // set initial weight
       initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
@@ -418,7 +421,13 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <ScrollView style={Styles.content}>
+        {this.state.showAlertWeightAdded &&
+          <Alert
+            type="success"
+            message="Added!"
+            closeAlert={this._closeAlert} />}
+
+        {!this.state.showAlertWeightAdded && <ScrollView style={Styles.content}>
           <View>
             <View style={Styles.flexRow}>
               <TouchableHighlight
@@ -461,20 +470,20 @@ export default class LoginScreen extends React.Component {
                     </TouchableHighlight>
                   </View>
 
-                    {this.state.latestRecordKey &&
-                      <View style={Styles.flexCol}>
-                        <TouchableHighlight
-                          underlayColor={Colors.darkerPrimaryColor}
-                          style={[Styles.buttonCircular, styles.undoButton, Styles.flexCol]}
-                          onPress={() => { this.undoWeight() }}>
-                          <Text style={Styles.buttonCircularIcon}>
-                            <FontAwesome
-                              name='undo'
-                              size={16}
-                            />
-                          </Text>
-                        </TouchableHighlight>
-                    </View>}
+                  {this.state.latestRecordKey &&
+                    <View style={Styles.flexCol}>
+                      <TouchableHighlight
+                        underlayColor={Colors.darkerPrimaryColor}
+                        style={[Styles.buttonCircular, styles.undoButton, Styles.flexCol]}
+                        onPress={() => { this.undoWeight() }}>
+                        <Text style={Styles.buttonCircularIcon}>
+                          <FontAwesome
+                            name='undo'
+                            size={16}
+                          />
+                        </Text>
+                      </TouchableHighlight>
+                  </View>}
                 </View>
 
                 {records && <View style={[Styles.flexRow, styles.pillButtons]}>
@@ -501,7 +510,8 @@ export default class LoginScreen extends React.Component {
                 </View>}
 
                 <BodyweightGraph
-                  data={this.state.bodyweightData} />
+                  data={this.state.bodyweightData}
+                  closeModal={this._closeModal} />
               </View>}
 
             {this.state.showProgressReports &&
@@ -549,7 +559,7 @@ export default class LoginScreen extends React.Component {
                 </View>
               </View>}
           </View>
-        </ScrollView>
+        </ScrollView>}
 
         {this.state.showAddBodyweight &&
           <ModalWindow
@@ -561,7 +571,6 @@ export default class LoginScreen extends React.Component {
             submitWeight={this._submitWeight}
             closeModal={this._closeModal} />}
 
-        <MessageBarAlert ref="alert" />
       </View>
     );
   }

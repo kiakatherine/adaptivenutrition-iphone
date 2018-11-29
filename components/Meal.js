@@ -89,8 +89,6 @@ class Meal extends React.Component {
        time = this.props.dinnerTime;
      }
 
-     console.log('this.props.trainingIntensity', this.props.trainingIntensity)
-
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>

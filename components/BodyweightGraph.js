@@ -76,7 +76,6 @@ class BodyweightGraph extends React.Component {
          alert('failed');
        } else {
          // alert('success!');
-         this.props.closeModal();
          this.setState({
            showTooltip: false,
            showConfirmDeleteEntry: false,
@@ -149,7 +148,7 @@ class BodyweightGraph extends React.Component {
             </View>}
 
           {this.state.showConfirmDeleteEntry &&
-            <ScrollView style={Styles.tooltip}>
+            <View style={[Styles.tooltip, {height: '100%'}]}>
               <TouchableHighlight
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showConfirmDeleteEntry: false }) }}>
@@ -166,7 +165,7 @@ class BodyweightGraph extends React.Component {
                 onPress={() => { this.clickDeleteDataPoint() }}>
                 <Text style={Styles.buttonText}>Yes</Text>
               </TouchableHighlight>
-            </ScrollView>}
+            </View>}
         </View>
       );
    }
