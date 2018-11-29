@@ -22,12 +22,10 @@ import Styles from '../constants/Styles';
 
 import * as quizzes from '../constants/Quizzes';
 
-class Lesson extends React.Component {
+class LessonDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showLessonDetail: false
-    };
+    this.state = { };
   }
 
   render() {
@@ -49,31 +47,55 @@ class Lesson extends React.Component {
      }
 
     return (
-       <TouchableHighlight
-        style={[styles.lessonWrapper, isCompleted ? styles.completed : null]}
-        onPress={() => this.props.showLessonDetail(true, lessonNumber)}>
+       <View style={styles.wrapper}>
 
-       <View>
-         {isCompleted &&
-          <Text style={[Styles.textCenter, styles.checkmark]}>
-            <FontAwesome
-              name='check'
-              size={48} />
-          </Text>}
+       {isCompleted &&
+        <Text style={[Styles.textCenter, styles.checkmark]}>
+          <FontAwesome
+            name='check'
+            size={48} />
+        </Text>}
 
-          <Text style={[styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
+        <TouchableHighlight
+          underlayColor={Colors.white}
+          onPress={() => this.props.showLessonDetail(false, lessonNumber)}>
+          <FontAwesome
+            name='arrow-left'
+            size={24} />
+        </TouchableHighlight>
+
+        <Text style={[styles.lessonNumber, Styles.textCenter, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
+
+        <View style={styles.lessonButtons}>
+          <TouchableHighlight
+            style={[Styles.button, isCompleted ? Styles.buttonInverted : null, styles.viewLessonButton]}
+            underlayColor={Colors.white}
+            onPress={() => Linking.openURL('http://adaptivenutrition.us/lesson' + this.props.lessonNumber)}>
+            <Text style={[Styles.buttonText, styles.lessonText, isCompleted ? styles.lessonTextCompleted : null, isCompleted ? Styles.buttonInvertedText : null]}>View lesson</Text>
+          </TouchableHighlight>
+
+           <TouchableHighlight
+             style={[Styles.button, isCompleted ? Styles.buttonInverted : null, ]}
+             underlayColor={Colors.white}
+             onPress={() => { this.props.clickTakeQuiz(lessonNumber, this.props.timestamp) }}>
+             <Text style={[Styles.buttonText, styles.lessonText, isCompleted ? styles.lessonTextCompleted : null, isCompleted ? Styles.buttonInvertedText : null]}>Take quiz</Text>
+           </TouchableHighlight>
         </View>
-       </TouchableHighlight>
+       </View>
      );
    }
 }
 
-export default Lesson;
+export default LessonDetail;
 
-Lesson.propTypes = {
+LessonDetail.propTypes = {
 };
 
 const styles = StyleSheet.create ({
+  wrapper: {
+    height: '100%',
+    padding: 20
+  },
   completed: {
     backgroundColor: Colors.primaryColor
   },

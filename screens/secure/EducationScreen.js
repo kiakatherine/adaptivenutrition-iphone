@@ -10,6 +10,7 @@ import Styles from '../../constants/Styles';
 
 import Header from '../../components/Header';
 import Lesson from '../../components/Lesson';
+import LessonDetail from '../../components/LessonDetail';
 import LessonQuiz from '../../components/LessonQuiz';
 
 import {
@@ -50,6 +51,7 @@ export default class LoginScreen extends React.Component {
 
     this._clickTakeQuiz = this._clickTakeQuiz.bind(this);
     this._selectAnswer = this._selectAnswer.bind(this);
+    this._showLessonDetail = this._showLessonDetail.bind(this);
     this._checkQuizAnswers = this._checkQuizAnswers.bind(this);
     this._closeQuiz = this._closeQuiz.bind(this);
   }
@@ -72,6 +74,7 @@ export default class LoginScreen extends React.Component {
 
   _clickTakeQuiz(lessonNumber, timestamp) {
     this.setState({
+      showLessonDetail: false,
       showQuiz: true,
       selectedLessonNumber: lessonNumber
     });
@@ -84,6 +87,10 @@ export default class LoginScreen extends React.Component {
       [q]: isCorrect,
       [s]: index
     });
+  }
+
+  _showLessonDetail(val, lessonNumber) {
+    this.setState({ showLessonDetail: val, selectedLesson: lessonNumber });
   }
 
   async _checkQuizAnswers() {
@@ -132,12 +139,12 @@ export default class LoginScreen extends React.Component {
   }
 
   _closeQuiz() {
-    this.setState({ showQuiz: false });
+    this.setState({ showQuiz: false, showLessonDetail: true });
   }
 
   render() {
     const client = this.state.client;
-    const lessons = [1,2,3,4,5,6,7,8];
+    const lessons = [1,2,3,4,5,6,7,8,9,10,11];
 
     return (
       <View style={[Styles.body, styles.body]}>
@@ -159,9 +166,17 @@ export default class LoginScreen extends React.Component {
               quiz9={client ? client.quiz9 : false}
               quiz10={client ? client.quiz1 : false}
               clickTakeQuiz={this._clickTakeQuiz}
+              showLessonDetail={this._showLessonDetail}
               timestamp={this.state.client ? this.state.client : null} />)}
             </View>
         </ScrollView>}
+
+        {this.state.showLessonDetail &&
+          <LessonDetail
+            lessonNumber={this.state.selectedLesson}
+            timestamp={this.props.timestamp}
+            showLessonDetail={this._showLessonDetail}
+            clickTakeQuiz={this._clickTakeQuiz} />}
 
         {this.state.showQuiz &&
           <LessonQuiz

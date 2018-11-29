@@ -349,5 +349,14 @@ export const quizzes = {
         ]
       }
     ]
+  },
+  "lesson9": {
+    "name": "Progress Beyond Bodyweight"
+  },
+  "lesson10": {
+    "name": "Fighting Food Boredom"
+  },
+  "lesson11": {
+    "name": "How to Reintroduce Foods"
   }
 };
