@@ -1,6 +1,7 @@
 export const quizzes = {
   "lesson1": {
     "name": "Week 1 Habit Building",
+    "description": "Begin by learning the fundamentals of personal nutrition: what, when, and how much to eat. Let's get started!",
     "questions": [
       {
         "question": "If I ate lunch at noon, my next meal should be at…",

@@ -31,6 +31,7 @@ class LessonDetail extends React.Component {
   render() {
     const lessonNumber = this.props.lessonNumber;
     let lessonName = quizzes.quizzes['lesson' + lessonNumber].name;
+    let lessonDescription = quizzes.quizzes['lesson' + lessonNumber].description;
     let isCompleted = false;
 
     if((lessonNumber === 1 && this.props.quiz1) ||
@@ -42,7 +43,8 @@ class LessonDetail extends React.Component {
      (lessonNumber === 7 && this.props.quiz7) ||
      (lessonNumber === 8 && this.props.quiz8) ||
      (lessonNumber === 9 && this.props.quiz9) ||
-     (lessonNumber === 10 && this.props.quiz10)) {
+     (lessonNumber === 10 && this.props.quiz10) ||
+     (lessonNumber === 11 && this.props.quiz11)) {
        isCompleted = true;
      }
 
@@ -64,7 +66,9 @@ class LessonDetail extends React.Component {
             size={24} />
         </TouchableHighlight>
 
-        <Text style={[styles.lessonNumber, Styles.textCenter, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
+        <Text style={[styles.lessonNumber, Styles.textCenter, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonName}</Text>
+
+        <Text style={[Styles.paragraphText, Styles.textCenter, {marginTop: 25}]}>{lessonDescription}</Text>
 
         <View style={styles.lessonButtons}>
           <TouchableHighlight
@@ -89,15 +93,16 @@ class LessonDetail extends React.Component {
 export default LessonDetail;
 
 LessonDetail.propTypes = {
+  lessonNumber: PropTypes.number,
+  timestamp: PropTypes.number,
+  showLessonDetail: PropTypes.func,
+  clickTakeQuiz: PropTypes.func
 };
 
 const styles = StyleSheet.create ({
   wrapper: {
     height: '100%',
-    padding: 20
-  },
-  completed: {
-    backgroundColor: Colors.primaryColor
+    padding: 40
   },
   lessonNumberCompleted: {
     color: Colors.white
@@ -124,11 +129,8 @@ const styles = StyleSheet.create ({
   lessonNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.black,
+    // marginTop: -25,
     marginBottom: 10
-  },
-  lessonButtons: {
-    marginTop: 15
   },
   viewLessonButton: {
     marginBottom: 10

@@ -35,7 +35,7 @@ export default class LoginScreen extends React.Component {
     this.state = {
       client: null,
       showQuiz: false,
-      selectedLessonNumber: 1,
+      selectedLessonNumber: '1',
       question1: false,
       question2: false,
       question3: false,

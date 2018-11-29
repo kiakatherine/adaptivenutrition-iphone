@@ -49,12 +49,13 @@ class Lesson extends React.Component {
      }
 
     return (
-       <TouchableHighlight
+      <TouchableHighlight
+        underlayColor={Colors.lightGray}
         style={[styles.lessonWrapper, isCompleted ? styles.completed : null]}
         onPress={() => this.props.showLessonDetail(true, lessonNumber)}>
 
        <View style={Styles.flexRow}>
-          <Text style={[Styles.flexCol, styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
+          <Text style={[Styles.flexCol, styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonName}</Text>
 
           {isCompleted &&
            <Text style={styles.checkmark}>
@@ -71,6 +72,21 @@ class Lesson extends React.Component {
 export default Lesson;
 
 Lesson.propTypes = {
+  lessonNumber: PropTypes.number,
+  quiz1: PropTypes.bool,
+  quiz2: PropTypes.bool,
+  quiz3: PropTypes.bool,
+  quiz4: PropTypes.bool,
+  quiz5: PropTypes.bool,
+  quiz6: PropTypes.bool,
+  quiz7: PropTypes.bool,
+  quiz8: PropTypes.bool,
+  quiz9: PropTypes.bool,
+  quiz10: PropTypes.bool,
+  quiz11: PropTypes.bool,
+  clickTakeQuiz: PropTypes.func,
+  showLessonDetail: PropTypes.func,
+  timestamp: PropTypes.object
 };
 
 const styles = StyleSheet.create ({
