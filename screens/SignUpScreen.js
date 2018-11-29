@@ -17,9 +17,9 @@ import {
   View
 } from 'react-native';
 
-export default class LoginScreen extends React.Component {
+export default class SignUpScreen extends React.Component {
   static navigationOptions = {
-    title: 'Login',
+    title: 'Sign Up',
   };
 
   constructor(props) {
@@ -73,7 +73,7 @@ export default class LoginScreen extends React.Component {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.body}>
           <View style={styles.title}>
-            <Text style={[Styles.bigTitle, styles.welcomeText]}>Welcome back!</Text>
+            <Text style={[Styles.bigTitle, styles.welcomeText]}>Sign up</Text>
           </View>
           <View style={styles.content}>
             {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
@@ -98,22 +98,22 @@ export default class LoginScreen extends React.Component {
               style={[Styles.button, {marginTop: 10}]}
               underlayColor={Colors.white}
               onPress={() => (!this.state.email.trim() || !this.state.password.trim()) ? this.login : null}>
-              <Text style={Styles.buttonText}>LOG IN</Text>
+              <Text style={Styles.buttonText}>SIGN UP</Text>
             </TouchableHighlight>
 
             <Text style={styles.orText}>OR</Text>
 
             <TouchableHighlight
-              style={[Styles.button, Styles.buttonInverted]}
+              style={[Styles.button, Styles.buttonInverted, {marginTop: 10}]}
               underlayColor={Colors.white}
               onPress={() => this.loginWithFacebook(navigate)}>
-              <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>LOG IN WITH FACEBOOK</Text>
+              <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>SIGN UP WITH FACEBOOK</Text>
             </TouchableHighlight>
             <TouchableHighlight
               style={[Styles.button, Styles.buttonInverted, {marginTop: 10}]}
               underlayColor={Colors.white}
               onPress={() => this.loginWithGoogle(navigate)}>
-              <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>LOG IN WITH GOOGLE</Text>
+              <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>SIGN UP WITH GOOGLE</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -140,6 +140,15 @@ const styles = StyleSheet.create({
   welcomeText: {
     marginBottom: 20
   },
+  // company: {
+  //   color: Colors.primaryColor,
+  //   fontFamily: 'Futura',
+  //   fontWeight: '700',
+  //   fontSize: 28,
+  //   textAlign: 'center',
+  //   marginTop: 15,
+  //   marginBottom: 30
+  // },
   content: {
     flex: 1
   },

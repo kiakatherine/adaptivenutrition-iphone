@@ -54,7 +54,7 @@ class ModalWindow extends React.Component {
   async closeLogoutModal() {
     this.setState({isLogout: false}, ()=> {
       // await AuthService.logout();
-      // navigate('Login');
+      navigate('Welcome');
       setTimeout(() => {
         this.props.closeModal('logout')
       })

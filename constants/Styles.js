@@ -108,7 +108,7 @@ export default {
     marginBottom: 20
   },
   button: {
-    padding: 12,
+    padding: 20,
     borderRadius: 100,
     backgroundColor: Colors.primaryColor
   },

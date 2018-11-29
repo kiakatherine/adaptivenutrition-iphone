@@ -107,8 +107,8 @@ export default class LoginScreen extends React.Component {
 
   async getClientData() {
     let userData = await AsyncStorage.getItem("user")
-    let currentUser = JSON.parse(userData)
-    const uid = currentUser.uid
+    let currentUser = JSON.parse(userData);
+    const uid = currentUser.uid;
     const clientWeightRef = firebase.database().ref('/clients/' + uid);
     const dayStatuses = firebase.database().ref('/clients/' + uid + '/day-statuses');
     // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
@@ -230,6 +230,7 @@ export default class LoginScreen extends React.Component {
     //   }
     // });
   }
+
   componentDidMount() {
     // Register the alert located on this master page
     // This MessageBar will be accessible from the current (same) component, and from its child component
@@ -237,9 +238,12 @@ export default class LoginScreen extends React.Component {
     MessageBarManager.registerMessageBar(this.refs.alert);
 
     // const uid = firebase.auth().currentUser.uid;
-    this.getClientData()
-
-
+    this.getClientData().then((resp) => {
+      console.log('RESP', resp);
+      if(resp && !resp.firstName) {
+        navigate('CreateAccount');
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -376,7 +380,8 @@ export default class LoginScreen extends React.Component {
     let hasBodyweightEntries = false;
     const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const client = this.state.client;
-    const clientRef = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
+    const clientId = currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
 
     bodyweightRecords.once('value', snapshot => {
       const records = snapshot.val();

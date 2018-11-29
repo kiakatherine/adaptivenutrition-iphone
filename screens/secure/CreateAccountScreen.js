@@ -2,11 +2,11 @@ import React from 'react';
 import {
   Alert
 } from 'react-native'
-import Colors from '../constants/Colors';
-import Styles from '../constants/Styles';
+import Colors from '../../constants/Colors';
+import Styles from '../../constants/Styles';
 import moment from 'moment';
 
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
@@ -69,7 +69,7 @@ export default class CreateAccountScreen extends React.Component {
         this.showAlert(data.data)
       }
     }
-    
+
   }
 
   indexChanged(idx) {

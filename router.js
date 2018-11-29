@@ -4,10 +4,12 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 // import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
+import WelcomeScreen from './screens/WelcomeScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
-import CreateAccountScreen from './screens/CreateAccountScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
+import CreateAccountScreen from './screens/secure/CreateAccountScreen';
 import ProgressScreen from './screens/secure/ProgressScreen';
 import NutritionScreen from './screens/secure/NutritionScreen';
 import HelpScreen from './screens/secure/HelpScreen';
@@ -23,15 +25,11 @@ export const AuthenticatedScreen = TabNavigator(
       screen: NutritionScreen
     },
     Progress: {
-      screen: ProgressScreen,
-      headerLeft: null
+      screen: ProgressScreen
     },
     Education: {
       screen: EducationScreen
     },
-    // Scoreboard: {
-    //   screen: ScoreboardScreen
-    // },
     Help: {
       screen: HelpScreen
     },
@@ -118,14 +116,23 @@ export const AuthenticatedScreen = TabNavigator(
 export const router = (signedIn = false) => {
   return StackNavigator({
     // Unauthenticated screens
-    Login: {
-      screen: LoginScreen,
+    WelcomeScreen: {
+      screen: WelcomeScreen,
       navigationOptions: {
         headerLeft: null
       }
     },
-    CreateAccount: {
-      screen: CreateAccountScreen
+    SignUpScreen: {
+      screen: SignUpScreen,
+      navigationOptions: {
+        headerLeft: null
+      }
+    },
+    LoginScreen: {
+      screen: LoginScreen,
+      navigationOptions: {
+        headerLeft: null
+      }
     },
     ResetPassword: {
       screen: ResetPasswordScreen
@@ -138,6 +145,6 @@ export const router = (signedIn = false) => {
       }
     }
   }, {
-    initialRouteName: signedIn ? "Authenticated" : "Login"
+    initialRouteName: signedIn ? "Authenticated" : "WelcomeScreen"
   });
 };

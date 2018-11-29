@@ -41,9 +41,11 @@ class AuthService {
   }
 
   async loginWithFacebook() {
+    try {
+
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
       '424797598049653',
-      { permissions: ['public_profile'] }
+      { permissions: ['public_profile', 'email'] }
     );
 
     if (type === 'success') {
@@ -52,10 +54,20 @@ class AuthService {
       firebase.auth().signInWithCredential(credential);
 
       const user = firebase.auth().currentUser;
-      await AsyncStorage.setItem("user", JSON.stringify(user))
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
+      if (user != null) {
+        console.log(user);
+      } else {
+        console.log("not user");
+      }
+
     } else {
 
     }
+  } catch(e) {
+
+  }
   }
 
   async resetPassword (email) {
@@ -72,7 +84,6 @@ class AuthService {
     try {
       await firebase.auth().signOut();
       await AsyncStorage.removeItem("user");
-      // await firebase.auth().signOut();
     } catch (err) {
       console.log(err);
     }
