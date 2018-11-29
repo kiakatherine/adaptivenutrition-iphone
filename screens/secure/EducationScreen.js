@@ -164,7 +164,8 @@ export default class LoginScreen extends React.Component {
               quiz7={client ? client.quiz7 : false}
               quiz8={client ? client.quiz8 : false}
               quiz9={client ? client.quiz9 : false}
-              quiz10={client ? client.quiz1 : false}
+              quiz10={client ? client.quiz10 : false}
+              quiz11={client ? client.quiz11 : false}
               clickTakeQuiz={this._clickTakeQuiz}
               showLessonDetail={this._showLessonDetail}
               timestamp={this.state.client ? this.state.client : null} />)}

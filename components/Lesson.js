@@ -53,15 +53,15 @@ class Lesson extends React.Component {
         style={[styles.lessonWrapper, isCompleted ? styles.completed : null]}
         onPress={() => this.props.showLessonDetail(true, lessonNumber)}>
 
-       <View>
-         {isCompleted &&
-          <Text style={[Styles.textCenter, styles.checkmark]}>
-            <FontAwesome
-              name='check'
-              size={48} />
-          </Text>}
+       <View style={Styles.flexRow}>
+          <Text style={[Styles.flexCol, styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
 
-          <Text style={[styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonNumber} {lessonName}</Text>
+          {isCompleted &&
+           <Text style={styles.checkmark}>
+             <FontAwesome
+               name='check'
+               size={24} />
+           </Text>}
         </View>
        </TouchableHighlight>
      );
@@ -84,26 +84,22 @@ const styles = StyleSheet.create ({
     color: Colors.white
   },
   checkmark: {
-    color: Colors.white,
-    marginBottom: 10
+    color: Colors.white
   },
   lessonWrapper: {
     backgroundColor: Colors.lightGray,
     borderBottomWidth: 2,
     borderColor: Colors.white,
-    paddingTop: 20,
-    paddingBottom: 15,
-    paddingLeft: 40,
-    paddingRight: 40,
-    borderRadius: 100,
+    padding: 25,
+    borderRadius: 10,
     margin: 15,
     marginTop: 0
   },
   lessonNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: Colors.black,
-    marginBottom: 10
+    fontSize: 18,
+    letterSpacing: 1,
+    fontWeight: '500',
+    color: Colors.black
   },
   lessonButtons: {
     marginTop: 15

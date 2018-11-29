@@ -132,7 +132,7 @@ export const quizzes = {
     ]
   },
   "lesson4": {
-    "name": "What Does Sleep Have to Do With It?",
+    "name": "Sleep",
     "questions": [
       {
         "question": "If a client is eating right and exercising but still not seeing results, 9 times out of 10 the issue is:",
@@ -220,7 +220,7 @@ export const quizzes = {
     ]
   },
   "lesson6": {
-    "name": "All About Metabolism",
+    "name": "Metabolism",
     "questions": [
       {
         "question": "If you’re gaining weight on Phase 3, it’s totally normal and means we are repairing your metabolism from undereating prior to the program.",
@@ -264,7 +264,7 @@ export const quizzes = {
     ]
   },
   "lesson7": {
-    "name": "Adjusting Your Meal Plan to Your Goal",
+    "name": "Adjusting for Your Goal",
     "questions": [
       {
         "question": "I know I’m ready to move on to the next step in Phase 3 when:",
@@ -308,7 +308,7 @@ export const quizzes = {
     ]
   },
   "lesson8": {
-    "name": "Supplementation & Refueling from Exercise",
+    "name": "Supplementation",
     "questions": [
       {
         "question": "Finding the right supplements for you is more important than eating anti-inflammatory foods, portion sizes, or meal timing.",
