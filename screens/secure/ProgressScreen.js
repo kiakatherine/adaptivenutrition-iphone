@@ -307,13 +307,11 @@ export default class LoginScreen extends React.Component {
   _updateWeight(weight, direction) {
     if(direction === 'decrease') {
       this.setState({
-        weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight,
-        showAddBodyweight: false
+        weight: (Number(weight) - 0.1).toFixed(1) ? (Number(weight) - 0.1).toFixed(1) : weight
       });
     } else {
       this.setState({
-        weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight,
-        showAddBodyweight: false
+        weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight
       });
     }
   }
@@ -374,7 +372,7 @@ export default class LoginScreen extends React.Component {
     let sevenDayAverage, initialWeight, pastWeekEntries = [];
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientId = firebase.auth().currentUser.uid;
-    const weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByChild('timestamp');
+    const weights = firebase.database().ref('/clients/' + clientId + '/weights');
     let records;
 
     if(weights) {
@@ -388,12 +386,9 @@ export default class LoginScreen extends React.Component {
           });
         }
 
-        // sort records by date
-        // TO DO: fix sorting
-        let sortedBodyweightRecords = recordsArr.sort((a,b) => {
-          return new Date(a.date) - new Date(b.date);
-        });
-        sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+      // sort records by date
+      // TO DO: fix sorting
+      let sortedBodyweightRecords = recordsArr;
 
       // set initial weight
       initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
@@ -402,6 +397,16 @@ export default class LoginScreen extends React.Component {
       let oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
+
+      Object.keys(sortedBodyweightRecords).map(key => {
+        console.log('sortedBodyweightRecords[key].date', sortedBodyweightRecords[key].date)
+        console.log('oneWeekAgo', oneWeekAgo)
+        if(sortedBodyweightRecords[key].date > oneWeekAgo) {
+          pastWeekEntries.push(sortedBodyweightRecords[key]);
+        }
+      });
+
+      console.log('pastWeekEntries', pastWeekEntries)
 
         if(pastWeekEntries.length) {
           sevenDayAverage = (

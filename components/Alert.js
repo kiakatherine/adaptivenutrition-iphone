@@ -27,7 +27,7 @@ class Alert extends React.Component {
   }
 
   render() {
-    setTimeout(() => { this.props.closeAlert(); }, 1750);
+    setTimeout(() => { this.props.closeAlert(); }, 1500);
 
     return (
       <View style={styles.wrapper}>
@@ -36,14 +36,14 @@ class Alert extends React.Component {
            <Text style={styles.checkmark}>
              <FontAwesome
                name='check'
-               size={24} />
+               size={36} />
            </Text>}
 
            {(this.props.type === 'failure') &&
             <Text style={styles.checkmark}>
               <FontAwesome
-                name='check'
-                size={24} />
+                name='remove'
+                size={36} />
             </Text>}
 
           <Text style={styles.message}>{this.props.message}</Text>
@@ -62,7 +62,6 @@ Alert.propTypes = {
 
 const styles = StyleSheet.create ({
   wrapper: {
-    // height: '100%',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
@@ -72,7 +71,7 @@ const styles = StyleSheet.create ({
     textAlign: 'center'
   },
   message: {
-    fontSize: 22,
+    fontSize: 24,
     letterSpacing: 1,
     textAlign: 'center',
     fontWeight: '500',
