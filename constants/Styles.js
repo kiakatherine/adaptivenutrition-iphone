@@ -388,7 +388,7 @@ export default {
     transform: [{ rotate: '-90deg'}]
   },
   emptyMessage: {
-    color: Colors.gray,
+    color: Colors.darkGray,
     fontSize: 18
   }
 }

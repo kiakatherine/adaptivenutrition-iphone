@@ -75,7 +75,8 @@ class BodyweightGraph extends React.Component {
        if(error) {
          alert('failed');
        } else {
-         alert('success!');
+         // alert('success!');
+         this.props.closeModal();
          this.setState({
            showTooltip: false,
            showConfirmDeleteEntry: false,
@@ -146,9 +147,6 @@ class BodyweightGraph extends React.Component {
           {!sortedData && <View>
               <Text style={Styles.loadingMessage}>No bodyweight data yet</Text>
             </View>}
-
-          {!this.props.data &&
-            <Text style={[Styles.loadingMessage, styles.loadingMessage]}>Getting data...</Text>}
 
           {this.state.showConfirmDeleteEntry &&
             <ScrollView style={Styles.tooltip}>

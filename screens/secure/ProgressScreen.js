@@ -172,8 +172,8 @@ export default class LoginScreen extends React.Component {
     // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
-    const uid = currentUser.uid
-    const clientRef = firebase.database().ref('/clients/' + uid);
+    const clientId = currentUser.uid
+    const clientRef = firebase.database().ref('/clients/' + clientId);
     let client;
 
     clientRef.once('value', snapshot => {
@@ -186,7 +186,7 @@ export default class LoginScreen extends React.Component {
     const bodyweightRecord = {
       date: date,
       weight: Number(weight),
-      uid: uid
+      clientId: clientId
     };
 
     // Get a key for a new bodyweightRecord
@@ -196,7 +196,7 @@ export default class LoginScreen extends React.Component {
     // in the bodyweightRecords list and the user's records list.
     var updates = {};
     updates['/weights/' + newRecordKey] = bodyweightRecord;
-    updates['/clients/' + uid + '/weights/' + newRecordKey] = bodyweightRecord;
+    updates['/clients/' + clientId + '/weights/' + newRecordKey] = bodyweightRecord;
 
 
     firebase.database().ref().update(updates, (error) => {
@@ -204,12 +204,18 @@ export default class LoginScreen extends React.Component {
       if(error) {
         alert('failed');
       } else {
-        alert('success!');
+        this.setState({ showAddBodyweight: false });
+        MessageBarManager.showAlert({
+          message: 'Successfully added',
+          alertType: 'success',
+          // See Properties section for full customization
+          // Or check `index.ios.js` or `index.android.js` for a complete example
+        });
       }
     });
 
     // save points to client
-    firebase.database().ref('/clients/' + uid).update({
+    firebase.database().ref('/clients/' + clientId).update({
       weightPoints: Number(client.weightPoints) + 1,
       totalPoints: Number(client.totalPoints) + 1,
       latestBodyweight: Number(weight)
@@ -362,10 +368,11 @@ export default class LoginScreen extends React.Component {
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
     const clientId = firebase.auth().currentUser.uid;
     const weights = firebase.database().ref('/clients/' + clientId + '/weights');
+    let records;
 
     if(weights) {
       weights.once('value', snapshot => {
-        const records = snapshot.val();
+        records = snapshot.val();
         let weight, recordsArr = [];
 
         // get client's bodyweight records
@@ -430,12 +437,14 @@ export default class LoginScreen extends React.Component {
 
             {this.state.showBodyweightLog &&
               <View style={styles.progressSection}>
-                <View style={styles.stats}>
+                {records && <View style={styles.stats}>
                   <View style={styles.stat}>
                     <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{sevenDayAverage}</Text>
                     <Text style={[Styles.menuItemSubText, Styles.textCenter]}>Average weight over past week</Text>
                   </View>
-                </View>
+                </View>}
+
+                {!records && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your first weight entry</Text>}
 
                 <View style={Styles.flexRow}>
                   <View style={Styles.flexCol}>
@@ -468,7 +477,7 @@ export default class LoginScreen extends React.Component {
                     </View>}
                 </View>
 
-                <View style={[Styles.flexRow, styles.pillButtons]}>
+                {records && <View style={[Styles.flexRow, styles.pillButtons]}>
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.weeklyView ? Styles.pillButtonSelected : null]}
@@ -489,7 +498,7 @@ export default class LoginScreen extends React.Component {
                     onPress={() => { this.setState({ weeklyView: false, monthlyView: false, yearlyView: true }) }}>
                     <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
                   </TouchableHighlight>
-                </View>
+                </View>}
 
                 <BodyweightGraph
                   data={this.state.bodyweightData} />

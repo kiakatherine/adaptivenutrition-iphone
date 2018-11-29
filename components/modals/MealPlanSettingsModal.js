@@ -88,13 +88,6 @@ class MealPlanSettings extends React.Component {
            <TouchableHighlight
             underlayColor={Colors.darkerPrimaryColor}
             style={Styles.modalButton}
-            onPress={() => { this.showTemplatePicker() }}>
-              <Text style={Styles.buttonText}>Adjust goal - {convertTemplateToString(template)}</Text>
-           </TouchableHighlight>
-
-           <TouchableHighlight
-            underlayColor={Colors.darkerPrimaryColor}
-            style={Styles.modalButton}
             onPress={() => { this.clickNavPhase() }}>
               <Text style={Styles.buttonText}>Go back to Phase 2</Text>
            </TouchableHighlight>

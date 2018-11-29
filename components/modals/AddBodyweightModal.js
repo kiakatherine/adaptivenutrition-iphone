@@ -51,7 +51,7 @@ class AddBodyweightModal extends React.Component {
       <View style={Styles.modalContent}>
         <View>
           <TouchableHighlight
-            underlayColor={Colors.lightGray}
+            underlayColor={Colors.white}
             onPress={this._showDatepicker}>
             <Text style={styles.bodyweightDate}>
               {moment(this.props.date).format('MMMM D')} <FontAwesome

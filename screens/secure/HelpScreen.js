@@ -35,7 +35,6 @@ export default class LoginScreen extends React.Component {
       showMealPlanList: true,
       showResourcesList: false,
       showOtherList: false,
-      showBiometricSettings: false,
       showSuccessChecklist: false,
       showFoodsToAvoid: false,
       showAbout: false,
@@ -57,7 +56,6 @@ export default class LoginScreen extends React.Component {
 
   closeModal() {
     this.setState({
-      showBiometricSettings: false,
       showFoodsToAvoid: false,
       showSuccessChecklist: false,
       showAbout: false,
@@ -98,21 +96,14 @@ export default class LoginScreen extends React.Component {
           {this.state.showMealPlanList && <View style={styles.helpSection}>
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}>How Do I Use the App?</Text>
-              <Text style={Styles.menuItemSubText}>Take a tour!</Text>
-            </View>
-
-            <View style={Styles.menuItemWrapper}>
-              <Text style={Styles.menuItem}
-                onPress={() => this.setState({ showBiometricSettings: true }) }>Biometric Settings</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showBiometricSettings: true }) }>Settings used to create your meal plan.</Text>
+              <Text style={Styles.menuItemSubText}>Take a tour.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
                 onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
               <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Inflammatory foods to remove for 6 weeks.</Text>
+                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to avoid for the first 6 weeks.</Text>
             </View>
           </View>}
 
@@ -121,14 +112,14 @@ export default class LoginScreen extends React.Component {
               <Text style={Styles.menuItem}
                 onPress={() => this.setState({ showSuccessChecklist: true }) }>Success Checklist</Text>
               <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showSuccessChecklist: true }) }>If you stop seeing progress, use this list to help pinpoint issues.</Text>
+                onPress={() => this.setState({ showSuccessChecklist: true }) }>If you hit a plateau, use this list to help pinpoint issues.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
                 onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
               <Text style={Styles.menuItemSubText}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Meal prep, recipes, & more.</Text>
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Meal prep tips, recipes, & much more.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
@@ -161,12 +152,6 @@ export default class LoginScreen extends React.Component {
                 onPress={() => this.setState({ showAbout: true }) }>Who is Adaptive Nutrition?</Text>
             </View>
           </View>}
-
-          {this.state.showBiometricSettings &&
-            <ModalWindow
-              currentModal="BIOMETRIC_SETTINGS"
-              data={this.state.client}
-              closeModal={this.closeModal} />}
 
           {this.state.showFoodsToAvoid &&
             <ModalWindow

@@ -4,6 +4,7 @@ import firebase from '../../services/FirebaseService';
 
 import format from 'date-fns/format';
 import subDays from 'date-fns/sub_days';
+import { convertTemplateToString } from '../../utils/helpers';
 
 import { FontAwesome } from 'react-native-vector-icons';
 import Styles from '../../constants/Styles';
@@ -59,10 +60,10 @@ class UserModal extends React.Component {
     const birthdate = this.props.client ? this.props.client.birthdate : new Date();
     const phase = this.props.client ? this.props.client.phase : 1;
 
-    // TO DO: not hardcoded
-    const template = 'Lose weight (Step 2)';
+    // TO DO: not hardcoded dates; check what goal is to see what step 2 should be
+    const template = convertTemplateToString(this.props.client.template);
     const templateStartDate = 'October 1, 2018';
-    const nextTemplate = 'Lock in results (Step 3)';
+    const nextTemplate = this.props.client.template + 1 < 5 ? convertTemplateToString(this.props.client.template + 1) : 0;
     const nextTemplateStartDate = 'December 1, 2018';
 
     return (
