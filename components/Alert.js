@@ -39,14 +39,14 @@ class Alert extends React.Component {
                size={36} />
            </Text>}
 
-           {(this.props.type === 'failure') &&
-            <Text style={styles.checkmark}>
+           {(this.props.type === 'error') &&
+            <Text style={styles.remove}>
               <FontAwesome
                 name='remove'
                 size={36} />
             </Text>}
 
-          <Text style={styles.message}>{this.props.message}</Text>
+          <Text style={Styles.message}>{this.props.message}</Text>
         </View>
       </View>
      );
@@ -70,11 +70,8 @@ const styles = StyleSheet.create ({
     color: Colors.primaryColor,
     textAlign: 'center'
   },
-  message: {
-    fontSize: 24,
-    letterSpacing: 1,
-    textAlign: 'center',
-    fontWeight: '500',
-    marginTop: 15
+  remove: {
+    color: Colors.paleRed,
+    textAlign: 'center'
   }
 });

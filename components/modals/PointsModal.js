@@ -68,22 +68,22 @@ class PointsModal extends React.Component {
 
         <View style={Styles.flexRow}>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.mealPoints}</Text>
+            <Text style={styles.specificPoints}>{client.mealPoints ? client.mealPoints : 0}</Text>
             <Text style={styles.specificTotal}>out of {totalDays}</Text>
             <Text style={styles.specificPointsDescription}>meals</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.weightPoints}</Text>
+            <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0}</Text>
             <Text style={styles.specificTotal}>out of {totalDays}</Text>
             <Text style={styles.specificPointsDescription}>weight</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.quizPoints}</Text>
+            <Text style={styles.specificPoints}>{client.quizPoints ? client.quizPoints : 0}</Text>
             <Text style={styles.specificTotal}>out of {totalAvailableQuizzes}</Text>
             <Text style={styles.specificPointsDescription}>quizzes</Text>
           </View>
           <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.socialPoints}</Text>
+            <Text style={styles.specificPoints}>{client.socialPoints ? client.socialPoints : 0}</Text>
             <Text style={styles.specificTotal}>{' '}</Text>
             <Text style={styles.specificPointsDescription}>social</Text>
           </View>

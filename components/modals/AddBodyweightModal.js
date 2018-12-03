@@ -114,6 +114,9 @@ class AddBodyweightModal extends React.Component {
               />
             </Text>
           </TouchableHighlight>
+
+          {this.props.duplicateError &&
+            <Text style={[Styles.message, {fontSize: 18, color: Colors.paleRed, marginTop: 30}]}>{"Oops, looks like there's already an entry for that day"}</Text>}
         </View>
       </View>
     );
@@ -135,10 +138,11 @@ const styles = StyleSheet.create({
   },
   bodyweightInputWrapper: {
     flexDirection: 'row',
-    marginBottom: 30
+    marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'stretch'
   },
   weight: {
-    // flex: 1,
     textAlign: 'center',
     fontSize: 36,
     fontFamily: 'Futura',

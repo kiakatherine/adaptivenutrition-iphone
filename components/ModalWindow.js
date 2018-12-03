@@ -109,6 +109,7 @@ class ModalWindow extends React.Component {
        modal = <AddBodyweightModal
          weight={this.props.weight}
          date={this.props.date}
+         duplicateError={this.props.duplicateError}
          updateWeight={this.props.updateWeight}
          setDate={this.props.setDate}
          submitWeight={this.props.submitWeight} />

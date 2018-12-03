@@ -50,7 +50,10 @@ export default class LoginScreen extends React.Component {
       showProgressPhase3: true,
       showBodyweightLog: true,
       showProgressReports: false,
+
       showAlertWeightAdded: false,
+      showAlertDuplicateWeight: false,
+
       weeklyView: true,
       monthlyView: false,
       yearlyView: false,
@@ -168,103 +171,87 @@ export default class LoginScreen extends React.Component {
   async _submitWeight() {
     const date = new Date(this.state.date);
     const weight = this.state.weight;
+    const weights = firebase.database().ref().child('weights');
     // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const clientId = currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + clientId);
     let client;
+    let duplicateEntry = false;
 
     clientRef.once('value', snapshot => {
       client = snapshot.val();
     });
 
-    // TO DO: check not already a record for that date
-    // use firebase.database().ref().child('weights').orderByValue() ?
+    // check not already a record for that date
+    weights.once('value', snapshot => {
+      records = snapshot.val();
 
-    const bodyweightRecord = {
-      date: date,
-      timestamp: Date.parse(date),
-      weight: Number(weight),
-      clientId: clientId
-    };
-
-    // Get a key for a new bodyweightRecord
-    const newRecordKey = firebase.database().ref().child('weights').push().key;
-
-    // Write the new record's data simultaneously
-    // in the bodyweightRecords list and the user's records list.
-    var updates = {};
-    updates['/weights/' + newRecordKey] = bodyweightRecord;
-    updates['/clients/' + clientId + '/weights/' + newRecordKey] = bodyweightRecord;
-
-    // save
-    firebase.database().ref().update(updates, (error) => {
-      // TO DO: these aren't firing
-      if(error) {
-        alert('failed');
-      } else {
-        this.setState({
-          showAddBodyweight: false,
-          showAlertWeightAdded: true
+      if(records) {
+        Object.keys(records).map(key => {
+          if(moment(records[key].date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')) {
+            duplicateEntry = true;
+          }
         });
       }
-    });
 
-    // save points to client
-    // not working
-    clientRef.update({
-      weightPoints: Number(client.weightPoints) + 1,
-      totalPoints: Number(client.totalPoints) + 1,
-      latestBodyweight: Number(weight)
-    }, (error) => {
-      console.log('whoa')
-      if(error) {
-        alert('failed');
+      if(duplicateEntry) {
+        this.setState({ showAlertDuplicateWeight: true });
+        return;
       } else {
-        alert('success!');
+        const bodyweightRecord = {
+          date: date,
+          timestamp: Date.parse(date),
+          weight: Number(weight),
+          clientId: clientId
+        };
+
+        // Get a key for a new bodyweightRecord
+        const newRecordKey = firebase.database().ref().child('weights').push().key;
+
+        // Write the new record's data simultaneously
+        // in the bodyweightRecords list and the user's records list.
+        var updates = {};
+        updates['/weights/' + newRecordKey] = bodyweightRecord;
+        updates['/clients/' + clientId + '/weights/' + newRecordKey] = bodyweightRecord;
+
+        // save
+        firebase.database().ref().update(updates, (error) => {
+          // TO DO: these aren't firing
+          if(error) {
+            alert('failed');
+          } else {
+            this.setState({
+              showAddBodyweight: false,
+              showAlertWeightAdded: true
+            });
+          }
+        });
+
+        // save points to client
+        // not working
+        clientRef.update({
+          weightPoints: Number(client.weightPoints ? client.weightPoints : 0) + 1,
+          totalPoints: Number(client.totalPoints ? client.totalPoints : 0) + 1,
+          latestBodyweight: Number(weight)
+        }, (error) => {
+          console.log('whoa')
+          if(error) {
+            alert('failed');
+          } else {
+            alert('success!');
+          }
+        });
+
+        this.setState({
+          showAddBodyweight: false,
+          date: new Date(),
+          weight,
+          latestRecordKey: newRecordKey
+        }, this._hideAll());
       }
     });
-
-    this.setState({
-      showAddBodyweight: false,
-      date: new Date(),
-      weight,
-      latestRecordKey: newRecordKey
-    }, this._hideAll());
-
-    // bodyweightRecords.once('value', snapshot => {
-    //   const records = snapshot.val();
-    //   let duplicateEntry = false;
-    //   let filteredBodyweightRecords = [];
-    //
-    //   // check first that there is not already an entry for today - check timestamp and date
-    //   if(clientTimestamp) {
-    //     Object.keys(records).map(function(key) {
-    //       if(records[key].timestamp === clientTimestamp) {
-    //         filteredBodyweightRecords.push(records[key]);
-    //         if(records[key].date === moment(date).format('MM-DD-YY')) {
-    //           // alert('oh hey')
-    //           // const recordRef = firebase.database().ref('bodyweightRecords/' + key);
-    //           // recordRef.remove();
-    //           duplicateEntry = true;
-    //         }
-    //       }
-    //     });
-    //
-    //     if(duplicateEntry === false) {
-    //       bodyweightRecords.push({
-    //         // date: moment(new Date).format('MM-DD-YY'),
-    //         date: moment(this.state.date).format('MM-DD-YY'),
-    //         timestamp: Number(this.state.clientTimestamp),
-    //         weight: Number(this.state.weight)
-    //       }).then(resp => {}, reason => {
-    //         alert('Could not save bodyweight');
-    //       });
-    //     } else {
-    //       alert('Oops! Looks like there is already an entry for that day.')
-    //     }
-    //   }
   }
 
   async undoWeight() {
@@ -321,7 +308,10 @@ export default class LoginScreen extends React.Component {
   }
 
   _closeModal() {
-    this.setState({ showAddBodyweight: false });
+    this.setState({
+      showAddBodyweight: false,
+      showAlertDuplicateWeight: false
+     });
   }
 
   _closeAlert() {
@@ -399,14 +389,10 @@ export default class LoginScreen extends React.Component {
       oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
 
       Object.keys(sortedBodyweightRecords).map(key => {
-        console.log('sortedBodyweightRecords[key].date', sortedBodyweightRecords[key].date)
-        console.log('oneWeekAgo', oneWeekAgo)
         if(sortedBodyweightRecords[key].date > oneWeekAgo) {
           pastWeekEntries.push(sortedBodyweightRecords[key]);
         }
       });
-
-      console.log('pastWeekEntries', pastWeekEntries)
 
         if(pastWeekEntries.length) {
           sevenDayAverage = (
@@ -571,6 +557,7 @@ export default class LoginScreen extends React.Component {
             currentModal="ADD_BODYWEIGHT"
             weight={this.state.weight}
             date={this.state.date}
+            duplicateError={this.state.showAlertDuplicateWeight}
             updateWeight={this._updateWeight}
             setDate={this._setDate}
             submitWeight={this._submitWeight}

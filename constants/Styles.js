@@ -390,5 +390,12 @@ export default {
   emptyMessage: {
     color: Colors.darkGray,
     fontSize: 18
+  },
+  message: {
+    fontSize: 22,
+    letterSpacing: 1,
+    textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 15
   }
 }
