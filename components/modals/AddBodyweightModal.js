@@ -49,7 +49,7 @@ class AddBodyweightModal extends React.Component {
 
     return (
       <View style={Styles.modalContent}>
-        <View>
+        {/*<View>
           <TouchableHighlight
             underlayColor={Colors.white}
             onPress={this._showDatepicker}>
@@ -69,7 +69,11 @@ class AddBodyweightModal extends React.Component {
             date={this.props.date}
             maximumDate={new Date()}
             onDateChange={date => this.setDate(date) }
-          />}
+          />}*/}
+
+        <View>
+          <Text style={styles.bodyweightDate}>{moment(this.props.date).format('MMMM D')}</Text>
+        </View>
 
         <View style={styles.progressSection}>
           <View style={styles.bodyweightInputWrapper}>

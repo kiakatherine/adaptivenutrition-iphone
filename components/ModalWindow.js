@@ -131,44 +131,41 @@ class ModalWindow extends React.Component {
      return (
        <View>
          <View style={styles.container}>
-           <Modal animationType={"slide"}
-            transparent={false}
-            onRequestClose={() => { console.log("Modal has been closed.") } }>
+            <Modal
+              animationType={"slide"}
+              transparent={true}
+              onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-            <ScrollView>
-              <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
-                <View style={styles.header}>
-                  <TouchableHighlight
-                    style={[styles.closeButton, Styles.textCenter]}
-                    underlayColor={Colors.white}
-                    onPress={()=>this.props.closeModal('')}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                      <FontAwesome
-                        name='remove'
-                        size={28}
-                      />
-                    </Text>
-                  </TouchableHighlight>
+              <View style={styles.modalWrapper}>
+                <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
+                  <View style={styles.header}>
+                    <TouchableHighlight
+                      style={styles.closeButton}
+                      underlayColor={Colors.white}
+                      onPress={()=>this.props.closeModal('')}>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                        <FontAwesome
+                          name='remove'
+                          size={28}
+                        />
+                      </Text>
+                    </TouchableHighlight>
 
-                  {(this.props.currentModal === 'USER') && <TouchableHighlight
-                    style={styles.logoutButton}
-                    underlayColor={Colors.white}
-                    onPress={()=> {this.setState({isLogout: true})}}>
-                    <Text style={{ fontSize: 24, fontWeight: '500' }}>Logout</Text>
-                  </TouchableHighlight>}
+                    {(this.props.currentModal === 'USER') && <TouchableHighlight
+                      style={styles.logoutButton}
+                      underlayColor={Colors.white}
+                      onPress={()=> {this.setState({isLogout: true})}}>
+                      <Text style={{ fontSize: 24, fontWeight: '500' }}>Logout</Text>
+                    </TouchableHighlight>}
 
+                  </View>
+                   {modal}
                 </View>
-                 {modal}
-               </View>
-            </ScrollView>
-            {
-              this.state.isLogout &&
-              <LogoutScreen
-                closeLogoutModal={() => {
-                  this.closeLogoutModal()
-                }}
-               />
-            }
+              </View>
+
+              {this.state.isLogout &&
+                <LogoutScreen
+                  closeLogoutModal={() => { this.closeLogoutModal() }} />}
            </Modal>
          </View>
        </View>
@@ -179,30 +176,39 @@ class ModalWindow extends React.Component {
 export default ModalWindow;
 
 const styles = StyleSheet.create ({
-   container: {
-      alignItems: 'flex-start',
-      backgroundColor: '#ede3f2'
-   },
-   header: {
+  container: {
+    justifyContent: 'center'
+  },
+  modalWrapper: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  header: {
     flexDirection: 'row'
-   },
-   modal: {
-      flex: 1,
-      alignItems: 'center',
-      backgroundColor: '#FFF',
-      paddingTop: 40,
-      paddingBottom: 40,
-      paddingLeft: 20,
-      paddingRight: 20
-   },
-   modalWide: {
-     paddingLeft: 0,
-     paddingRight: 0
-   },
-   closeButton: {
+  },
+  modal: {
+    backgroundColor: Colors.white,
+    borderTopWidth: 1,
+    borderColor: Colors.gray,
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingLeft: 20,
+    paddingRight: 20,
+    width: '100%',
+    height: 400
+  },
+  modalWide: {
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+  closeButton: {
     paddingTop: 20
-   },
-   logoutButton: {
+  },
+  logoutButton: {
     width: '50%',
     paddingTop: 20,
     paddingRight: 20,

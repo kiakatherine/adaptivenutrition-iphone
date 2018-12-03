@@ -171,21 +171,29 @@ export default class LoginScreen extends React.Component {
   async _submitWeight() {
     const date = new Date(this.state.date);
     const weight = this.state.weight;
-    const weights = firebase.database().ref().child('weights');
     // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const clientId = currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + clientId);
-    let client;
-    let duplicateEntry = false;
+    const clientWeights = firebase.database().ref('/clients/' + clientId + '/weights');
+    let client, duplicateEntry = false, records;
 
     clientRef.once('value', snapshot => {
       client = snapshot.val();
     });
 
+    console.log('weights', clientWeights)
+
+    if(!clientWeights) {
+      clientRef.update({
+        clientWeights: []
+      });
+      console.log('yep')
+    }
+
     // check not already a record for that date
-    weights.once('value', snapshot => {
+    clientWeights.once('value', snapshot => {
       records = snapshot.val();
 
       if(records) {
@@ -235,13 +243,6 @@ export default class LoginScreen extends React.Component {
           weightPoints: Number(client.weightPoints ? client.weightPoints : 0) + 1,
           totalPoints: Number(client.totalPoints ? client.totalPoints : 0) + 1,
           latestBodyweight: Number(weight)
-        }, (error) => {
-          console.log('whoa')
-          if(error) {
-            alert('failed');
-          } else {
-            alert('success!');
-          }
         });
 
         this.setState({
@@ -412,13 +413,13 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        {this.state.showAlertWeightAdded &&
+        {/*{this.state.showAlertWeightAdded &&
           <Alert
             type="success"
             message="Added!"
-            closeAlert={this._closeAlert} />}
+            closeAlert={this._closeAlert} />}*/}
 
-        {!this.state.showAlertWeightAdded && <ScrollView style={Styles.content}>
+        <ScrollView style={Styles.content}>
           <View>
             <View style={Styles.flexRow}>
               <TouchableHighlight
@@ -446,35 +447,26 @@ export default class LoginScreen extends React.Component {
 
                 {!records && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your first weight entry</Text>}
 
-                <View style={Styles.flexRow}>
-                  <View style={Styles.flexCol}>
-                    <TouchableHighlight
-                      underlayColor={Colors.darkerPrimaryColor}
-                      style={Styles.buttonCircular}
-                      onPress={() => { this.setState({ showAddBodyweight: true }) }}>
-                      <Text style={Styles.buttonCircularIcon}>
-                        <FontAwesome
-                          name='plus'
-                          size={16}
-                        />
-                      </Text>
-                    </TouchableHighlight>
-                  </View>
+                <View>
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={Styles.buttonCircular}
+                    onPress={() => { this.setState({ showAddBodyweight: true }) }}>
+                    <Text style={Styles.buttonCircularIcon}>
+                      <FontAwesome
+                        name='plus'
+                        size={16}
+                      />
+                    </Text>
+                  </TouchableHighlight>
 
                   {this.state.latestRecordKey &&
-                    <View style={Styles.flexCol}>
-                      <TouchableHighlight
-                        underlayColor={Colors.darkerPrimaryColor}
-                        style={[Styles.buttonCircular, styles.undoButton, Styles.flexCol]}
-                        onPress={() => { this.undoWeight() }}>
-                        <Text style={Styles.buttonCircularIcon}>
-                          <FontAwesome
-                            name='undo'
-                            size={16}
-                          />
-                        </Text>
-                      </TouchableHighlight>
-                  </View>}
+                    <TouchableHighlight
+                      underlayColor={Colors.white}
+                      style={[Styles.linkButton, styles.undoButton]}
+                      onPress={() => { this.undoWeight() }}>
+                      <Text style={[Styles.textCenter, styles.undoButtonText]}>Undo</Text>
+                    </TouchableHighlight>}
                 </View>
 
                 {records && <View style={[Styles.flexRow, styles.pillButtons]}>
@@ -550,7 +542,7 @@ export default class LoginScreen extends React.Component {
                 </View>
               </View>}
           </View>
-        </ScrollView>}
+        </ScrollView>
 
         {this.state.showAddBodyweight &&
           <ModalWindow
@@ -624,7 +616,9 @@ const styles = StyleSheet.create ({
     marginTop: 50,
     alignItems: 'center'
   },
-  undoButton: {
-    marginLeft: 15
+  undoButtonText: {
+    fontSize: 18,
+    letterSpacing: 1,
+    marginTop: 10
   }
 });
