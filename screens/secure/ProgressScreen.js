@@ -90,6 +90,7 @@ export default class LoginScreen extends React.Component {
       if(clientResponse) {
         this.setState({
           weight: clientResponse.latestBodyweight ? clientResponse.latestBodyweight : clientResponse.weight,
+          hasCycleCalendar: clientResponse.hasCycleCalendar,
           clientId: clientId
         });
       }
@@ -321,48 +322,127 @@ export default class LoginScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
-    const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
-    const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
-    let dayStatusesPhase1 = [];
-    let dayStatusesPhase2 = [];
-    let dayStatusesPhase3 = [];
+    // const filteredDayStatusesPhase1 = this.state.filteredDayStatusesPhase1;
+    // const filteredDayStatusesPhase2 = this.state.filteredDayStatusesPhase2;
+    // const filteredDayStatusesPhase3 = this.state.filteredDayStatusesPhase3;
+    // let dayStatusesPhase1 = [];
+    // let dayStatusesPhase2 = [];
+    // let dayStatusesPhase3 = [];
     let weight = this.state.weight;
 
-    if(this.state.showProgressPhase1) {
-      if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
-        Object.keys(filteredDayStatusesPhase1).map((key, index) => {
-          dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
+    let phase1DaysHTML = [];
+    let phase2DaysHTML = [];
+    let phase3DaysHTML = [];
+    let phase4DaysHTML = [];
+    let phase5DaysHTML = [];
+    let phase6DaysHTML = [];
+
+    const clientId = this.state.clientId;
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+    const dayStatusesRef = firebase.database().ref().child('/clients/' + clientId + '/day-statuses');
+
+    if(!this.state.hasCycleCalendar) {
+      // create day-status for upcoming days
+      // only run once - save variable to check if done already
+      // fix start date
+      // remember months are 0 indexed
+      const startDate = new Date(2018, 10, 1); // 1 week
+      let phase2StartDate = new Date(); // 1 week
+      let phase3StartDate = new Date(); // 8 weeks
+      let phase4StartDate = new Date(); // 2 weeks
+      let phase5StartDate = new Date(); // 2 weeks
+      let phase6StartDate = new Date(); // 4 weeks
+      let endDate = new Date();
+
+      phase2StartDate.setDate(startDate.getDate() + 1); // step 1
+      phase3StartDate.setDate(startDate.getDate() + (7 * 2)); // step 2
+      phase4StartDate.setDate(startDate.getDate() + (7 * 10)); // step 3
+      phase5StartDate.setDate(startDate.getDate() + (7 * 12)); // step 4
+      phase6StartDate.setDate(startDate.getDate() + (7 * 14)); // step 5
+      endDate.setDate(startDate.getDate() + (7 * 18));
+
+      // console.log('startDate', startDate);
+      // console.log('phase2StartDate', phase2StartDate); // why wrong???
+      // console.log('----');
+
+      const daysOfCycle = [];
+      for (const startDate = new Date(2018, 10, 1); startDate <= endDate; startDate.setDate(startDate.getDate() + 1)) {
+        const newDayStatus = dayStatusesRef.push();
+        newDayStatus.set({
+          fullDate: new Date(startDate),
+          phase: (new Date(startDate) < phase2StartDate && new Date(startDate) > startDate) ? 1 :
+            (new Date(startDate) < phase3StartDate && new Date(startDate) > phase2StartDate) ? 2 :
+            (new Date(startDate) < phase4StartDate && new Date(startDate) > phase3StartDate) ? 3 :
+            (new Date(startDate) < phase5StartDate && new Date(startDate) > phase4StartDate) ? 4 :
+            (new Date(startDate) < phase6StartDate && new Date(startDate) > phase5StartDate) ? 5 :
+            (new Date(startDate) < endDate && new Date(startDate) > phase6StartDate) ? 6 : null,
+          weight: null,
+          meal1: null,
+          meal2: null,
+          meal3: null,
+          meal4: null,
+          meal5: null
         });
-      } else {
-        dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
       }
+
+      clientRef.update({ hasCycleCalendar: true });
     }
 
-    if(this.state.showProgressPhase2) {
-      if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
-        Object.keys(filteredDayStatusesPhase2).map((key, index) => {
-          dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
-        });
-      } else {
-        dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-      }
-    }
+    dayStatusesRef.on('value', snapshot => {
+      const dayStatuses = snapshot.val();
 
-    if(this.state.showProgressPhase3) {
-      if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
-        Object.keys(filteredDayStatusesPhase3).map((key, index) => {
-          dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
-        });
-      } else {
-        dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
-      }
-    }
+      Object.keys(dayStatuses).map((d, index) => {
+        const day = dayStatuses[d];
+
+        if(day.phase === 1) {
+          phase1DaysHTML.push(<DayStatus key={index} day={day} />);
+        } else if(day.phase === 2) {
+          phase2DaysHTML.push(<DayStatus key={index} day={day} />);
+        } else if(day.phase === 3) {
+          phase3DaysHTML.push(<DayStatus key={index} day={day} />);
+        } else if(day.phase === 4) {
+          phase4DaysHTML.push(<DayStatus key={index} day={day} />);
+        } else if(day.phase === 5) {
+          phase5DaysHTML.push(<DayStatus key={index} day={day} />);
+        } else if(day.phase === 6) {
+          phase6DaysHTML.push(<DayStatus key={index} day={day} />);
+        }
+      });
+    });
+
+    // if(this.state.showProgressPhase1) {
+    //   if(filteredDayStatusesPhase1 && filteredDayStatusesPhase1.length) {
+    //     Object.keys(filteredDayStatusesPhase1).map((key, index) => {
+    //       dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
+    //
+    // if(this.state.showProgressPhase2) {
+    //   if(filteredDayStatusesPhase2 && filteredDayStatusesPhase2.length) {
+    //     Object.keys(filteredDayStatusesPhase2).map((key, index) => {
+    //       dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
+    //
+    // if(this.state.showProgressPhase3) {
+    //   if(filteredDayStatusesPhase3 && filteredDayStatusesPhase3.length) {
+    //     Object.keys(filteredDayStatusesPhase3).map((key, index) => {
+    //       dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
+    //     });
+    //   } else {
+    //     dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+    //   }
+    // }
 
     // seven day bodyweight average, initial weight
     let sevenDayAverage, initialWeight, pastWeekEntries = [];
     // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
-    const clientId = firebase.auth().currentUser.uid;
     const weights = firebase.database().ref('/clients/' + clientId + '/weights');
     let records;
 
@@ -499,7 +579,25 @@ export default class LoginScreen extends React.Component {
 
             {this.state.showProgressReports &&
               <View style={[Styles.content, styles.progressSection]}>
-                <View>
+                <Text style={Styles.uppercaseText}>PHASE 1</Text>
+                <View style={styles.phaseProgressWrapper}>{phase1DaysHTML}</View>
+
+                <Text style={Styles.uppercaseText}>PHASE 2</Text>
+                <View style={styles.phaseProgressWrapper}>{phase2DaysHTML}</View>
+
+                <Text style={Styles.uppercaseText}>PHASE 3</Text>
+                <View style={styles.phaseProgressWrapper}>{phase3DaysHTML}</View>
+
+                <Text style={Styles.uppercaseText}>PHASE 4</Text>
+                <View style={styles.phaseProgressWrapper}>{phase4DaysHTML}</View>
+
+                <Text style={Styles.uppercaseText}>PHASE 5</Text>
+                <View style={styles.phaseProgressWrapper}>{phase5DaysHTML}</View>
+
+                <Text style={Styles.uppercaseText}>PHASE 6</Text>
+                <View style={styles.phaseProgressWrapper}>{phase6DaysHTML}</View>
+
+                {/*<View>
                   <TouchableHighlight
                     underlayColor={Colors.white}
                     onPress={() => { this._clickProgressReportPhase1()}}
@@ -539,7 +637,7 @@ export default class LoginScreen extends React.Component {
 
                   {this.state.showProgressPhase3 &&
                     <View style={styles.phaseProgressWrapper}>{dayStatusesPhase3}</View>}
-                </View>
+                </View>*/}
               </View>}
           </View>
         </ScrollView>

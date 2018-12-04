@@ -84,14 +84,14 @@ class DayStatus extends React.Component {
 
   render() {
      const day = this.props.day;
-     const phase = this.props.phase;
+     const phase = day.phase;
 
      return (
        <View style={styles.dayStatusWrapper}>
 
         {phase !== 2 && <View>
           <View style={styles.dayStatusMeals}>
-            <Text style={styles.dayStatusDate}>{moment(day.fullDate).format('ddd M/D/YY')}</Text>
+            <Text style={styles.dayStatusDate}>{moment(day.fullDate).format('ddd M-D-YY')}</Text>
 
             <TouchableHighlight style={[
               styles.dayStatusMeal,

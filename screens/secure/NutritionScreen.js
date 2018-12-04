@@ -607,8 +607,6 @@ export default class LoginScreen extends React.Component {
     dayStatusesRef.once('value', snapshot => {
       const ds = snapshot.val();
 
-      console.log('ds', ds)
-
       if(ds) {
         Object.keys(ds).map(key => {
           if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
