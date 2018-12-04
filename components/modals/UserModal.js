@@ -161,7 +161,7 @@ class UserModal extends React.Component {
                 keyboardType='decimal-pad' />
             </View>
 
-            <View style={[Styles.biometricRow, styles.noBorder]}>
+            <View style={[Styles.biometricRow, Styles.noBorderBottom]}>
               <Text style={[Styles.inputLabel, Styles.textCenter]}>BODY FAT %</Text>
               <TextInput
                 style={[Styles.forms.textInput]}
@@ -223,9 +223,6 @@ const styles = StyleSheet.create ({
   },
   birthdate: {
     fontSize: 28
-  },
-  noBorder: {
-    borderBottomWidth: 0
   },
   blurb: {
     fontSize: 20,

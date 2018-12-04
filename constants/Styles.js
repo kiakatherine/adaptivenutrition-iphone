@@ -406,5 +406,8 @@ export default {
     textAlign: 'center',
     fontWeight: '500',
     marginTop: 15
+  },
+  noBorderBottom: {
+    borderBottomWidth: 0
   }
 }

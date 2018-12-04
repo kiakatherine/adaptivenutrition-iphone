@@ -56,7 +56,7 @@ class PointsModal extends React.Component {
     const totalAvailableQuizzes = 3;
 
     return (
-      <View style={[Styles.modalContent, styles.wrapper]}>
+      <View style={styles.wrapper}>
         <Text style={styles.trophyIcon}>
           <FontAwesome
             name='trophy'
@@ -66,30 +66,26 @@ class PointsModal extends React.Component {
         <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{client.totalPoints}</Text>
         <Text style={[Styles.textCenter, styles.pointsDescription]}>Your Points</Text>
 
-        <View style={Styles.flexRow}>
-          <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.mealPoints ? client.mealPoints : 0}</Text>
-            <Text style={styles.specificTotal}>out of {totalDays}</Text>
-            <Text style={styles.specificPointsDescription}>meals</Text>
+        <View>
+          <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
+          <Text style={styles.specificPointsDescription}>Meals</Text>
+            <Text style={styles.specificPoints}>{client.mealPoints ? client.mealPoints : 0} / {totalDays}</Text>
           </View>
-          <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0}</Text>
-            <Text style={styles.specificTotal}>out of {totalDays}</Text>
-            <Text style={styles.specificPointsDescription}>weight</Text>
+          <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
+            <Text style={styles.specificPointsDescription}>Weight</Text>
+            <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0} / {totalDays}</Text>
           </View>
-          <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
-            <Text style={styles.specificPoints}>{client.quizPoints ? client.quizPoints : 0}</Text>
-            <Text style={styles.specificTotal}>out of {totalAvailableQuizzes}</Text>
-            <Text style={styles.specificPointsDescription}>quizzes</Text>
+          <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
+            <Text style={styles.specificPointsDescription}>Lessons</Text>
+            <Text style={styles.specificPoints}>{client.quizPoints ? client.quizPoints : 0} / {totalAvailableQuizzes}</Text>
           </View>
-          <View style={[Styles.flexCol, styles.specificPointsWrapper]}>
+          <View style={[Styles.biometricRow, Styles.noBorderBottom, {paddingBottom: 35}]}>
+            <Text style={styles.specificPointsDescription}>Social</Text>
             <Text style={styles.specificPoints}>{client.socialPoints ? client.socialPoints : 0}</Text>
-            <Text style={styles.specificTotal}>{' '}</Text>
-            <Text style={styles.specificPointsDescription}>social</Text>
           </View>
         </View>
 
-        <Text style={[Styles.bigTitle, Styles.textCenter, styles.teamPoints]}>{this.state.teamPoints}</Text>
+        {/*<Text style={[Styles.bigTitle, Styles.textCenter, styles.teamPoints]}>{this.state.teamPoints}</Text>
         <Text style={[Styles.textCenter, styles.pointsDescription]}>Team {this.state.team} Points</Text>
 
         <View style={styles.teamsWrapper}>
@@ -98,7 +94,7 @@ class PointsModal extends React.Component {
               <Text style={[Styles.flexRowCol, styles.leaderboardText]}>Team {team.name}</Text>
               <Text style={[Styles.flexRowCol, styles.leaderboardText, styles.leaderboardPoints]}>{team.points}</Text>
             </View>)}
-        </View>
+        </View>*/}
       </View>
     );
   }
@@ -106,24 +102,21 @@ class PointsModal extends React.Component {
 
 export default PointsModal;
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   wrapper: {
     marginTop: 20,
-    alignItems: 'center'
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    width: '100%'
   },
   trophyIcon: {
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center'
   },
   individualPoints: {
     fontSize: 56,
     marginBottom: 10
-  },
-  specificPointsWrapper: {
-    marginTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    alignItems: 'center'
   },
   specificPoints: {
     fontFamily: 'Futura',
@@ -132,11 +125,13 @@ const styles = StyleSheet.create ({
   },
   specificTotal: {
     color: Colors.darkGray,
-    marginBottom: 5
+    textAlign: 'center'
   },
   specificPointsDescription: {
     letterSpacing: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 15
   },
   teamPoints: {
     fontSize: 56,
