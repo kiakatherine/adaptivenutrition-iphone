@@ -1574,8 +1574,7 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
-        {!this.state.showTemplatePicker &&
-          <ScrollView style={[Styles.content, styles.content]}>{this.state.phase !== null &&
+        {this.state.phase !== null &&
           <Header
             client={this.state.client}
             points={totalPoints}
@@ -1602,6 +1601,7 @@ export default class LoginScreen extends React.Component {
             logout={() => this.logout()}
             />}
 
+          <ScrollView style={[Styles.content, styles.content]}>
             {(this.state.phase === null) &&
               <Text style={styles.loadingText}>adapt & thrive</Text>}
 
