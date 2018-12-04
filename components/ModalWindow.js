@@ -190,8 +190,8 @@ const styles = StyleSheet.create ({
   },
   modal: {
     backgroundColor: Colors.white,
-    borderTopWidth: 1,
-    borderColor: Colors.gray,
+    // borderTopWidth: 1,
+    // borderColor: Colors.gray,
     justifyContent: 'center',
     alignItems: 'stretch',
     paddingTop: 40,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create ({
     paddingLeft: 20,
     paddingRight: 20,
     width: '100%',
-    height: 400
+    // height: 400
   },
   modalWide: {
     paddingLeft: 0,

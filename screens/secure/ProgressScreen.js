@@ -419,25 +419,25 @@ export default class LoginScreen extends React.Component {
             message="Added!"
             closeAlert={this._closeAlert} />}*/}
 
-        <ScrollView style={Styles.content}>
+        <ScrollView>
           <View>
             <View style={Styles.flexRow}>
               <TouchableHighlight
                 underlayColor={Colors.white}
                 style={[Styles.flexRowCol, styles.progressButtonFirst, this.state.showBodyweightLog ? styles.progressButtonActive : styles.progressButton]}
                 onPress={() => this.setState({ showBodyweightLog: true, showProgressReports: false })}>
-                <Text style={this.state.showBodyweightLog ? styles.progressButtonTextActive : styles.progressButtonText}>Weight</Text>
+                <Text style={this.state.showBodyweightLog ? styles.progressButtonTextActive : styles.progressButtonText}>WEIGHT</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 underlayColor={Colors.white}
                 style={[Styles.flexRowCol, this.state.showProgressReports ? styles.progressButtonActive : styles.progressButton]}
                 onPress={() => this.setState({ showBodyweightLog: false, showProgressReports: true })}>
-                <Text style={this.state.showProgressReports ? styles.progressButtonTextActive : styles.progressButtonText}>Consistency</Text>
+                <Text style={this.state.showProgressReports ? styles.progressButtonTextActive : styles.progressButtonText}>CONSISTENCY</Text>
               </TouchableHighlight>
             </View>
 
             {this.state.showBodyweightLog &&
-              <View style={styles.progressSection}>
+              <View style={[Styles.content, styles.progressSection]}>
                 {records && <View style={styles.stats}>
                   <View style={styles.stat}>
                     <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{sevenDayAverage}</Text>
@@ -498,7 +498,7 @@ export default class LoginScreen extends React.Component {
               </View>}
 
             {this.state.showProgressReports &&
-              <View style={styles.progressSection}>
+              <View style={[Styles.content, styles.progressSection]}>
                 <View>
                   <TouchableHighlight
                     underlayColor={Colors.white}
@@ -561,26 +561,22 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
-  progressButton: {
-    marginRight: 20
-  },
   progressButtonActive: {
-    borderBottomWidth: 3,
-    borderColor: Colors.black
+    borderBottomWidth: 3
   },
   progressButtonText: {
     fontFamily: 'Futura',
     textAlign: 'center',
-    color: Colors.black,
-    fontSize: 20,
-    paddingBottom: 10
+    fontSize: 16,
+    letterSpacing: 2,
+    padding: 20
   },
   progressButtonTextActive: {
     fontFamily: 'Futura',
-    fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 20,
-    paddingBottom: 10
+    fontSize: 16,
+    letterSpacing: 2,
+    padding: 20
   },
   weightDelta: {
     textAlign: 'left',
