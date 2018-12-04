@@ -136,7 +136,7 @@ class ModalWindow extends React.Component {
               transparent={true}
               onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-              <View style={styles.modalWrapper}>
+              <ScrollView>
                 <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
                   <View style={styles.header}>
                     <TouchableHighlight
@@ -150,18 +150,17 @@ class ModalWindow extends React.Component {
                         />
                       </Text>
                     </TouchableHighlight>
-
-                    {(this.props.currentModal === 'USER') && <TouchableHighlight
-                      style={styles.logoutButton}
-                      underlayColor={Colors.white}
-                      onPress={()=> {this.setState({isLogout: true})}}>
-                      <Text style={{ fontSize: 24, fontWeight: '500' }}>Logout</Text>
-                    </TouchableHighlight>}
-
                   </View>
                    {modal}
+
+                   {(this.props.currentModal === 'USER') && <TouchableHighlight
+                     style={styles.logoutButton}
+                     underlayColor={Colors.white}
+                     onPress={()=> {this.setState({isLogout: true})}}>
+                     <Text style={Styles.uppercaseText}>LOGOUT</Text>
+                   </TouchableHighlight>}
                 </View>
-              </View>
+              </ScrollView>
 
               {this.state.isLogout &&
                 <LogoutScreen
@@ -177,41 +176,29 @@ export default ModalWindow;
 
 const styles = StyleSheet.create ({
   container: {
-    justifyContent: 'center'
+    alignItems: 'flex-start',
+    height: '100%'
   },
-  modalWrapper: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'center'
-  },
-  header: {
-    flexDirection: 'row'
-  },
+  // header: {
+  //   flexDirection: 'row'
+  // },
   modal: {
     backgroundColor: Colors.white,
-    // borderTopWidth: 1,
-    // borderColor: Colors.gray,
-    justifyContent: 'center',
-    alignItems: 'stretch',
+    alignItems: 'center',
     paddingTop: 40,
     paddingBottom: 40,
     paddingLeft: 20,
-    paddingRight: 20,
-    width: '100%',
-    // height: 400
+    paddingRight: 20
   },
   modalWide: {
     paddingLeft: 0,
     paddingRight: 0
   },
   closeButton: {
-    paddingTop: 20
+    padding: 30
   },
   logoutButton: {
-    width: '50%',
-    paddingTop: 20,
-    paddingRight: 20,
-    alignItems: 'flex-end'
+    width: '100%',
+    alignItems: 'center'
    }
 });

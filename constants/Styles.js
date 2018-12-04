@@ -30,13 +30,20 @@ export default {
     marginBottom: 20,
     textAlign: 'center'
   },
+  uppercaseText: {
+    fontFamily: 'Futura',
+    fontSize: 16,
+    letterSpacing: 2
+  },
   paragraphText: {
+    fontFamily: 'Futura',
     fontSize: 20,
     lineHeight: 26,
     marginBottom: 25
   },
   paragraphTextNote: {
-    color: Colors.darkGray
+    color: Colors.darkGray,
+    fontFamily: 'Futura'
   },
   center: {
     alignItems: 'center',
@@ -389,6 +396,8 @@ export default {
   },
   emptyMessage: {
     color: Colors.darkGray,
+    fontFamily: 'Futura',
+    letterSpacing: 1,
     fontSize: 18
   },
   message: {
