@@ -238,7 +238,6 @@ export default class LoginScreen extends React.Component {
         });
 
         // save points to client
-        // not working
         clientRef.update({
           weightPoints: Number(client.weightPoints ? client.weightPoints : 0) + 1,
           totalPoints: Number(client.totalPoints ? client.totalPoints : 0) + 1,
@@ -260,20 +259,25 @@ export default class LoginScreen extends React.Component {
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const clientId = currentUser.uid
+    const clientRef = firebase.database().ref('/clients/' + clientId);
     const weightRef = firebase.database().ref('/weights/' + this.state.latestRecordKey);
     const clientWeightRef = firebase.database().ref('/clients/' + clientId + '/weights/' + this.state.latestRecordKey);
+
+    clientRef.once('value', snapshot => {
+      client = snapshot.val();
+    });
 
     weightRef.remove();
     clientWeightRef.remove();
 
-    this.setState({ latestRecordKey: null });
-
-    MessageBarManager.showAlert({
-      // title: 'Oops!',
-      message: 'Entry removed',
-      alertType: 'success',
-      // stylesheetInfo : {{ backgroundColor : '#1f8964', messageColor: '#ffffff' }}
+    // subtract point
+    clientRef.update({
+      weightPoints: Number(client.weightPoints) - 1,
+      totalPoints: Number(client.totalPoints) - 1,
+      latestBodyweight: null
     });
+
+    this.setState({ latestRecordKey: null });
   }
 
   _clickProgressReportPhase1() {
@@ -445,7 +449,7 @@ export default class LoginScreen extends React.Component {
                   </View>
                 </View>}
 
-                {!records && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your first weight entry</Text>}
+                {!records && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your weight</Text>}
 
                 <View>
                   <TouchableHighlight

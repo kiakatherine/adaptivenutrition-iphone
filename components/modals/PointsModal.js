@@ -63,8 +63,8 @@ class PointsModal extends React.Component {
             size={48} />
         </Text>
 
+        <Text style={[Styles.textCenter, styles.pointsDescription]}>Total</Text>
         <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{client.totalPoints}</Text>
-        <Text style={[Styles.textCenter, styles.pointsDescription]}>Your Points</Text>
 
         <View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
