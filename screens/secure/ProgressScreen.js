@@ -335,7 +335,7 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase1.push(<DayStatus key={index} day={filteredDayStatusesPhase1[key]} phase={1} />);
         });
       } else {
-        dayStatusesPhase1 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+        dayStatusesPhase1 = <Text style={Styles.emptyMessage}>No progress for this phase yet</Text>;
       }
     }
 
@@ -345,7 +345,7 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase2.push(<DayStatus key={index} day={filteredDayStatusesPhase2[key]} phase={2} />);
         });
       } else {
-        dayStatusesPhase2 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+        dayStatusesPhase2 = <Text style={Styles.emptyMessage}>No progress for this phase yet</Text>;
       }
     }
 
@@ -355,7 +355,7 @@ export default class LoginScreen extends React.Component {
           dayStatusesPhase3.push(<DayStatus key={index} day={filteredDayStatusesPhase3[index]} phase={3} />);
         });
       } else {
-        dayStatusesPhase3 = <Text style={Styles.loadingMessage}>No progress for this phase yet</Text>;
+        dayStatusesPhase3 = <Text style={Styles.emptyMessage}>No progress for this phase yet</Text>;
       }
     }
 
@@ -460,7 +460,7 @@ export default class LoginScreen extends React.Component {
                     </Text>
                   </TouchableHighlight>
 
-                  {this.state.latestRecordKey &&
+                  {this.state.latestRecordKey && this.state.bodyweightData &&
                     <TouchableHighlight
                       underlayColor={Colors.white}
                       style={[Styles.linkButton, styles.undoButton]}
@@ -504,8 +504,8 @@ export default class LoginScreen extends React.Component {
                     underlayColor={Colors.white}
                     onPress={() => { this._clickProgressReportPhase1()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      Phase 1
+                    <Text style={Styles.uppercaseText}>
+                      PHASE 1
                     </Text>
                   </TouchableHighlight>
 
@@ -518,8 +518,8 @@ export default class LoginScreen extends React.Component {
                     underlayColor={Colors.white}
                     onPress={() => { this._clickProgressReportPhase2()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      Phase 2
+                    <Text style={Styles.uppercaseText}>
+                      PHASE 2
                     </Text>
                   </TouchableHighlight>
 
@@ -532,8 +532,8 @@ export default class LoginScreen extends React.Component {
                     underlayColor={Colors.white}
                     onPress={() => { this._clickProgressReportPhase3()}}
                     style={styles.phaseHeader}>
-                    <Text style={styles.phaseHeaderText}>
-                      Phase 3
+                    <Text style={Styles.uppercaseText}>
+                      PHASE 3
                     </Text>
                   </TouchableHighlight>
 
@@ -586,11 +586,6 @@ const styles = StyleSheet.create ({
     paddingTop: 15,
     marginBottom: 5,
     backgroundColor: Colors.white
-  },
-  phaseHeaderText: {
-    color: Colors.black,
-    fontSize: 20,
-    fontWeight: 'bold'
   },
   progressSection: {
     marginTop: 20,
