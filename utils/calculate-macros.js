@@ -195,7 +195,7 @@ export function calculateTotals(age, gender, height, bodyfat, bodyweight, leanMa
 
   let totals = {};
   const bmr = calculateBmr(gender, age, height, bodyweight);
-  const difference = calculateDifference(gender, age, height, weight2, bmr, bodyweight, templateType, templates.templates);
+  const difference = calculateDifference(gender, age, height, weight2, bmr, bodyweight, templateType, templates);
 
   // rest calories final
   let restCalories;

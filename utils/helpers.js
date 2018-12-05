@@ -174,9 +174,7 @@ export function changeUnit(showInGrams, macroType, value, altSource) {
   }
 }
 
-export function createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake) {
-  // this.set('selection', null);
-
+export function createFoodMenu(macro, currentMeal, phase, sources, isPwoShake) {
   // return 'sources' if not phase 3
 
   const currMeal = currentMeal + 1;
@@ -197,10 +195,6 @@ export function createFoodMenu(macro, currentMeal, phase, sources, selection, is
           proteinAmount + ' of lean pork',
           proteinAmount + ' of game meat'
         ];
-
-        if(isBedtimeMeal) {
-          arr.push(sources[proteinString + 'casein'] + ' of casein');
-        }
 
         return arr;
       }

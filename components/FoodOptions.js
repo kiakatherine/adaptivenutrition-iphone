@@ -24,25 +24,23 @@ import Styles from '../constants/Styles';
 import { createFoodMenu } from '../utils/helpers';
 
 class FoodOptions extends React.Component {
-   state = { }
+  state = { }
 
-   render() {
-     const macro = this.props.macro;
-     const currentMeal = this.props.currentMeal;
-     const phase = this.props.phase;
-     const showInGrams = this.props.showInGrams;
-     const sources = this.props.sources;
-     const selection = this.state.selection;
-     const isBedtimeMeal = this.props.bedtime;
-     const isPwoShake = this.props.pwo;
-     const trainingIntensity = this.props.trainingIntensity;
-     let hidePwoShakeArrows = false;
-     let formattedOptions = [];
-     let formattedOptionsLength = 0;
-     let i = 0;
+  render() {
+    const macro = this.props.macro;
+    const currentMeal = this.props.currentMeal;
+    const phase = this.props.phase;
+    const showInGrams = this.props.showInGrams;
+    const sources = this.props.sources;
+    const isPwoShake = this.props.pwo;
+    const trainingIntensity = this.props.trainingIntensity;
+    let hidePwoShakeArrows = false;
+    let formattedOptions = [];
+    let formattedOptionsLength = 0;
+    let i = 0;
 
     if(macro !== 'veggies') {
-      let options = createFoodMenu(macro, currentMeal, phase, sources, selection, isBedtimeMeal, isPwoShake);
+      let options = createFoodMenu(macro, currentMeal, phase, sources, isPwoShake);
 
       if(options) {
         options.forEach(opt => {
@@ -114,8 +112,8 @@ const styles = StyleSheet.create ({
      display: 'none'
    },
    foodOptionsList: {
-     flex: 1,
-     flexDirection: 'row',
+     // flex: 1,
+     // flexDirection: 'row',
      marginTop: 10,
      marginBottom: 40
    },

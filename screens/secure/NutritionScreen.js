@@ -607,8 +607,6 @@ export default class LoginScreen extends React.Component {
     dayStatusesRef.once('value', snapshot => {
       const ds = snapshot.val();
 
-      console.log('ds', ds)
-
       if(ds) {
         Object.keys(ds).map(key => {
           if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
@@ -1274,7 +1272,7 @@ export default class LoginScreen extends React.Component {
       carbDelta = leanMass > 150 ? 50 :
         (leanMass < 150 && leanMass > 100) ? 35 : 20;
 
-      template = client.templateType;
+      template = client.template;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
       trainingIntensity = phase === 3 ? client.trainingIntensity : client.phase1TrainingIntensity;
