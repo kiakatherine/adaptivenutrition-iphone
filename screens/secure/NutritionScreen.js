@@ -1577,6 +1577,7 @@ export default class LoginScreen extends React.Component {
             client={this.state.client}
             points={totalPoints}
             phase={phase}
+            trainingIntensity={trainingIntensity}
             phase1meal1={this.state.phase1meal1}
             phase1meal2={this.state.phase1meal2}
             phase1meal3={this.state.phase1meal3}

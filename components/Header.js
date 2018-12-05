@@ -158,6 +158,13 @@ class Header extends React.Component {
                   styles.incomplete]}
                  name={'check'}
                  size={28} />
+               {this.props.trainingIntensity > 0 && <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal5 === 1 ? styles.complete :
+                  this.props.phase3meal5 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />}
               </Text>}
 
            <TouchableHighlight

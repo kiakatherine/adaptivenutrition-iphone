@@ -103,13 +103,13 @@ export function changeUnit(showInGrams, macroType, value, altSource) {
       cup = Number(beforeDecimal) <= 1 ? ' cup' : ' cups';
 
       if(afterDecimal === '50') {
-        return beforeDecimal + ' 1/2 ' + cup;
+        return beforeDecimal + '1/2 ' + cup;
       } else if(afterDecimal === '00') {
         return beforeDecimal + cup;
       } else if(afterDecimal === '75') {
-        return beforeDecimal + ' 3/4 ' + cup;
+        return beforeDecimal + '3/4 ' + cup;
       } else if(afterDecimal === '25') {
-        return beforeDecimal + ' 1/4 ' + cup;
+        return beforeDecimal + '1/4 ' + cup;
       }
     } else if(macroType === 'fats') {
       let fat;
