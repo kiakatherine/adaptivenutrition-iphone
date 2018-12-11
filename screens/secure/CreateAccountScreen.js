@@ -1,18 +1,5 @@
 import React from 'react';
 import {
-  Alert
-} from 'react-native'
-import Colors from '../../constants/Colors';
-import Styles from '../../constants/Styles';
-import moment from 'moment';
-
-import AuthService from '../../services/AuthService';
-
-import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
-
-import Swiper from 'react-native-swiper';
-
-import {
   Button,
   DatePickerIOS,
   Keyboard,
@@ -20,8 +7,21 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  View
+  View,
+  Alert
 } from 'react-native';
+
+import Swiper from 'react-native-swiper';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
+import moment from 'moment';
+import { TextInputMask } from 'react-native-masked-text'
+
+
+import Colors from '../../constants/Colors';
+import Styles from '../../constants/Styles';
+import AuthService from '../../services/AuthService';
+import FirebaseDBService from '../../services/FirebaseDBService';
+import FieldValidation from '../../services/FieldValidation';
 
 export default class CreateAccountScreen extends React.Component {
   static navigationOptions = {
@@ -32,76 +32,114 @@ export default class CreateAccountScreen extends React.Component {
     super(props);
 
     this.state = {
-      firstName: null,
-      lastName: null,
-      gender: null,
-      birthdate: null,
-      height: null,
-      bodyweight: null,
-      bodyfat: null,
-      email: "",
-      password: null,
+      firstName: '',
+      lastName: '',
+      gender: '',
+      birthdate: '',
+      height: '',
+      bodyweight: '',
+      bodyfat: '',      
 
-      page: 1,
+      page: 0,
       showError: false
     };
-
-    console.log('date', this.state.birthdate)
-
-    this.signUp = this.signUp.bind(this);
   }
 
-  async signUp() {
-    // TO DO: if error, don't navigate to meal plan
-    console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, this.state.email, this.state.password);
+  componentDidMount() {	
+		
+	}
 
-    // TO DO: default settings
-    // phase, templateType (as number), latestBodyweight, weightPoints, mealPoints, socialPoints, quizPoints, totalPoints, leanMass
-
-    const { navigate } = this.props.navigation;
-    let data = await AuthService.signUp(this.state.email, this.state.password);
-    if(data) {
-      if(data.success) {
-        const authenticated = await AuthService.isSignedIn();
-        if (authenticated) navigate('Authenticated');
-        else this.setState({ unauthorized: true });
-      }else{
-        this.showAlert(data.data)
-      }
+  fieldValidation(page) {    
+    switch(page) {
+      case 1:
+        if(!FieldValidation.emptyFieldValidation(this.state.firstName) || !FieldValidation.emptyFieldValidation(this.state.lastName)){
+          this.showAlert(page, 'Enter your First Name and Last Name.', true);
+        }
+        break;
+      case 2:
+        if(!FieldValidation.emptyFieldValidation(this.state.gender)) {
+          this.showAlert(page, 'Select your gender.', true)
+        }
+        break;
+      case 3:
+        let valid = this.refs.myDateText.isValid()
+        if(!valid) {
+          this.showAlert(page, 'Enter your birthday correctly.', true)
+        }else if(!FieldValidation.birthValidation(this.state.birthdate)) {
+          this.showAlert(page, 'Age should be 12 years or older.', true)
+        }
+        break;
+      case 4:
+        if(FieldValidation.heightValidation(this.state.height) == -1) {
+          this.showAlert(page, 'Enter your height.', true)
+        }else if(FieldValidation.heightValidation(this.state.height) == 0) {
+          this.showAlert(page, 'The height should be at least 8 inches.', true)
+        }
+        break;
+      case 5:
+        if(FieldValidation.weightValidation(this.state.bodyweight) == -1) {
+          this.showAlert(page, 'Enter your weight.', true)
+        }else if(FieldValidation.weightValidation(this.state.bodyweight) == 0) {
+          this.showAlert(page, 'The weight should be at least 600 pounds.', true)
+        }
+        break;
     }
-
   }
 
-  indexChanged(idx) {
-
-  }
-
-  showAlert(msg) {
+  showAlert(page, msg, state) {
     Alert.alert(
       'Warning!',
       msg,
       [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
+        {text: 'OK', onPress: () => {
+          if(state) {
+            this.refs.swiper.scrollBy(-1)       
+            return
+          }
+        }},
       ],
       { cancelable: false }
     )
   }
 
+  renderPagination = (index, total, context) => {  
+    console.log(index, this.state.page)
+    if(this.state.page != index) {
+      this.setState({page: index}, () => {
+        if(index > 0) {      
+          this.fieldValidation(index)
+        }
+      })
+    }
+  }
+
+  async saveClientData(navigate) {
+    // TO DO: if error, don't navigate to meal plan
+    if(FieldValidation.bodyFatPercentageValidation(this.state.bodyfat) == -1) {
+      this.showAlert(page, 'Enter your body fat.', false)
+    }else if(FieldValidation.bodyFatPercentageValidation(this.state.bodyfat) == 0){
+      this.showAlert(page, 'The body fat should be at least 75%.', false)
+    }else{
+      let deviceToken = await AsyncStorage.getItem("deviceToken")
+      console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, deviceToken);  
+      let res = await FirebaseDBService.setClientData(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, deviceToken);
+      if(res.success) navigate('Authenticated');
+      else this.showAlert(0, res.data, false)
+    }
+  }
+
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <View style={Styles.body}>
         <Swiper
+          ref='swiper'
           style={styles.wrapper}
           showsButtons={true}
           loop={false}
-          index={1}>
-          <View style={styles.slide1}>
-            <Text style={Styles.bigTitle}>Create Account</Text>
-            <Text style={Styles.contentHeading}>
-              We just need a few things in order to build your meal plan...
-            </Text>
-          </View>
-
+          index={0}
+          renderPagination={this.renderPagination}
+          >          
           <View style={styles.slide1}>
             <TextInput
               style={styles.input}
@@ -110,6 +148,7 @@ export default class CreateAccountScreen extends React.Component {
               onChangeText={firstName => this.setState({ firstName })}
               value={this.state.firstName}
             />
+            
             <TextInput
               style={styles.input}
               placeholder={"Last name"}
@@ -117,7 +156,6 @@ export default class CreateAccountScreen extends React.Component {
               onChangeText={lastName => this.setState({ lastName })}
               value={this.state.lastName}
             />
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
           </View>
 
           <View style={styles.slide1}>
@@ -125,7 +163,7 @@ export default class CreateAccountScreen extends React.Component {
               <TouchableHighlight
                 style={[Styles.flexCol, styles.femaleButton]}
                 onPress={() => this.setState({ gender: 'F' }) }>
-                  <Text style={Styles.textCenter}>
+                  <Text style={[Styles.textCenter, this.state.gender == 'F' && {color: 'red'}]}>
                     <FontAwesome
                       name='female'
                       size={36}
@@ -136,7 +174,7 @@ export default class CreateAccountScreen extends React.Component {
               <TouchableHighlight
                 style={[Styles.flexCol]}
                 onPress={() => this.setState({ gender: 'M' }) }>
-                  <Text style={[Styles.textCenter]}>
+                  <Text style={[Styles.textCenter, this.state.gender == 'M' && {color: 'red'}]}>
                   <FontAwesome
                     name='male'
                     size={36}
@@ -146,25 +184,21 @@ export default class CreateAccountScreen extends React.Component {
             </View>
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Men and women vary in body fat percentage...</Text>
-
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
           </View>
 
-          <View style={styles.slide1}>
-            <TextInput
+          <View style={styles.slide1}>           
+            <TextInputMask
+              ref='myDateText'
+              type={'datetime'}
+              options={{
+                format: 'MM-DD-YYYY'
+              }}
               style={styles.input}
               placeholder={"MM-DD-YYYY"}
-              value={this.state.birthdate ? moment(this.state.birthdate).format('MM-DD-YYYY') : null} />
-
-            {/*<DatePickerIOS
-              mode={'date'}
-              date={this.state.birthdate}
-              maximumDate={new Date()}
-              onDateChange={birthdate => this.setState({ birthdate }) } /> */}
-
+              onChangeText={birthdate => this.setState({ birthdate })}
+              value={this.state.birthdate}
+              />
             <Text style={[Styles.paragraphText, styles.blurb]}>Did you know that your protein needs vary by age?</Text>
-
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
           </View>
 
           <View style={styles.slide1}>
@@ -192,7 +226,6 @@ export default class CreateAccountScreen extends React.Component {
             />
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Your bodyweight will help determine what your portion sizes are.</Text>
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
           </View>
 
           <View style={styles.slide1}>
@@ -207,39 +240,15 @@ export default class CreateAccountScreen extends React.Component {
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Different sized people need different sized meals!</Text>
 
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
-          </View>
-
-          <View style={styles.slide1}>
-            <TextInput
-              style={styles.input}
-              placeholder={"Email address"}
-              keyboardType={"email-address"}
-              maxLength={30}
-              onChangeText={email => this.setState({ email })}
-              value={this.state.email}
-            />
-          </View>
-
-          <View style={styles.slide1}>
-            <TextInput
-              style={styles.input}
-              placeholder={"Password"}
-              maxLength={20}
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-            />
-
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
-
             <TouchableHighlight
               style={Styles.linkButton}
-              disabled={!this.state.email.trim()}
               underlayColor={Colors.paleGreen}
-              onPress={this.signUp}>
+              onPress={() => this.saveClientData(navigate)}>
               <Text style={[Styles.link, Styles.textCenter, Styles.whiteColor]}>CREATE MY ACCOUNT</Text>
             </TouchableHighlight>
           </View>
+
+          
         </Swiper>
       </View>
     );

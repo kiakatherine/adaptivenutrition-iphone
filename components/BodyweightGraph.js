@@ -49,7 +49,6 @@ class BodyweightGraph extends React.Component {
    async clickDeleteDataPoint() {
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
-    console.log(currentUser)
     const uid = currentUser.uid
     //  const uid = firebase.auth().currentUser.uid;
      const records = this.props.data;

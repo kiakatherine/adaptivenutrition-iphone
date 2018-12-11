@@ -1,10 +1,4 @@
 import React from 'react';
-
-import Colors from '../constants/Colors';
-import Styles from '../constants/Styles';
-
-import AuthService from '../services/AuthService';
-
 import {
   Button,
   Image,
@@ -14,8 +8,17 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  View
+  View,
+  Alert,
+  AsyncStorage
 } from 'react-native';
+
+import Colors from '../constants/Colors';
+import Styles from '../constants/Styles';
+import AuthService from '../services/AuthService';
+import FirebaseDBService from '../services/FirebaseDBService'
+import FieldValidation from '../services/FieldValidation';
+import NotificationService from '../services/NotificationService';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -29,46 +32,94 @@ export default class LoginScreen extends React.Component {
       password: "",
       unauthorized: false
     };
+  }
 
-    this.login = this.login.bind(this);
-    // this.signUp = this.signUp.bind(this);
+  showAlert(msg) {
+    Alert.alert(
+      'Warning!',
+      msg,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  fieldValidation() {
+    if(!FieldValidation.emptyFieldValidation(this.state.email)) {
+      this.showAlert('Enter your email address.');
+    }else if(!FieldValidation.emailValidation(this.state.email)) {
+      this.showAlert('Invalid email address.')
+    }else if(!FieldValidation.emptyFieldValidation(this.state.password)){
+      this.showAlert('Enter a password.')
+    }else{
+      this.login()
+    }
   }
 
   async login() {
     const { navigate } = this.props.navigation;
-
-    await AuthService.login(this.state.email, this.state.password);
-
-    const authenticated = await AuthService.isSignedIn();
-    if (authenticated) navigate('Authenticated');
-    else this.setState({ unauthorized: true });
+    let res = await AuthService.login(this.state.email, this.state.password);
+    let deviceToken = await AsyncStorage.getItem('deviceToken')
+    NotificationService.getClientsInfoRef()
+    if(res.success) {      
+      let clientRef = FirebaseDBService.getClientRef(res.data.uid)
+      clientRef.on('value', snapshot => {
+        clientResponse = snapshot.val();  
+        if(clientResponse) {
+          AsyncStorage.setItem("user", JSON.stringify(res.data))          
+          clientRef.update({devicetoken: deviceToken})
+          navigate('Authenticated')
+          
+        }else{
+          navigate('CreateAccount')
+        }
+      });   
+    }else {
+      this.showAlert(res.data)
+    }
   }
 
   async loginWithFacebook(navigate) {
-    await AuthService.loginWithFacebook();
+    let res = await AuthService.loginWithFacebook();
 
-    const authenticated = await AuthService.isSignedIn();
-    if (authenticated) navigate('Authenticated');
-    else this.setState({ unauthorized: true });
+    if(res.success) {      
+      let clientRef = FirebaseDBService.getClientRef(res.data.uid)
+      clientRef.on('value', snapshot => {
+        clientResponse = snapshot.val();  
+        if(clientResponse) {
+          AsyncStorage.setItem("user", JSON.stringify(res.data))
+          navigate('Authenticated')
+        }else{
+          navigate('CreateAccount')
+        }
+      });   
+    }else {
+      this.showAlert(res.data)
+    }    
   }
 
   async loginWithGoogle(navigate) {
-    await AuthService.loginWithGoogle();
-
-    const authenticated = await AuthService.isSignedIn();
-    if (authenticated) navigate('Authenticated');
-    else this.setState({ unauthorized: true });
+    let res = await AuthService.loginWithGoogle();
+    
+    if(res.success) {      
+      let clientRef = FirebaseDBService.getClientRef(res.data.uid)
+      clientRef.on('value', snapshot => {
+        clientResponse = snapshot.val();  
+        if(clientResponse) {
+          AsyncStorage.setItem("user", JSON.stringify(res.data))
+          navigate('Authenticated')
+        }else{
+          navigate('CreateAccount')
+        }
+      });   
+    }else {
+      this.showAlert(res.data)
+    }    
   }
-
-  // async signUp() {
-    // Luke's code
-    // this.setState({ signUp: true });
-    // AuthService.signUp(this.state.email, this.state.password);
-  // }
 
   render() {
     const { navigate } = this.props.navigation;
-
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.body}>
@@ -76,7 +127,6 @@ export default class LoginScreen extends React.Component {
             <Text style={[Styles.bigTitle, styles.welcomeText]}>Welcome back!</Text>
           </View>
           <View style={styles.content}>
-            {this.state.unauthorized && <View style={Styles.center}><Text style={Styles.errorText}>Invalid username or password</Text></View>}
             <TextInput
               style={styles.textInput}
               autoCapitalize= { 'none' }
@@ -97,7 +147,7 @@ export default class LoginScreen extends React.Component {
             <TouchableHighlight
               style={[Styles.button, {marginTop: 10}]}
               underlayColor={Colors.white}
-              onPress={() => (!this.state.email.trim() || !this.state.password.trim()) ? this.login : null}>
+              onPress={() => this.fieldValidation()}>
               <Text style={Styles.buttonText}>LOG IN</Text>
             </TouchableHighlight>
 

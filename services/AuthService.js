@@ -6,16 +6,17 @@ import firebase from 'firebase';
 class AuthService {
   async login (email, password) {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email.trim().toLowerCase(), password);
-
+      await firebase.auth().signInWithEmailAndPassword(email.trim().toLowerCase(), password); 
       const user = firebase.auth().currentUser;
-      await AsyncStorage.setItem("user", JSON.stringify(user))
-      // TODO: Check isEmailVerified, if not firebase.auth().signOut()
-      // if(!user.emailVerified) {
-      //   await firebase.auth().signOut();
-      // }
-      // await AsyncStorage.setItem(ADAPTIVE_SESSION_KEY, "true");
+      return {
+        success: true,
+        data: user        
+      }      
     } catch(err) {
+      return {
+        success: false,
+        data: err.message
+      }
       // console.log(err);
     }
   }
@@ -33,41 +34,47 @@ class AuthService {
         await firebase.auth().signInAndRetrieveDataWithCredential(credential);
 
         const user = firebase.auth().currentUser;
-        await AsyncStorage.setItem("user", JSON.stringify(user))
+        return {
+          success: true,
+          data: user        
+        }  
+        // await AsyncStorage.setItem("user", JSON.stringify(user))
       }
     } catch(e) {
-
+      return {
+        success: false,
+        data: e.message        
+      }  
     }
   }
 
   async loginWithFacebook() {
     try {
+      const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+        '424797598049653',
+        { permissions: ['public_profile', 'email'] }
+      );
 
-    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
-      '424797598049653',
-      { permissions: ['public_profile', 'email'] }
-    );
-
-    if (type === 'success') {
-      const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-      firebase.auth().signInWithCredential(credential);
-
-      const user = firebase.auth().currentUser;
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-
-      if (user != null) {
-        console.log(user);
+      if (type === 'success') {
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        firebase.auth().signInWithCredential(credential);
+        const user = firebase.auth().currentUser;        
+        return {
+          success: true,
+          data: user        
+        }  
       } else {
-        console.log("not user");
+        return {
+          success: false,
+          data: 'Facebook login error!'        
+        }  
       }
-
-    } else {
-
+    } catch(e) {
+      return {
+        success: false,
+        data: e.message        
+      }  
     }
-  } catch(e) {
-
-  }
   }
 
   async resetPassword (email) {
@@ -94,7 +101,6 @@ class AuthService {
       // await AsyncStorage.removeItem("user")
       let userData = await AsyncStorage.getItem("user")
       let currentUser = JSON.parse(userData)
-      // console.log(currentUser)
       if(currentUser){
         return true
       }else{
@@ -107,10 +113,10 @@ class AuthService {
     }
   }
 
-  async signUp(email, password, firstName, lastName, gender, birthdate, height, bodyweight, bodyfat) {
-    try {
-      const user = firebase.auth().currentUser;
+  async signUp(email, password) {
+    try {      
       await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const user = firebase.auth().currentUser;
       await AsyncStorage.setItem("user", JSON.stringify(user))
       return {
         success: true,
@@ -123,6 +129,10 @@ class AuthService {
       }
     }
   }
+
+  
+
+  
 }
 
 export default new AuthService();

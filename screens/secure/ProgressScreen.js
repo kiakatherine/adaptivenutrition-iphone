@@ -33,7 +33,7 @@ import BodyweightGraph from '../../components/BodyweightGraph';
 import DayStatus from '../../components/DayStatus';
 import ModalWindow from '../../components/ModalWindow';
 
-export default class LoginScreen extends React.Component {
+export default class ProgressScreen extends React.Component {
   static navigationOptions = {
     title: 'Progress',
   };
@@ -53,10 +53,12 @@ export default class LoginScreen extends React.Component {
 
       showAlertWeightAdded: false,
       showAlertDuplicateWeight: false,
+      bodyweightData: null,
 
       weeklyView: true,
       monthlyView: false,
       yearlyView: false,
+      allView: false,
       clientId: null
     }
 
@@ -68,21 +70,18 @@ export default class LoginScreen extends React.Component {
     this._closeAlert = this._closeAlert.bind(this);
   }
 
-  async getClientData() {
-    // const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    // const dayStatuses = firebase.database().ref('dayStatuses');
-    // const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
+  async getClientData() {   
     let clientResponse = null;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const clientId = currentUser.uid
     const clientRef = firebase.database().ref('/clients/' + clientId);
-    const weightsRef = firebase.database().ref('/clients/' + clientId + '/weights');
+    // const weightsRef = firebase.database().ref('/clients/' + clientId + '/weights');
     const dayStatuses = firebase.database().ref('/clients/' + clientId + '/day-statuses');
 
-    weightsRef.on('value', snapshot => {
-      this.setState({ bodyweightData: snapshot.val() });
-    });
+    // weightsRef.on('value', snapshot => {
+    //   this.setState({ bodyweightData: snapshot.val() });
+    // });
 
     clientRef.on('value', snapshot => {
       clientResponse = snapshot.val();
@@ -161,6 +160,75 @@ export default class LoginScreen extends React.Component {
 
   componentDidMount() {
     this.getClientData()
+    this.sortingWeightByTimestamp()
+  }
+
+  getAgoTimestamp(days) {
+    var date = new Date();
+    var last = new Date(date.getTime() - (days * 24 * 60 * 60 * 1000));
+    var day =last.getDate();
+    var month=last.getMonth()+1;
+    var year=last.getFullYear();
+
+    return year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day)) + "T00:00:00Z"
+  }
+
+  // sorting by firebase
+  async sortingWeightByTimestamp() {   
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid;
+    let endTimestamp = Date.parse(new Date())
+    let startTimestamp
+    if(this.state.weeklyView)  startTimestamp = Date.parse(new Date(this.getAgoTimestamp(7)))    
+    else if(this.state.monthlyView) startTimestamp = Date.parse(new Date(this.getAgoTimestamp(30)))
+    else if(this.state.yearlyView) startTimestamp = Date.parse(new Date(this.getAgoTimestamp(365)))
+    else if(this.state.allView) startTimestamp = null
+
+    if(startTimestamp) weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByChild('timestamp').startAt(startTimestamp).endAt(endTimestamp)
+    else weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByValue()
+
+    if(weights) {
+      weights.once('value', snapshot => {
+        records = snapshot.val();
+        let recordsArr = [];
+        if(records) {
+          Object.keys(records).map(key => {
+            recordsArr.push(records[key]);
+          });
+          recordsArr.sort((a, b)=> (a.timestamp > b.timestamp) ? -1 : ((b.timestamp > a.timestamp) ? 1 : 0))
+          this.setState({ bodyweightData: recordsArr });
+        }        
+      })
+    }
+  }
+
+  sevenDayAverage() {
+    let sevenDayAverage
+    let oneWeekAgo = new Date();
+    let pastWeekEntries = []
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
+    Object.keys(this.state.bodyweightData).map(key => {
+      if(this.state.bodyweightData[key].date > oneWeekAgo) {
+        pastWeekEntries.push(this.state.bodyweightData[key]);
+      }
+    });
+
+    if(pastWeekEntries.length) {
+      sevenDayAverage = (
+        (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
+        (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
+        (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
+        (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
+        (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
+        (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
+        (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
+      sevenDayAverage = sevenDayAverage.toFixed(1);
+    } else {
+      sevenDayAverage = '---';
+    }
+    return sevenDayAverage
   }
 
   _hideAll () {
@@ -171,7 +239,6 @@ export default class LoginScreen extends React.Component {
   async _submitWeight() {
     const date = new Date(this.state.date);
     const weight = this.state.weight;
-    // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const clientId = currentUser.uid;
@@ -183,7 +250,6 @@ export default class LoginScreen extends React.Component {
       client = snapshot.val();
     });
 
-    console.log('weights', clientWeights)
 
     if(!clientWeights) {
       clientRef.update({
@@ -292,10 +358,6 @@ export default class LoginScreen extends React.Component {
     this.setState({ showProgressPhase3: !this.state.showProgressPhase3 });
   }
 
-  clickWeeklyView(pastWeekEntries) {
-    this.setState({ bodyweightData: pastWeekEntries, weeklyView: true, monthlyView: false, yearlyView: false });
-  }
-
   _updateWeight(weight, direction) {
     if(direction === 'decrease') {
       this.setState({
@@ -362,67 +424,9 @@ export default class LoginScreen extends React.Component {
         dayStatusesPhase3 = <Text style={Styles.emptyMessage}>No progress for this phase yet</Text>;
       }
     }
-
-    // seven day bodyweight average, initial weight
-    let sevenDayAverage, initialWeight, pastWeekEntries = [];
-    // const bodyweightRecords = firebase.database().ref('bodyweightRecords');
-    const clientId = firebase.auth().currentUser.uid;
-    const weights = firebase.database().ref('/clients/' + clientId + '/weights');
-    let records;
-
-    if(weights) {
-      weights.once('value', snapshot => {
-        records = snapshot.val();
-        let weight, recordsArr = [];
-
-        if(records) {
-          Object.keys(records).map(key => {
-            recordsArr.push(records[key]);
-          });
-        }
-
-      // sort records by date
-      // TO DO: fix sorting
-      let sortedBodyweightRecords = recordsArr;
-
-      // set initial weight
-      initialWeight = sortedBodyweightRecords.length ? sortedBodyweightRecords[0].weight : null;
-
-      // get date from 1 week ago
-      let oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
-
-      Object.keys(sortedBodyweightRecords).map(key => {
-        if(sortedBodyweightRecords[key].date > oneWeekAgo) {
-          pastWeekEntries.push(sortedBodyweightRecords[key]);
-        }
-      });
-
-        if(pastWeekEntries.length) {
-          sevenDayAverage = (
-            (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
-            (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
-            (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
-            (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
-            (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
-            (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
-            (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
-          sevenDayAverage = sevenDayAverage.toFixed(1);
-        } else {
-          sevenDayAverage = '---';
-        }
-      });
-    }
-
+    
     return (
       <View style={Styles.body}>
-        {/*{this.state.showAlertWeightAdded &&
-          <Alert
-            type="success"
-            message="Added!"
-            closeAlert={this._closeAlert} />}*/}
-
         <ScrollView>
           <View>
             <View style={Styles.flexRow}>
@@ -442,14 +446,14 @@ export default class LoginScreen extends React.Component {
 
             {this.state.showBodyweightLog &&
               <View style={[Styles.content, styles.progressSection]}>
-                {records && <View style={styles.stats}>
+                {this.state.bodyweightData && <View style={styles.stats}>
                   <View style={styles.stat}>
-                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{sevenDayAverage}</Text>
+                    <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{this.sevenDayAverage()}</Text>
                     <Text style={[Styles.menuItemSubText, Styles.textCenter]}>Average weight over past week</Text>
                   </View>
                 </View>}
 
-                {!records && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your weight</Text>}
+                {!this.state.bodyweightData && <Text style={[Styles.emptyMessage, Styles.textCenter, {marginTop: 30, marginBottom: 20}]}>Add your weight</Text>}
 
                 <View>
                   <TouchableHighlight
@@ -473,26 +477,61 @@ export default class LoginScreen extends React.Component {
                     </TouchableHighlight>}
                 </View>
 
-                {records && <View style={[Styles.flexRow, styles.pillButtons]}>
+                {this.state.bodyweightData && <View style={[Styles.flexRow, styles.pillButtons]}>
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.weeklyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { this.clickWeeklyView(pastWeekEntries) }}>
+                    onPress={() => { 
+                      this.setState({ 
+                        weeklyView: true, 
+                        monthlyView: false, 
+                        yearlyView: false, 
+                        allView: false 
+                      }, () =>this.sortingWeightByTimestamp()) 
+                    }}>
                     <Text style={[Styles.pillButtonText, this.state.weeklyView ? Styles.pillButtonTextSelected : null]}>WEEK</Text>
                   </TouchableHighlight>
 
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.monthlyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { this.setState({ weeklyView: false, monthlyView: true, yearlyView: false }) }}>
+                    onPress={() => { 
+                      this.setState({ 
+                        weeklyView: false, 
+                        monthlyView: true, 
+                        yearlyView: false, 
+                        allView: false 
+                      }, () => this.sortingWeightByTimestamp()) 
+                    }}>
                     <Text style={[Styles.pillButtonText, this.state.monthlyView ? Styles.pillButtonTextSelected : null]}>MONTH</Text>
                   </TouchableHighlight>
 
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.yearlyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { this.setState({ weeklyView: false, monthlyView: false, yearlyView: true }) }}>
+                    onPress={() => { 
+                      this.setState({ 
+                        weeklyView: false, 
+                        monthlyView: false, 
+                        yearlyView: true, 
+                        allView: false 
+                      }, () => this.sortingWeightByTimestamp()) 
+                    }}>
                     <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
+                  </TouchableHighlight>
+
+                  <TouchableHighlight
+                    underlayColor={Colors.darkerPrimaryColor}
+                    style={[Styles.pillButton, this.state.allView ? Styles.pillButtonSelected : null]}
+                    onPress={() => { 
+                      this.setState({ 
+                        weeklyView: false, 
+                        monthlyView: false, 
+                        yearlyView: false, 
+                        allView: true 
+                      }, () => this.sortingWeightByTimestamp()) 
+                    }}>
+                    <Text style={[Styles.pillButtonText, this.state.allView ? Styles.pillButtonTextSelected : null]}>All</Text>
                   </TouchableHighlight>
                 </View>}
 

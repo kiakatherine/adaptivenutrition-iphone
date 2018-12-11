@@ -128,6 +128,12 @@ export const router = (signedIn = false) => {
         headerLeft: null
       }
     },
+    CreateAccount: {
+      screen: CreateAccountScreen,
+      navigationOptions: {
+        headerLeft: null
+      }
+    },
     LoginScreen: {
       screen: LoginScreen,
       navigationOptions: {
