@@ -5,13 +5,13 @@ import firebase from 'firebase';
 // const ADAPTIVE_SESSION_KEY = "adaptive-session-key";
 
 class NotificationService {
-    getClientsInfoRef() {
-        console.log('okokok')
-        // const clientsRef = firebase.database().ref().child('clients')
-        // clientsRef.on('value', snapshot => {
-        //     console.log(snapshot.val())
-        // });
-    }
+    // async getClientsInfoRef() {
+    //     console.log('okokok')
+    //     // const clientsRef = firebase.database().ref().child('clients')
+    //     // clientsRef.on('value', snapshot => {
+    //     //     console.log(snapshot.val())
+    //     // });
+    // }
 
     sendNotification(deviceToken) {
         const url = 'https://exp.host/--/api/v2/push/send';

@@ -5,20 +5,54 @@ import { Permissions, Notifications } from 'expo';
 import { router } from './router';
 
 import AuthService from './services/AuthService';
+import FirebaseDBService from './services/FirebaseDBService'
 import NotificationService from './services/NotificationService'
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     console.disableYellowBox = true;
-    this.state = { authenticated: false };
+    this.state = { 
+      authenticated: false,
+      saveClientData: false
+    };
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.registerForPushNotificationsAsync()
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    let uid
+    if(currentUser) uid = currentUser.uid
+
+    let saveData = await AsyncStorage.getItem("saveData")
+
+    let clientRef, clientResponse
+    if(saveData) {
+      clientResponse = true
+    }else{
+      clientRef = await FirebaseDBService.getClientRef(uid)
+      clientRef.on('value', snapshot => {
+        clientResponse = snapshot.val(); 
+      });  
+    }
+     
+    
     return AuthService.isSignedIn()
-      .then(res => this.setState({ authenticated: res }));
+      .then(res => {        
+        if(clientResponse) {
+          this.setState({ 
+            authenticated: res,
+            saveClientData: true
+          })    
+        }else{
+          this.setState({ 
+            authenticated: res,
+            saveClientData: false
+          })
+        } 
+      });
   }
 
   // register device token to firebase db.
@@ -55,7 +89,7 @@ export default class App extends React.Component {
   };
 
   render () {
-    const Layout = router(this.state.authenticated);
+    const Layout = router(this.state.authenticated, this.state.saveClientData);
     return <Layout />;
   }
 }

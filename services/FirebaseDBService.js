@@ -4,7 +4,7 @@ import firebase from 'firebase';
 // const ADAPTIVE_SESSION_KEY = "adaptive-session-key";
 
 class FirebaseDBService {
-    getClientRef(clientId) {
+    async getClientRef(clientId) {
       return firebase.database().ref('/clients/' + clientId);        
     }
 

@@ -99,6 +99,7 @@ class AuthService {
   async isSignedIn () {
     try {
       // await AsyncStorage.removeItem("user")
+      // await AsyncStorage.removeItem("saveData")
       let userData = await AsyncStorage.getItem("user")
       let currentUser = JSON.parse(userData)
       if(currentUser){

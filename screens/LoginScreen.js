@@ -61,7 +61,6 @@ export default class LoginScreen extends React.Component {
     const { navigate } = this.props.navigation;
     let res = await AuthService.login(this.state.email, this.state.password);
     let deviceToken = await AsyncStorage.getItem('deviceToken')
-    NotificationService.getClientsInfoRef()
     if(res.success) {      
       let clientRef = FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {

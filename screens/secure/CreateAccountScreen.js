@@ -11,6 +11,7 @@ import {
   Alert
 } from 'react-native';
 
+import { AsyncStorage } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 import moment from 'moment';
@@ -103,7 +104,7 @@ export default class CreateAccountScreen extends React.Component {
   }
 
   renderPagination = (index, total, context) => {  
-    console.log(index, this.state.page)
+    // console.log(index, this.state.page)
     if(this.state.page != index) {
       this.setState({page: index}, () => {
         if(index > 0) {      
@@ -116,15 +117,16 @@ export default class CreateAccountScreen extends React.Component {
   async saveClientData(navigate) {
     // TO DO: if error, don't navigate to meal plan
     if(FieldValidation.bodyFatPercentageValidation(this.state.bodyfat) == -1) {
-      this.showAlert(page, 'Enter your body fat.', false)
+      this.showAlert(0, 'Enter your body fat.', false)
     }else if(FieldValidation.bodyFatPercentageValidation(this.state.bodyfat) == 0){
-      this.showAlert(page, 'The body fat should be at least 75%.', false)
+      this.showAlert(0, 'The body fat should be at least 75%.', false)
     }else{
       let deviceToken = await AsyncStorage.getItem("deviceToken")
-      console.log(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, deviceToken);  
       let res = await FirebaseDBService.setClientData(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, deviceToken);
-      if(res.success) navigate('Authenticated');
-      else this.showAlert(0, res.data, false)
+      if(res.success) {
+        await AsyncStorage.setItem('saveData', 'true')
+        navigate('Authenticated');
+      }else this.showAlert(0, res.data, false)
     }
   }
 
@@ -212,7 +214,6 @@ export default class CreateAccountScreen extends React.Component {
             />
 
             <Text style={[Styles.paragraphText, styles.blurb]}>Different sized people need different sized meals!</Text>
-            {this.state.showError && <Text style={[Styles.errorText, Styles.textCenter, Styles.paragraphText]}>Make sure to fill out all fields!</Text>}
           </View>
 
           <View style={styles.slide1}>

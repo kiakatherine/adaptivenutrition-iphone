@@ -113,7 +113,8 @@ export const AuthenticatedScreen = TabNavigator(
   }
 );
 
-export const router = (signedIn = false) => {
+export const router = (signedIn = false, saveClientData = false) => {
+  console.log(signedIn, saveClientData)
   return StackNavigator({
     // Unauthenticated screens
     WelcomeScreen: {
@@ -151,6 +152,6 @@ export const router = (signedIn = false) => {
       }
     }
   }, {
-    initialRouteName: signedIn ? "Authenticated" : "WelcomeScreen"
+    initialRouteName: signedIn ? ( saveClientData ? "Authenticated" : "CreateAccount") : "WelcomeScreen"
   });
 };
