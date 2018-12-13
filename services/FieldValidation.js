@@ -23,13 +23,13 @@ export default class FieldValidation {
 
     static weightValidation(weight) {
         if(weight == 0) return -1;
-        else if(weight < 600) return 0;
+        else if(weight > 600) return 0;
         else return 1; 
     }
 
     static bodyFatPercentageValidation(percent) {
         if(percent == 0) return -1;
-        else if(percent < 75) return 0;
+        else if(percent > 75) return 0;
         else return 1;
     }
 

@@ -114,7 +114,6 @@ export const AuthenticatedScreen = TabNavigator(
 );
 
 export const router = (signedIn = false, saveClientData = false) => {
-  console.log(signedIn, saveClientData)
   return StackNavigator({
     // Unauthenticated screens
     WelcomeScreen: {

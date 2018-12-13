@@ -91,8 +91,9 @@ class AuthService {
     try {
       await firebase.auth().signOut();
       await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("saveData")
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 

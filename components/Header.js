@@ -35,9 +35,9 @@ class Header extends React.Component {
   }
 
   _closeModal(page) {
-    this.setState({
-      showPoints: false,
-      showUserInfo: false
+    this.setState({ 
+      showPoints: false, 
+      showUserInfo: false 
     }, () => {
       if(page == "logout") {
         this.props.logout()
@@ -46,7 +46,7 @@ class Header extends React.Component {
   }
 
    render() {
-     return (
+     return ( 
        <View>
          <View style={styles.header}>
            {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />
@@ -158,13 +158,6 @@ class Header extends React.Component {
                   styles.incomplete]}
                  name={'check'}
                  size={28} />
-               {this.props.trainingIntensity > 0 && <FontAwesome
-                 style={[styles.checkmark,
-                  this.props.phase3meal5 === 1 ? styles.complete :
-                  this.props.phase3meal5 === 2 ? styles.completeBad :
-                  styles.incomplete]}
-                 name={'check'}
-                 size={28} />}
               </Text>}
 
            <TouchableHighlight
@@ -194,7 +187,7 @@ class Header extends React.Component {
             onChangeBirthdate={this.props.onChangeBirthdate}
             client={this.props.client ? this.props.client : null}
             wide={true}
-            closeModal={(page)=> this._closeModal(page)}
+            closeModal={(page)=> this._closeModal(page)} 
             /> }
       </View>
      );
@@ -211,9 +204,7 @@ const styles = StyleSheet.create ({
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: Colors.white,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.gray
+    padding: 10
   },
   headerItem: {
     flex: 1,
@@ -226,7 +217,7 @@ const styles = StyleSheet.create ({
     marginRight: 5
   },
   complete: {
-    color: Colors.primaryColor
+    color: Colors.secondaryColor
   },
   completeBad: {
     color: Colors.paleRed
