@@ -21,12 +21,14 @@ export default class App extends React.Component {
   async componentWillMount() {
     this.registerForPushNotificationsAsync()
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
+
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     let uid
     if(currentUser) uid = currentUser.uid
 
     let saveData = await AsyncStorage.getItem("saveData")
+    console.log(saveData)
 
     let clientRef, clientResponse
     if(saveData) {

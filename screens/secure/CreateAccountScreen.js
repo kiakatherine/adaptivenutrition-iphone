@@ -137,8 +137,8 @@ export default class CreateAccountScreen extends React.Component {
               <View style={styles.genderButtons}>
                 <TouchableHighlight
                   style={[Styles.flexCol, styles.femaleButton]}
-                  onPress={() => this.setState({ gender: 'F' }) }>
-                    <Text style={[Styles.textCenter, this.state.gender == 'F' && {color: 'red'}]}>
+                  onPress={() => this.setState({ gender: 'Female' }) }>
+                    <Text style={[Styles.textCenter, this.state.gender == 'Female' && {color: 'red'}]}>
                       <FontAwesome
                         name='female'
                         size={36}
@@ -148,8 +148,8 @@ export default class CreateAccountScreen extends React.Component {
 
                 <TouchableHighlight
                   style={[Styles.flexCol]}
-                  onPress={() => this.setState({ gender: 'M' }) }>
-                    <Text style={[Styles.textCenter, this.state.gender == 'M' && {color: 'red'}]}>
+                  onPress={() => this.setState({ gender: 'Male' }) }>
+                    <Text style={[Styles.textCenter, this.state.gender == 'Male' && {color: 'red'}]}>
                     <FontAwesome
                       name='male'
                       size={36}
@@ -166,10 +166,10 @@ export default class CreateAccountScreen extends React.Component {
                 ref='birthText'
                 type={'datetime'}
                 options={{
-                  format: 'MM-DD-YYYY'
+                  format: 'YYYY-MM-DD'
                 }}
                 style={styles.input}
-                placeholder={"MM-DD-YYYY"}
+                placeholder={"YYYY-MM-DD"}
                 onChangeText={birthdate => this.setState({ birthdate })}
                 value={this.state.birthdate}
                 />

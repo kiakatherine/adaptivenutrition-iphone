@@ -160,7 +160,7 @@ export default class ProgressScreen extends React.Component {
 
   componentDidMount() {
     this.getClientData()
-    this.sortingWeightByTimestamp()
+    this.sortingWeightByDate()
   }
 
   getAgoTimestamp(days) {
@@ -174,33 +174,73 @@ export default class ProgressScreen extends React.Component {
   }
 
   // sorting by firebase
-  async sortingWeightByTimestamp() {   
+  async sortingWeightByDate() {   
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
-    const clientId = currentUser.uid;
-    let endTimestamp = Date.parse(new Date())
-    let startTimestamp
-    if(this.state.weeklyView)  startTimestamp = Date.parse(new Date(this.getAgoTimestamp(7)))    
-    else if(this.state.monthlyView) startTimestamp = Date.parse(new Date(this.getAgoTimestamp(30)))
-    else if(this.state.yearlyView) startTimestamp = Date.parse(new Date(this.getAgoTimestamp(365)))
-    else if(this.state.allView) startTimestamp = null
-
-    if(startTimestamp) weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByChild('timestamp').startAt(startTimestamp).endAt(endTimestamp)
-    else weights = firebase.database().ref('/clients/' + clientId + '/weights').orderByValue()
-
+    const weights = firebase.database().ref('/clients/' + currentUser.uid + '/weights');
     if(weights) {
       weights.once('value', snapshot => {
-        records = snapshot.val();
+        const records = snapshot.val();
         let recordsArr = [];
+        // get client's bodyweight records
+        // do this on server side
         if(records) {
           Object.keys(records).map(key => {
             recordsArr.push(records[key]);
           });
-          recordsArr.sort((a, b)=> (a.timestamp > b.timestamp) ? -1 : ((b.timestamp > a.timestamp) ? 1 : 0))
-          this.setState({ bodyweightData: recordsArr });
-        }        
-      })
+        }
+
+        // sort records by date
+        // TO DO: fix sorting
+        let sortedBodyweightRecords = recordsArr.sort((a,b) => {
+          return new Date(a.date) - new Date(b.date);
+        });
+        sortedBodyweightRecords = sortedBodyweightRecords.reverse();
+
+        let startDate = new Date()
+        let entries = []
+        if(this.state.weeklyView){
+          startDate.setDate(startDate.getDate() - 7)
+          startDate = moment(startDate)
+          sortedBodyweightRecords.forEach(rec => {
+            if(moment(rec.date) > startDate) {
+              entries.push(rec);
+            }
+          });
+          this.setState({
+            bodyweightData: entries
+          })
+        }else if(this.state.monthlyView){
+          startDate.setDate(startDate.getDate() - 30)
+          startDate = moment(startDate)
+          sortedBodyweightRecords.forEach(rec => {
+            if(moment(rec.date) > startDate) {
+              entries.push(rec);
+            }
+          });
+          this.setState({
+            bodyweightData: entries
+          })
+        }else if(this.state.yearlyView){
+          startDate.setDate(startDate.getDate() - 365)
+          startDate = moment(startDate)
+          sortedBodyweightRecords.forEach(rec => {
+            if(moment(rec.date) > startDate) {
+              entries.push(rec);
+            }
+          });
+          this.setState({
+            bodyweightData: entries
+          })
+        }else if(this.state.allView){
+          this.setState({
+            bodyweightData: sortedBodyweightRecords
+          })
+        }
+      });
     }
+
+    
   }
 
   sevenDayAverage() {
@@ -487,7 +527,7 @@ export default class ProgressScreen extends React.Component {
                         monthlyView: false, 
                         yearlyView: false, 
                         allView: false 
-                      }, () =>this.sortingWeightByTimestamp()) 
+                      }, () =>this.sortingWeightByDate()) 
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.weeklyView ? Styles.pillButtonTextSelected : null]}>WEEK</Text>
                   </TouchableHighlight>
@@ -501,7 +541,7 @@ export default class ProgressScreen extends React.Component {
                         monthlyView: true, 
                         yearlyView: false, 
                         allView: false 
-                      }, () => this.sortingWeightByTimestamp()) 
+                      }, () => this.sortingWeightByDate()) 
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.monthlyView ? Styles.pillButtonTextSelected : null]}>MONTH</Text>
                   </TouchableHighlight>
@@ -515,7 +555,7 @@ export default class ProgressScreen extends React.Component {
                         monthlyView: false, 
                         yearlyView: true, 
                         allView: false 
-                      }, () => this.sortingWeightByTimestamp()) 
+                      }, () => this.sortingWeightByDate()) 
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
                   </TouchableHighlight>
@@ -529,7 +569,7 @@ export default class ProgressScreen extends React.Component {
                         monthlyView: false, 
                         yearlyView: false, 
                         allView: true 
-                      }, () => this.sortingWeightByTimestamp()) 
+                      }, () => this.sortingWeightByDate()) 
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.allView ? Styles.pillButtonTextSelected : null]}>All</Text>
                   </TouchableHighlight>

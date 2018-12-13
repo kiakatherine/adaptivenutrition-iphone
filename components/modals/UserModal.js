@@ -58,6 +58,7 @@ class UserModal extends React.Component {
     const bodyweight = this.props.client && this.props.client.weight ? this.props.client.weight.toString() : null;
     const bodyfat = this.props.client && this.props.client.bodyfat ? this.props.client.bodyfat.toString() : null;
     const birthdate = this.props.client ? this.props.client.birthdate : new Date();
+    console.log(birthdate)
     const phase = this.props.client ? this.props.client.phase : 1;
 
     // TO DO: not hardcoded dates; check what goal is to see what step 2 should be

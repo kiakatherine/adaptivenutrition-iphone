@@ -58,7 +58,7 @@ class ModalWindow extends React.Component {
       setTimeout(() => {
         this.props.closeModal('logout')
       })
-      
+
     })
   }
 
@@ -83,88 +83,88 @@ class ModalWindow extends React.Component {
         toggleUnits={this.props.toggleUnits}
         showTemplatePicker={this.props.showTemplatePicker}
         clickNavPhase={this.props.clickNavPhase}
-        closeModal={()=>this.props.closeModal('')} />;
-    } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {
-      modal = <TemplateConfirmationModal
-        currentTemplate={this.props.currentTemplate}
-        saveTemplateType={this.props.saveTemplateType} />;
-    } else if(this.props.currentModal === 'PHASE_CONFIRMATION') {
-      modal = <PhaseConfirmationModal
-        currentPhase={this.props.currentPhase}
-        movePhase={this.props.movePhase} />;
-    } else if(this.props.currentModal === 'MEAL_COMPLETION') {
-      modal = <MealCompletionModal
-        phase={this.props.phase}
-        date={this.props.date}
-        mealNumber={this.props.mealNumber}
-        completeMeal={this.props.completeMeal} />;
-    } else if(this.props.currentModal === 'CONTACT_US') {
-      modal = <ContactUsModal />;
-    } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
-      modal = <WaketimeTooltip />
-    } else if(this.props.currentModal === 'TRAINING_TOOLTIP') {
-      modal = <TrainingTooltip phase={this.props.phase} />
-    } else if(this.props.currentModal === 'ADD_BODYWEIGHT') {
-      modal = <AddBodyweightModal
-        weight={this.props.weight}
-        date={this.props.date}
-        updateWeight={this.props.updateWeight}
-        setDate={this.props.setDate}
-        submitWeight={this.props.submitWeight} />
-    } else if(this.props.currentModal === 'POINTS') {
-      modal = <PointsModal
-        client={this.props.client} />
-    } else if(this.props.currentModal === 'USER') {
-      modal = <UserModal
-        client={this.props.client}
-        onChangeGender={this.props.onChangeGender}
-        onChangeBodyweight={this.props.onChangeBodyweight}
-        onChangeHeight={this.props.onChangeHeight}
-        onChangeBodyfat={this.props.onChangeBodyfat}
-        onChangeBirthdate={this.props.onChangeBirthdate}/>
-    } else if(this.props.currentModal === 'SUCCESS_CHECKLIST') {
-      modal = <SuccessChecklistModal />
-    }
+        closeModal={this.props.closeModal} />;
+     } else if(this.props.currentModal === 'TEMPLATE_CONFIRMATION') {
+       modal = <TemplateConfirmationModal
+         currentTemplate={this.props.currentTemplate}
+         saveTemplateType={this.props.saveTemplateType} />;
+     } else if(this.props.currentModal === 'PHASE_CONFIRMATION') {
+       modal = <PhaseConfirmationModal
+         currentPhase={this.props.currentPhase}
+         movePhase={this.props.movePhase} />;
+     } else if(this.props.currentModal === 'MEAL_COMPLETION') {
+       modal = <MealCompletionModal
+         phase={this.props.phase}
+         date={this.props.date}
+         mealNumber={this.props.mealNumber}
+         completeMeal={this.props.completeMeal}
+         closeModal={this.props.closeModal} />;
+     } else if(this.props.currentModal === 'CONTACT_US') {
+       modal = <ContactUsModal />;
+     } else if(this.props.currentModal === 'WAKETIME_TOOLTIP') {
+       modal = <WaketimeTooltip />
+     } else if(this.props.currentModal === 'TRAINING_TOOLTIP') {
+       modal = <TrainingTooltip phase={this.props.phase} />
+     } else if(this.props.currentModal === 'ADD_BODYWEIGHT') {
+       modal = <AddBodyweightModal
+         weight={this.props.weight}
+         date={this.props.date}
+         duplicateError={this.props.duplicateError}
+         updateWeight={this.props.updateWeight}
+         setDate={this.props.setDate}
+         submitWeight={this.props.submitWeight} />
+     } else if(this.props.currentModal === 'POINTS') {
+       modal = <PointsModal
+         client={this.props.client} />
+     } else if(this.props.currentModal === 'USER') {
+       modal = <UserModal
+         client={this.props.client}
+         onChangeGender={this.props.onChangeGender}
+         onChangeBodyweight={this.props.onChangeBodyweight}
+         onChangeHeight={this.props.onChangeHeight}
+         onChangeBodyfat={this.props.onChangeBodyfat}
+         onChangeBirthdate={this.props.onChangeBirthdate}/>
+     } else if(this.props.currentModal === 'SUCCESS_CHECKLIST') {
+       modal = <SuccessChecklistModal />
+     }
 
      return (
        <View>
          <View style={styles.container}>
-           <Modal animationType={"slide"}
-            transparent={false}
-            onRequestClose={() => { console.log("Modal has been closed.") } }>
+            <Modal
+              animationType={"slide"}
+              transparent={true}
+              onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-            <ScrollView>
-              <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
-                <View style={styles.header}>
-                  <TouchableHighlight
-                    style={styles.closeButton}
-                    underlayColor={Colors.white}
-                    onPress={()=>this.props.closeModal('')}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                      <FontAwesome
-                        name='remove'
-                        size={28}
-                      />
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    style={styles.logoutButton}
-                    underlayColor={Colors.white}
-                    onPress={()=> {this.setState({isLogout: true})}}>
-                    <Text style={{ fontSize: 24, fontWeight: '500' }}>Logout</Text>
-                  </TouchableHighlight>
-                </View>                
-                 {modal}
-               </View>
-            </ScrollView>
-            {
-              this.state.isLogout &&
-              <LogoutScreen
-                closeLogoutModal={() => {
-                  this.closeLogoutModal()
-                }}
-               />
-            }
+              <ScrollView>
+                <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
+                  <View style={styles.header}>
+                    <TouchableHighlight
+                      style={styles.closeButton}
+                      underlayColor={Colors.white}
+                      onPress={()=>this.props.closeModal('')}>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                        <FontAwesome
+                          name='remove'
+                          size={28}
+                        />
+                      </Text>
+                    </TouchableHighlight>
+                  </View>
+                   {modal}
+
+                   {(this.props.currentModal === 'USER') && <TouchableHighlight
+                     style={styles.logoutButton}
+                     underlayColor={Colors.white}
+                     onPress={()=> {this.setState({isLogout: true})}}>
+                     <Text style={Styles.uppercaseText}>LOGOUT</Text>
+                   </TouchableHighlight>}
+                </View>
+              </ScrollView>
+
+              {this.state.isLogout &&
+                <LogoutScreen
+                  closeLogoutModal={() => { this.closeLogoutModal() }} />}
            </Modal>
          </View>
        </View>
@@ -175,36 +175,30 @@ class ModalWindow extends React.Component {
 export default ModalWindow;
 
 const styles = StyleSheet.create ({
-   container: {
-      alignItems: 'flex-start',
-      backgroundColor: '#ede3f2'
-   },
-   header: {
-    flexDirection: 'row'
-   }, 
-   modal: {
-      flex: 1,
-      alignItems: 'center',
-      backgroundColor: '#FFF',
-      paddingTop: 40,
-      paddingBottom: 40,
-      paddingLeft: 20,
-      paddingRight: 20
-   },
-   modalWide: {
-     paddingLeft: 0,
-     paddingRight: 0
-   },
-   closeButton: {
-    //  padding: 20
-    width: '50%',
-    paddingTop: 20,
-    alignItems: 'flex-end'
-   },
-   logoutButton: {
-    width: '50%',
-    paddingTop: 20,
-    paddingRight: 20,
-    alignItems: 'flex-end'
+  container: {
+    alignItems: 'flex-start',
+    height: '100%'
+  },
+  // header: {
+  //   flexDirection: 'row'
+  // },
+  modal: {
+    backgroundColor: Colors.white,
+    alignItems: 'center',
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  modalWide: {
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+  closeButton: {
+    padding: 30
+  },
+  logoutButton: {
+    width: '100%',
+    alignItems: 'center'
    }
 });

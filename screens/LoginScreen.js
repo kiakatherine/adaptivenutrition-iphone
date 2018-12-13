@@ -66,7 +66,8 @@ export default class LoginScreen extends React.Component {
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))          
+          AsyncStorage.setItem("user", JSON.stringify(res.data))
+          AsyncStorage.setItem('saveData', 'true')
           clientRef.update({devicetoken: deviceToken})
           navigate('Authenticated')
           
@@ -88,6 +89,7 @@ export default class LoginScreen extends React.Component {
         clientResponse = snapshot.val();  
         if(clientResponse) {
           AsyncStorage.setItem("user", JSON.stringify(res.data))
+          AsyncStorage.setItem('saveData', 'true')
           navigate('Authenticated')
         }else{
           navigate('CreateAccount')
@@ -107,6 +109,7 @@ export default class LoginScreen extends React.Component {
         clientResponse = snapshot.val();  
         if(clientResponse) {
           AsyncStorage.setItem("user", JSON.stringify(res.data))
+          AsyncStorage.setItem('saveData', 'true')
           navigate('Authenticated')
         }else{
           navigate('CreateAccount')
