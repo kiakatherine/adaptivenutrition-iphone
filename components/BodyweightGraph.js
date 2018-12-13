@@ -55,14 +55,15 @@ class BodyweightGraph extends React.Component {
      let recordKey;
      const weight = this.state.weightToDelete;
      const date = this.state.dateToDelete;
+     
      let weightObjRef;
      let clientWeightRef;
 
-     Object.keys(records).map(key => {
-       if(records[key].date === date) {
-         recordKey = key;
+     records.map(rec => {
+       if(rec.record.date === date) {
+         recordKey = rec.key
        }
-     });
+     })
 
      clientWeightRef = firebase.database().ref('/clients/' + uid + '/weights/' + recordKey);
      weightObjRef = firebase.database().ref('/weights/' + recordKey);
@@ -82,6 +83,8 @@ class BodyweightGraph extends React.Component {
            tooltipDate: null,
            tooltipX: null,
            tooltipY: null
+         }, () => {
+           this.props.sortingWeightByDate()
          });
        }
      });
@@ -92,13 +95,13 @@ class BodyweightGraph extends React.Component {
      let sortedData = [];
 
      if(data) {
-       Object.keys(data).map((key) => {
+       data.map(dt => {
          sortedData.push({
-           date: data[key].date,
-           weight: data[key].weight,
-           key
-         });
-       });
+           date: dt.record.date,
+           weight: dt.record.weight,
+           key: dt.key
+         })
+       })      
      }
      sortedData = sortedData.reverse();
 

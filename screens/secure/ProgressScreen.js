@@ -54,6 +54,7 @@ export default class ProgressScreen extends React.Component {
       showAlertWeightAdded: false,
       showAlertDuplicateWeight: false,
       bodyweightData: null,
+      sortedbodyweightData: null,
 
       weeklyView: true,
       monthlyView: false,
@@ -176,14 +177,16 @@ export default class ProgressScreen extends React.Component {
         // do this on server side
         if(records) {
           Object.keys(records).map(key => {
-            recordsArr.push(records[key]);
+            recordsArr.push({
+              key: key,
+              record: records[key]
+            });
           });
         }
-
         // sort records by date
         // TO DO: fix sorting
         let sortedBodyweightRecords = recordsArr.sort((a,b) => {
-          return new Date(a.date) - new Date(b.date);
+          return new Date(a.record.date) - new Date(b.record.date);
         });
         sortedBodyweightRecords = sortedBodyweightRecords.reverse();
 
@@ -193,37 +196,41 @@ export default class ProgressScreen extends React.Component {
           startDate.setDate(startDate.getDate() - 7)
           startDate = moment(startDate)
           sortedBodyweightRecords.forEach(rec => {
-            if(moment(rec.date) > startDate) {
+            if(moment(rec.record.date) > startDate) {
               entries.push(rec);
             }
           });
           this.setState({
-            bodyweightData: entries
+            sortedbodyweightData: entries,
+            bodyweightData: sortedBodyweightRecords
           })
         }else if(this.state.monthlyView){
           startDate.setDate(startDate.getDate() - 30)
           startDate = moment(startDate)
           sortedBodyweightRecords.forEach(rec => {
-            if(moment(rec.date) > startDate) {
+            if(moment(rec.record.date) > startDate) {
               entries.push(rec);
             }
           });
           this.setState({
-            bodyweightData: entries
+            sortedbodyweightData: entries,
+            bodyweightData: sortedBodyweightRecords
           })
         }else if(this.state.yearlyView){
           startDate.setDate(startDate.getDate() - 365)
           startDate = moment(startDate)
           sortedBodyweightRecords.forEach(rec => {
-            if(moment(rec.date) > startDate) {
+            if(moment(rec.record.date) > startDate) {
               entries.push(rec);
             }
           });
           this.setState({
-            bodyweightData: entries
+            sortedbodyweightData: entries,
+            bodyweightData: sortedBodyweightRecords
           })
         }else if(this.state.allView){
           this.setState({
+            sortedbodyweightData: sortedBodyweightRecords,
             bodyweightData: sortedBodyweightRecords
           })
         }
@@ -236,22 +243,22 @@ export default class ProgressScreen extends React.Component {
     let oneWeekAgo = new Date();
     let pastWeekEntries = []
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    oneWeekAgo = moment(oneWeekAgo).format('YYYY-MM-DD');
-    Object.keys(this.state.bodyweightData).map(key => {
-      if(this.state.bodyweightData[key].date > oneWeekAgo) {
-        pastWeekEntries.push(this.state.bodyweightData[key]);
+    oneWeekAgo = moment(oneWeekAgo);
+    this.state.bodyweightData.map(data => {
+      if(moment(data.record.date) > oneWeekAgo) {
+        pastWeekEntries.push(data)
       }
-    });
-
+    })
+    
     if(pastWeekEntries.length) {
       sevenDayAverage = (
-        (pastWeekEntries[0] ? pastWeekEntries[0].weight : null) +
-        (pastWeekEntries[1] ? pastWeekEntries[1].weight : null) +
-        (pastWeekEntries[2] ? pastWeekEntries[2].weight : null) +
-        (pastWeekEntries[3] ? pastWeekEntries[3].weight : null) +
-        (pastWeekEntries[4] ? pastWeekEntries[4].weight : null) +
-        (pastWeekEntries[5] ? pastWeekEntries[5].weight : null) +
-        (pastWeekEntries[6] ? pastWeekEntries[6].weight : null)) / pastWeekEntries.length;
+        (pastWeekEntries[0] ? pastWeekEntries[0].record.weight : null) +
+        (pastWeekEntries[1] ? pastWeekEntries[1].record.weight : null) +
+        (pastWeekEntries[2] ? pastWeekEntries[2].record.weight : null) +
+        (pastWeekEntries[3] ? pastWeekEntries[3].record.weight : null) +
+        (pastWeekEntries[4] ? pastWeekEntries[4].record.weight : null) +
+        (pastWeekEntries[5] ? pastWeekEntries[5].record.weight : null) +
+        (pastWeekEntries[6] ? pastWeekEntries[6].record.weight : null)) / pastWeekEntries.length;
       sevenDayAverage = sevenDayAverage.toFixed(1);
     } else {
       sevenDayAverage = '---';
@@ -342,10 +349,13 @@ export default class ProgressScreen extends React.Component {
           showAddBodyweight: false,
           date: new Date(),
           weight,
-          latestRecordKey: newRecordKey
-        }, this._hideAll());
+          latestRecordKey: newRecordKey,          
+        }, () => {
+          this._hideAll()
+          this.sortingWeightByDate()
+        });
       }
-    });
+    });    
   }
 
   async undoWeight() {
@@ -396,6 +406,7 @@ export default class ProgressScreen extends React.Component {
         weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight
       });
     }
+    
   }
 
   _setDate(date) {
@@ -564,8 +575,10 @@ export default class ProgressScreen extends React.Component {
                 </View>}
 
                 <BodyweightGraph
-                  data={this.state.bodyweightData}
-                  closeModal={this._closeModal} />
+                  data={this.state.sortedbodyweightData}
+                  sortingWeightByDate={() => this.sortingWeightByDate()}
+                  closeModal={this._closeModal} 
+                  />
               </View>}
 
             {this.state.showProgressReports &&
