@@ -163,21 +163,11 @@ export default class ProgressScreen extends React.Component {
     this.sortingWeightByDate()
   }
 
-  getAgoTimestamp(days) {
-    var date = new Date();
-    var last = new Date(date.getTime() - (days * 24 * 60 * 60 * 1000));
-    var day =last.getDate();
-    var month=last.getMonth()+1;
-    var year=last.getFullYear();
-
-    return year + '-' + (month > 9 ? month : ('0' + month)) + '-' + (day > 9 ? day : ('0' + day)) + "T00:00:00Z"
-  }
-
   // sorting by firebase
   async sortingWeightByDate() {   
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
-    const weights = firebase.database().ref('/clients/' + currentUser.uid + '/weights');
+    const weights = firebase.database().ref('/clients/' + currentUser.uid + '/weights').orderByValue();
     if(weights) {
       weights.once('value', snapshot => {
         const records = snapshot.val();
@@ -238,9 +228,7 @@ export default class ProgressScreen extends React.Component {
           })
         }
       });
-    }
-
-    
+    }    
   }
 
   sevenDayAverage() {
