@@ -381,7 +381,9 @@ export default class ProgressScreen extends React.Component {
       latestBodyweight: null
     });
 
-    this.setState({ latestRecordKey: null });
+    this.setState({ 
+      latestRecordKey: null 
+    }, () => this.sortingWeightByDate());
   }
 
   _clickProgressReportPhase1() {
