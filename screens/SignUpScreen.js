@@ -59,12 +59,12 @@ export default class SignUpScreen extends React.Component {
   async loginWithFacebook(navigate) {
     let res = await AuthService.loginWithFacebook();
 
-    if(res.success) {      
+    if(res.success) {     
+      await AsyncStorage.setItem("user", JSON.stringify(res.data)) 
       let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))
           navigate('Authenticated')
         }else{
           navigate('CreateAccount')
@@ -79,11 +79,11 @@ export default class SignUpScreen extends React.Component {
     let res = await AuthService.loginWithGoogle();
     
     if(res.success) {      
+      await AsyncStorage.setItem("user", JSON.stringify(res.data))
       let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))
           navigate('Authenticated')
         }else{
           navigate('CreateAccount')

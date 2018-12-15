@@ -62,11 +62,12 @@ export default class LoginScreen extends React.Component {
     let res = await AuthService.login(this.state.email, this.state.password);
     let deviceToken = await AsyncStorage.getItem('deviceToken')
     if(res.success) {      
+      await AsyncStorage.setItem("user", JSON.stringify(res.data))
       let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))
+          
           AsyncStorage.setItem('saveData', 'true')
           clientRef.update({devicetoken: deviceToken})
           navigate('Authenticated')
@@ -82,13 +83,13 @@ export default class LoginScreen extends React.Component {
 
   async loginWithFacebook(navigate) {
     let res = await AuthService.loginWithFacebook();
-
+    
     if(res.success) {      
+      await AsyncStorage.setItem("user", JSON.stringify(res.data))
       let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
-        if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))
+        if(clientResponse) {          
           AsyncStorage.setItem('saveData', 'true')
           navigate('Authenticated')
         }else{
@@ -102,12 +103,13 @@ export default class LoginScreen extends React.Component {
 
   async loginWithGoogle(navigate) {
     let res = await AuthService.loginWithGoogle();
+    
     if(res.success) {      
+      await AsyncStorage.setItem("user", JSON.stringify(res.data))
       let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
-        if(clientResponse) {
-          AsyncStorage.setItem("user", JSON.stringify(res.data))
+        if(clientResponse) {         
           AsyncStorage.setItem('saveData', 'true')
           navigate('Authenticated')
         }else{
