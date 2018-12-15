@@ -19,7 +19,7 @@ class AuthService {
       }
       // console.log(err);
     }
-  }
+  }  
 
   async loginWithGoogle() {
     try {
@@ -32,20 +32,19 @@ class AuthService {
         const { idToken, accessToken } = result;
         const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
         await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-
         const user = firebase.auth().currentUser;
+       
         return {
           success: true,
           data: user        
         }  
-        // await AsyncStorage.setItem("user", JSON.stringify(user))
+      }else{ 
+        return {
+          success: false,
+          data: 'Google login error!'        
+        }  
       }
-    } catch(e) {
-      return {
-        success: false,
-        data: e.message        
-      }  
-    }
+    } catch(e) { }
   }
 
   async loginWithFacebook() {
@@ -63,18 +62,14 @@ class AuthService {
           success: true,
           data: user        
         }  
-      } else {
+        // if (user != null) { console.log(user); } else { console.log("not user"); }
+      } else { 
         return {
           success: false,
-          data: 'Facebook login error!'        
+          data: 'Google login error!'        
         }  
       }
-    } catch(e) {
-      return {
-        success: false,
-        data: e.message        
-      }  
-    }
+    } catch(e) { }
   }
 
   async resetPassword (email) {
@@ -130,11 +125,7 @@ class AuthService {
         data: err.message
       }
     }
-  }
-
-  
-
-  
+  } 
 }
 
 export default new AuthService();

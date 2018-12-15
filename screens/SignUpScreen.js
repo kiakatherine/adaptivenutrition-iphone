@@ -60,7 +60,7 @@ export default class SignUpScreen extends React.Component {
     let res = await AuthService.loginWithFacebook();
 
     if(res.success) {      
-      let clientRef = FirebaseDBService.getClientRef(res.data.uid)
+      let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
@@ -79,7 +79,7 @@ export default class SignUpScreen extends React.Component {
     let res = await AuthService.loginWithGoogle();
     
     if(res.success) {      
-      let clientRef = FirebaseDBService.getClientRef(res.data.uid)
+      let clientRef = await FirebaseDBService.getClientRef(res.data.uid)
       clientRef.on('value', snapshot => {
         clientResponse = snapshot.val();  
         if(clientResponse) {
