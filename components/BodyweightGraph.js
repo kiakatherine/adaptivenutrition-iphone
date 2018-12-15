@@ -208,7 +208,7 @@ const styles = StyleSheet.create ({
     marginBottom: 30,
     paddingTop: 10,
     paddingBottom: 10,
-    height: 300,
+    // height: 300,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: Colors.gray
