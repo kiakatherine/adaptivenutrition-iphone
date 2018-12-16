@@ -9,13 +9,15 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   View,
-  Alert
+  Alert,
+  AsyncStorage
 } from 'react-native';
 
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 import AuthService from '../services/AuthService';
 import FieldValidation from '../services/FieldValidation';
+import FirebaseDBService from '../services/FirebaseDBService'
 
 export default class SignUpScreen extends React.Component {
   static navigationOptions = {
