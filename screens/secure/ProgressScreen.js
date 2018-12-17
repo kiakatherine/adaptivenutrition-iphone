@@ -490,7 +490,7 @@ export default class ProgressScreen extends React.Component {
                 {this.state.bodyweightData && <View style={styles.stats}>
                   <View style={styles.stat}>
                     <Text style={[Styles.bigTitle, Styles.pageTitle, styles.weightDelta, Styles.textCenter]}>{this.sevenDayAverage()}</Text>
-                    <Text style={[Styles.menuItemSubText, Styles.textCenter]}>Average weight over past week</Text>
+                    <Text style={[Styles.textCenter, {fontSize: 18, marginTop: 5, marginBottom: 5}]}>Average weight over past week</Text>
                   </View>
                 </View>}
 

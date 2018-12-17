@@ -150,8 +150,6 @@ export default class LoginScreen extends React.Component {
       <View style={[Styles.body, styles.body]}>
         {!this.state.showQuiz && <ScrollView style={[Styles.content, styles.content]}>
           <View>
-            <Text style={[Styles.bigTitle, Styles.pageTitle]}>Lessons</Text>
-
             {lessons.map(i => <Lesson
               key={i}
               lessonNumber={i}

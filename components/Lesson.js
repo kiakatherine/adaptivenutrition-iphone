@@ -114,7 +114,8 @@ const styles = StyleSheet.create ({
   weekHeader: {
     marginLeft: 40,
     marginBottom: 15,
-    marginTop: 30
+    marginTop: 30,
+    fontWeight: 'bold'
   },
   lessonWrapper: {
     backgroundColor: Colors.lightGray,

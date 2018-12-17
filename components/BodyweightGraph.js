@@ -55,7 +55,7 @@ class BodyweightGraph extends React.Component {
      let recordKey;
      const weight = this.state.weightToDelete;
      const date = this.state.dateToDelete;
-     
+
      let weightObjRef;
      let clientWeightRef;
 
@@ -101,7 +101,7 @@ class BodyweightGraph extends React.Component {
            weight: dt.record.weight,
            key: dt.key
          })
-       })      
+       })
      }
      sortedData = sortedData.reverse();
 
@@ -133,12 +133,12 @@ class BodyweightGraph extends React.Component {
             >
             {sortedData && sortedData.map((rec, i) =>
               <View style={styles.bodyweightLogWrapper} key={i}>
-                <Text>{rec.weight}</Text>
+                <Text style={{ fontSize: 16, marginBottom: 5, marginLeft: 5 }}>{rec.weight}</Text>
                 <View style={{ height: Number(rec.weight), width: 35, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
                   <TouchableHighlight
                     underlayColor={Colors.white}
                     onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
-                    <View style={{ backgroundColor: Colors.primaryColor, borderRadius: 100, width: 10, height: 10 }}></View>
+                    <View style={{ backgroundColor: Colors.primaryColor, borderRadius: 100, width: 20, height: 20 }}></View>
                   </TouchableHighlight>
                 </View>
                 <Text>{formatBodyweightLogDate(rec.date)}</Text>
@@ -150,7 +150,7 @@ class BodyweightGraph extends React.Component {
             </View>}
 
           {this.state.showConfirmDeleteEntry &&
-            <View style={[Styles.tooltip, {height: '100%'}]}>
+            <View style={[Styles.tooltip, {shadowColor: Colors.black, shadowOpacity: 0.25, shadowRadius: 10, borderRadius: 5}]}>
               <TouchableHighlight
                 underlayColor={Colors.white}
                 onPress={() => { this.setState({ showConfirmDeleteEntry: false }) }}>
@@ -160,7 +160,7 @@ class BodyweightGraph extends React.Component {
                   size={24}
                 />
               </TouchableHighlight>
-              <Text style={Styles.tooltipParagraph}>{'Are you sure you want to delete this entry?'}</Text>
+              <Text style={[Styles.tooltipParagraph, Styles.textCenter, {fontSize: 18, marginTop: 5, marginBottom: 20}]}>{'Are you sure you want to delete this entry?'}</Text>
               <TouchableHighlight
                 underlayColor={Colors.darkerPrimaryColor}
                 style={Styles.button}

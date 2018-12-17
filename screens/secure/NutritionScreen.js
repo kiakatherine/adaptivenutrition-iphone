@@ -113,7 +113,7 @@ export default class LoginScreen extends React.Component {
     let clientResponse = null;
 
     clientWeightRef.on('value', snapshot => {
-      clientResponse = snapshot.val();  
+      clientResponse = snapshot.val();
       this.setState({
         client: clientResponse,
         phase: clientResponse && clientResponse.phase ? clientResponse.phase : 1
@@ -239,7 +239,7 @@ export default class LoginScreen extends React.Component {
     // const uid = firebase.auth().currentUser.uid;
     this.getClientData()
 
-    
+
   }
 
   componentWillUnmount() {
@@ -1088,7 +1088,7 @@ export default class LoginScreen extends React.Component {
     setTimeout(() => {
       navigate('LoginScreen');
     })
-    
+
   }
 
   closeModal() {
@@ -1435,7 +1435,7 @@ export default class LoginScreen extends React.Component {
       this.state.meal2measurementsCompleted < 4 &&
       this.state.meal3measurementsCompleted < 4 &&
       this.state.meal4measurementsCompleted < 4;
-   
+
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {!this.state.showTemplatePicker &&
@@ -1462,7 +1462,7 @@ export default class LoginScreen extends React.Component {
             onChangeBodyweight={this._onChangeBodyweight}
             onChangeHeight={this._onChangeHeight}
             onChangeBodyfat={this._onChangeBodyfat}
-            onChangeBirthdate={this._onChangeBirthdate} 
+            onChangeBirthdate={this._onChangeBirthdate}
             logout={() => this.logout()}
             />}
 
@@ -2190,7 +2190,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'stretch',
     flexDirection: 'row',
-    marginBottom: 50
+    marginBottom: 30
   },
   optionTitle: {
     color: Colors.black,
