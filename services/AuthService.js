@@ -30,7 +30,7 @@ class AuthService {
 
       if (result.type === 'success') {
         const { idToken, accessToken } = result;
-        const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+        const credential = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
         await firebase.auth().signInAndRetrieveDataWithCredential(credential);
         const user = firebase.auth().currentUser;
        
@@ -44,7 +44,12 @@ class AuthService {
           data: 'Google login error!'        
         }  
       }
-    } catch(e) { }
+    } catch(e) { 
+      return {
+        success: false,
+        data: e.message
+      } 
+    }
   }
 
   async loginWithFacebook() {
@@ -55,9 +60,9 @@ class AuthService {
       );
 
       if (type === 'success') {
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        firebase.auth().signInWithCredential(credential);
-        const user = firebase.auth().currentUser;        
+        const credential = await firebase.auth.FacebookAuthProvider.credential(token);
+        await firebase.auth().signInWithCredential(credential)        
+        const user = firebase.auth().currentUser;    
         return {
           success: true,
           data: user        
@@ -66,10 +71,15 @@ class AuthService {
       } else { 
         return {
           success: false,
-          data: 'Google login error!'        
+          data: 'Facebook login error!'        
         }  
       }
-    } catch(e) { }
+    } catch(e) { 
+      return {
+        success: false,
+        data: e.message
+      }
+    }
   }
 
   async resetPassword (email) {

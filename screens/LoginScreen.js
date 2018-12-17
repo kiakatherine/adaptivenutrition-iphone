@@ -16,9 +16,8 @@ import {
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
 import AuthService from '../services/AuthService';
-import FirebaseDBService from '../services/FirebaseDBService'
 import FieldValidation from '../services/FieldValidation';
-import NotificationService from '../services/NotificationService';
+import FirebaseDBService from '../services/FirebaseDBService'
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
