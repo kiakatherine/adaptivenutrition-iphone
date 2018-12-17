@@ -94,38 +94,29 @@ export default class LoginScreen extends React.Component {
         <ScrollView>
           {this.state.showMealPlanList && <View style={styles.helpSection}>
             <View style={Styles.menuItemWrapper}>
-              <Text style={Styles.menuItem}>How Do I Use the App?</Text>
-              <Text style={Styles.menuItemSubText}>Take a tour.</Text>
+              <Text style={Styles.menuItem}>How to Use the App</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
-                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to avoid for the first 6 weeks.</Text>
+                onPress={() => this.setState({ showFoodsToAvoid: true }) }>Foods to Avoid for 6 Weeks</Text>
             </View>
           </View>}
 
           {this.state.showResourcesList && <View style={styles.helpSection}>
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
-                onPress={() => this.setState({ showSuccessChecklist: true }) }>Success Checklist</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showSuccessChecklist: true }) }>If you hit a plateau, use this list to help pinpoint issues.</Text>
-            </View>
-
-            <View style={Styles.menuItemWrapper}>
-              <Text style={Styles.menuItem}
                 onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Member Toolkit</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/member-toolkit')}>Meal prep tips, recipes, & much more.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Client FAQ</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Answers to our most frequently asked questions.</Text>
+                onPress={() => this.setState({ showSuccessChecklist: true }) }>Success Checklist</Text>
+            </View>
+
+            <View style={Styles.menuItemWrapper}>
+              <Text style={Styles.menuItem}
+                onPress={() => Linking.openURL('http://adaptivenutrition.us/client-faq')}>Frequently Asked Questions</Text>
             </View>
           </View>}
 
@@ -133,22 +124,16 @@ export default class LoginScreen extends React.Component {
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
                 onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Your Subscription</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => Linking.openURL('https://app.moonclerk.com/portal/ghgknyh4wz8/signin')}>Manage your subscription.</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
                 onPress={() => this.setState({ showContact: true }) }>Contact</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showContact: true }) }>Have a question or comment? Let us know!</Text>
             </View>
 
             <View style={Styles.menuItemWrapper}>
               <Text style={Styles.menuItem}
                 onPress={() => this.setState({ showAbout: true }) }>About</Text>
-              <Text style={Styles.menuItemSubText}
-                onPress={() => this.setState({ showAbout: true }) }>Who is Adaptive Nutrition?</Text>
             </View>
           </View>}
 

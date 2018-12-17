@@ -50,12 +50,12 @@ class Lesson extends React.Component {
 
     return (
       <View>
-        {lessonNumber === 1 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 1</Text> :
-         lessonNumber === 3 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 2</Text> :
-         lessonNumber === 5 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 3</Text> :
-         lessonNumber === 7 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 4</Text> :
-         lessonNumber === 9 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 5</Text> :
-         lessonNumber === 11 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 6</Text> : null}
+        {lessonNumber === 1 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 1</Text> :
+         lessonNumber === 3 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 2</Text> :
+         lessonNumber === 5 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 3</Text> :
+         lessonNumber === 7 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 4</Text> :
+         lessonNumber === 9 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 5</Text> :
+         lessonNumber === 11 ? <Text style={[Styles.uppercaseText, styles.weekHeader]}>WEEK 6</Text> : null}
 
         <TouchableHighlight
           underlayColor={Colors.lightGray}

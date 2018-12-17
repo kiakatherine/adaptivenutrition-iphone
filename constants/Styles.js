@@ -267,30 +267,22 @@ export default {
     fontSize: 16
   },
   menuItemWrapper: {
-    paddingTop: 20,
-    paddingBottom: 40,
-    paddingLeft: 20,
-    paddingRight: 20,
     backgroundColor: Colors.lightGray,
-    borderBottomWidth: 1,
-    borderColor: Colors.white
+    borderBottomWidth: 2,
+    borderColor: Colors.white,
+    padding: 25,
+    borderRadius: 10,
+    margin: 15,
+    marginBottom: 0
   },
   menuItem: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '500',
     color: Colors.black,
-    paddingTop: 20,
     paddingBottom: 5,
     letterSpacing: 1
   },
-  menuItemSubText: {
-    fontSize: 18,
-    color: Colors.black,
-    marginBottom: 10
-  },
   biometricRow: {
-    // alignSelf: 'stretch',
-    // flexDirection: 'row',
     paddingTop: 35,
     paddingBottom: 15,
     borderBottomWidth: 2,
