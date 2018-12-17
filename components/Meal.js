@@ -89,6 +89,8 @@ class Meal extends React.Component {
        time = this.props.dinnerTime;
      }
 
+     console.log('PHASE', this.props.phase)
+
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
@@ -142,19 +144,6 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
-
-          {this.props.phase === 2 &&
-            <View style={styles.phase2Measurement}>
-              <Text style={styles.phase2PickerLabel}>Enter your portion weight</Text>
-              <MeasurementInput
-                macro='protein'
-                currentMeal={this.props.currentMeal}
-                measurement={this.props.currentMeal === 0 ? this.props.meal1proteinMeasurement :
-                  this.props.currentMeal === 1 ? this.props.meal2proteinMeasurement :
-                  this.props.currentMeal === 2 ? this.props.meal3proteinMeasurement :
-                  this.props.currentMeal === 3 ? this.props.meal4proteinMeasurement : null}
-                updateMeasurement={this.props.updateMeasurement} />
-            </View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -183,19 +172,6 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
-
-          {this.props.phase === 2 &&
-            <View style={styles.phase2Measurement}>
-              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
-              <MeasurementInput
-                macro='carbs'
-                currentMeal={this.props.currentMeal}
-                measurement={this.props.currentMeal === 0 ? this.props.meal1carbsMeasurement :
-                  this.props.currentMeal === 1 ? this.props.meal2carbsMeasurement :
-                  this.props.currentMeal === 2 ? this.props.meal3carbsMeasurement :
-                  this.props.currentMeal === 3 ? this.props.meal4carbsMeasurement : null}
-                updateMeasurement={this.props.updateMeasurement} />
-          </View>}
         </View>
 
         <View style={styles.mealRow}>
@@ -220,19 +196,6 @@ class Meal extends React.Component {
             bodyweight={this.props.bodyweight}
             bodyfat={this.props.bodyfat}
             showInGrams={this.props.showInGrams} />
-
-          {this.props.phase === 2 &&
-            <View style={styles.phase2Measurement}>
-              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
-              <MeasurementInput
-                macro='fats'
-                currentMeal={this.props.currentMeal}
-                measurement={this.props.currentMeal === 0 ? this.props.meal1fatsMeasurement :
-                  this.props.currentMeal === 1 ? this.props.meal2fatsMeasurement :
-                  this.props.currentMeal === 2 ? this.props.meal3fatsMeasurement :
-                  this.props.currentMeal === 3 ? this.props.meal4fatsMeasurement : null}
-                updateMeasurement={this.props.updateMeasurement} />
-            </View>}
         </View>
 
         {!this.props.showInGrams && <View style={styles.mealRow}>
@@ -264,19 +227,6 @@ class Meal extends React.Component {
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ width: 60, height: 60, resizeMode: 'contain' }} />
             </View>}
-
-          {this.props.phase === 2 &&
-            <View style={styles.phase2Measurement}>
-              <Text style={styles.phase2PickerLabel}>Enter your portion measurement</Text>
-              <MeasurementInput
-                macro='veggies'
-                currentMeal={this.props.currentMeal}
-                measurement={this.props.currentMeal === 0 ? this.props.meal1veggiesMeasurement :
-                  this.props.currentMeal === 1 ? this.props.meal2veggiesMeasurement :
-                  this.props.currentMeal === 2 ? this.props.meal3veggiesMeasurement :
-                  this.props.currentMeal === 3 ? this.props.meal4veggiesMeasurement : null}
-                updateMeasurement={this.props.updateMeasurement} />
-          </View>}
         </View>}
        </View>
      );

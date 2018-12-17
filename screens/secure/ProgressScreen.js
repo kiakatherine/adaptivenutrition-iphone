@@ -71,7 +71,7 @@ export default class ProgressScreen extends React.Component {
     this._closeAlert = this._closeAlert.bind(this);
   }
 
-  async getClientData() {   
+  async getClientData() {
     let clientResponse = null;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
@@ -165,7 +165,7 @@ export default class ProgressScreen extends React.Component {
   }
 
   // sorting by firebase
-  async sortingWeightByDate() {   
+  async sortingWeightByDate() {
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
     const weights = firebase.database().ref('/clients/' + currentUser.uid + '/weights').orderByValue();
@@ -235,7 +235,7 @@ export default class ProgressScreen extends React.Component {
           })
         }
       });
-    }    
+    }
   }
 
   sevenDayAverage() {
@@ -249,7 +249,7 @@ export default class ProgressScreen extends React.Component {
         pastWeekEntries.push(data)
       }
     })
-    
+
     if(pastWeekEntries.length) {
       sevenDayAverage = (
         (pastWeekEntries[0] ? pastWeekEntries[0].record.weight : null) +
@@ -349,13 +349,13 @@ export default class ProgressScreen extends React.Component {
           showAddBodyweight: false,
           date: new Date(),
           weight,
-          latestRecordKey: newRecordKey,          
+          latestRecordKey: newRecordKey,
         }, () => {
           this._hideAll()
           this.sortingWeightByDate()
         });
       }
-    });    
+    });
   }
 
   async undoWeight() {
@@ -381,8 +381,8 @@ export default class ProgressScreen extends React.Component {
       latestBodyweight: null
     });
 
-    this.setState({ 
-      latestRecordKey: null 
+    this.setState({
+      latestRecordKey: null
     }, () => this.sortingWeightByDate());
   }
 
@@ -408,7 +408,7 @@ export default class ProgressScreen extends React.Component {
         weight: (Number(weight) + 0.1).toFixed(1) ? (Number(weight) + 0.1).toFixed(1) : weight
       });
     }
-    
+
   }
 
   _setDate(date) {
@@ -465,7 +465,7 @@ export default class ProgressScreen extends React.Component {
         dayStatusesPhase3 = <Text style={Styles.emptyMessage}>No progress for this phase yet</Text>;
       }
     }
-    
+
     return (
       <View style={Styles.body}>
         <ScrollView>
@@ -473,15 +473,15 @@ export default class ProgressScreen extends React.Component {
             <View style={Styles.flexRow}>
               <TouchableHighlight
                 underlayColor={Colors.white}
-                style={[Styles.flexRowCol, styles.progressButtonFirst, this.state.showBodyweightLog ? styles.progressButtonActive : styles.progressButton]}
+                style={[Styles.flexRowCol, styles.progressButtonFirst, this.state.showBodyweightLog ? Styles.progressButtonActive : styles.progressButton]}
                 onPress={() => this.setState({ showBodyweightLog: true, showProgressReports: false })}>
-                <Text style={this.state.showBodyweightLog ? styles.progressButtonTextActive : styles.progressButtonText}>WEIGHT</Text>
+                <Text style={this.state.showBodyweightLog ? Styles.progressButtonTextActive : Styles.progressButtonText}>WEIGHT</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 underlayColor={Colors.white}
-                style={[Styles.flexRowCol, this.state.showProgressReports ? styles.progressButtonActive : styles.progressButton]}
+                style={[Styles.flexRowCol, this.state.showProgressReports ? Styles.progressButtonActive : styles.progressButton]}
                 onPress={() => this.setState({ showBodyweightLog: false, showProgressReports: true })}>
-                <Text style={this.state.showProgressReports ? styles.progressButtonTextActive : styles.progressButtonText}>CONSISTENCY</Text>
+                <Text style={this.state.showProgressReports ? Styles.progressButtonTextActive : Styles.progressButtonText}>CONSISTENCY</Text>
               </TouchableHighlight>
             </View>
 
@@ -522,13 +522,13 @@ export default class ProgressScreen extends React.Component {
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.weeklyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { 
-                      this.setState({ 
-                        weeklyView: true, 
-                        monthlyView: false, 
-                        yearlyView: false, 
-                        allView: false 
-                      }, () =>this.sortingWeightByDate()) 
+                    onPress={() => {
+                      this.setState({
+                        weeklyView: true,
+                        monthlyView: false,
+                        yearlyView: false,
+                        allView: false
+                      }, () =>this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.weeklyView ? Styles.pillButtonTextSelected : null]}>WEEK</Text>
                   </TouchableHighlight>
@@ -536,13 +536,13 @@ export default class ProgressScreen extends React.Component {
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.monthlyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { 
-                      this.setState({ 
-                        weeklyView: false, 
-                        monthlyView: true, 
-                        yearlyView: false, 
-                        allView: false 
-                      }, () => this.sortingWeightByDate()) 
+                    onPress={() => {
+                      this.setState({
+                        weeklyView: false,
+                        monthlyView: true,
+                        yearlyView: false,
+                        allView: false
+                      }, () => this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.monthlyView ? Styles.pillButtonTextSelected : null]}>MONTH</Text>
                   </TouchableHighlight>
@@ -550,13 +550,13 @@ export default class ProgressScreen extends React.Component {
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.yearlyView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { 
-                      this.setState({ 
-                        weeklyView: false, 
-                        monthlyView: false, 
-                        yearlyView: true, 
-                        allView: false 
-                      }, () => this.sortingWeightByDate()) 
+                    onPress={() => {
+                      this.setState({
+                        weeklyView: false,
+                        monthlyView: false,
+                        yearlyView: true,
+                        allView: false
+                      }, () => this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
                   </TouchableHighlight>
@@ -564,22 +564,22 @@ export default class ProgressScreen extends React.Component {
                   <TouchableHighlight
                     underlayColor={Colors.darkerPrimaryColor}
                     style={[Styles.pillButton, this.state.allView ? Styles.pillButtonSelected : null]}
-                    onPress={() => { 
-                      this.setState({ 
-                        weeklyView: false, 
-                        monthlyView: false, 
-                        yearlyView: false, 
-                        allView: true 
-                      }, () => this.sortingWeightByDate()) 
+                    onPress={() => {
+                      this.setState({
+                        weeklyView: false,
+                        monthlyView: false,
+                        yearlyView: false,
+                        allView: true
+                      }, () => this.sortingWeightByDate())
                     }}>
-                    <Text style={[Styles.pillButtonText, this.state.allView ? Styles.pillButtonTextSelected : null]}>All</Text>
+                    <Text style={[Styles.pillButtonText, this.state.allView ? Styles.pillButtonTextSelected : null]}>ALL</Text>
                   </TouchableHighlight>
                 </View>}
 
                 <BodyweightGraph
                   data={this.state.sortedbodyweightData}
                   sortingWeightByDate={() => this.sortingWeightByDate()}
-                  closeModal={this._closeModal} 
+                  closeModal={this._closeModal}
                   />
               </View>}
 
@@ -647,23 +647,23 @@ export default class ProgressScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
-  progressButtonActive: {
-    borderBottomWidth: 3
-  },
-  progressButtonText: {
-    fontFamily: 'Futura',
-    textAlign: 'center',
-    fontSize: 16,
-    letterSpacing: 2,
-    padding: 20
-  },
-  progressButtonTextActive: {
-    fontFamily: 'Futura',
-    textAlign: 'center',
-    fontSize: 16,
-    letterSpacing: 2,
-    padding: 20
-  },
+  // progressButtonActive: {
+  //   borderBottomWidth: 3
+  // },
+  // progressButtonText: {
+  //   fontFamily: 'Futura',
+  //   textAlign: 'center',
+  //   fontSize: 16,
+  //   letterSpacing: 2,
+  //   padding: 20
+  // },
+  // progressButtonTextActive: {
+  //   fontFamily: 'Futura',
+  //   textAlign: 'center',
+  //   fontSize: 16,
+  //   letterSpacing: 2,
+  //   padding: 20
+  // },
   weightDelta: {
     textAlign: 'left',
     marginBottom: 0

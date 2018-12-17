@@ -49,7 +49,7 @@ class QuizQuestion extends React.Component {
               (questionNumber === 3 && this.props.question3Selection === i) ? styles.selected :
               (questionNumber === 4 && this.props.question4Selection === i) ? styles.selected :
               (questionNumber === 5 && this.props.question5Selection === i) ? styles.selected : null)]}
-            underlayColor={Colors.paleGreen}
+            underlayColor={Colors.secondaryColor}
             key={i}
             onPress={() => this.props.quizPassed ? null : this.selectAnswer(questionNumber, answer.isCorrect, i)}>
             <Text style={styles.quizAnswerText}>{answer.answer}</Text>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create ({
     fontSize: 22
   },
   selected: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.secondaryColor,
     borderRadius: 3
   },
   lessonWrapper: {

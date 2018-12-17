@@ -36,14 +36,14 @@ export default {
     letterSpacing: 2
   },
   paragraphText: {
-    fontFamily: 'Futura',
+    // fontFamily: 'Futura',
     fontSize: 20,
     lineHeight: 26,
     marginBottom: 25
   },
   paragraphTextNote: {
     color: Colors.darkGray,
-    fontFamily: 'Futura'
+    // fontFamily: 'Futura'
   },
   center: {
     alignItems: 'center',
@@ -306,35 +306,34 @@ export default {
     color: Colors.gray,
     marginTop: 20
   },
-  tabButtons: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    backgroundColor: Colors.gray,
-    paddingTop: 10
-  },
-  tabButton: {
-    flex: 1,
-    borderBottomWidth: 3,
-    borderColor: Colors.gray,
-    padding: 10
-  },
-  tabButtonActive: {
-    borderBottomWidth: 3,
-    borderColor: Colors.black,
-    paddingBottom: 15
-  },
-  tabButtonText: {
-    textAlign: 'center',
-    color: Colors.black,
-    fontSize: 16,
-    letterSpacing: 1
-  },
-  tabButtonTextActive: {
-    textAlign: 'center',
-    color: Colors.black,
-    fontSize: 16,
-    letterSpacing: 1
-  },
+  // tabButtons: {
+  //   alignSelf: 'stretch',
+  //   flexDirection: 'row',
+  //   paddingTop: 10
+  // },
+  // tabButton: {
+  //   flex: 1,
+  //   borderBottomWidth: 3,
+  //   borderColor: Colors.gray,
+  //   padding: 10
+  // },
+  // tabButtonActive: {
+  //   borderBottomWidth: 3,
+  //   borderColor: Colors.black,
+  //   paddingBottom: 15
+  // },
+  // tabButtonText: {
+  //   textAlign: 'center',
+  //   color: Colors.black,
+  //   fontSize: 16,
+  //   letterSpacing: 1
+  // },
+  // tabButtonTextActive: {
+  //   textAlign: 'center',
+  //   color: Colors.black,
+  //   fontSize: 16,
+  //   letterSpacing: 1
+  // },
   flexRow: {
     alignSelf: 'stretch',
     flexDirection: 'row'
@@ -396,7 +395,7 @@ export default {
   },
   emptyMessage: {
     color: Colors.darkGray,
-    fontFamily: 'Futura',
+    // fontFamily: 'Futura',
     letterSpacing: 1,
     fontSize: 18
   },
@@ -409,5 +408,24 @@ export default {
   },
   noBorderBottom: {
     borderBottomWidth: 0
+  },
+  progressButtonActive: {
+    borderBottomWidth: 3
+  },
+  progressButtonText: {
+    fontFamily: 'Futura',
+    textAlign: 'center',
+    fontSize: 16,
+    letterSpacing: 2,
+    paddingTop: 20,
+    paddingBottom: 20
+  },
+  progressButtonTextActive: {
+    fontFamily: 'Futura',
+    textAlign: 'center',
+    fontSize: 16,
+    letterSpacing: 2,
+    paddingTop: 20,
+    paddingBottom: 20
   }
 }

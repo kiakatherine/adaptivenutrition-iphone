@@ -49,22 +49,31 @@ class Lesson extends React.Component {
      }
 
     return (
-      <TouchableHighlight
-        underlayColor={Colors.lightGray}
-        style={[styles.lessonWrapper, isCompleted ? styles.completed : null]}
-        onPress={() => this.props.showLessonDetail(true, lessonNumber)}>
+      <View>
+        {lessonNumber === 1 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 1</Text> :
+         lessonNumber === 3 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 2</Text> :
+         lessonNumber === 5 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 3</Text> :
+         lessonNumber === 7 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 4</Text> :
+         lessonNumber === 9 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 5</Text> :
+         lessonNumber === 11 ? <Text style={[Styles.h3, styles.weekHeader]}>Week 6</Text> : null}
 
-       <View style={Styles.flexRow}>
-          <Text style={[Styles.flexCol, styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonName}</Text>
+        <TouchableHighlight
+          underlayColor={Colors.lightGray}
+          style={[styles.lessonWrapper, isCompleted ? styles.completed : null]}
+          onPress={() => this.props.showLessonDetail(true, lessonNumber)}>
 
-          {isCompleted &&
-           <Text style={styles.checkmark}>
-             <FontAwesome
-               name='check'
-               size={24} />
-           </Text>}
-        </View>
-       </TouchableHighlight>
+         <View style={Styles.flexRow}>
+            <Text style={[Styles.flexCol, styles.lessonNumber, isCompleted ? styles.lessonNumberCompleted : null]}>{lessonName}</Text>
+
+            {isCompleted &&
+             <Text style={styles.checkmark}>
+               <FontAwesome
+                 name='check'
+                 size={24} />
+             </Text>}
+          </View>
+        </TouchableHighlight>
+      </View>
      );
    }
 }
@@ -101,6 +110,11 @@ const styles = StyleSheet.create ({
   },
   checkmark: {
     color: Colors.white
+  },
+  weekHeader: {
+    marginLeft: 40,
+    marginBottom: 15,
+    marginTop: 30
   },
   lessonWrapper: {
     backgroundColor: Colors.lightGray,

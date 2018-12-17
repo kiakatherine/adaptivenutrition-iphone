@@ -71,10 +71,6 @@ class AddBodyweightModal extends React.Component {
             onDateChange={date => this.setDate(date) }
           />}
 
-        <View>
-          <Text style={styles.bodyweightDate}>{moment(this.props.date).format('MMMM D')}</Text>
-        </View>
-
         <View style={styles.progressSection}>
           <View style={styles.bodyweightInputWrapper}>
             <TouchableHighlight

@@ -68,27 +68,26 @@ export default class LoginScreen extends React.Component {
 
     return (
       <View style={Styles.body}>
-        <Text style={[Styles.bigTitle, Styles.pageTitle]}>Help</Text>
-
-        <View style={Styles.tabButtons}>
+        <View style={Styles.flexRow}>
           <TouchableHighlight
-            underlayColor={Colors.gray}
-            style={[Styles.tabButton, this.state.showMealPlanList ? Styles.tabButtonActive : Styles.tabButton]}
+            underlayColor={Colors.white}
+            style={[Styles.flexCol, this.state.showMealPlanList ? Styles.progressButtonActive : Styles.progressButton]}
             onPress={() => this.setState({ showMealPlanList: true, showResourcesList: false, showOtherList: false })}>
-            <Text style={this.state.showMealPlanList ? Styles.tabButtonTextActive : Styles.tabButtonText}>MEAL PLAN</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            underlayColor={Colors.gray}
-            style={[Styles.tabButton, this.state.showResourcesList ? Styles.tabButtonActive : Styles.tabButton]}
-            onPress={() => this.setState({ showMealPlanList: false, showResourcesList: true, showOtherList: false })}>
-            <Text style={this.state.showResourcesList ? Styles.tabButtonTextActive : Styles.tabButtonText}>RESOURCES</Text>
+            <Text style={this.state.showMealPlanList ? Styles.progressButtonTextActive : Styles.progressButtonText}>MEAL PLAN</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
-            underlayColor={Colors.gray}
-            style={[Styles.tabButton, this.state.showOtherList ? Styles.tabButtonActive : Styles.tabButton]}
+            underlayColor={Colors.white}
+            style={[Styles.flexCol, this.state.showResourcesList ? Styles.progressButtonActive : Styles.progressButton]}
+            onPress={() => this.setState({ showMealPlanList: false, showResourcesList: true, showOtherList: false })}>
+            <Text style={this.state.showResourcesList ? Styles.progressButtonTextActive : Styles.progressButtonText}>RESOURCES</Text>
+          </TouchableHighlight>
+
+          <TouchableHighlight
+            underlayColor={Colors.white}
+            style={[Styles.flexCol, this.state.showOtherList ? Styles.progressButtonActive : Styles.progressButton]}
             onPress={() => this.setState({ showMealPlanList: false, showResourcesList: false, showOtherList: true })}>
-            <Text style={this.state.showOtherList ? Styles.tabButtonTextActive : Styles.tabButtonText}>OTHER</Text>
+            <Text style={this.state.showOtherList ? Styles.progressButtonTextActive : Styles.progressButtonText}>OTHER</Text>
           </TouchableHighlight>
         </View>
 

@@ -156,7 +156,7 @@ class LessonQuiz extends React.Component {
             {this.props.quizPassed &&
               <View>
                 <TouchableHighlight
-                  underlayColor={Colors.paleGreen}
+                  underlayColor={Colors.white}
                   onPress={this.props.closeQuiz}>
                   <FontAwesome
                     style={[Styles.textCenter, Styles.tooltipClose]}
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.paleGreen,
+    // backgroundColor: Colors.paleGreen,
     padding: 40
   },
   congratsMessageText: {
