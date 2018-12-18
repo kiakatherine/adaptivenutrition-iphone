@@ -64,7 +64,7 @@ class PointsModal extends React.Component {
             size={48} />
         </Text>
 
-        <Text style={[Styles.textCenter, styles.pointsDescription]}>Total</Text>
+        <Text style={[Styles.textCenter, styles.specificPointsDescription]}>Total Points</Text>
         <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{client.totalPoints}</Text>
 
         <View>

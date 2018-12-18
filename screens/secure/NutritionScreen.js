@@ -58,7 +58,6 @@ export default class LoginScreen extends React.Component {
       showTrainingTooltip: false,
       showMealsTooltip: false,
       showWakeTimePicker: false,
-      showTrainingIntensityPicker: false,
       showMealsBeforeWorkoutPicker: false,
       showTemplatePicker: false,
       showNeedBodyweightEntries: false,
@@ -1470,7 +1469,7 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.loadingText}>adapt & thrive</Text>}
 
             {this.state.phase !== null && <ScrollView style={Styles.content}>
-              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>{"Today's Meal Plan"}</Text>
+              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>Meal Plan Settings</Text>
 
               <View style={styles.optionWrapper}>
                 <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
@@ -1508,10 +1507,18 @@ export default class LoginScreen extends React.Component {
               </View>
 
               {this.state.phase < 3 && <View style={styles.optionSection}>
-                <TouchableHighlight style={styles.optionButton}
+                <TouchableHighlight
+                  style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showModal: true, showTrainingIntensityPicker: true }) }}>
-                  <Text style={styles.optionButtonText}>{trainingIntensity ? 'Yes' : 'No'}</Text>
+                  onPress={() => { this.saveTrainingIntensity(1) }}>
+                  <Text style={[styles.optionButtonText, trainingIntensity === 1 ? styles.optionButtonTextActive : null]}>Yes</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
+                  style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
+                  underlayColor={Colors.white}
+                  onPress={() => { this.saveTrainingIntensity(0) }}>
+                  <Text style={[styles.optionButtonText, trainingIntensity === 0 ? styles.optionButtonTextActive : null]}>No</Text>
                 </TouchableHighlight>
               </View>}
 
@@ -1585,6 +1592,78 @@ export default class LoginScreen extends React.Component {
                     </TouchableHighlight>
                   </View>
                 </View>}
+
+                <Text style={Styles.bigTitle}>{"Today's Meal Plan"}</Text>
+
+                <View style={[Styles.flexRow, styles.mealOptions]}>
+                  {phase === 3 && mealsBeforeWorkout === 0 &&
+                    <TouchableHighlight
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveCurrentMeal(0) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                    </TouchableHighlight>}
+
+                  <TouchableHighlight
+                    style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveCurrentMeal(0) }}>
+                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>BREAKFAST</Text>
+                  </TouchableHighlight>
+
+                  {phase === 3 && mealsBeforeWorkout === 1 &&
+                    <TouchableHighlight
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveCurrentMeal(0) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                    </TouchableHighlight>}
+
+                  <TouchableHighlight
+                    style={[Styles.flexCol, styles.mealOption, currentMeal === 1 ? styles.mealOptionSelected : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveCurrentMeal(1) }}>
+                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 1 ? styles.mealOptionTextSelected : null]}>LUNCH 1</Text>
+                  </TouchableHighlight>
+
+                  {phase === 3 && mealsBeforeWorkout === 2 &&
+                    <TouchableHighlight
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveCurrentMeal(0) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                    </TouchableHighlight>}
+
+                  <TouchableHighlight
+                    style={[Styles.flexCol, styles.mealOption, currentMeal === 2 ? styles.mealOptionSelected : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveCurrentMeal(2) }}>
+                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 2 ? styles.mealOptionTextSelected : null]}>LUNCH 2</Text>
+                  </TouchableHighlight>
+
+                  {phase === 3 && mealsBeforeWorkout === 3 &&
+                    <TouchableHighlight
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveCurrentMeal(0) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                    </TouchableHighlight>}
+
+                  <TouchableHighlight
+                    style={[Styles.flexCol, styles.mealOption, currentMeal === 3 ? styles.mealOptionSelected : null]}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.saveCurrentMeal(3) }}>
+                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 3 ? styles.mealOptionTextSelected : null]}>DINNER</Text>
+                  </TouchableHighlight>
+
+                  {phase === 3 && mealsBeforeWorkout === 4 &&
+                    <TouchableHighlight
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      underlayColor={Colors.white}
+                      onPress={() => { this.saveCurrentMeal(0) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                    </TouchableHighlight>}
+                </View>
 
                 <View style={styles.progressSection}>
                   {!viewAllMeals && phase === 1 &&
@@ -2003,15 +2082,6 @@ export default class LoginScreen extends React.Component {
                 phase={this.state.phase}
                 closeModal={this.closeModal} />}
 
-            {this.state.showTrainingIntensityPicker &&
-              <Picker
-                selectedValue={trainingIntensity ? 'Yes' : 'No'}
-                onValueChange={(itemValue) => this.saveTrainingIntensity(itemValue)}>
-                <Picker.Item label="Yes" value={0} />
-                <Picker.Item label="No" value={1} />
-              </Picker>
-            }
-
             {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
               <View>
                 <TouchableHighlight
@@ -2231,9 +2301,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20
   },
   mealPlanSection: {
-    alignSelf: 'stretch',
-    // alignItems: 'center',
-    // marginTop: 50
+    alignSelf: 'stretch'
   },
   mealsMenu: {
     alignSelf: 'stretch',
@@ -2245,8 +2313,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
-    marginTop: 40
+    flexDirection: 'row'
   },
   progressButtonText: {
     textAlign: 'center',
@@ -2356,5 +2423,21 @@ const styles = StyleSheet.create({
   },
   incompletePhaseTwoMealText: {
     color: Colors.darkGray
+  },
+  mealOptions: {
+    marginTop: 10,
+    marginBottom: 30
+  },
+  mealOption: {
+    paddingBottom: 10,
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.white
+  },
+  mealOptionSelected: {
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.black
+  },
+  mealOptionText: {
+    fontSize: 12
   }
 });

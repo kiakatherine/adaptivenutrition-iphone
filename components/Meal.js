@@ -29,24 +29,6 @@ class Meal extends React.Component {
      selected: false,
    }
 
-   changeMeal(dir) {
-     let meal = 0;
-     let totalMeals = 3;
-
-     if(this.props.phase === 3 && this.props.trainingIntensity > 0) {
-       totalMeals = 4;
-     }
-
-     if(dir === 'prev') {
-       meal = (this.props.currentMeal - 1 >= 0) ? (this.props.currentMeal - 1) : totalMeals;
-     } else {
-       meal = 4;
-       meal = (this.props.currentMeal + 1 <= totalMeals) ? (this.props.currentMeal + 1) : 0;
-     }
-
-     this.props.changeMeal(meal);
-   }
-
    render() {
      let label;
      let time;
@@ -76,6 +58,9 @@ class Meal extends React.Component {
        pwo = true;
      }
 
+     console.log('LABEL', label)
+     console.log('TIME', this.props.breakfastTime)
+
      // timing
      if(pwo) {
        time = 'Post-workout';
@@ -89,37 +74,13 @@ class Meal extends React.Component {
        time = this.props.dinnerTime;
      }
 
-     console.log('PHASE', this.props.phase)
-
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
-          {!viewAllMeals && <TouchableHighlight
-            underlayColor={Colors.white}
-            onPress={() => this.changeMeal('prev')}>
-            <Text style={styles.mealRowHeaderColArrowLeft}>
-              <FontAwesome
-                name='arrow-left'
-                size={24}
-              />
-            </Text>
-          </TouchableHighlight>}
-
           <View style={styles.mealRowHeaderColLong}>
-            <Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>
+            {/*<Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>*/}
             <Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>
           </View>
-
-          {!viewAllMeals && <TouchableHighlight
-            underlayColor={Colors.white}
-            onPress={() => this.changeMeal('next')}>
-            <Text style={styles.mealRowHeaderColArrowRight}>
-              <FontAwesome
-                name='arrow-right'
-                size={24}
-              />
-            </Text>
-          </TouchableHighlight>}
         </View>
 
         <View style={styles.mealRow}>
@@ -242,7 +203,7 @@ Meal.propTypes = {
   currentMeal: PropTypes.number,
   age: PropTypes.number,
   gender: PropTypes.string,
-  height: PropTypes.number,
+  height: PropTypes.string,
   bodyweight: PropTypes.number,
   bodyfat: PropTypes.number,
   showInGrams: PropTypes.bool
@@ -250,7 +211,7 @@ Meal.propTypes = {
 
 const styles = StyleSheet.create ({
   mealContainer: {
-    marginTop: 30,
+    // marginTop: 30,
     marginBottom: 30,
     // paddingLeft: 20,
     // paddingRight: 20
@@ -290,12 +251,6 @@ const styles = StyleSheet.create ({
     textAlign: 'center',
     letterSpacing: 1,
     flex: 1
-  },
-  mealRowHeaderColArrowLeft: {
-    textAlign: 'left'
-  },
-  mealRowHeaderColArrowRight: {
-    textAlign: 'right'
   },
   mealRowHeaderColLong: {
     flex: 2,
