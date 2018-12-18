@@ -51,6 +51,9 @@ export default {
   textCenter: {
     textAlign: 'center'
   },
+  textBold: {
+    fontWeight: 'bold'
+  },
   errorText: {
     color: '#FF4444'
   },

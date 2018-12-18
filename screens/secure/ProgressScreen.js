@@ -674,7 +674,7 @@ const styles = StyleSheet.create ({
     backgroundColor: Colors.white
   },
   progressSection: {
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 50
   },
   phaseProgressWrapper: {
@@ -682,7 +682,6 @@ const styles = StyleSheet.create ({
     marginBottom: 15
   },
   stats: {
-    marginTop: 20,
     marginBottom: 20
   },
   statNumber: {

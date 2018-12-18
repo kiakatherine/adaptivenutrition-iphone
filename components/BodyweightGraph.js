@@ -204,6 +204,7 @@ const styles = StyleSheet.create ({
   bodyweightLogWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignSelf: 'stretch',
     marginTop: 30,
     marginBottom: 30,
     paddingTop: 10,

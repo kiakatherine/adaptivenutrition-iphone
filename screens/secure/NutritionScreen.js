@@ -1463,8 +1463,9 @@ export default class LoginScreen extends React.Component {
             onChangeBirthdate={this._onChangeBirthdate}
             logout={() => this.logout()} />}
 
-        {!this.state.showTemplatePicker &&
-          <ScrollView style={[Styles.content, styles.content]}>
+        <ScrollView
+          style={[Styles.content, styles.content]}
+          scrollEnabled={this.state.showModal ? false : true}>
 
             {(this.state.phase === null) &&
               <Text style={styles.loadingText}>adapt & thrive</Text>}
@@ -2015,224 +2016,224 @@ export default class LoginScreen extends React.Component {
 
             {this.state.showModal &&
               <View style={Styles.showModal}></View>}
-
-            {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
-              <Picker
-                selectedValue={wakeTime ? wakeTime : '7:00 a.m.'}
-                onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
-                <Picker.Item label="12:00 am" value="12:00 am" />
-                <Picker.Item label="12:30 am" value="12:30 am" />
-                <Picker.Item label="1:00 am" value="1:00 am" />
-                <Picker.Item label="1:30 am" value="1:30 am" />
-                <Picker.Item label="2:00 am" value="2:00 am" />
-                <Picker.Item label="2:30 am" value="2:30 am" />
-                <Picker.Item label="3:00 am" value="3:00 am" />
-                <Picker.Item label="3:30 am" value="3:30 am" />
-                <Picker.Item label="4:00 am" value="4:00 am" />
-                <Picker.Item label="4:30 am" value="4:30 am" />
-                <Picker.Item label="5:00 am" value="5:00 am" />
-                <Picker.Item label="5:30 am" value="6:30 am" />
-                <Picker.Item label="6:00 am" value="6:00 am" />
-                <Picker.Item label="6:30 am" value="6:30 am" />
-                <Picker.Item label="7:00 am" value="7:00 am" />
-                <Picker.Item label="7:30 am" value="7:30 am" />
-                <Picker.Item label="8:00 am" value="8:00 am" />
-                <Picker.Item label="8:30 am" value="8:30 am" />
-                <Picker.Item label="9:00 am" value="9:00 am" />
-                <Picker.Item label="9:30 am" value="9:30 am" />
-                <Picker.Item label="10:00 am" value="10:00 am" />
-                <Picker.Item label="10:30 am" value="10:30 am" />
-                <Picker.Item label="11:00 am" value="11:00 am" />
-                <Picker.Item label="11:30 am" value="11:30 am" />
-
-                <Picker.Item label="12:00 pm" value="12:00 pm" />
-                <Picker.Item label="12:30 pm" value="12:30 pm" />
-                <Picker.Item label="1:00 pm" value="1:00 pm" />
-                <Picker.Item label="1:30 pm" value="1:30 pm" />
-                <Picker.Item label="2:00 pm" value="2:00 pm" />
-                <Picker.Item label="2:30 pm" value="2:30 pm" />
-                <Picker.Item label="3:00 pm" value="3:00 pm" />
-                <Picker.Item label="3:30 pm" value="3:30 pm" />
-                <Picker.Item label="4:00 pm" value="4:00 pm" />
-                <Picker.Item label="4:30 pm" value="4:30 pm" />
-                <Picker.Item label="5:00 pm" value="5:00 pm" />
-                <Picker.Item label="5:30 pm" value="5:30 pm" />
-                <Picker.Item label="6:00 pm" value="6:00 pm" />
-                <Picker.Item label="6:30 pm" value="6:30 pm" />
-                <Picker.Item label="7:00 pm" value="7:00 pm" />
-                <Picker.Item label="7:30 pm" value="7:30 pm" />
-                <Picker.Item label="8:00 pm" value="8:00 pm" />
-                <Picker.Item label="8:30 pm" value="8:30 pm" />
-                <Picker.Item label="9:00 pm" value="9:00 pm" />
-                <Picker.Item label="9:30 pm" value="9:30 pm" />
-                <Picker.Item label="10:00 pm" value="10:00 pm" />
-                <Picker.Item label="10:30 pm" value="10:30 pm" />
-                <Picker.Item label="11:00 pm" value="11:00 pm" />
-                <Picker.Item label="11:30 pm" value="11:30 pm" />
-              </Picker>
-            </View>}
-
-            {this.state.showWaketimeTooltip &&
-              <ModalWindow
-                currentModal="WAKETIME_TOOLTIP"
-                closeModal={this.closeModal} />}
-
-            {this.state.showTrainingTooltip &&
-              <ModalWindow
-                currentModal="TRAINING_TOOLTIP"
-                phase={this.state.phase}
-                closeModal={this.closeModal} />}
-
-            {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
-                  <FontAwesome
-                    style={[Styles.textCenter, Styles.tooltipClose]}
-                    name='remove'
-                    size={24}
-                  />
-                </TouchableHighlight>
-                <Text style={Styles.tooltipHeader}>Number of Meals Before Your Workout</Text>
-                <Text style={Styles.tooltipParagraph}>This option indicates how many meals you will have eaten before your workout of the day. Keep in mind that meals should be spaced 3-5 hours apart, with breakfast being within an hour of waking.</Text>
-                <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
-              </View>
-            </ScrollView>}
-
-            {this.state.showNeedBodyweightEntries && <ScrollView style={Styles.tooltip}>
-              <View>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showNeedBodyweightEntries: false, showModal: false }) }}>
-                  <FontAwesome
-                    style={[Styles.textCenter, Styles.tooltipClose]}
-                    name='remove'
-                    size={24}
-                  />
-                </TouchableHighlight>
-                <Text style={Styles.tooltipHeader}>
-                  <FontAwesome
-                    style={[Styles.textCenter]}
-                    name='lock'
-                    size={36}
-                  />
-                </Text>
-                <Text style={Styles.tooltipHeader}>
-                  Uh oh!
-                </Text>
-                <Text style={Styles.tooltipParagraph}>{"Make sure you've entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step."}</Text>
-                <Text></Text>
-                <Text></Text>
-              </View>
-            </ScrollView>}
-
-            {this.state.showTemplateConfirmation && <ModalWindow
-              currentModal="TEMPLATE_CONFIRMATION"
-              currentTemplate={this.state.client.templateType}
-              saveTemplateType={this.saveTemplateType}
-              closeModal={this.closeModal} />}
-
-            {this.state.showStepSuccessMessage &&
-              <ScrollView style={Styles.tooltip}>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this.setState({
-                    showStepSuccessMessage: false,
-                    showModal: false
-                   })
-                }}>
-                  <FontAwesome
-                    style={[Styles.textCenter, Styles.tooltipClose]}
-                    name='remove'
-                    size={24}
-                  />
-                </TouchableHighlight>
-
-                <Text style={Styles.tooltipHeader}>Congratulations!</Text>
-
-                <Text style={Styles.tooltipParagraph}>{"You're almost done with the program!"}</Text>
-                <Text style={Styles.tooltipParagraph}>What happens next?</Text>
-                <Text style={Styles.tooltipParagraph}>After 4 weeks on this step, you may choose to maintain your new weight at Step 1.</Text>
-                <Text style={Styles.tooltipParagraph}>{"If you'd like to continue losing weight or building lean muscle, you can skip over Step 1 and go to Step 2 and do the process again from there. Just be sure to update your biometric settings with your new bodyweight and body fat percentage."}</Text>
-                <Text style={Styles.tooltipParagraph}>Keep up the great work!</Text>
-              </ScrollView>}
-
-              {this.state.showUpdateBiometricsReminder &&
-                <ScrollView style={Styles.tooltip}>
-                  <TouchableHighlight
-                    underlayColor={Colors.white}
-                    onPress={() => { this.setState({
-                      showUpdateBiometricsReminder: false,
-                      showModal: false
-                     })
-                  }}>
-                    <FontAwesome
-                      style={[Styles.textCenter, Styles.tooltipClose]}
-                      name='remove'
-                      size={24}
-                    />
-                  </TouchableHighlight>
-
-                  <Text style={Styles.tooltipHeader}>Congrats!</Text>
-
-                  <Text style={Styles.tooltipParagraph}>{"Great work making it all the way through the program!"}</Text>
-                  <Text style={Styles.tooltipParagraph}>A quick reminder</Text>
-                  <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
-                </ScrollView>}
-
-            {this.state.showNavPhase &&
-              <ModalWindow
-                currentModal="PHASE_CONFIRMATION"
-                currentPhase={this.state.phase}
-                movePhase={this.movePhase}
-                closeModal={this.closeModal} />}
-
-            {this.state.showMacrosWarning &&
-              <ScrollView style={Styles.tooltip}>
-                <TouchableHighlight
-                  underlayColor={Colors.white}
-                  onPress={() => { this.setState({ showWaketimeTooltip: false, showModal: false }) }}>
-                  <FontAwesome
-                    style={[Styles.textCenter, Styles.tooltipClose]}
-                    name='remove'
-                    size={24}
-                  />
-                </TouchableHighlight>
-
-                <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
-                <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
-
-                <TouchableHighlight
-                  style={Styles.modalButton}
-                  underlayColor={Colors.white}
-                  onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
-                  <Text style={Styles.modalButtonText}>GOT IT!</Text>
-                </TouchableHighlight>
-
-                <View style={styles.checkboxRow}>
-                  <TouchableHighlight
-                    style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
-                    onPress={() => { this.doNotShowMacroWarning() }}>
-                    <Text></Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={Colors.white}
-                    onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
-                    <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
-                  </TouchableHighlight>
-                </View>
-
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-              </ScrollView>}
-              </ScrollView>}
+        </ScrollView>
 
         {this.state.showTemplatePicker &&
           <TemplatePicker
             template={template}
             closeTemplatePicker={this.showTemplatePicker} />}
+
+        {this.state.showWakeTimePicker && <View style={styles.wakeTimePicker}>
+          <Picker
+            selectedValue={wakeTime ? wakeTime : '7:00'}
+            onValueChange={(itemValue, itemIndex) => this.saveWakeTime(itemValue)}>
+            <Picker.Item label="12:00" value="12:00" />
+            <Picker.Item label="12:30" value="12:30" />
+            <Picker.Item label="1:00" value="1:00" />
+            <Picker.Item label="1:30" value="1:30" />
+            <Picker.Item label="2:00" value="2:00" />
+            <Picker.Item label="2:30" value="2:30" />
+            <Picker.Item label="3:00" value="3:00" />
+            <Picker.Item label="3:30" value="3:30" />
+            <Picker.Item label="4:00" value="4:00" />
+            <Picker.Item label="4:30" value="4:30" />
+            <Picker.Item label="5:00" value="5:00" />
+            <Picker.Item label="5:30" value="5:30" />
+            <Picker.Item label="6:00" value="6:00" />
+            <Picker.Item label="6:30" value="6:30" />
+            <Picker.Item label="7:00" value="7:00" />
+            <Picker.Item label="7:30" value="7:30" />
+            <Picker.Item label="8:00" value="8:00" />
+            <Picker.Item label="8:30" value="8:30" />
+            <Picker.Item label="9:00" value="9:00" />
+            <Picker.Item label="9:30" value="9:30" />
+            <Picker.Item label="10:00" value="10:00" />
+            <Picker.Item label="10:30" value="10:30" />
+            <Picker.Item label="11:00" value="11:00" />
+            <Picker.Item label="11:30" value="11:30" />
+
+            {/*<Picker.Item label="12:00 pm" value="12:00 pm" />
+            <Picker.Item label="12:30 pm" value="12:30 pm" />
+            <Picker.Item label="1:00 pm" value="1:00 pm" />
+            <Picker.Item label="1:30 pm" value="1:30 pm" />
+            <Picker.Item label="2:00 pm" value="2:00 pm" />
+            <Picker.Item label="2:30 pm" value="2:30 pm" />
+            <Picker.Item label="3:00 pm" value="3:00 pm" />
+            <Picker.Item label="3:30 pm" value="3:30 pm" />
+            <Picker.Item label="4:00 pm" value="4:00 pm" />
+            <Picker.Item label="4:30 pm" value="4:30 pm" />
+            <Picker.Item label="5:00 pm" value="5:00 pm" />
+            <Picker.Item label="5:30 pm" value="5:30 pm" />
+            <Picker.Item label="6:00 pm" value="6:00 pm" />
+            <Picker.Item label="6:30 pm" value="6:30 pm" />
+            <Picker.Item label="7:00 pm" value="7:00 pm" />
+            <Picker.Item label="7:30 pm" value="7:30 pm" />
+            <Picker.Item label="8:00 pm" value="8:00 pm" />
+            <Picker.Item label="8:30 pm" value="8:30 pm" />
+            <Picker.Item label="9:00 pm" value="9:00 pm" />
+            <Picker.Item label="9:30 pm" value="9:30 pm" />
+            <Picker.Item label="10:00 pm" value="10:00 pm" />
+            <Picker.Item label="10:30 pm" value="10:30 pm" />
+            <Picker.Item label="11:00 pm" value="11:00 pm" />
+            <Picker.Item label="11:30 pm" value="11:30 pm" />*/}
+          </Picker>
+        </View>}
+
+        {this.state.showWaketimeTooltip &&
+          <ModalWindow
+            currentModal="WAKETIME_TOOLTIP"
+            closeModal={this.closeModal} />}
+
+        {this.state.showTrainingTooltip &&
+          <ModalWindow
+            currentModal="TRAINING_TOOLTIP"
+            phase={this.state.phase}
+            closeModal={this.closeModal} />}
+
+        {this.state.showMealsTooltip && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showMealsTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>Number of Meals Before Your Workout</Text>
+            <Text style={Styles.tooltipParagraph}>This option indicates how many meals you will have eaten before your workout of the day. Keep in mind that meals should be spaced 3-5 hours apart, with breakfast being within an hour of waking.</Text>
+            <Text style={Styles.tooltipParagraph}>For example, if you wake up at 7 a.m. and workout at 6 p.m., you will have eaten breakfast by 8 a.m., early lunch around 12 p.m., and late lunch around 3 p.m., so you choose the "3 meals" option.</Text>
+          </View>
+        </ScrollView>}
+
+        {this.state.showNeedBodyweightEntries && <ScrollView style={Styles.tooltip}>
+          <View>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showNeedBodyweightEntries: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+            <Text style={Styles.tooltipHeader}>
+              <FontAwesome
+                style={[Styles.textCenter]}
+                name='lock'
+                size={36}
+              />
+            </Text>
+            <Text style={Styles.tooltipHeader}>
+              Uh oh!
+            </Text>
+            <Text style={Styles.tooltipParagraph}>{"Make sure you've entered at least three bodyweight entries from the past seven days to confirm you are ready to progress to the next step."}</Text>
+            <Text></Text>
+            <Text></Text>
+          </View>
+        </ScrollView>}
+
+        {this.state.showTemplateConfirmation && <ModalWindow
+          currentModal="TEMPLATE_CONFIRMATION"
+          currentTemplate={this.state.client.templateType}
+          saveTemplateType={this.saveTemplateType}
+          closeModal={this.closeModal} />}
+
+        {this.state.showStepSuccessMessage &&
+          <ScrollView style={Styles.tooltip}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({
+                showStepSuccessMessage: false,
+                showModal: false
+               })
+            }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipHeader}>Congratulations!</Text>
+
+            <Text style={Styles.tooltipParagraph}>{"You're almost done with the program!"}</Text>
+            <Text style={Styles.tooltipParagraph}>What happens next?</Text>
+            <Text style={Styles.tooltipParagraph}>After 4 weeks on this step, you may choose to maintain your new weight at Step 1.</Text>
+            <Text style={Styles.tooltipParagraph}>{"If you'd like to continue losing weight or building lean muscle, you can skip over Step 1 and go to Step 2 and do the process again from there. Just be sure to update your biometric settings with your new bodyweight and body fat percentage."}</Text>
+            <Text style={Styles.tooltipParagraph}>Keep up the great work!</Text>
+          </ScrollView>}
+
+          {this.state.showUpdateBiometricsReminder &&
+            <ScrollView style={Styles.tooltip}>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                onPress={() => { this.setState({
+                  showUpdateBiometricsReminder: false,
+                  showModal: false
+                 })
+              }}>
+                <FontAwesome
+                  style={[Styles.textCenter, Styles.tooltipClose]}
+                  name='remove'
+                  size={24}
+                />
+              </TouchableHighlight>
+
+              <Text style={Styles.tooltipHeader}>Congrats!</Text>
+
+              <Text style={Styles.tooltipParagraph}>{"Great work making it all the way through the program!"}</Text>
+              <Text style={Styles.tooltipParagraph}>A quick reminder</Text>
+              <Text style={Styles.tooltipParagraph}>{"Don't forget to update your biometric settings with your new bodyweight and body fat percentage so your new meal plan is accurate."}</Text>
+            </ScrollView>}
+
+        {this.state.showNavPhase &&
+          <ModalWindow
+            currentModal="PHASE_CONFIRMATION"
+            currentPhase={this.state.phase}
+            movePhase={this.movePhase}
+            closeModal={this.closeModal} />}
+
+        {this.state.showMacrosWarning &&
+          <ScrollView style={Styles.tooltip}>
+            <TouchableHighlight
+              underlayColor={Colors.white}
+              onPress={() => { this.setState({ showWaketimeTooltip: false, showModal: false }) }}>
+              <FontAwesome
+                style={[Styles.textCenter, Styles.tooltipClose]}
+                name='remove'
+                size={24}
+              />
+            </TouchableHighlight>
+
+            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is not recommended during your initial six weeks on the meal plan. A key component of our program is focusing on not only the amounts of foods, but also the quality. The foods shown in the meal plan are the foods that are most likely to leave you feeling good and help you avoid bloating, mental fogginess, and other health issues.</Text>
+            <Text style={Styles.tooltipParagraph}>Viewing your meal plan in macros is useful for when reintroducing foods that have a combination of macronutrients (for instance, Greek yogurt has protein, fat, and carbs). Knowing how mixed-macronutrient foods fit into your meal plan is valuable once you have identified which foods work best with your body.</Text>
+
+            <TouchableHighlight
+              style={Styles.modalButton}
+              underlayColor={Colors.white}
+              onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
+              <Text style={Styles.modalButtonText}>GOT IT!</Text>
+            </TouchableHighlight>
+
+            <View style={styles.checkboxRow}>
+              <TouchableHighlight
+                style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
+                onPress={() => { this.doNotShowMacroWarning() }}>
+                <Text></Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
+                <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
+              </TouchableHighlight>
+            </View>
+
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+          </ScrollView>}
 
         <MessageBarAlert ref="alert" />
       </View>
