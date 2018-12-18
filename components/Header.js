@@ -35,9 +35,9 @@ class Header extends React.Component {
   }
 
   _closeModal(page) {
-    this.setState({ 
-      showPoints: false, 
-      showUserInfo: false 
+    this.setState({
+      showPoints: false,
+      showUserInfo: false
     }, () => {
       if(page == "logout") {
         this.props.logout()
@@ -46,7 +46,7 @@ class Header extends React.Component {
   }
 
    render() {
-     return ( 
+     return (
        <View>
          <View style={styles.header}>
            {/*<Image source={require('../assets/an_logo.png')} style={styles.logo} />
@@ -187,7 +187,7 @@ class Header extends React.Component {
             onChangeBirthdate={this.props.onChangeBirthdate}
             client={this.props.client ? this.props.client : null}
             wide={true}
-            closeModal={(page)=> this._closeModal(page)} 
+            closeModal={(page)=> this._closeModal(page)}
             /> }
       </View>
      );
@@ -204,7 +204,9 @@ const styles = StyleSheet.create ({
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: Colors.white,
-    padding: 10
+    padding: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.lightGray
   },
   headerItem: {
     flex: 1,
