@@ -71,19 +71,19 @@ class UserModal extends React.Component {
       <View style={[Styles.modalContent, styles.modalContent]}>
         <Text style={Styles.bigTitle}>{name}</Text>
 
-        <View style={Styles.tabButtons}>
+        <View style={Styles.flexRow}>
           <TouchableHighlight
-            underlayColor={Colors.gray}
-            style={[Styles.tabButton, this.state.showTemplateInfo ? Styles.tabButtonActive : Styles.tabButton]}
+            underlayColor={Colors.white}
+            style={[Styles.flexCol, this.state.showTemplateInfo ? Styles.progressButtonActive : Styles.progressButton]}
             onPress={() => this.setState({ showTemplateInfo: true, showBiometricSettings: false })}>
-            <Text style={this.state.showTemplateInfo ? Styles.tabButtonTextActive : Styles.tabButtonText}>MEAL PLAN</Text>
+            <Text style={this.state.showTemplateInfo ? Styles.progressButtonTextActive : Styles.progressButtonText}>MEAL PLAN</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
-            underlayColor={Colors.gray}
-            style={[Styles.tabButton, this.state.showBiometricSettings ? Styles.tabButtonActive : Styles.tabButton]}
+            underlayColor={Colors.white}
+            style={[Styles.flexCol, this.state.showBiometricSettings ? Styles.progressButtonActive : Styles.progressButton]}
             onPress={() => this.setState({ showTemplateInfo: false, showBiometricSettings: true })}>
-            <Text style={this.state.showBiometricSettings ? Styles.tabButtonTextActive : Styles.tabButtonText}>BIOMETRICS</Text>
+            <Text style={this.state.showBiometricSettings ? Styles.progressButtonTextActive : Styles.progressButtonText}>BIOMETRICS</Text>
           </TouchableHighlight>
         </View>
 

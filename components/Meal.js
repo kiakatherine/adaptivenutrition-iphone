@@ -58,9 +58,6 @@ class Meal extends React.Component {
        pwo = true;
      }
 
-     console.log('LABEL', label)
-     console.log('TIME', this.props.breakfastTime)
-
      // timing
      if(pwo) {
        time = 'Post-workout';
