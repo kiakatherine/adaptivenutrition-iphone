@@ -201,8 +201,8 @@ Meal.propTypes = {
   age: PropTypes.number,
   gender: PropTypes.string,
   height: PropTypes.string,
-  bodyweight: PropTypes.number,
-  bodyfat: PropTypes.number,
+  bodyweight: PropTypes.string,
+  bodyfat: PropTypes.string,
   showInGrams: PropTypes.bool
 };
 

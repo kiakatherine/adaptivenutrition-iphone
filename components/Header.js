@@ -219,7 +219,7 @@ const styles = StyleSheet.create ({
     marginRight: 5
   },
   complete: {
-    color: Colors.secondaryColor
+    color: Colors.primaryColor
   },
   completeBad: {
     color: Colors.paleRed

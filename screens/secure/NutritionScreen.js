@@ -22,9 +22,6 @@ import { changeUnit, convertTrainingTimeToString, format12Hour, getAge, setMealT
 
 const TEMPLATE_TYPES = ['Home (Step 1)', 'Build muscle (Step 2)', 'Lose weight (Step 2)', 'Lock in results (Step 3)', 'Lock in results (Step 4)', 'New home (Step 5)'];
 
-const MessageBarAlert = require('react-native-message-bar').MessageBar;
-const MessageBarManager = require('react-native-message-bar').MessageBarManager;
-
 import {
   Alert,
   Button,
@@ -105,13 +102,13 @@ export default class LoginScreen extends React.Component {
   }
 
   async getClientData() {
-    let userData = await AsyncStorage.getItem("user")
-    let currentUser = JSON.parse(userData)
-    const uid = currentUser.uid
-    const clientWeightRef = firebase.database().ref('/clients/' + uid);
+    let userData = await AsyncStorage.getItem("user");
+    let currentUser = JSON.parse(userData);
+    const uid = currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
     let clientResponse = null;
 
-    clientWeightRef.on('value', snapshot => {
+    clientRef.on('value', snapshot => {
       clientResponse = snapshot.val();
       this.setState({
         client: clientResponse,
@@ -230,20 +227,7 @@ export default class LoginScreen extends React.Component {
     // });
   }
   componentDidMount() {
-    // Register the alert located on this master page
-    // This MessageBar will be accessible from the current (same) component, and from its child component
-    // The MessageBar is then declared only once, in your main component.
-    MessageBarManager.registerMessageBar(this.refs.alert);
-
-    // const uid = firebase.auth().currentUser.uid;
     this.getClientData()
-
-
-  }
-
-  componentWillUnmount() {
-    // Remove the alert located on this master page from the manager
-    MessageBarManager.unregisterMessageBar();
   }
 
   async clickTemplateType(template) {
@@ -273,13 +257,6 @@ export default class LoginScreen extends React.Component {
       // show error if template is step 3, 4, 5
       // else show confirmation modal
       if(template === 3 || template === 4 || template === 5) {
-        MessageBarManager.showAlert({
-          title: 'Oops!',
-          message: 'cant go here yet!',
-          alertType: 'warning',
-          // See Properties section for full customization
-          // Or check `index.ios.js` or `index.android.js` for a complete example
-        });
         this.setState({ showTemplateNavError1: true, showModal: true });
         return;
       } else {
@@ -582,13 +559,6 @@ export default class LoginScreen extends React.Component {
       // show congrats message
     } else {
       alert('make sure to fill out all portions!');
-      MessageBarManager.showAlert({
-        // title: 'Your alert title goes here',
-        message: 'make sure to fill out all portions!',
-        alertType: 'warning',
-        // See Properties section for full customization
-        // Or check `index.ios.js` or `index.android.js` for a complete example
-      });
     }
   }
 
@@ -638,7 +608,6 @@ export default class LoginScreen extends React.Component {
 
       todayRef.update({ [mealToSave]: today[mealToSave] }).then(resp => {
         // TO DO: congrats message
-        const team = client.challengeGroupTeam;
         const meal1 = today.meal1 < 3 ? true : false;
         const meal2 = today.meal2 < 3 ? true : false;
         const meal3 = today.meal3 < 3 ? true : false;
@@ -646,6 +615,10 @@ export default class LoginScreen extends React.Component {
         const meal5 = today.meal5 < 3 ? true : false;
         let numberOfMealsToComplete = 4;
         let mealsCompleted = false;
+        let key = 'phase' + phase + 'meal' + (currentMeal + 1);
+
+        // update state so progress bar updates
+        this.setState({ [key]: completion });
 
         // check number of meals to complete in phase 3
         if(phase === 3) {
@@ -685,32 +658,6 @@ export default class LoginScreen extends React.Component {
               alert('success!');
             }
           });
-
-          // clean up code
-          if(team) {
-            const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
-            let teamKey;
-
-            challengeGroupTeamsRef.on('value', snapshot => {
-             const teams = snapshot.val();
-
-             Object.keys(teams).map(key => {
-               if(teams[key].name === team) {
-                 teamKey = key;
-                 return teams[key];
-               }
-             });
-
-             if(teamKey) {
-               const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
-               const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
-               challengeGroupTeamRef.update({ points: (points - 1) > -1 ? (points - 1) : 0 });
-               todayRef.update({ allMealsCompleted: false });
-             }
-            });
-
-            return;
-          }
         }
 
         if(mealsCompleted) {
@@ -726,29 +673,6 @@ export default class LoginScreen extends React.Component {
             }
           });
 
-          // clean up code
-          if(team) {
-            const challengeGroupTeamsRef = firebase.database().ref().child('challengeGroupTeams');
-            let teamKey;
-
-            challengeGroupTeamsRef.on('value', snapshot => {
-              const teams = snapshot.val();
-
-              Object.keys(teams).map(key => {
-                if(teams[key].name === team) {
-                  teamKey = key;
-                  return teams[key];
-                }
-              });
-
-              if(teamKey) {
-                const challengeGroupTeamRef = firebase.database().ref().child('challengeGroupTeams/' + teamKey);
-                const points = challengeGroupTeamRef.points ? challengeGroupTeamRef.points : 0;
-                challengeGroupTeamRef.update({ points: (points + 1) });
-                todayRef.update({ allMealsCompleted: true });
-              }
-            });
-          }
           return;
         }
       }, reason => {
@@ -1127,7 +1051,11 @@ export default class LoginScreen extends React.Component {
 
       bodyweight = client.weight;
       bodyfat = client.bodyfat;
-      age = client.age;
+
+      const today = new Date();
+      const birthDate = new Date(this.state.client.birthdate);
+      age = today.getFullYear() - birthDate.getFullYear();
+
       gender = client.gender;
       height = client.height;
       leanMass = client.leanMass;
@@ -2234,8 +2162,6 @@ export default class LoginScreen extends React.Component {
             <Text></Text>
             <Text></Text>
           </ScrollView>}
-
-        <MessageBarAlert ref="alert" />
       </View>
     );
   }
