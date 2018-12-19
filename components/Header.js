@@ -128,7 +128,7 @@ class Header extends React.Component {
                  size={28} />
               </Text>}
 
-           {this.props.phase === 3 &&
+           {this.props.phase === 3 && this.props.trainingIntensity === 0 &&
              <Text style={styles.headerItem}>
                <FontAwesome
                  style={[styles.checkmark,
@@ -155,6 +155,45 @@ class Header extends React.Component {
                  style={[styles.checkmark,
                   this.props.phase3meal4 === 1 ? styles.complete :
                   this.props.phase3meal4 === 2 ? styles.completeBad :
+                  styles.incomplete]}
+                 name={'check'}
+                 size={28} />
+              </Text>}
+
+            {this.props.phase === 3 && this.props.trainingIntensity > 0 &&
+              <Text style={styles.headerItem}>
+                <FontAwesome
+                  style={[styles.checkmark,
+                   this.props.phase3meal1 === 1 ? styles.complete :
+                   this.props.phase3meal1 === 2 ? styles.completeBad :
+                   styles.incomplete]}
+                  name={'check'}
+                  size={28} />
+                <FontAwesome
+                  style={[styles.checkmark,
+                   this.props.phase3meal2 === 1 ? styles.complete :
+                   this.props.phase3meal2 === 2 ? styles.completeBad :
+                   styles.incomplete]}
+                  name={'check'}
+                  size={28} />
+                <FontAwesome
+                  style={[styles.checkmark,
+                   this.props.phase3meal3 === 1 ? styles.complete :
+                   this.props.phase3meal3 === 2 ? styles.completeBad :
+                   styles.incomplete]}
+                  name={'check'}
+                  size={28} />
+                <FontAwesome
+                  style={[styles.checkmark,
+                   this.props.phase3meal4 === 1 ? styles.complete :
+                   this.props.phase3meal4 === 2 ? styles.completeBad :
+                   styles.incomplete]}
+                  name={'check'}
+                  size={28} />
+                <FontAwesome
+                 style={[styles.checkmark,
+                  this.props.phase3meal5 === 1 ? styles.complete :
+                  this.props.phase3meal5 === 2 ? styles.completeBad :
                   styles.incomplete]}
                  name={'check'}
                  size={28} />
