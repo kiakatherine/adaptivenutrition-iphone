@@ -23,10 +23,21 @@ import * as labels from '../constants/MealLabels';
 
 import FoodOptions from './FoodOptions';
 import MeasurementInput from './MeasurementInput';
+import MealCompletionButtons from './MealCompletionButtons';
 
 class Meal extends React.Component {
-   state = {
-     selected: false,
+   constructor(props) {
+     super(props);
+
+     this.state = {
+       selected: false
+     }
+
+     this._clickCompleteMeal = this._clickCompleteMeal.bind(this);
+   }
+
+   _clickCompleteMeal(phase, currentMeal, completion) {
+     this.props.completeMeal(phase, currentMeal, completion);
    }
 
    render() {
@@ -34,6 +45,8 @@ class Meal extends React.Component {
      let time;
      let pwo = false;
      let viewAllMeals = this.props.viewAllMeals;
+     let phase = this.props.phase;
+     let currentMeal = this.props.currentMeal;
 
      let proteinMeasurementInput = 0;
      let carbMeasurementInput = 0;
@@ -79,6 +92,25 @@ class Meal extends React.Component {
             <Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>
           </View>
         </View>
+
+        {!viewAllMeals &&
+          <MealCompletionButtons
+            currentMeal={currentMeal}
+            phase={phase}
+            phase1meal1={this.props.phase1meal1}
+            phase1meal2={this.props.phase1meal2}
+            phase1meal3={this.props.phase1meal3}
+            phase1meal4={this.props.phase1meal4}
+            phase2meal1={this.props.phase2meal1}
+            phase2meal2={this.props.phase2meal2}
+            phase2meal3={this.props.phase2meal3}
+            phase2meal4={this.props.phase2meal4}
+            phase3meal1={this.props.phase3meal1}
+            phase3meal2={this.props.phase3meal2}
+            phase3meal3={this.props.phase3meal3}
+            phase3meal4={this.props.phase3meal4}
+            phase3meal5={this.props.phase3meal5}
+            completeMeal={this._clickCompleteMeal} />}
 
         <View style={styles.mealRow}>
           <View style={Styles.flexRow}>

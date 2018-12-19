@@ -94,6 +94,7 @@ export default class LoginScreen extends React.Component {
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
+    this._completeMeal = this._completeMeal.bind(this);
     this._onChangeGender = this._onChangeGender.bind(this);
     this._onChangeBodyweight = this._onChangeBodyweight.bind(this);
     this._onChangeHeight = this._onChangeHeight.bind(this);
@@ -562,7 +563,7 @@ export default class LoginScreen extends React.Component {
     }
   }
 
-  async completeMeal(phase, currentMeal, completion) {
+  async _completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
     // const uid = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
@@ -1543,10 +1544,10 @@ export default class LoginScreen extends React.Component {
 
                   {phase === 3 && mealsBeforeWorkout === 1 &&
                     <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 1 ? styles.mealOptionSelected : null]}
                       underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(0) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                      onPress={() => { this.saveCurrentMeal(1) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 1 ? styles.mealOptionTextSelected : null]}>PWO</Text>
                     </TouchableHighlight>}
 
                   <TouchableHighlight
@@ -1558,10 +1559,10 @@ export default class LoginScreen extends React.Component {
 
                   {phase === 3 && mealsBeforeWorkout === 2 &&
                     <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 2 ? styles.mealOptionSelected : null]}
                       underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(0) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                      onPress={() => { this.saveCurrentMeal(2) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 2 ? styles.mealOptionTextSelected : null]}>PWO</Text>
                     </TouchableHighlight>}
 
                   <TouchableHighlight
@@ -1573,10 +1574,10 @@ export default class LoginScreen extends React.Component {
 
                   {phase === 3 && mealsBeforeWorkout === 3 &&
                     <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 3 ? styles.mealOptionSelected : null]}
                       underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(0) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                      onPress={() => { this.saveCurrentMeal(3) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 3 ? styles.mealOptionTextSelected : null]}>PWO</Text>
                     </TouchableHighlight>}
 
                   <TouchableHighlight
@@ -1588,10 +1589,10 @@ export default class LoginScreen extends React.Component {
 
                   {phase === 3 && mealsBeforeWorkout === 4 &&
                     <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
+                      style={[Styles.flexCol, styles.mealOption, currentMeal === 4 ? styles.mealOptionSelected : null]}
                       underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(0) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
+                      onPress={() => { this.saveCurrentMeal(4) }}>
+                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 4 ? styles.mealOptionTextSelected : null]}>PWO</Text>
                     </TouchableHighlight>}
                 </View>
 
@@ -1638,52 +1639,6 @@ export default class LoginScreen extends React.Component {
                     </Text>
                   </TouchableHighlight>}
 
-                  {!viewAllMeals && phase === 3 &&
-                    <TouchableHighlight
-                      style={[Styles.buttonCircular, styles.progressButtonGood,
-                        (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButton :
-                        (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButton :
-                        (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButton :
-                        (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButton :
-                        (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
-                      underlayColor={Colors.darkerPrimaryColor}
-                      onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                       <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                          (currentMeal === 0 && this.state.phase3meal1 === 1) ? styles.completedMealButtonText :
-                          (currentMeal === 1 && this.state.phase3meal2 === 1) ? styles.completedMealButtonText :
-                          (currentMeal === 2 && this.state.phase3meal3 === 1) ? styles.completedMealButtonText :
-                          (currentMeal === 3 && this.state.phase3meal4 === 1) ? styles.completedMealButtonText :
-                          (currentMeal === 4 && this.state.phase3meal5 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
-                         <FontAwesome
-                           style={styles.progressButtonGoodIcon}
-                           name='check'
-                           size={16}
-                         />
-                       </Text>
-                  </TouchableHighlight>}
-
-                  {!viewAllMeals && phase === 3 &&
-                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
-                      (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
-                      underlayColor={Colors.darkerRed}
-                      onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                        (currentMeal === 0 && this.state.phase3meal1 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 1 && this.state.phase3meal2 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 2 && this.state.phase3meal3 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 3 && this.state.phase3meal4 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 4 && this.state.phase3meal5 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
-                        <FontAwesome
-                          style={styles.progressButtonBadIcon}
-                          name='remove'
-                          size={16} />
-                    </Text>
-                  </TouchableHighlight>}
-
                   {!viewAllMeals && phase === 2 && dayStatusesLoaded &&
                     <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
                       (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
@@ -1713,22 +1668,6 @@ export default class LoginScreen extends React.Component {
                     earlyLunchTime={mealTimes['earlyLunchTime']}
                     lateLunchTime={mealTimes['lateLunchTime']}
                     dinnerTime={mealTimes['dinnerTime']}
-                    meal1proteinMeasurement={this.state.meal1proteinMeasurement}
-                    meal2proteinMeasurement={this.state.meal2proteinMeasurement}
-                    meal3proteinMeasurement={this.state.meal3proteinMeasurement}
-                    meal4proteinMeasurement={this.state.meal4proteinMeasurement}
-                    meal1carbsMeasurement={this.state.meal1carbsMeasurement}
-                    meal2carbsMeasurement={this.state.meal2carbsMeasurement}
-                    meal3carbsMeasurement={this.state.meal3carbsMeasurement}
-                    meal4carbsMeasurement={this.state.meal4carbsMeasurement}
-                    meal1fatsMeasurement={this.state.meal1fatsMeasurement}
-                    meal2fatsMeasurement={this.state.meal2fatsMeasurement}
-                    meal3fatsMeasurement={this.state.meal3fatsMeasurement}
-                    meal4fatsMeasurement={this.state.meal4fatsMeasurement}
-                    meal1veggiesMeasurement={this.state.meal1veggiesMeasurement}
-                    meal2veggiesMeasurement={this.state.meal2veggiesMeasurement}
-                    meal3veggiesMeasurement={this.state.meal3veggiesMeasurement}
-                    meal4veggiesMeasurement={this.state.meal4veggiesMeasurement}
                     age={age}
                     gender={gender}
                     height={height}
@@ -1741,7 +1680,21 @@ export default class LoginScreen extends React.Component {
                     viewAllMeals={viewAllMeals}
                     showInGrams={showInGrams}
                     updateMeasurement={this.saveMeasurement}
-                    changeMeal={this.saveCurrentMeal} />}
+                    changeMeal={this.saveCurrentMeal}
+                    phase1meal1={this.state.phase1meal1}
+                    phase1meal2={this.state.phase1meal2}
+                    phase1meal3={this.state.phase1meal3}
+                    phase1meal4={this.state.phase1meal4}
+                    phase2meal1={this.state.phase2meal1}
+                    phase2meal2={this.state.phase2meal2}
+                    phase2meal3={this.state.phase2meal3}
+                    phase2meal4={this.state.phase2meal4}
+                    phase3meal1={this.state.phase3meal1}
+                    phase3meal2={this.state.phase3meal2}
+                    phase3meal3={this.state.phase3meal3}
+                    phase3meal4={this.state.phase3meal4}
+                    phase3meal5={this.state.phase3meal5}
+                    completeMeal={this._completeMeal} />}
 
                   {(this.state.phase === 3 && viewAllMeals) && <View>
                     <Meal
@@ -1765,7 +1718,21 @@ export default class LoginScreen extends React.Component {
                       veggies={veggies}
                       pwo={isPwoMeal}
                       viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams} />
+                      showInGrams={showInGrams}
+                      phase1meal1={this.state.phase1meal1}
+                      phase1meal2={this.state.phase1meal2}
+                      phase1meal3={this.state.phase1meal3}
+                      phase1meal4={this.state.phase1meal4}
+                      phase2meal1={this.state.phase2meal1}
+                      phase2meal2={this.state.phase2meal2}
+                      phase2meal3={this.state.phase2meal3}
+                      phase2meal4={this.state.phase2meal4}
+                      phase3meal1={this.state.phase3meal1}
+                      phase3meal2={this.state.phase3meal2}
+                      phase3meal3={this.state.phase3meal3}
+                      phase3meal4={this.state.phase3meal4}
+                      phase3meal5={this.state.phase3meal5}
+                      completeMeal={this._completeMeal} />
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1787,7 +1754,21 @@ export default class LoginScreen extends React.Component {
                       veggies={veggies}
                       pwo={isPwoMeal}
                       viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams} />
+                      showInGrams={showInGrams}
+                      phase1meal1={this.state.phase1meal1}
+                      phase1meal2={this.state.phase1meal2}
+                      phase1meal3={this.state.phase1meal3}
+                      phase1meal4={this.state.phase1meal4}
+                      phase2meal1={this.state.phase2meal1}
+                      phase2meal2={this.state.phase2meal2}
+                      phase2meal3={this.state.phase2meal3}
+                      phase2meal4={this.state.phase2meal4}
+                      phase3meal1={this.state.phase3meal1}
+                      phase3meal2={this.state.phase3meal2}
+                      phase3meal3={this.state.phase3meal3}
+                      phase3meal4={this.state.phase3meal4}
+                      phase3meal5={this.state.phase3meal5}
+                      completeMeal={this._completeMeal} />
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1809,7 +1790,21 @@ export default class LoginScreen extends React.Component {
                       veggies={veggies}
                       pwo={isPwoMeal}
                       viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams} />
+                      showInGrams={showInGrams}
+                      phase1meal1={this.state.phase1meal1}
+                      phase1meal2={this.state.phase1meal2}
+                      phase1meal3={this.state.phase1meal3}
+                      phase1meal4={this.state.phase1meal4}
+                      phase2meal1={this.state.phase2meal1}
+                      phase2meal2={this.state.phase2meal2}
+                      phase2meal3={this.state.phase2meal3}
+                      phase2meal4={this.state.phase2meal4}
+                      phase3meal1={this.state.phase3meal1}
+                      phase3meal2={this.state.phase3meal2}
+                      phase3meal3={this.state.phase3meal3}
+                      phase3meal4={this.state.phase3meal4}
+                      phase3meal5={this.state.phase3meal5}
+                      completeMeal={this._completeMeal} />
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1831,7 +1826,21 @@ export default class LoginScreen extends React.Component {
                       veggies={veggies}
                       pwo={isPwoMeal}
                       viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams} />
+                      showInGrams={showInGrams}
+                      phase1meal1={this.state.phase1meal1}
+                      phase1meal2={this.state.phase1meal2}
+                      phase1meal3={this.state.phase1meal3}
+                      phase1meal4={this.state.phase1meal4}
+                      phase2meal1={this.state.phase2meal1}
+                      phase2meal2={this.state.phase2meal2}
+                      phase2meal3={this.state.phase2meal3}
+                      phase2meal4={this.state.phase2meal4}
+                      phase3meal1={this.state.phase3meal1}
+                      phase3meal2={this.state.phase3meal2}
+                      phase3meal3={this.state.phase3meal3}
+                      phase3meal4={this.state.phase3meal4}
+                      phase3meal5={this.state.phase3meal5}
+                      completeMeal={this._completeMeal} />
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1853,7 +1862,21 @@ export default class LoginScreen extends React.Component {
                       veggies={veggies}
                       pwo={isPwoMeal}
                       viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams} />
+                      showInGrams={showInGrams}
+                      phase1meal1={this.state.phase1meal1}
+                      phase1meal2={this.state.phase1meal2}
+                      phase1meal3={this.state.phase1meal3}
+                      phase1meal4={this.state.phase1meal4}
+                      phase2meal1={this.state.phase2meal1}
+                      phase2meal2={this.state.phase2meal2}
+                      phase2meal3={this.state.phase2meal3}
+                      phase2meal4={this.state.phase2meal4}
+                      phase3meal1={this.state.phase3meal1}
+                      phase3meal2={this.state.phase3meal2}
+                      phase3meal3={this.state.phase3meal3}
+                      phase3meal4={this.state.phase3meal4}
+                      phase3meal5={this.state.phase3meal5}
+                      completeMeal={this._completeMeal} />
                     </View>}
                 </View>
               </View>
@@ -2243,23 +2266,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row'
   },
-  progressButtonText: {
-    textAlign: 'center',
-    color: Colors.white
-  },
-  progressButtonGood: {
-    marginRight: 5
-  },
-  progressButtonGoodIcon: {
-    color: Colors.white
-  },
-  progressButtonBadIcon: {
-    color: Colors.white
-  },
-  progressButtonBad: {
-    backgroundColor: Colors.paleRed,
-    marginLeft: 5
-  },
   phaseNavButtons: {
     display: 'flex',
     flexDirection: 'row',
@@ -2318,39 +2324,6 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
-  },
-  completedMealButton: {
-    backgroundColor: Colors.primaryColor
-  },
-  completedMealButtonText: {
-    color: Colors.white
-  },
-  completedMealButtonBad: {
-    backgroundColor: Colors.paleRed
-  },
-  completedMealButtonTextBad: {
-    color: Colors.white
-  },
-  incompleteMealButton: {
-    backgroundColor: Colors.darkGray
-  },
-  incompleteMealButtonBad: {
-    backgroundColor: Colors.darkGray
-  },
-  incompleteMealButtonText: {
-    color: Colors.darkGray
-  },
-  incompleteMealButtonTextBad: {
-    color: Colors.white
-  },
-  completedPhaseTwoMeal: {
-    backgroundColor: Colors.primaryColor
-  },
-  incompletePhaseTwoMeal: {
-    backgroundColor: Colors.gray
-  },
-  incompletePhaseTwoMealText: {
-    color: Colors.darkGray
   },
   mealOptions: {
     marginTop: 10,
