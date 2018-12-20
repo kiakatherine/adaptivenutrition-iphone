@@ -66,8 +66,6 @@ class Meal extends React.Component {
        label = labels.x.low[this.props.currentMeal];
      }
 
-     console.log('PROPS', this.props)
-
      // pwo
      if(this.props.pwo || label && label.indexOf('PWO') > -1) {
        pwo = true;
@@ -88,13 +86,6 @@ class Meal extends React.Component {
 
      return (
        <View style={styles.mealContainer}>
-        <View style={styles.mealRowHeader}>
-          <View style={styles.mealRowHeaderColLong}>
-            {/*<Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>*/}
-            {/*<Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>*/}
-          </View>
-        </View>
-
         {!viewAllMeals &&
           <MealCompletionButtons
             currentMeal={currentMeal}
@@ -114,14 +105,14 @@ class Meal extends React.Component {
             phase3meal5={this.props.phase3meal5}
             completeMeal={this._clickCompleteMeal} />}
 
-        <View style={styles.mealRow}>
+        <View style={styles.macroRow}>
           <View style={Styles.flexRow}>
-            <Text style={styles.mealRowColPhase3}>PROTEIN OPTIONS</Text>
+            <Text style={styles.foodOptionLabel}>PROTEIN OPTIONS</Text>
             {this.props.phase < 3 && <Image source={require('../assets/icons/protein.png')}
               style={{ width: 60, height: 60, resizeMode: 'contain', alignItems: 'flex-start' }} />}
           </View>
 
-          <FoodOptions style={styles.mealRowColLong}
+          <FoodOptions style={styles.foodOptions}
             macro='protein'
             sources={this.props.proteins}
             trainingIntensity={this.props.trainingIntensity}
@@ -138,9 +129,9 @@ class Meal extends React.Component {
             showInGrams={this.props.showInGrams} />
         </View>
 
-        <View style={styles.mealRow}>
+        <View style={styles.macroRow}>
           <View style={Styles.flexRow}>
-            <Text style={styles.mealRowColPhase3}>STARCH OPTIONS</Text>
+            <Text style={styles.foodOptionLabel}>STARCH OPTIONS</Text>
             {this.props.phase < 3 && this.props.trainingIntensity === 1 &&
               <Image source={require('../assets/icons/carbs-training.png')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
@@ -149,7 +140,7 @@ class Meal extends React.Component {
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
           </View>
 
-          <FoodOptions style={styles.mealRowColLong}
+          <FoodOptions style={styles.foodOptions}
             macro='carbs'
             sources={this.props.carbs}
             trainingIntensity={this.props.trainingIntensity}
@@ -166,14 +157,14 @@ class Meal extends React.Component {
             showInGrams={this.props.showInGrams} />
         </View>
 
-        <View style={styles.mealRow}>
+        <View style={styles.macroRow}>
           <View style={Styles.flexRow}>
-            <Text style={styles.mealRowColPhase3}>FAT OPTIONS</Text>
+            <Text style={styles.foodOptionLabel}>FAT OPTIONS</Text>
             {this.props.phase < 3 && <Image source={require('../assets/icons/fats.png')}
               style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
           </View>
 
-          <FoodOptions style={styles.mealRowColLong}
+          <FoodOptions style={styles.foodOptions}
             macro='fats'
             sources={this.props.fats}
             trainingIntensity={this.props.trainingIntensity}
@@ -190,12 +181,12 @@ class Meal extends React.Component {
             showInGrams={this.props.showInGrams} />
         </View>
 
-        {!this.props.showInGrams && <View style={styles.mealRow}>
+        {!this.props.showInGrams && <View style={styles.macroRow}>
           {this.props.phase === 3 &&
             <View>
-              <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
+              <Text style={styles.foodOptionLabel}>VEGGIES</Text>
 
-              <FoodOptions style={styles.mealRowColLong}
+              <FoodOptions style={styles.foodOptions}
                 macro='veggies'
                 sources={this.props.veggies}
                 trainingIntensity={this.props.trainingIntensity}
@@ -214,7 +205,7 @@ class Meal extends React.Component {
 
           {this.props.phase < 3 &&
             <View>
-              <Text style={styles.mealRowColPhase3}>VEGGIES</Text>
+              <Text style={styles.foodOptionLabel}>VEGGIES</Text>
               <Text style={styles.macroLabelsWithIconPhase2}>Portion size</Text>
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ width: 60, height: 60, resizeMode: 'contain' }} />
@@ -241,62 +232,14 @@ Meal.propTypes = {
 };
 
 const styles = StyleSheet.create ({
-  mealContainer: {
-    // marginTop: 30,
-    marginBottom: 30,
-    // paddingLeft: 20,
-    // paddingRight: 20
-  },
-  // mealRow: {
-  //   alignSelf: 'stretch',
-  //   alignItems: 'flex-start',
-  //   flexDirection: 'row',
-  //   paddingTop: 10,
-  //   paddingBottom: 10
-  // },
-  mealRow: {
-    // paddingLeft: 15,
-    // paddingRight: 15,
-    marginBottom: 10
-  },
-  mealRowCol: {
-    width: 100,
-    height: 75
-  },
-  mealRowColLong: {
-    flex: 2
-  },
-  mealRowColPhase3: {
+  foodOptionLabel: {
     color: Colors.black,
     letterSpacing: 2,
-    paddingTop: 20,
+    paddingTop: 10,
     marginBottom: 10
   },
-  mealRowHeader: {
-    alignSelf: 'stretch',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginBottom: 15
-  },
-  mealRowHeaderCol: {
-    textAlign: 'center',
-    letterSpacing: 1,
-    flex: 1
-  },
-  mealRowHeaderColLong: {
-    flex: 2,
-    marginBottom: 40
-  },
-  mealLabel: {
-    fontWeight: 'bold',
-    fontSize: 24,
-    fontFamily: 'Futura',
-    marginTop: -5
-  },
-  mealRowHeaderColText: {
-    width: '100%',
-    textAlign: 'center',
-    letterSpacing: 1
+  foodOptions: {
+    flex: 2
   },
   macroLabelsWithIcon: {
     textAlign: 'left',
@@ -316,10 +259,5 @@ const styles = StyleSheet.create ({
   },
   phase2Measurement: {
     marginBottom: 40
-  },
-  veggieText: {
-    fontSize: 22,
-    marginTop: 10,
-    marginBottom: 20
   }
 });

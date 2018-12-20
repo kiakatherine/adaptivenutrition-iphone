@@ -112,21 +112,17 @@ const styles = StyleSheet.create ({
      display: 'none'
    },
    foodOptionsList: {
-     // flex: 1,
-     // flexDirection: 'row',
      marginTop: 10,
-     marginBottom: 40
+     marginBottom: 35
    },
    foodOption: {
      flex: 1,
-     height: 150,
      marginRight: 15,
-     padding: 20,
-     paddingTop: 40,
+     padding: 25,
      backgroundColor: Colors.lightGray
    },
    foodOptionAmount: {
-     fontSize: 20,
+     fontSize: 22,
      fontWeight: '600',
      marginBottom: 3,
      color: Colors.black
