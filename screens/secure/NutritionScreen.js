@@ -1948,15 +1948,14 @@ export default class LoginScreen extends React.Component {
               </View>
 
               <TouchableHighlight
-               style={Styles.buttonCircular}
-               underlayColor={Colors.darkerPrimaryColor}
-               onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
-                 <Text style={Styles.buttonCircularIcon}>
-                   <FontAwesome
-                     name='gear'
-                     size={20}
-                   /> {this.props.label}
-                 </Text>
+                style={[Styles.button, { marginTop: 30 }]}
+                underlayColor={Colors.darkerPrimaryColor}
+                onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
+                  <Text style={Styles.buttonText}>
+                    <FontAwesome
+                      name='gear'
+                      size={20} /> Additional Settings
+                  </Text>
               </TouchableHighlight>
 
               {this.state.phase === 3 && this.state.showMealPlanSettings &&
