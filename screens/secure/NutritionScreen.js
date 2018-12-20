@@ -1722,195 +1722,205 @@ export default class LoginScreen extends React.Component {
                     completeMeal={this._completeMeal} />}
 
                   {(this.state.phase === 3 && viewAllMeals) && <View>
-                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 1</Text>
-                    <Meal
-                      trainingIntensity={trainingIntensity}
-                      mealsBeforeWorkout={mealsBeforeWorkout}
-                      template={template}
-                      phase={phase}
-                      currentMeal={0}
-                      breakfastTime={mealTimes['breakfastTime']}
-                      earlyLunchTime={mealTimes['earlyLunchTime']}
-                      lateLunchTime={mealTimes['lateLunchTime']}
-                      dinnerTime={mealTimes['dinnerTime']}
-                      age={age}
-                      gender={gender}
-                      height={height}
-                      bodyweight={bodyweight}
-                      bodyfat={bodyfat}
-                      proteins={proteins}
-                      carbs={carbs}
-                      fats={fats}
-                      veggies={veggies}
-                      pwo={isPwoMeal}
-                      viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams}
-                      phase1meal1={this.state.phase1meal1}
-                      phase1meal2={this.state.phase1meal2}
-                      phase1meal3={this.state.phase1meal3}
-                      phase1meal4={this.state.phase1meal4}
-                      phase2meal1={this.state.phase2meal1}
-                      phase2meal2={this.state.phase2meal2}
-                      phase2meal3={this.state.phase2meal3}
-                      phase2meal4={this.state.phase2meal4}
-                      phase3meal1={this.state.phase3meal1}
-                      phase3meal2={this.state.phase3meal2}
-                      phase3meal3={this.state.phase3meal3}
-                      phase3meal4={this.state.phase3meal4}
-                      phase3meal5={this.state.phase3meal5}
-                      completeMeal={this._completeMeal} />
+                    <View style={styles.viewAllMealsMeal}>
+                      <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 1</Text>
+                      <Meal
+                        trainingIntensity={trainingIntensity}
+                        mealsBeforeWorkout={mealsBeforeWorkout}
+                        template={template}
+                        phase={phase}
+                        currentMeal={0}
+                        breakfastTime={mealTimes['breakfastTime']}
+                        earlyLunchTime={mealTimes['earlyLunchTime']}
+                        lateLunchTime={mealTimes['lateLunchTime']}
+                        dinnerTime={mealTimes['dinnerTime']}
+                        age={age}
+                        gender={gender}
+                        height={height}
+                        bodyweight={bodyweight}
+                        bodyfat={bodyfat}
+                        proteins={proteins}
+                        carbs={carbs}
+                        fats={fats}
+                        veggies={veggies}
+                        pwo={isPwoMeal}
+                        viewAllMeals={viewAllMeals}
+                        showInGrams={showInGrams}
+                        phase1meal1={this.state.phase1meal1}
+                        phase1meal2={this.state.phase1meal2}
+                        phase1meal3={this.state.phase1meal3}
+                        phase1meal4={this.state.phase1meal4}
+                        phase2meal1={this.state.phase2meal1}
+                        phase2meal2={this.state.phase2meal2}
+                        phase2meal3={this.state.phase2meal3}
+                        phase2meal4={this.state.phase2meal4}
+                        phase3meal1={this.state.phase3meal1}
+                        phase3meal2={this.state.phase3meal2}
+                        phase3meal3={this.state.phase3meal3}
+                        phase3meal4={this.state.phase3meal4}
+                        phase3meal5={this.state.phase3meal5}
+                        completeMeal={this._completeMeal} />
+                    </View>
 
-                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 2</Text>
-                    <Meal
-                      trainingIntensity={trainingIntensity}
-                      mealsBeforeWorkout={mealsBeforeWorkout}
-                      template={template}
-                      phase={phase}
-                      currentMeal={1}
-                      breakfastTime={mealTimes['breakfastTime']}
-                      earlyLunchTime={mealTimes['earlyLunchTime']}
-                      lateLunchTime={mealTimes['lateLunchTime']}
-                      dinnerTime={mealTimes['dinnerTime']}
-                      age={age}
-                      gender={gender}
-                      height={height}
-                      bodyweight={bodyweight}
-                      bodyfat={bodyfat}
-                      proteins={proteins}
-                      carbs={carbs}
-                      fats={fats}
-                      veggies={veggies}
-                      pwo={isPwoMeal}
-                      viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams}
-                      phase1meal1={this.state.phase1meal1}
-                      phase1meal2={this.state.phase1meal2}
-                      phase1meal3={this.state.phase1meal3}
-                      phase1meal4={this.state.phase1meal4}
-                      phase2meal1={this.state.phase2meal1}
-                      phase2meal2={this.state.phase2meal2}
-                      phase2meal3={this.state.phase2meal3}
-                      phase2meal4={this.state.phase2meal4}
-                      phase3meal1={this.state.phase3meal1}
-                      phase3meal2={this.state.phase3meal2}
-                      phase3meal3={this.state.phase3meal3}
-                      phase3meal4={this.state.phase3meal4}
-                      phase3meal5={this.state.phase3meal5}
-                      completeMeal={this._completeMeal} />
+                    <View style={styles.viewAllMealsMeal}>
+                      <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 2</Text>
+                      <Meal
+                        trainingIntensity={trainingIntensity}
+                        mealsBeforeWorkout={mealsBeforeWorkout}
+                        template={template}
+                        phase={phase}
+                        currentMeal={1}
+                        breakfastTime={mealTimes['breakfastTime']}
+                        earlyLunchTime={mealTimes['earlyLunchTime']}
+                        lateLunchTime={mealTimes['lateLunchTime']}
+                        dinnerTime={mealTimes['dinnerTime']}
+                        age={age}
+                        gender={gender}
+                        height={height}
+                        bodyweight={bodyweight}
+                        bodyfat={bodyfat}
+                        proteins={proteins}
+                        carbs={carbs}
+                        fats={fats}
+                        veggies={veggies}
+                        pwo={isPwoMeal}
+                        viewAllMeals={viewAllMeals}
+                        showInGrams={showInGrams}
+                        phase1meal1={this.state.phase1meal1}
+                        phase1meal2={this.state.phase1meal2}
+                        phase1meal3={this.state.phase1meal3}
+                        phase1meal4={this.state.phase1meal4}
+                        phase2meal1={this.state.phase2meal1}
+                        phase2meal2={this.state.phase2meal2}
+                        phase2meal3={this.state.phase2meal3}
+                        phase2meal4={this.state.phase2meal4}
+                        phase3meal1={this.state.phase3meal1}
+                        phase3meal2={this.state.phase3meal2}
+                        phase3meal3={this.state.phase3meal3}
+                        phase3meal4={this.state.phase3meal4}
+                        phase3meal5={this.state.phase3meal5}
+                        completeMeal={this._completeMeal} />
+                    </View>
 
-                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 3</Text>
-                    <Meal
-                      trainingIntensity={trainingIntensity}
-                      mealsBeforeWorkout={mealsBeforeWorkout}
-                      template={template}
-                      phase={phase}
-                      currentMeal={2}
-                      breakfastTime={mealTimes['breakfastTime']}
-                      earlyLunchTime={mealTimes['earlyLunchTime']}
-                      lateLunchTime={mealTimes['lateLunchTime']}
-                      dinnerTime={mealTimes['dinnerTime']}
-                      age={age}
-                      gender={gender}
-                      height={height}
-                      bodyweight={bodyweight}
-                      bodyfat={bodyfat}
-                      proteins={proteins}
-                      carbs={carbs}
-                      fats={fats}
-                      veggies={veggies}
-                      pwo={isPwoMeal}
-                      viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams}
-                      phase1meal1={this.state.phase1meal1}
-                      phase1meal2={this.state.phase1meal2}
-                      phase1meal3={this.state.phase1meal3}
-                      phase1meal4={this.state.phase1meal4}
-                      phase2meal1={this.state.phase2meal1}
-                      phase2meal2={this.state.phase2meal2}
-                      phase2meal3={this.state.phase2meal3}
-                      phase2meal4={this.state.phase2meal4}
-                      phase3meal1={this.state.phase3meal1}
-                      phase3meal2={this.state.phase3meal2}
-                      phase3meal3={this.state.phase3meal3}
-                      phase3meal4={this.state.phase3meal4}
-                      phase3meal5={this.state.phase3meal5}
-                      completeMeal={this._completeMeal} />
+                    <View style={styles.viewAllMealsMeal}>
+                      <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 3</Text>
+                      <Meal
+                        trainingIntensity={trainingIntensity}
+                        mealsBeforeWorkout={mealsBeforeWorkout}
+                        template={template}
+                        phase={phase}
+                        currentMeal={2}
+                        breakfastTime={mealTimes['breakfastTime']}
+                        earlyLunchTime={mealTimes['earlyLunchTime']}
+                        lateLunchTime={mealTimes['lateLunchTime']}
+                        dinnerTime={mealTimes['dinnerTime']}
+                        age={age}
+                        gender={gender}
+                        height={height}
+                        bodyweight={bodyweight}
+                        bodyfat={bodyfat}
+                        proteins={proteins}
+                        carbs={carbs}
+                        fats={fats}
+                        veggies={veggies}
+                        pwo={isPwoMeal}
+                        viewAllMeals={viewAllMeals}
+                        showInGrams={showInGrams}
+                        phase1meal1={this.state.phase1meal1}
+                        phase1meal2={this.state.phase1meal2}
+                        phase1meal3={this.state.phase1meal3}
+                        phase1meal4={this.state.phase1meal4}
+                        phase2meal1={this.state.phase2meal1}
+                        phase2meal2={this.state.phase2meal2}
+                        phase2meal3={this.state.phase2meal3}
+                        phase2meal4={this.state.phase2meal4}
+                        phase3meal1={this.state.phase3meal1}
+                        phase3meal2={this.state.phase3meal2}
+                        phase3meal3={this.state.phase3meal3}
+                        phase3meal4={this.state.phase3meal4}
+                        phase3meal5={this.state.phase3meal5}
+                        completeMeal={this._completeMeal} />
+                    </View>
 
-                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 4</Text>
-                    <Meal
-                      trainingIntensity={trainingIntensity}
-                      mealsBeforeWorkout={mealsBeforeWorkout}
-                      template={template}
-                      phase={phase}
-                      currentMeal={3}
-                      breakfastTime={mealTimes['breakfastTime']}
-                      earlyLunchTime={mealTimes['earlyLunchTime']}
-                      lateLunchTime={mealTimes['lateLunchTime']}
-                      dinnerTime={mealTimes['dinnerTime']}
-                      age={age}
-                      gender={gender}
-                      height={height}
-                      bodyweight={bodyweight}
-                      bodyfat={bodyfat}
-                      proteins={proteins}
-                      carbs={carbs}
-                      fats={fats}
-                      veggies={veggies}
-                      pwo={isPwoMeal}
-                      viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams}
-                      phase1meal1={this.state.phase1meal1}
-                      phase1meal2={this.state.phase1meal2}
-                      phase1meal3={this.state.phase1meal3}
-                      phase1meal4={this.state.phase1meal4}
-                      phase2meal1={this.state.phase2meal1}
-                      phase2meal2={this.state.phase2meal2}
-                      phase2meal3={this.state.phase2meal3}
-                      phase2meal4={this.state.phase2meal4}
-                      phase3meal1={this.state.phase3meal1}
-                      phase3meal2={this.state.phase3meal2}
-                      phase3meal3={this.state.phase3meal3}
-                      phase3meal4={this.state.phase3meal4}
-                      phase3meal5={this.state.phase3meal5}
-                      completeMeal={this._completeMeal} />
+                    <View style={styles.viewAllMealsMeal}>
+                      <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 4</Text>
+                      <Meal
+                        trainingIntensity={trainingIntensity}
+                        mealsBeforeWorkout={mealsBeforeWorkout}
+                        template={template}
+                        phase={phase}
+                        currentMeal={3}
+                        breakfastTime={mealTimes['breakfastTime']}
+                        earlyLunchTime={mealTimes['earlyLunchTime']}
+                        lateLunchTime={mealTimes['lateLunchTime']}
+                        dinnerTime={mealTimes['dinnerTime']}
+                        age={age}
+                        gender={gender}
+                        height={height}
+                        bodyweight={bodyweight}
+                        bodyfat={bodyfat}
+                        proteins={proteins}
+                        carbs={carbs}
+                        fats={fats}
+                        veggies={veggies}
+                        pwo={isPwoMeal}
+                        viewAllMeals={viewAllMeals}
+                        showInGrams={showInGrams}
+                        phase1meal1={this.state.phase1meal1}
+                        phase1meal2={this.state.phase1meal2}
+                        phase1meal3={this.state.phase1meal3}
+                        phase1meal4={this.state.phase1meal4}
+                        phase2meal1={this.state.phase2meal1}
+                        phase2meal2={this.state.phase2meal2}
+                        phase2meal3={this.state.phase2meal3}
+                        phase2meal4={this.state.phase2meal4}
+                        phase3meal1={this.state.phase3meal1}
+                        phase3meal2={this.state.phase3meal2}
+                        phase3meal3={this.state.phase3meal3}
+                        phase3meal4={this.state.phase3meal4}
+                        phase3meal5={this.state.phase3meal5}
+                        completeMeal={this._completeMeal} />
+                    </View>
 
-                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 5</Text>
-                    <Meal
-                      trainingIntensity={trainingIntensity}
-                      mealsBeforeWorkout={mealsBeforeWorkout}
-                      template={template}
-                      phase={phase}
-                      currentMeal={4}
-                      breakfastTime={mealTimes['breakfastTime']}
-                      earlyLunchTime={mealTimes['earlyLunchTime']}
-                      lateLunchTime={mealTimes['lateLunchTime']}
-                      dinnerTime={mealTimes['dinnerTime']}
-                      age={age}
-                      gender={gender}
-                      height={height}
-                      bodyweight={bodyweight}
-                      bodyfat={bodyfat}
-                      proteins={proteins}
-                      carbs={carbs}
-                      fats={fats}
-                      veggies={veggies}
-                      pwo={isPwoMeal}
-                      viewAllMeals={viewAllMeals}
-                      showInGrams={showInGrams}
-                      phase1meal1={this.state.phase1meal1}
-                      phase1meal2={this.state.phase1meal2}
-                      phase1meal3={this.state.phase1meal3}
-                      phase1meal4={this.state.phase1meal4}
-                      phase2meal1={this.state.phase2meal1}
-                      phase2meal2={this.state.phase2meal2}
-                      phase2meal3={this.state.phase2meal3}
-                      phase2meal4={this.state.phase2meal4}
-                      phase3meal1={this.state.phase3meal1}
-                      phase3meal2={this.state.phase3meal2}
-                      phase3meal3={this.state.phase3meal3}
-                      phase3meal4={this.state.phase3meal4}
-                      phase3meal5={this.state.phase3meal5}
-                      completeMeal={this._completeMeal} />
+                    <View style={[styles.viewAllMealsMeal, Styles.noBorderBottom]}>
+                      <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 5</Text>
+                      <Meal
+                        trainingIntensity={trainingIntensity}
+                        mealsBeforeWorkout={mealsBeforeWorkout}
+                        template={template}
+                        phase={phase}
+                        currentMeal={4}
+                        breakfastTime={mealTimes['breakfastTime']}
+                        earlyLunchTime={mealTimes['earlyLunchTime']}
+                        lateLunchTime={mealTimes['lateLunchTime']}
+                        dinnerTime={mealTimes['dinnerTime']}
+                        age={age}
+                        gender={gender}
+                        height={height}
+                        bodyweight={bodyweight}
+                        bodyfat={bodyfat}
+                        proteins={proteins}
+                        carbs={carbs}
+                        fats={fats}
+                        veggies={veggies}
+                        pwo={isPwoMeal}
+                        viewAllMeals={viewAllMeals}
+                        showInGrams={showInGrams}
+                        phase1meal1={this.state.phase1meal1}
+                        phase1meal2={this.state.phase1meal2}
+                        phase1meal3={this.state.phase1meal3}
+                        phase1meal4={this.state.phase1meal4}
+                        phase2meal1={this.state.phase2meal1}
+                        phase2meal2={this.state.phase2meal2}
+                        phase2meal3={this.state.phase2meal3}
+                        phase2meal4={this.state.phase2meal4}
+                        phase3meal1={this.state.phase3meal1}
+                        phase3meal2={this.state.phase3meal2}
+                        phase3meal3={this.state.phase3meal3}
+                        phase3meal4={this.state.phase3meal4}
+                        phase3meal5={this.state.phase3meal5}
+                        completeMeal={this._completeMeal} />
+                      </View>
                     </View>}
                 </View>
               </View>
@@ -2364,9 +2374,16 @@ const styles = StyleSheet.create({
     color: Colors.white
   },
   completionMessage: {
-    marginBottom: 20
+    marginBottom: 30
+  },
+  viewAllMealsMeal: {
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.lightGray,
+    paddingBottom: 15
   },
   viewAllMealsMealLabel: {
+    fontWeight: 'bold',
+    color: Colors.primaryColor,
     marginTop: 40,
     marginBottom: 10
   }
