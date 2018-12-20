@@ -139,30 +139,28 @@ class ModalWindow extends React.Component {
               transparent={true}
               onRequestClose={() => { console.log("Modal has been closed.") } }>
 
-              <ScrollView>
-                <View style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
-                  <View style={styles.header}>
-                    <TouchableHighlight
-                      style={styles.closeButton}
-                      underlayColor={Colors.white}
-                      onPress={()=>this.props.closeModal('')}>
-                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                        <FontAwesome
-                          name='remove'
-                          size={28}
-                        />
-                      </Text>
-                    </TouchableHighlight>
-                  </View>
-                   {modal}
-
-                   {(this.props.currentModal === 'USER') && <TouchableHighlight
-                     style={styles.logoutButton}
-                     underlayColor={Colors.white}
-                     onPress={()=> {this.setState({isLogout: true})}}>
-                     <Text style={Styles.uppercaseText}>LOGOUT</Text>
-                   </TouchableHighlight>}
+              <ScrollView style={[styles.modal, this.props.wide ? styles.modalWide : null]}>
+                <View style={styles.header}>
+                  <TouchableHighlight
+                    style={styles.closeButton}
+                    underlayColor={Colors.white}
+                    onPress={()=>this.props.closeModal('')}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                      <FontAwesome
+                        name='remove'
+                        size={28}
+                      />
+                    </Text>
+                  </TouchableHighlight>
                 </View>
+                 {modal}
+
+                 {(this.props.currentModal === 'USER') && <TouchableHighlight
+                   style={styles.logoutButton}
+                   underlayColor={Colors.white}
+                   onPress={()=> {this.setState({isLogout: true})}}>
+                   <Text style={Styles.uppercaseText}>LOGOUT</Text>
+                 </TouchableHighlight>}
               </ScrollView>
 
               {this.state.isLogout &&
@@ -179,15 +177,14 @@ export default ModalWindow;
 
 const styles = StyleSheet.create ({
   container: {
-    alignItems: 'flex-start',
-    height: '100%'
+    // alignItems: 'center',
+    // paddingBottom: 40
   },
-  // header: {
-  //   flexDirection: 'row'
-  // },
+  header: {
+    alignItems: 'center'
+  },
   modal: {
     backgroundColor: Colors.white,
-    alignItems: 'center',
     paddingTop: 40,
     paddingBottom: 40,
     paddingLeft: 20,
