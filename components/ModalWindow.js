@@ -25,6 +25,7 @@ import PointsModal from './modals/PointsModal';
 // nutrition screen
 import WaketimeTooltip from './modals/WaketimeTooltip';
 import TrainingTooltip from './modals/TrainingTooltip';
+import MealsBeforeWorkoutTooltip from './modals/MealsBeforeWorkoutTooltip';
 import MealPlanSettingsModal from './modals/MealPlanSettingsModal';
 import TemplateConfirmationModal from './modals/TemplateConfirmationModal';
 import PhaseConfirmationModal from './modals/PhaseConfirmationModal';
@@ -105,6 +106,8 @@ class ModalWindow extends React.Component {
        modal = <WaketimeTooltip />
      } else if(this.props.currentModal === 'TRAINING_TOOLTIP') {
        modal = <TrainingTooltip phase={this.props.phase} />
+     } else if(this.props.currentModal === 'MEALSBEFOREWORKOUT_TOOLTIP') {
+       modal = <MealsBeforeWorkoutTooltip phase={this.props.phase} />
      } else if(this.props.currentModal === 'ADD_BODYWEIGHT') {
        modal = <AddBodyweightModal
          weight={this.props.weight}

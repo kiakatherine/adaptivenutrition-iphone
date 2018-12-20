@@ -54,6 +54,7 @@ export default class LoginScreen extends React.Component {
       showModal: false,
       showWaketimeTooltip: false,
       showTrainingTooltip: false,
+      showMealsBeforeWorkoutTooltip: false,
       showMealsTooltip: false,
       showWakeTimePicker: false,
       showMealsBeforeWorkoutPicker: false,
@@ -1093,6 +1094,7 @@ export default class LoginScreen extends React.Component {
       showTemplateConfirmation: false,
       showWaketimeTooltip: false,
       showTrainingTooltip: false,
+      showMealsBeforeWorkoutTooltip: false,
       showNavPhase: false
     });
   }
@@ -1556,7 +1558,17 @@ export default class LoginScreen extends React.Component {
 
               <View>
                 {(this.state.phase === 3) && <View><View style={styles.optionWrapper}>
-                  <Text style={styles.optionTitle}>HOW MANY MEALS BEFORE YOUR WORKOUT?</Text></View>
+                  <Text style={styles.optionTitle}>HOW MANY MEALS BEFORE YOUR WORKOUT?</Text>
+                  <TouchableHighlight
+                    style={styles.optionTooltip}
+                    underlayColor={Colors.white}
+                    onPress={() => { this.setState({ showModal: true, showMealsBeforeWorkoutTooltip: true }) }}>
+                    <FontAwesome
+                      name='info-circle'
+                      size={20}
+                    />
+                  </TouchableHighlight>
+                </View>
 
                   <View style={styles.optionSection}>
                     <TouchableHighlight
@@ -2052,6 +2064,12 @@ export default class LoginScreen extends React.Component {
         {this.state.showTrainingTooltip &&
           <ModalWindow
             currentModal="TRAINING_TOOLTIP"
+            phase={this.state.phase}
+            closeModal={this.closeModal} />}
+
+        {this.state.showMealsBeforeWorkoutTooltip &&
+          <ModalWindow
+            currentModal="MEALSBEFOREWORKOUT_TOOLTIP"
             phase={this.state.phase}
             closeModal={this.closeModal} />}
 
