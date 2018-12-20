@@ -124,13 +124,6 @@ class DayStatus extends React.Component {
                 day.meal5 === 2 ? styles.dayStatusMealBad : '']}
                 onPress={this.showPopup}><Text></Text>
               </TouchableHighlight>}
-            {phase === 3 &&
-              <TouchableHighlight style={[
-                styles.dayStatusMeal,
-                day.meal6 === 1 ? styles.dayStatusMealGood :
-                day.meal6 === 2 ? styles.dayStatusMealBad : '']}
-                onPress={this.showPopup}><Text></Text>
-              </TouchableHighlight>}
           </View>
         </View>}
 

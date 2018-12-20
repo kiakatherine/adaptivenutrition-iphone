@@ -290,7 +290,6 @@ export default class ProgressScreen extends React.Component {
       clientRef.update({
         clientWeights: []
       });
-      console.log('yep')
     }
 
     // check not already a record for that date

@@ -55,7 +55,6 @@ class MealOption extends React.Component {
     if(isPwo) {
       time = 'Post-workout';
     } else if(label === 'Breakfast') {
-      console.log('breakfast')
       time = this.props.breakfastTime;
     } else if(label === 'Lunch 1') {
       time = this.props.earlyLunchTime;

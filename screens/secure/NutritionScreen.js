@@ -104,6 +104,73 @@ export default class LoginScreen extends React.Component {
     this._onChangeBirthdate = this._onChangeBirthdate.bind(this);
   }
 
+  async getTodayStatuses() {
+    let userData = await AsyncStorage.getItem("user");
+    let currentUser = JSON.parse(userData);
+    const uid = currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+    const clientDayStatuses = firebase.database().ref('/clients/' + uid + '/day-statuses');
+    let phase = null;
+
+    clientRef.on('value', snapshot => {
+      phase = snapshot.val().phase;
+
+      clientDayStatuses.on('value', snapshot => {
+        const todaysDate = moment(new Date()).format('YYYY-MM-DD');
+        const resp = snapshot.val();
+        let today = null;
+
+        Object.keys(resp).map(key => {
+          if(resp[key].date === todaysDate && (resp[key].phase === phase)) {
+            today = resp[key];
+          }
+        });
+
+        let phase1meal1 = null, phase1meal2 = null, phase1meal3 = null, phase1meal4 = null,
+            phase2meal1 = null, phase2meal2 = null, phase2meal3 = null, phase2meal4 = null,
+            phase3meal1 = null, phase3meal2 = null, phase3meal3 = null, phase3meal4 = null, phase3meal5 = null;
+
+        if(today) {
+          const phase = today.phase;
+
+          phase1meal1 = (phase === 1 ? today.meal1 : null);
+          phase1meal2 = (phase === 1 ? today.meal2 : null);
+          phase1meal3 = (phase === 1 ? today.meal3 : null);
+          phase1meal4 = (phase === 1 ? today.meal4 : null);
+
+          phase2meal1 = (phase === 1 ? today.meal1 : null);
+          phase2meal2 = (phase === 1 ? today.meal2 : null);
+          phase2meal3 = (phase === 1 ? today.meal3 : null);
+          phase2meal4 = (phase === 1 ? today.meal4 : null);
+
+          phase3meal1 = (phase === 3 ? today.meal1 : null);
+          phase3meal2 = (phase === 3 ? today.meal2 : null);
+          phase3meal3 = (phase === 3 ? today.meal3 : null);
+          phase3meal4 = (phase === 3 ? today.meal4 : null);
+          phase3meal5 = (phase === 3 ? today.meal5 : null);
+        }
+
+        this.setState({
+          phase1meal1: phase1meal1,
+          phase1meal2: phase1meal2,
+          phase1meal3: phase1meal3,
+          phase1meal4: phase1meal4,
+
+          phase2meal1: phase2meal1,
+          phase2meal2: phase2meal2,
+          phase2meal3: phase2meal3,
+          phase2meal4: phase2meal4,
+
+          phase3meal1: phase3meal1,
+          phase3meal2: phase3meal2,
+          phase3meal3: phase3meal3,
+          phase3meal4: phase3meal4,
+          phase3meal5: phase3meal5
+        });
+      });
+    });
+  }
+
   async getClientData() {
     let userData = await AsyncStorage.getItem("user");
     let currentUser = JSON.parse(userData);
@@ -229,8 +296,10 @@ export default class LoginScreen extends React.Component {
     //   }
     // });
   }
+
   componentDidMount() {
-    this.getClientData()
+    this.getClientData();
+    this.getTodayStatuses();
   }
 
   async clickTemplateType(template) {
