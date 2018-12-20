@@ -79,7 +79,7 @@ class MealPlanSettings extends React.Component {
            {!showInGrams && <TouchableHighlight
              underlayColor={Colors.darkerPrimaryColor}
              style={Styles.modalButton}
-             onPress={() => { doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.setState({ showModal: true, showMacrosWarning: true }) }}>
+             onPress={() => { doNotShowMacroWarning ? this.toggleUnits(showInGrams) : this.props.showMacrosWarning() }}>
               <Text style={Styles.buttonText}>
                View in macros
               </Text>

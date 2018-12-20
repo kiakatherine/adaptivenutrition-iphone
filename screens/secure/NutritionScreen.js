@@ -96,6 +96,7 @@ export default class LoginScreen extends React.Component {
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
+    this._showMacrosWarning = this._showMacrosWarning.bind(this);
     this._saveCurrentMeal = this._saveCurrentMeal.bind(this);
     this._completeMeal = this._completeMeal.bind(this);
     this._onChangeGender = this._onChangeGender.bind(this);
@@ -819,12 +820,22 @@ export default class LoginScreen extends React.Component {
     });
   }
 
-  doNotShowMacroWarning() {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    client.update({
-      doNotShowMacroWarning: true
-    });
+  async doNotShowMacroWarning() {
+    let userData = await AsyncStorage.getItem("user");
+    let currentUser = JSON.parse(userData);
+    const uid = currentUser.uid;
+    const clientRef = firebase.database().ref('/clients/' + uid);
+
+    clientRef.update({ doNotShowMacroWarning: true });
     this.setState({ doNotShowMacroWarning: true });
+  }
+
+  _showMacrosWarning() {
+    this.setState({
+      showModal: true,
+      showMealPlanSettings: false,
+      showMacrosWarning: true
+    })
   }
 
   saveMeasurement(currentMeal, macro, value) {
@@ -1111,7 +1122,7 @@ export default class LoginScreen extends React.Component {
 
     let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta, carbDelta,
       template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity,
-      showInGrams, viewAllMeals, isPwoMeal, wakeTime,
+      showInGrams, doNotShowMacroWarning, viewAllMeals, isPwoMeal, wakeTime,
       complete1, complete2, complete3, complete4, complete5, complete6,
       enablePhase2, enablePhase3, totalPoints, showRestDay, customMacros, customRestDayProtein,
       customRestDayCarbs, customRestDayFat, customModerateDayProtein,
@@ -1151,6 +1162,7 @@ export default class LoginScreen extends React.Component {
       if(phase === 3) {
         mealsBeforeWorkout = client.trainingTime;
         showInGrams = client.showInGrams;
+        doNotShowMacroWarning = client.doNotShowMacroWarning ? client.doNotShowMacroWarning : false;
         viewAllMeals = client.viewAllMeals;
         isPwoMeal = (trainingIntensity > 0 && mealsBeforeWorkout === (currentMeal + 1)) ? true : false;
       }
@@ -1955,9 +1967,10 @@ export default class LoginScreen extends React.Component {
                   template={template}
                   viewAllMeals={viewAllMeals}
                   showInGrams={showInGrams}
-                  doNotShowMacroWarning={this.state.client.doNotShowMacroWarning}
+                  doNotShowMacroWarning={doNotShowMacroWarning}
                   toggleView={this.toggleView}
                   toggleUnits={this.toggleUnits}
+                  showMacrosWarning={this._showMacrosWarning}
                   showTemplatePicker={this.showTemplatePicker}
                   clickNavPhase={this.clickNavPhase}
                   closeModal={this.closeModal} />}
@@ -2216,19 +2229,19 @@ export default class LoginScreen extends React.Component {
               style={Styles.modalButton}
               underlayColor={Colors.white}
               onPress={() => { this.toggleUnits(showInGrams); this.setState({ showModal: false, showMacrosWarning: false }) }}>
-              <Text style={Styles.modalButtonText}>GOT IT!</Text>
+              <Text style={Styles.modalButtonText}>GOT IT</Text>
             </TouchableHighlight>
 
             <View style={styles.checkboxRow}>
               <TouchableHighlight
-                style={[styles.checkbox, this.state.doNotShowMacroWarning ? styles.checked : '']}
+                style={[styles.checkbox, doNotShowMacroWarning ? styles.checked : null]}
                 onPress={() => { this.doNotShowMacroWarning() }}>
                 <Text></Text>
               </TouchableHighlight>
               <TouchableHighlight
                 underlayColor={Colors.white}
-                onPress={ () => { this.setState({ doNotShowMacroWarning: !this.state.doNotShowMacroWarning }) }}>
-                <Text style={[Styles.tooltipParagraph, this.state.doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
+                onPress={ () => { this.doNotShowMacroWarning() }}>
+                <Text style={[Styles.tooltipParagraph, doNotShowMacroWarning ? styles.checkedText : styles.uncheckedText]}>Do not show this message again</Text>
               </TouchableHighlight>
             </View>
 

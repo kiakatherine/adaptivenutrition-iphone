@@ -80,6 +80,7 @@ class ModalWindow extends React.Component {
         viewAllMeals={this.props.viewAllMeals}
         showInGrams={this.props.showInGrams}
         doNotShowMacroWarning={this.props.doNotShowMacroWarning}
+        showMacrosWarning={this.props.showMacrosWarning}
         toggleView={this.props.toggleView}
         toggleUnits={this.props.toggleUnits}
         showTemplatePicker={this.props.showTemplatePicker}
@@ -176,10 +177,6 @@ class ModalWindow extends React.Component {
 export default ModalWindow;
 
 const styles = StyleSheet.create ({
-  container: {
-    // alignItems: 'center',
-    // paddingBottom: 40
-  },
   header: {
     alignItems: 'center'
   },

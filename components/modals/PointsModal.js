@@ -54,8 +54,10 @@ class PointsModal extends React.Component {
             size={48} />
         </Text>
 
-        <Text style={[Styles.textCenter, styles.specificPointsDescription]}>Total Points</Text>
-        <Text style={[Styles.bigTitle, Styles.textCenter, styles.individualPoints]}>{client.totalPoints}</Text>
+        <View style={[Styles.biometricRow]}>
+          <Text style={[Styles.textCenter, styles.specificPointsDescription]}>Total Points</Text>
+          <Text style={[Styles.bigTitle, Styles.textCenter, styles.totalPoints]}>{client.totalPoints}</Text>
+        </View>
 
         <View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
@@ -76,16 +78,11 @@ class PointsModal extends React.Component {
           </View>
         </View>
 
-        {/*<Text style={[Styles.bigTitle, Styles.textCenter, styles.teamPoints]}>{this.state.teamPoints}</Text>
-        <Text style={[Styles.textCenter, styles.pointsDescription]}>Team {this.state.team} Points</Text>
-
-        <View style={styles.teamsWrapper}>
-          {teams.map((team, i) =>
-            <View style={[Styles.flexRow, styles.teamWrapper]} key={i}>
-              <Text style={[Styles.flexRowCol, styles.leaderboardText]}>Team {team.name}</Text>
-              <Text style={[Styles.flexRowCol, styles.leaderboardText, styles.leaderboardPoints]}>{team.points}</Text>
-            </View>)}
-        </View>*/}
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
       </View>
     );
   }
@@ -101,13 +98,10 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   trophyIcon: {
-    marginTop: 10,
-    marginBottom: 20,
     textAlign: 'center'
   },
-  individualPoints: {
-    fontSize: 56,
-    marginBottom: 10
+  totalPoints: {
+    fontSize: 56
   },
   specificPoints: {
     fontFamily: 'Futura',

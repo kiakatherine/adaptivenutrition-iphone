@@ -38,36 +38,42 @@ class FoodOptions extends React.Component {
     let formattedOptions = [];
     let formattedOptionsLength = 0;
     let i = 0;
+    let macros = null;
 
-    if(macro !== 'veggies') {
-      let options = createFoodMenu(macro, currentMeal, phase, sources, isPwoShake);
-
-      if(options) {
-        options.forEach(opt => {
-         const option = opt !== '---' ? opt.split('of ') : null;
-
-          if(option) {
-            formattedOptions.push({
-              amount: option[0],
-              food: option[1],
-              key: i
-            });
-          }
-
-          i++;
-        });
-      }
+    if(showInGrams) {
+      const key = macro + (Number(currentMeal) + 1) + 'Grams';
+      macros = sources[key];
     } else {
-      if(!this.props.pwo) {
-        formattedOptions.push({
-          amount: '1 cup',
-          food: 'veggies',
-          key: i
-        });
-      }
-    }
+      if(macro !== 'veggies') {
+        let options = createFoodMenu(macro, currentMeal, phase, sources, isPwoShake);
 
-    formattedOptionsLength = formattedOptions.length;
+        if(options) {
+          options.forEach(opt => {
+           const option = opt !== '---' ? opt.split('of ') : null;
+
+            if(option) {
+              formattedOptions.push({
+                amount: option[0],
+                food: option[1],
+                key: i
+              });
+            }
+
+            i++;
+          });
+        }
+      } else {
+        if(!this.props.pwo) {
+          formattedOptions.push({
+            amount: '1 cup',
+            food: 'veggies',
+            key: i
+          });
+        }
+      }
+
+      formattedOptionsLength = formattedOptions.length;
+    }
 
     return (
       <View>
@@ -86,7 +92,7 @@ class FoodOptions extends React.Component {
         {!showInGrams && formattedOptionsLength === 0 &&
           <Text style={[Styles.emptyMessage, styles.emptyMessage]}>No {macro} needed for this meal</Text>}
 
-        {showInGrams && <Text style={styles.content}>{content}</Text>}
+        {showInGrams && <Text style={styles.content}>{macros}</Text>}
       </View>
     );
   }
