@@ -16,6 +16,7 @@ import * as macroRatios from '../../constants/MacroRatios';
 import moment from 'moment';
 import format from 'date-fns/format';
 import TemplatePicker from '../../components/TemplatePicker';
+import MealOptions from '../../components/MealOptions';
 
 import { calcProtein, calcCarbs, calcFat, calcVeggies, calculateTotals } from '../../utils/calculate-macros';
 import { changeUnit, convertTrainingTimeToString, format12Hour, getAge, setMealTimes } from '../../utils/helpers';
@@ -94,6 +95,7 @@ export default class LoginScreen extends React.Component {
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
+    this._saveCurrentMeal = this._saveCurrentMeal.bind(this);
     this._completeMeal = this._completeMeal.bind(this);
     this._onChangeGender = this._onChangeGender.bind(this);
     this._onChangeBodyweight = this._onChangeBodyweight.bind(this);
@@ -501,7 +503,7 @@ export default class LoginScreen extends React.Component {
     this.setState({ mealsBeforeWorkout: numberOfMeals });
   }
 
-  async saveCurrentMeal(meal) {
+  async _saveCurrentMeal(meal) {
     // const clientId = firebase.auth().currentUser.uid;
     let userData = await AsyncStorage.getItem("user")
     let currentUser = JSON.parse(userData)
@@ -1527,75 +1529,17 @@ export default class LoginScreen extends React.Component {
 
                 <Text style={Styles.bigTitle}>{"Today's Meal Plan"}</Text>
 
-                <View style={[Styles.flexRow, styles.mealOptions]}>
-                  {phase === 3 && mealsBeforeWorkout === 0 &&
-                    <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
-                      underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(0) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>PWO</Text>
-                    </TouchableHighlight>}
-
-                  <TouchableHighlight
-                    style={[Styles.flexCol, styles.mealOption, currentMeal === 0 ? styles.mealOptionSelected : null]}
-                    underlayColor={Colors.white}
-                    onPress={() => { this.saveCurrentMeal(0) }}>
-                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 0 ? styles.mealOptionTextSelected : null]}>BREAKFAST</Text>
-                  </TouchableHighlight>
-
-                  {phase === 3 && mealsBeforeWorkout === 1 &&
-                    <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 1 ? styles.mealOptionSelected : null]}
-                      underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(1) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 1 ? styles.mealOptionTextSelected : null]}>PWO</Text>
-                    </TouchableHighlight>}
-
-                  <TouchableHighlight
-                    style={[Styles.flexCol, styles.mealOption, currentMeal === 1 ? styles.mealOptionSelected : null]}
-                    underlayColor={Colors.white}
-                    onPress={() => { this.saveCurrentMeal(1) }}>
-                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 1 ? styles.mealOptionTextSelected : null]}>LUNCH 1</Text>
-                  </TouchableHighlight>
-
-                  {phase === 3 && mealsBeforeWorkout === 2 &&
-                    <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 2 ? styles.mealOptionSelected : null]}
-                      underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(2) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 2 ? styles.mealOptionTextSelected : null]}>PWO</Text>
-                    </TouchableHighlight>}
-
-                  <TouchableHighlight
-                    style={[Styles.flexCol, styles.mealOption, currentMeal === 2 ? styles.mealOptionSelected : null]}
-                    underlayColor={Colors.white}
-                    onPress={() => { this.saveCurrentMeal(2) }}>
-                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 2 ? styles.mealOptionTextSelected : null]}>LUNCH 2</Text>
-                  </TouchableHighlight>
-
-                  {phase === 3 && mealsBeforeWorkout === 3 &&
-                    <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 3 ? styles.mealOptionSelected : null]}
-                      underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(3) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 3 ? styles.mealOptionTextSelected : null]}>PWO</Text>
-                    </TouchableHighlight>}
-
-                  <TouchableHighlight
-                    style={[Styles.flexCol, styles.mealOption, currentMeal === 3 ? styles.mealOptionSelected : null]}
-                    underlayColor={Colors.white}
-                    onPress={() => { this.saveCurrentMeal(3) }}>
-                    <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 3 ? styles.mealOptionTextSelected : null]}>DINNER</Text>
-                  </TouchableHighlight>
-
-                  {phase === 3 && mealsBeforeWorkout === 4 &&
-                    <TouchableHighlight
-                      style={[Styles.flexCol, styles.mealOption, currentMeal === 4 ? styles.mealOptionSelected : null]}
-                      underlayColor={Colors.white}
-                      onPress={() => { this.saveCurrentMeal(4) }}>
-                      <Text style={[Styles.textCenter, Styles.uppercaseText, styles.mealOptionText, currentMeal === 4 ? styles.mealOptionTextSelected : null]}>PWO</Text>
-                    </TouchableHighlight>}
-                </View>
+                <MealOptions
+                  phase={phase}
+                  currentMeal={currentMeal}
+                  mealsBeforeWorkout={mealsBeforeWorkout}
+                  pwo={isPwoMeal}
+                  trainingIntensity={trainingIntensity}
+                  breakfastTime={mealTimes['breakfastTime']}
+                  earlyLunchTime={mealTimes['earlyLunchTime']}
+                  lateLunchTime={mealTimes['lateLunchTime']}
+                  dinnerTime={mealTimes['dinnerTime']}
+                  saveCurrentMeal={this._saveCurrentMeal} />
 
                 <View style={styles.progressSection}>
                   {!viewAllMeals && phase === 1 &&
@@ -2325,21 +2269,5 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
-  },
-  mealOptions: {
-    marginTop: 10,
-    marginBottom: 30
-  },
-  mealOption: {
-    paddingBottom: 10,
-    borderBottomWidth: 3,
-    borderBottomColor: Colors.white
-  },
-  mealOptionSelected: {
-    borderBottomWidth: 3,
-    borderBottomColor: Colors.black
-  },
-  mealOptionText: {
-    fontSize: 12
   }
 });

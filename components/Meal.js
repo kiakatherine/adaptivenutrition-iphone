@@ -53,43 +53,43 @@ class Meal extends React.Component {
      let fatMeasurementInput = 0;
      let veggieMeasurementInput = 0;
 
-     // label
-     if(this.props.phase === 3) {
-       if(this.props.trainingIntensity === 0) {
-         label = labels.x.low[this.props.currentMeal];
-       } else if(this.props.trainingIntensity === 1) {
-         label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
-       } else if(this.props.trainingIntensity === 2) {
-         label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
-       }
-     } else {
-       label = labels.x.low[this.props.currentMeal];
-     }
-
-     // pwo
-     if(this.props.pwo || label && label.indexOf('PWO') > -1) {
-       pwo = true;
-     }
-
-     // timing
-     if(pwo) {
-       time = 'Post-workout';
-     } else if(label === 'Breakfast') {
-       time = this.props.breakfastTime;
-     } else if(label === 'Early lunch') {
-       time = this.props.earlyLunchTime;
-     } else if(label === 'Late lunch') {
-       time = this.props.lateLunchTime;
-     } else if(label === 'Dinner') {
-       time = this.props.dinnerTime;
-     }
+     // // label
+     // if(this.props.phase === 3) {
+     //   if(this.props.trainingIntensity === 0) {
+     //     label = labels.x.low[this.props.currentMeal];
+     //   } else if(this.props.trainingIntensity === 1) {
+     //     label = labels.x.moderate[this.props.mealsBeforeWorkout][this.props.currentMeal];
+     //   } else if(this.props.trainingIntensity === 2) {
+     //     label = labels.x.high[this.props.mealsBeforeWorkout][this.props.currentMeal];
+     //   }
+     // } else {
+     //   label = labels.x.low[this.props.currentMeal];
+     // }
+     //
+     // // pwo
+     // if(this.props.pwo || label && label.indexOf('PWO') > -1) {
+     //   pwo = true;
+     // }
+     //
+     // // timing
+     // if(pwo) {
+     //   time = 'Post-workout';
+     // } else if(label === 'Breakfast') {
+     //   time = this.props.breakfastTime;
+     // } else if(label === 'Early lunch') {
+     //   time = this.props.earlyLunchTime;
+     // } else if(label === 'Late lunch') {
+     //   time = this.props.lateLunchTime;
+     // } else if(label === 'Dinner') {
+     //   time = this.props.dinnerTime;
+     // }
 
      return (
        <View style={styles.mealContainer}>
         <View style={styles.mealRowHeader}>
           <View style={styles.mealRowHeaderColLong}>
             {/*<Text style={[styles.mealRowHeaderColText, styles.mealLabel]}>{label ? label: ''}</Text>*/}
-            <Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>
+            {/*<Text style={styles.mealRowHeaderColText}>{this.props.timing}{time}</Text>*/}
           </View>
         </View>
 

@@ -1,93 +1,82 @@
 export const x = {
   "low": [
     "Breakfast",
-    "Early lunch",
-    "Late lunch",
-    "Dinner",
-    "Bedtime"
+    "Lunch 1",
+    "Lunch 2",
+    "Dinner"
   ],
   "moderate": [
     [
-      "PWO shake",
+      "PWO",
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "PWO shake",
-      "Early lunch",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "PWO",
+      "Lunch 1",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "PWO shake",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "PWO",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
-      "PWO shake",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "Lunch 2",
+      "PWO",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
+      "Lunch 1",
+      "Lunch 2",
       "Dinner",
-      "PWO shake",
-      "Bedtime"
+      "PWO"
     ]
   ],
   "high": [
     [
-      "PWO shake",
+      "PWO",
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "PWO shake",
-      "Early lunch",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "PWO",
+      "Lunch 1",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "PWO shake",
-      "Late lunch",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "PWO",
+      "Lunch 2",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
-      "PWO shake",
-      "Dinner",
-      "Bedtime"
+      "Lunch 1",
+      "Lunch 2",
+      "PWO",
+      "Dinner"
     ],
     [
       "Breakfast",
-      "Early lunch",
-      "Late lunch",
+      "Lunch 1",
+      "Lunch 2",
       "Dinner",
-      "PWO shake",
-      "Bedtime"
+      "PWO"
     ]
   ],
 };
