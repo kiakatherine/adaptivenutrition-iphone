@@ -55,6 +55,7 @@ class MealOption extends React.Component {
     if(isPwo) {
       time = 'Post-workout';
     } else if(label === 'Breakfast') {
+      console.log('breakfast')
       time = this.props.breakfastTime;
     } else if(label === 'Lunch 1') {
       time = this.props.earlyLunchTime;
@@ -92,7 +93,7 @@ MealOption.propTypes = { };
 
 const styles = StyleSheet.create({
   mealOption: {
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: Colors.white
@@ -106,6 +107,8 @@ const styles = StyleSheet.create({
   },
   mealTime: {
     fontSize: 12,
+    paddingTop: 10,
+    letterSpacing: 0
     // textAlign: 'center'
   }
 });

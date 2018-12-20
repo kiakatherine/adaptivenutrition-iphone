@@ -479,10 +479,10 @@ export function setMealTimes(wakeTime, phase, trainingIntensity, mealsBeforeWork
   }
 
   return {
-    breakfastTime: cleanTimeLabel(convertToTime(wakeTime, breakfastTimeLower) + '-' + convertToTime(wakeTime, breakfastTimeUpper)),
-    earlyLunchTime: cleanTimeLabel(convertToTime(wakeTime, earlyLunchTimeLower) + '-' + convertToTime(wakeTime, earlyLunchTimeUpper)),
-    lateLunchTime: cleanTimeLabel(convertToTime(wakeTime, lateLunchTimeLower) + '-' + convertToTime(wakeTime, lateLunchTimeUpper)),
-    dinnerTime: cleanTimeLabel(convertToTime(wakeTime, dinnerTimeLower) + '-' + convertToTime(wakeTime, dinnerTimeUpper))
+    breakfastTime: cleanTimeLabel(convertToTime(wakeTime, breakfastTimeLower) + ' - ' + convertToTime(wakeTime, breakfastTimeUpper)),
+    earlyLunchTime: cleanTimeLabel(convertToTime(wakeTime, earlyLunchTimeLower) + ' - ' + convertToTime(wakeTime, earlyLunchTimeUpper)),
+    lateLunchTime: cleanTimeLabel(convertToTime(wakeTime, lateLunchTimeLower) + ' - ' + convertToTime(wakeTime, lateLunchTimeUpper)),
+    dinnerTime: cleanTimeLabel(convertToTime(wakeTime, dinnerTimeLower) + ' - ' + convertToTime(wakeTime, dinnerTimeUpper))
   };
 }
 

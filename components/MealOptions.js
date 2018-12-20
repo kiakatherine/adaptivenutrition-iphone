@@ -53,6 +53,10 @@ class MealOptions extends React.Component {
           currentMeal={currentMeal}
           mealsBeforeWorkout={mealsBeforeWorkout}
           trainingIntensity={trainingIntensity}
+          breakfastTime={this.props.breakfastTime}
+          earlyLunchTime={this.props.earlyLunchTime}
+          lateLunchTime={this.props.lateLunchTime}
+          dinnerTime={this.props.dinnerTime}
           saveCurrentMeal={this._saveCurrentMeal} />)}
       </View>
      );
