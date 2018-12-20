@@ -24,37 +24,27 @@ class PointsModal extends React.Component {
     super(props);
 
     this.state = {
-      // points: 20, // TO DO
-      teamPoints: 100,
-      team: 'Orange',
-      totalDays: 0
+      totalDays: null
     }
   }
 
   componentDidMount() {
     const joinDate = this.props.client.joinDate;
 
-    const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-    const firstDate = new Date(joinDate);
-    const secondDate = new Date();
-    const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+    if(joinDate) {
+      const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+      const firstDate = new Date(joinDate);
+      const secondDate = new Date();
+      const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
 
-    this.setState({ totalDays: diffDays });
+      this.setState({ totalDays: diffDays });
+    }
   }
 
   render() {
     const client = this.props.client;
-    const teams = [
-      { name: 'Apple', points: 500 },
-      { name: 'Banana', points: 400 },
-      { name: 'Kiwi', points: 300 },
-      { name: 'Lemon', points: 200 },
-      { name: 'Orange', points: 100 }
-    ];
-
     const totalDays = this.state.totalDays;
-    // TO DO: not hardcoded
-    const totalAvailableQuizzes = 3;
+    const totalAvailableQuizzes = 10;
 
     return (
       <View style={styles.wrapper}>
@@ -70,11 +60,11 @@ class PointsModal extends React.Component {
         <View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
           <Text style={styles.specificPointsDescription}>Meals</Text>
-            <Text style={styles.specificPoints}>{client.mealPoints ? client.mealPoints : 0} / {totalDays}</Text>
+            <Text style={styles.specificPoints}>{client.mealPoints ? client.mealPoints : 0} {totalDays ? "/ " + totalDays : null}</Text>
           </View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
             <Text style={styles.specificPointsDescription}>Weight</Text>
-            <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0} / {totalDays}</Text>
+            <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0} {totalDays ? "/ " + totalDays : null}</Text>
           </View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
             <Text style={styles.specificPointsDescription}>Lessons</Text>
