@@ -397,10 +397,10 @@ function calculateBmrProxyRevDiet2(bmrProxyNewBmr, bmrProxyLeaningOut) {
 }
 
 function calculateDifference(gender, age, height, weight2, bmr, bodyweight, templateType, templates) {
-  const bmrProxyNewBmr = calculateBmrProxyNewBmr(gender, age, height, weight2);
-  const bmrProxyLeaningOut = calculateBmrProxyLeaningOut(bmr, bodyweight);
-  const bmrProxyRevDiet1 = calculateBmrProxyRevDiet1(bmrProxyNewBmr, bmrProxyLeaningOut);
-  const bmrProxyRevDiet2 = calculateBmrProxyRevDiet2(bmrProxyNewBmr, bmrProxyLeaningOut);
+  const bmrProxyNewBmr = templateType === 5 ? calculateBmrProxyNewBmr(gender, age, height, weight2) : null;
+  const bmrProxyLeaningOut = templateType === 2 ? calculateBmrProxyLeaningOut(bmr, bodyweight) : null;
+  const bmrProxyRevDiet1 = templateType > 2 ? calculateBmrProxyRevDiet1(bmrProxyNewBmr, bmrProxyLeaningOut) : null;
+  const bmrProxyRevDiet2 = templateType > 2 ? calculateBmrProxyRevDiet2(bmrProxyNewBmr, bmrProxyLeaningOut) : null;
 
   if(templateType === 0) {
     // refer to Adaptive Nutrition Meal Planning Development Google Sheet - D9

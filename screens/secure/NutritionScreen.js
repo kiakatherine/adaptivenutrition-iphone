@@ -122,11 +122,13 @@ export default class LoginScreen extends React.Component {
         const resp = snapshot.val();
         let today = null;
 
-        Object.keys(resp).map(key => {
-          if(resp[key].date === todaysDate && (resp[key].phase === phase)) {
-            today = resp[key];
-          }
-        });
+        if(resp) {
+          Object.keys(resp).map(key => {
+            if(resp[key].date === todaysDate && (resp[key].phase === phase)) {
+              today = resp[key];
+            }
+          });
+        }
 
         let phase1meal1 = null, phase1meal2 = null, phase1meal3 = null, phase1meal4 = null,
             phase2meal1 = null, phase2meal2 = null, phase2meal3 = null, phase2meal4 = null,

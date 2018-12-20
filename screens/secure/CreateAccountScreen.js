@@ -40,7 +40,7 @@ export default class CreateAccountScreen extends React.Component {
       birthdate: '',
       height: '',
       bodyweight: '',
-      bodyfat: '',      
+      bodyfat: '',
 
       page: 0,
       showError: false
@@ -48,11 +48,11 @@ export default class CreateAccountScreen extends React.Component {
   }
 
   componentDidMount () {
-    
+
   }
 
   componentWillUnmount () {
-    
+
   }
 
   showAlert(page, msg) {
@@ -61,7 +61,7 @@ export default class CreateAccountScreen extends React.Component {
       msg,
       [
         {text: 'OK', onPress: () => {
-          this.refs.swiper.scrollBy(page)   
+          this.refs.swiper.scrollBy(page)
         }},
       ],
       { cancelable: false }
@@ -91,13 +91,21 @@ export default class CreateAccountScreen extends React.Component {
     }else if(FieldValidation.bodyFatPercentageValidation(this.state.bodyfat) == 0){
       this.showAlert(0, 'The body fat should be at most 75%.')
     }else{
-      let deviceToken = await AsyncStorage.getItem("deviceToken")
-      let res = await FirebaseDBService.setClientData(this.state.firstName, this.state.lastName, this.state.gender, this.state.birthdate, this.state.height, this.state.bodyweight, this.state.bodyfat, deviceToken);
+      let deviceToken = await AsyncStorage.getItem("deviceToken");
+      let res = await FirebaseDBService.setClientData(this.state.firstName,
+        this.state.lastName,
+        this.state.gender,
+        this.state.birthdate,
+        this.state.height,
+        this.state.bodyweight,
+        this.state.bodyfat,
+        deviceToken);
+
       if(res.success) {
         await AsyncStorage.setItem('saveData', 'true')
         navigate('Authenticated');
       }else this.showAlert(0, res.data, false)
-    }    
+    }
   }
 
   render() {
@@ -110,7 +118,7 @@ export default class CreateAccountScreen extends React.Component {
             showsButtons={true}
             loop={false}
             index={0}
-            >          
+            >
             <View style={styles.slide1}>
               <TextInput
                 ref='firstNameText'
@@ -121,7 +129,7 @@ export default class CreateAccountScreen extends React.Component {
                 value={this.state.firstName}
                 autoFocus={false}
               />
-              
+
               <TextInput
                 ref='lastNameText'
                 style={styles.input}
@@ -161,7 +169,7 @@ export default class CreateAccountScreen extends React.Component {
               <Text style={[Styles.paragraphText, styles.blurb]}>Men and women vary in body fat percentage...</Text>
             </View>
 
-            <View style={styles.slide1}>           
+            <View style={styles.slide1}>
               <TextInputMask
                 ref='birthText'
                 type={'datetime'}
