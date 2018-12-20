@@ -1706,7 +1706,6 @@ export default class LoginScreen extends React.Component {
                     viewAllMeals={viewAllMeals}
                     showInGrams={showInGrams}
                     updateMeasurement={this.saveMeasurement}
-                    changeMeal={this.saveCurrentMeal}
                     phase1meal1={this.state.phase1meal1}
                     phase1meal2={this.state.phase1meal2}
                     phase1meal3={this.state.phase1meal3}
