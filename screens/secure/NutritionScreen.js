@@ -1722,6 +1722,7 @@ export default class LoginScreen extends React.Component {
                     completeMeal={this._completeMeal} />}
 
                   {(this.state.phase === 3 && viewAllMeals) && <View>
+                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 1</Text>
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1758,6 +1759,8 @@ export default class LoginScreen extends React.Component {
                       phase3meal4={this.state.phase3meal4}
                       phase3meal5={this.state.phase3meal5}
                       completeMeal={this._completeMeal} />
+
+                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 2</Text>
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1794,6 +1797,8 @@ export default class LoginScreen extends React.Component {
                       phase3meal4={this.state.phase3meal4}
                       phase3meal5={this.state.phase3meal5}
                       completeMeal={this._completeMeal} />
+
+                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 3</Text>
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1830,6 +1835,8 @@ export default class LoginScreen extends React.Component {
                       phase3meal4={this.state.phase3meal4}
                       phase3meal5={this.state.phase3meal5}
                       completeMeal={this._completeMeal} />
+
+                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 4</Text>
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1866,6 +1873,8 @@ export default class LoginScreen extends React.Component {
                       phase3meal4={this.state.phase3meal4}
                       phase3meal5={this.state.phase3meal5}
                       completeMeal={this._completeMeal} />
+
+                    <Text style={[Styles.uppercaseText, styles.viewAllMealsMealLabel]}>MEAL 5</Text>
                     <Meal
                       trainingIntensity={trainingIntensity}
                       mealsBeforeWorkout={mealsBeforeWorkout}
@@ -1909,9 +1918,10 @@ export default class LoginScreen extends React.Component {
               <View>
                 {viewAllMeals &&
                   <TouchableHighlight
+                    underlayColor={Colors.white}
                     style={[Styles.center, styles.completionMessage]}
                     onPress={() => this.toggleView(viewAllMeals) }>
-                    <Text style={Styles.textCenter}>View by single meal to see meal completion buttons</Text>
+                    <Text style={[Styles.textCenter, Styles.emptyMessage]}>View by single meal to see meal completion buttons</Text>
                   </TouchableHighlight>}
               </View>
 
@@ -2355,5 +2365,9 @@ const styles = StyleSheet.create({
   },
   completionMessage: {
     marginBottom: 20
+  },
+  viewAllMealsMealLabel: {
+    marginTop: 40,
+    marginBottom: 10
   }
 });

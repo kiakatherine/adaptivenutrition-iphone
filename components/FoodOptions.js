@@ -113,7 +113,7 @@ const styles = StyleSheet.create ({
    },
    foodOptionsList: {
      marginTop: 10,
-     marginBottom: 35
+     marginBottom: 25
    },
    foodOption: {
      flex: 1,
