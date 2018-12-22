@@ -156,12 +156,23 @@ class ModalWindow extends React.Component {
                 </View>
                  {modal}
 
-                 {(this.props.currentModal === 'USER') && <TouchableHighlight
-                   style={styles.logoutButton}
-                   underlayColor={Colors.white}
-                   onPress={()=> {this.setState({isLogout: true})}}>
-                   <Text style={Styles.uppercaseText}>LOGOUT</Text>
-                 </TouchableHighlight>}
+                 {(this.props.currentModal === 'USER') && <View>
+                   <TouchableHighlight
+                     style={styles.logoutButton}
+                     underlayColor={Colors.white}
+                     onPress={()=> {this.setState({isLogout: true})}}>
+                     <Text style={Styles.uppercaseText}>LOGOUT</Text>
+                   </TouchableHighlight>
+                 </View>}
+
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
+                 <Text></Text>
               </ScrollView>
 
               {this.state.isLogout &&

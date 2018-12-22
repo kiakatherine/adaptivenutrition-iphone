@@ -141,10 +141,10 @@ export default class LoginScreen extends React.Component {
           phase1meal3 = (phase === 1 ? today.meal3 : null);
           phase1meal4 = (phase === 1 ? today.meal4 : null);
 
-          phase2meal1 = (phase === 1 ? today.meal1 : null);
-          phase2meal2 = (phase === 1 ? today.meal2 : null);
-          phase2meal3 = (phase === 1 ? today.meal3 : null);
-          phase2meal4 = (phase === 1 ? today.meal4 : null);
+          phase2meal1 = (phase === 2 ? today.meal1 : null);
+          phase2meal2 = (phase === 2 ? today.meal2 : null);
+          phase2meal3 = (phase === 2 ? today.meal3 : null);
+          phase2meal4 = (phase === 2 ? today.meal4 : null);
 
           phase3meal1 = (phase === 3 ? today.meal1 : null);
           phase3meal2 = (phase === 3 ? today.meal2 : null);
@@ -494,17 +494,14 @@ export default class LoginScreen extends React.Component {
 
   async _completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
-    // const uid = firebase.auth().currentUser.uid;
-    let userData = await AsyncStorage.getItem("user")
-    let currentUser = JSON.parse(userData)
-    const uid = currentUser.uid
+    let userData = await AsyncStorage.getItem("user");
+    let currentUser = JSON.parse(userData);
+    const uid = currentUser.uid;
     const clientRef = firebase.database().ref('/clients/' + uid);
-    // const dayStatusesRef = firebase.database().ref().child('dayStatuses');
     const dayStatusesRef = firebase.database().ref().child('/clients/' + uid + '/day-statuses');
     const mealToSave = 'meal' + (Number(currentMeal) + 1);
     const date = new Date();
     let todayKey, todayRef, today;
-    const clientTimestamp = 1539184566736;
 
     // 1 = completed good
     // 2 = completed bad
@@ -514,14 +511,16 @@ export default class LoginScreen extends React.Component {
     dayStatusesRef.once('value', snapshot => {
       const ds = snapshot.val();
 
-      Object.keys(ds).map(key => {
-        if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
-          todayKey = key;
-          today = ds[key];
-          // todayRef = firebase.database().ref().child('dayStatuses/' + key);
-          // todayRef.remove();
-        }
-      });
+      if(ds) {
+        Object.keys(ds).map(key => {
+          if(ds[key].date === moment(date).format('YYYY-MM-DD')) {
+            todayKey = key;
+            today = ds[key];
+            // todayRef = firebase.database().ref().child('dayStatuses/' + key);
+            // todayRef.remove();
+          }
+        });
+      }
     });
 
     if(today && todayKey && today.phase === this.state.phase) {
@@ -575,8 +574,7 @@ export default class LoginScreen extends React.Component {
          todayMealsCompleted && today.meal2 === 3 ||
          todayMealsCompleted && today.meal3 === 3 ||
          todayMealsCompleted && today.meal4 === 3 ||
-         todayMealsCompleted && today.meal5 === 3 ||
-         todayMealsCompleted && today.meal6 === 3) {
+         todayMealsCompleted && today.meal5 === 3) {
           // save points to client
           firebase.database().ref('/clients/' + uid).update({
             mealPoints: Number(client.mealPoints) - 1,
@@ -585,7 +583,7 @@ export default class LoginScreen extends React.Component {
             if(error) {
               alert('failed');
             } else {
-              alert('success!');
+              alert('Nice job!');
             }
           });
         }
@@ -599,7 +597,7 @@ export default class LoginScreen extends React.Component {
             if(error) {
               alert('failed');
             } else {
-              alert('success!');
+              alert('Nice job!');
             }
           });
 
@@ -620,7 +618,6 @@ export default class LoginScreen extends React.Component {
         meal3: 3,
         meal4: 3,
         meal5: 3,
-        meal6: 3,
         [mealToSave]: completion,
         phase: client.phase
       }).then(resp => {
@@ -774,7 +771,7 @@ export default class LoginScreen extends React.Component {
     };
 
     let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta, carbDelta,
-      template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity,
+      template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity, phase1TrainingIntensity,
       showInGrams, doNotShowMacroWarning, viewAllMeals, isPwoMeal, wakeTime,
       complete1, complete2, complete3, complete4, complete5, complete6,
       enablePhase2, enablePhase3, totalPoints, showRestDay, customMacros, customRestDayProtein,
@@ -806,7 +803,8 @@ export default class LoginScreen extends React.Component {
       template = client.templateType;
       phase = client.phase;
       currentMeal = Number(client.selectedMeal) ? Number(client.selectedMeal) : 0;
-      trainingIntensity = phase === 3 ? client.trainingIntensity : client.phase1TrainingIntensity;
+      trainingIntensity = client.trainingIntensity;
+      phase1TrainingIntensity = client.phase1TrainingIntensity;
       enablePhase2 = client.enablePhase2;
       enablePhase3 = client.enablePhase3;
 
@@ -1173,17 +1171,17 @@ export default class LoginScreen extends React.Component {
 
               {this.state.phase < 3 && <View style={styles.optionSection}>
                 <TouchableHighlight
-                  style={[styles.optionButton, trainingIntensity === 1 ? styles.optionButtonActive : null]}
+                  style={[styles.optionButton, phase1TrainingIntensity === 1 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveTrainingIntensity(1) }}>
-                  <Text style={[styles.optionButtonText, trainingIntensity === 1 ? styles.optionButtonTextActive : null]}>Yes</Text>
+                  <Text style={[styles.optionButtonText, phase1TrainingIntensity === 1 ? styles.optionButtonTextActive : null]}>Yes</Text>
                 </TouchableHighlight>
 
                 <TouchableHighlight
-                  style={[styles.optionButton, trainingIntensity === 0 ? styles.optionButtonActive : null]}
+                  style={[styles.optionButton, phase1TrainingIntensity === 0 ? styles.optionButtonActive : null]}
                   underlayColor={Colors.white}
                   onPress={() => { this.saveTrainingIntensity(0) }}>
-                  <Text style={[styles.optionButtonText, trainingIntensity === 0 ? styles.optionButtonTextActive : null]}>No</Text>
+                  <Text style={[styles.optionButtonText, phase1TrainingIntensity === 0 ? styles.optionButtonTextActive : null]}>No</Text>
                 </TouchableHighlight>
               </View>}
 
@@ -1284,6 +1282,7 @@ export default class LoginScreen extends React.Component {
 
                 <View style={styles.mealPlanSection}>
                   {!viewAllMeals && <Meal
+                    phase1TrainingIntensity={phase1TrainingIntensity}
                     trainingIntensity={trainingIntensity}
                     mealsBeforeWorkout={mealsBeforeWorkout}
                     template={template}
@@ -1534,7 +1533,7 @@ export default class LoginScreen extends React.Component {
               </View>
 
               <TouchableHighlight
-                style={[Styles.button, { marginTop: 30 }]}
+                style={[Styles.button, { marginTop: 50 }]}
                 underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
                   <Text style={Styles.buttonText}>

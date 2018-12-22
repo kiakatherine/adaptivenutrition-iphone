@@ -106,7 +106,7 @@ class Meal extends React.Component {
             completeMeal={this._clickCompleteMeal} />}
 
         <View style={styles.macroRow}>
-          <View style={Styles.flexRow}>
+          <View style={[Styles.flexRow, styles.macroRowTitle ]}>
             <Text style={styles.foodOptionLabel}>PROTEIN OPTIONS</Text>
             {this.props.phase < 3 && <Image source={require('../assets/icons/protein.png')}
               style={{ width: 60, height: 60, resizeMode: 'contain', alignItems: 'flex-start' }} />}
@@ -130,12 +130,12 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.macroRow}>
-          <View style={Styles.flexRow}>
+          <View style={[Styles.flexRow, styles.macroRowTitle ]}>
             <Text style={styles.foodOptionLabel}>STARCH OPTIONS</Text>
-            {this.props.phase < 3 && this.props.trainingIntensity === 1 &&
+            {this.props.phase < 3 && this.props.phase1TrainingIntensity === 1 &&
               <Image source={require('../assets/icons/carbs-training.png')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
-            {this.props.phase < 3 && this.props.trainingIntensity === 0 &&
+            {this.props.phase < 3 && this.props.phase1TrainingIntensity === 0 &&
               <Image source={require('../assets/icons/carbs-rest.png')}
                 style={{ flex: 1, alignSelf: 'stretch', width: undefined, height: undefined, resizeMode: 'contain' }} />}
           </View>
@@ -158,7 +158,7 @@ class Meal extends React.Component {
         </View>
 
         <View style={styles.macroRow}>
-          <View style={Styles.flexRow}>
+          <View style={[Styles.flexRow, styles.macroRowTitle ]}>
             <Text style={styles.foodOptionLabel}>FAT OPTIONS</Text>
             {this.props.phase < 3 && <Image source={require('../assets/icons/fats.png')}
               style={{ width: 60, height: 60, resizeMode: 'contain' }} />}
@@ -205,10 +205,10 @@ class Meal extends React.Component {
 
           {this.props.phase < 3 &&
             <View>
-              <Text style={styles.foodOptionLabel}>VEGGIES</Text>
-              <Text style={styles.macroLabelsWithIconPhase2}>Portion size</Text>
+              <Text style={styles.foodOptionLabel}>VEGETABLES</Text>
               <Image source={require('../assets/icons/veggies.jpg')}
                 style={{ width: 60, height: 60, resizeMode: 'contain' }} />
+              <Text style={Styles.emptyMessage}>Aim for a wide variety of veggies</Text>
             </View>}
         </View>}
        </View>
@@ -250,5 +250,8 @@ const styles = StyleSheet.create ({
     textAlign: 'left',
     fontSize: 16,
     marginTop: 10
+  },
+  macroRowTitle: {
+    flexDirection: 'column'
   }
 });
