@@ -574,16 +574,17 @@ export default class LoginScreen extends React.Component {
          todayMealsCompleted && today.meal2 === 3 ||
          todayMealsCompleted && today.meal3 === 3 ||
          todayMealsCompleted && today.meal4 === 3 ||
-         todayMealsCompleted && today.meal5 === 3) {
+         todayMealsCompleted && today.meal5 === 3 ||
+         todayMealsCompleted && today.meal6 === 3) {
           // save points to client
           firebase.database().ref('/clients/' + uid).update({
             mealPoints: Number(client.mealPoints) - 1,
             totalPoints: Number(client.totalPoints) - 1
           }, (error) => {
             if(error) {
-              alert('failed');
+              // alert('failed');
             } else {
-              alert('Nice job!');
+              // alert('Nice job!');
             }
           });
         }
@@ -595,9 +596,9 @@ export default class LoginScreen extends React.Component {
             totalPoints: Number(client.totalPoints) + 1
           }, (error) => {
             if(error) {
-              alert('failed');
+              // alert('failed');
             } else {
-              alert('Nice job!');
+              // alert('success!');
             }
           });
 
@@ -1132,8 +1133,6 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.loadingText}>adapt & thrive</Text>}
 
             {this.state.phase !== null && <ScrollView style={Styles.content}>
-              <Text style={[Styles.bigTitle, Styles.pageTitle, styles.mealPlanTitle]}>Meal Plan Settings</Text>
-
               <View style={styles.optionWrapper}>
                 <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
                 <TouchableHighlight
@@ -1266,7 +1265,7 @@ export default class LoginScreen extends React.Component {
                   </View>
                 </View>}
 
-                <Text style={Styles.bigTitle}>{"Today's Meal Plan"}</Text>
+                <Text style={styles.mealPlanTitle}>{"TODAY'S MEAL PLAN"}</Text>
 
                 <MealOptions
                   phase={phase}
@@ -1532,7 +1531,7 @@ export default class LoginScreen extends React.Component {
                   </TouchableHighlight>}
               </View>
 
-              <TouchableHighlight
+              {phase === 3 && <TouchableHighlight
                 style={[Styles.button, { marginTop: 50 }]}
                 underlayColor={Colors.darkerPrimaryColor}
                 onPress={() => { this.setState({ showMealPlanSettings: true }) }}>
@@ -1541,9 +1540,9 @@ export default class LoginScreen extends React.Component {
                       name='gear'
                       size={20} /> Additional Settings
                   </Text>
-              </TouchableHighlight>
+              </TouchableHighlight>}
 
-              {this.state.phase === 3 && this.state.showMealPlanSettings &&
+              {phase === 3 && this.state.showMealPlanSettings &&
                 <ModalWindow
                   currentModal="MEAL_PLAN_SETTINGS"
                   style="button"
@@ -1847,7 +1846,13 @@ const styles = StyleSheet.create({
     color: Colors.white
   },
   mealPlanTitle: {
-    marginBottom: 40
+    marginTop: 40,
+    marginBottom: 20,
+    letterSpacing: 2,
+    fontFamily: 'Futura',
+    fontSize: 22,
+    textAlign: 'center',
+    fontWeight: '500'
   },
   optionWrapper: {
     flexDirection: 'row',
@@ -1863,10 +1868,12 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     color: Colors.black,
+    fontFamily: 'Futura',
     letterSpacing: 1,
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: '500',
     marginRight: 3,
-    marginBottom: 20,
+    marginBottom: 15,
     textAlign: 'center'
   },
   optionTooltip: {

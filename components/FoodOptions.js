@@ -83,7 +83,7 @@ class FoodOptions extends React.Component {
             style={styles.foodOptionsList}
             data={formattedOptions}
             renderItem={({item}) => (
-              <View style={styles.foodOption} key={item.key}>
+              <View style={[styles.foodOption, formattedOptions.length === (item.key + 1) ? { marginRight: 0 } : null]} key={item.key}>
                 <Text style={styles.foodOptionAmount}>{item.amount}</Text>
                 {item.food && <Text style={styles.foodOptionFood}>{item.food}</Text>}
               </View>)}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create ({
    },
    foodOptionsList: {
      marginTop: 10,
-     marginBottom: 25
+     marginBottom: 30
    },
    foodOption: {
      flex: 1,
@@ -128,6 +128,7 @@ const styles = StyleSheet.create ({
      backgroundColor: Colors.lightGray
    },
    foodOptionAmount: {
+     fontFamily: 'Futura',
      fontSize: 22,
      fontWeight: '600',
      marginBottom: 3,

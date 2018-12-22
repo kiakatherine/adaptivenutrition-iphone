@@ -44,7 +44,7 @@ class PointsModal extends React.Component {
   render() {
     const client = this.props.client;
     const totalDays = this.state.totalDays;
-    const totalAvailableQuizzes = 10;
+    const totalAvailableQuizzes = 30; // 3 pts per quiz
 
     return (
       <View style={styles.wrapper}>
@@ -69,7 +69,7 @@ class PointsModal extends React.Component {
             <Text style={styles.specificPoints}>{client.weightPoints ? client.weightPoints : 0} {totalDays ? "/ " + totalDays : null}</Text>
           </View>
           <View style={[Styles.biometricRow, {paddingBottom: 35}]}>
-            <Text style={styles.specificPointsDescription}>Lessons</Text>
+            <Text style={styles.specificPointsDescription}>Quizzes</Text>
             <Text style={styles.specificPoints}>{client.quizPoints ? client.quizPoints : 0} / {totalAvailableQuizzes}</Text>
           </View>
           <View style={[Styles.biometricRow, Styles.noBorderBottom, {paddingBottom: 35}]}>
