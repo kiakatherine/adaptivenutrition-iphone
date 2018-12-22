@@ -92,7 +92,6 @@ export default class LoginScreen extends React.Component {
     this.movePhase = this.movePhase.bind(this);
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showTemplatePicker = this.showTemplatePicker.bind(this);
-    this.saveMeasurement = this.saveMeasurement.bind(this);
     this.saveTemplateType = this.saveTemplateType.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
@@ -189,116 +188,6 @@ export default class LoginScreen extends React.Component {
         phase: clientResponse && clientResponse.phase ? clientResponse.phase : 1
       });
     });
-
-    // dayStatuses.on('value', snapshot => {
-    //   const date = new Date();
-    //   const dayStatuses = snapshot.val();
-    //   let filteredDayStatuses = [];
-    //
-    //   Object.keys(dayStatuses).map(key => {
-    //     if(dayStatuses[key].timestamp === clientResponse.timestamp) {
-    //       filteredDayStatuses.push(dayStatuses[key]);
-    //     }
-    //   });
-    //
-    //   let today;
-    //   filteredDayStatuses.forEach(day => {
-    //     if((day && day.date === moment(date).format('MM-DD-YY')) && (day.phase === this.state.phase)) {
-    //       today = day;
-    //     }
-    //   });
-    //
-    //   let phase1meal1 = null;
-    //   let phase1meal2 = null;
-    //   let phase1meal3 = null;
-    //   let phase1meal4 = null;
-    //   let phase3meal1 = null;
-    //   let phase3meal2 = null;
-    //   let phase3meal3 = null;
-    //   let phase3meal4 = null;
-    //   let phase3meal5 = null;
-    //   let phase3meal6 = null;
-    //
-    //   if(today) {
-    //     const phase = today.phase;
-    //
-    //     phase1meal1 = (phase === 1 ? today.meal1 : null);
-    //     phase1meal2 = (phase === 1 ? today.meal2 : null);
-    //     phase1meal3 = (phase === 1 ? today.meal3 : null);
-    //     phase1meal4 = (phase === 1 ? today.meal4 : null);
-    //
-    //     phase3meal1 = (phase === 3 ? today.meal1 : null);
-    //     phase3meal2 = (phase === 3 ? today.meal2 : null);
-    //     phase3meal3 = (phase === 3 ? today.meal3 : null);
-    //     phase3meal4 = (phase === 3 ? today.meal4 : null);
-    //     phase3meal5 = (phase === 3 ? today.meal5 : null);
-    //     phase3meal6 = (phase === 3 ? today.meal6 : null);
-    //   }
-    //
-    //   this.setState({
-    //     dayStatuses: snapshot.val(),
-    //     phase1meal1: phase1meal1,
-    //     phase1meal2: phase1meal2,
-    //     phase1meal3: phase1meal3,
-    //     phase1meal4: phase1meal4,
-    //     phase3meal1: phase3meal1,
-    //     phase3meal2: phase3meal2,
-    //     phase3meal3: phase3meal3,
-    //     phase3meal4: phase3meal4,
-    //     phase3meal5: phase3meal5,
-    //     phase3meal6: phase3meal6
-    //   });
-    // });
-    //
-    // phaseTwoDayStatuses.on('value', snapshot => {
-    //   const phaseTwoDayStatusesRef = snapshot.val();
-    //   const date = new Date;
-    //   let today;
-    //
-    //   if(clientResponse) {
-    //     if(clientResponse.timestamp) {
-    //       Object.keys(phaseTwoDayStatusesRef).map(key => {
-    //         if(phaseTwoDayStatusesRef[key].timestamp === clientResponse.timestamp) {
-    //           if(phaseTwoDayStatusesRef[key].date === moment(date).format('MM-DD-YY')) {
-    //             today = phaseTwoDayStatusesRef[key];
-    //           }
-    //         }
-    //       });
-    //
-    //       this.setState({
-    //         meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
-    //         meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
-    //         meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
-    //         meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null,
-    //
-    //         meal1proteinMeasurement: today ? today.meal1proteinMeasurement : null,
-    //         meal2proteinMeasurement: today ? today.meal2proteinMeasurement : null,
-    //         meal3proteinMeasurement: today ? today.meal3proteinMeasurement : null,
-    //         meal4proteinMeasurement: today ? today.meal4proteinMeasurement : null,
-    //
-    //         meal1carbsMeasurement: today ? today.meal1carbsMeasurement : null,
-    //         meal2carbsMeasurement: today ? today.meal2carbsMeasurement : null,
-    //         meal3carbsMeasurement: today ? today.meal3carbsMeasurement : null,
-    //         meal4carbsMeasurement: today ? today.meal4carbsMeasurement : null,
-    //
-    //         meal1fatsMeasurement: today ? today.meal1fatsMeasurement : null,
-    //         meal2fatsMeasurement: today ? today.meal2fatsMeasurement : null,
-    //         meal3fatsMeasurement: today ? today.meal3fatsMeasurement : null,
-    //         meal4fatsMeasurement: today ? today.meal4fatsMeasurement : null,
-    //
-    //         meal1veggiesMeasurement: today ? today.meal1veggiesMeasurement : null,
-    //         meal2veggiesMeasurement: today ? today.meal2veggiesMeasurement : null,
-    //         meal3veggiesMeasurement: today ? today.meal3veggiesMeasurement : null,
-    //         meal4veggiesMeasurement: today ? today.meal4veggiesMeasurement : null,
-    //
-    //         meal1measurementsCompleted: today ? today.meal1measurementsCompleted : null,
-    //         meal2measurementsCompleted: today ? today.meal2measurementsCompleted : null,
-    //         meal3measurementsCompleted: today ? today.meal3measurementsCompleted : null,
-    //         meal4measurementsCompleted: today ? today.meal4measurementsCompleted : null
-    //       });
-    //     }
-    //   }
-    // });
   }
 
   componentDidMount() {
@@ -603,41 +492,6 @@ export default class LoginScreen extends React.Component {
     clientRef.update({ showInGrams: !showInGrams });
   }
 
-  completePhaseTwoMeal(currentMeal) {
-    // this function simply shows a success/error message
-    // saveMeasurement() runs each time portion size is updated and saves measurement
-
-    const phase = this.state.phase;
-
-    if(currentMeal === 0 &&
-      this.state.meal1proteinMeasurement &&
-      this.state.meal1carbsMeasurement &&
-      this.state.meal1fatsMeasurement &&
-      this.state.meal1veggiesMeasurement) {
-      // show congrats message
-    } else if(currentMeal === 1 &&
-      this.state.meal2proteinMeasurement &&
-      this.state.meal2carbsMeasurement &&
-      this.state.meal2fatsMeasurement &&
-      this.state.meal2veggiesMeasurement) {
-      // show congrats message
-    } else if(currentMeal === 2 &&
-      this.state.meal3proteinMeasurement &&
-      this.state.meal3carbsMeasurement &&
-      this.state.meal3fatsMeasurement &&
-      this.state.meal3veggiesMeasurement) {
-      // show congrats message
-    } else if(currentMeal === 3 &&
-      this.state.meal4proteinMeasurement &&
-      this.state.meal4carbsMeasurement &&
-      this.state.meal4fatsMeasurement &&
-      this.state.meal4veggiesMeasurement) {
-      // show congrats message
-    } else {
-      alert('make sure to fill out all portions!');
-    }
-  }
-
   async _completeMeal(phase, currentMeal, completion) {
     const client = this.state.client;
     // const uid = firebase.auth().currentUser.uid;
@@ -838,209 +692,6 @@ export default class LoginScreen extends React.Component {
       showMealPlanSettings: false,
       showMacrosWarning: true
     })
-  }
-
-  saveMeasurement(currentMeal, macro, value) {
-    const client = firebase.database().ref('clients/-L5KTqELYJEOv55oR8bF');
-    const key = 'meal' + (Number(currentMeal) + 1) + macro + 'Measurement';
-
-    client.on('value', snapshot => {
-      clientRef = snapshot.val();
-
-      if(key) {
-        const date = new Date();
-        const phaseTwoDayStatuses = firebase.database().ref('phaseTwoDays');
-        let today, todayKey;
-
-        phaseTwoDayStatuses.once('value', snapshot => {
-          const phaseTwoDayStatusesRef = snapshot.val();
-
-          // check whether day recorded yet
-          if(clientRef.timestamp) {
-            Object.keys(phaseTwoDayStatusesRef).map(phaseTwoDayKey => {
-              if(phaseTwoDayKey && (phaseTwoDayStatusesRef[phaseTwoDayKey].timestamp === clientRef.timestamp)) {
-                if(phaseTwoDayStatusesRef[phaseTwoDayKey].date === moment(date).format('MM-DD-YY')) {
-                  todayKey = phaseTwoDayKey;
-                  today = phaseTwoDayStatusesRef[phaseTwoDayKey];
-                }
-                // todayRef = firebase.database().ref().child('phaseTwoDays/' + phaseTwoDayKey);
-                // todayRef.remove();
-              } else {
-                // alert('day has not yet been recorded')
-              }
-            });
-          }
-
-          // if day already recorded...
-          if(todayKey) {
-            // set meal completed boolean
-            todayRef = firebase.database().ref().child('phaseTwoDays/' + todayKey);
-            todayRef.update({ [key]: value });
-
-            todayRef.on('value', snapshot => {
-              const today = snapshot.val();
-              // update progress bar
-              let mealNumber, p, c, f, v;
-
-              if(key.indexOf('1') > -1) {
-                mealNumber = 1;
-                p = today.meal1proteinMeasurement !== '' ? today.meal1proteinMeasurement : null;
-                c = today.meal1carbsMeasurement !== '' ? today.meal1carbsMeasurement : null;
-                f = today.meal1fatsMeasurement !== '' ? today.meal1fatsMeasurement : null;
-                v = today.meal1veggiesMeasurement !== '' ? today.meal1veggiesMeasurement : null;
-              } else if(key.indexOf('2') > -1) {
-                mealNumber = 2;
-                p = today.meal2proteinMeasurement !== '' ? today.meal2proteinMeasurement : null;
-                c = today.meal2carbsMeasurement !== '' ? today.meal2carbsMeasurement : null;
-                f = today.meal2fatsMeasurement !== '' ? today.meal2fatsMeasurement : null;
-                v = today.meal2veggiesMeasurement !== '' ? today.meal2veggiesMeasurement : null;
-              } else if(key.indexOf('3') > -1) {
-                mealNumber = 3;
-                p = today.meal3proteinMeasurement !== '' ? today.meal3proteinMeasurement : null;
-                c = today.meal3carbsMeasurement !== '' ? today.meal3carbsMeasurement : null;
-                f = today.meal3fatsMeasurement !== '' ? today.meal3fatsMeasurement : null;
-                v = today.meal3veggiesMeasurement !== '' ? today.meal3veggiesMeasurement : null;
-              } else if(key.indexOf('4') > -1) {
-                mealNumber = 4;
-                p = today.meal4proteinMeasurement !== '' ? today.meal4proteinMeasurement : null;
-                c = today.meal4carbsMeasurement !== '' ? today.meal4carbsMeasurement : null;
-                f = today.meal4fatsMeasurement !== '' ? today.meal4fatsMeasurement : null;
-                v = today.meal4veggiesMeasurement !== '' ? today.meal4veggiesMeasurement : null;
-              }
-
-              if(p && c && f && v) {
-                todayRef.update({ ['meal' + mealNumber + 'measurementsCompleted']: 1 }).then(resp => {
-                  console.log('updated meal measurements completed');
-                  this.setState({ ['meal' + mealNumber + 'measurementsCompleted'] : 1 });
-                  // check if all measurements have been entered for each meal
-                  if(today.meal1proteinMeasurement &&
-                    today.meal1carbsMeasurement &&
-                    today.meal1fatsMeasurement &&
-                    today.meal1veggiesMeasurement &&
-                    today.meal2proteinMeasurement &&
-                    today.meal2carbsMeasurement &&
-                    today.meal2fatsMeasurement &&
-                    today.meal2veggiesMeasurement &&
-                    today.meal3proteinMeasurement &&
-                    today.meal3carbsMeasurement &&
-                    today.meal3fatsMeasurement &&
-                    today.meal3veggiesMeasurement &&
-                    today.meal4proteinMeasurement &&
-                    today.meal4carbsMeasurement &&
-                    today.meal4fatsMeasurement &&
-                    today.meal4veggiesMeasurement &&
-                    today.allMealsCompleted === false) {
-
-                    todayRef.update({ allMealsCompleted: true });
-
-                    const clientTeam = clientRef.challengeGroupTeam;
-
-                    // update team score
-                    if(clientTeam) {
-                      const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
-
-                      challengeGroupTeams.once('value', snapshot => {
-                        const challengeGroupTeamsRef = snapshot.val();
-                        let points;
-
-                        Object.keys(challengeGroupTeamsRef).map(key => {
-                          if(challengeGroupTeamsRef[key].name === clientTeam) {
-                            teamKey = key;
-                            points = challengeGroupTeamsRef[key].points;
-                          }
-                        });
-
-                        if(teamKey) {
-                          const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
-
-                          teamRef.update({ points: Number(points) + 1 });
-                          todayRef.update({ allMealsCompleted: true });
-                        }
-                      });
-                    }
-                  } else if(today.meal1measurementsCompleted === 1 &&
-                    today.meal2measurementsCompleted === 1 &&
-                    today.meal3measurementsCompleted === 1 &&
-                    today.meal4measurementsCompleted === 1 &&
-                    today.allMealsCompleted) {
-                      // if all meals already marked as completed and measurement
-                      // is simply changing value, don't add points to team score
-                      return;
-                  }
-
-                  // streaks - WIP
-                  // const client = this.get('client');
-                  // // add 1 to bestStreak and currentStreak
-                  // client.set('phase2bestStreak', this.get('phase2bestStreak') === null ? 1 : Number(this.get('phase2bestStreak')) + 1);
-                  // client.set('phase2currentStreak', this.get('phase2currentStreak') === null ? 1 : Number(this.get('phase2currentStreak')) + 1);
-                  // this.get('client').save().then(resp => {
-                  //   Ember.Logger.info('saved phase 2 streak', resp.get('phase2bestStreak'), resp.get('phase2currentStreak'));
-                  // }, reason => {
-                  //   Ember.Logger.error('could not save phase 2 streak', reason);
-                  // });
-                }, reason => {
-                  alert('Could not save meal completion')
-                });
-              } else {
-                // mark meal measurements as incomplete
-                todayRef.update({
-                  ['meal' + mealNumber + 'measurementsCompleted']: 3
-                });
-
-                if(today.allMealsCompleted) {
-                  const clientTeam = clientRef.challengeGroupTeam;
-
-                  // update team score
-                  if(clientTeam) {
-                    const challengeGroupTeams = firebase.database().ref().child('challengeGroupTeams');
-
-                    challengeGroupTeams.once('value', snapshot => {
-                      const challengeGroupTeamsRef = snapshot.val();
-                      let points;
-
-                      Object.keys(challengeGroupTeamsRef).map(key => {
-                        if(challengeGroupTeamsRef[key].name === clientTeam) {
-                          teamKey = key;
-                          points = challengeGroupTeamsRef[key].points;
-                        }
-                      });
-
-                      if(teamKey) {
-                        const teamRef = firebase.database().ref('challengeGroupTeams/' + teamKey);
-
-                        teamRef.update({ points: Number(points) - 1 });
-                        todayRef.update({ allMealsCompleted: false });
-                      }
-                    });
-                  }
-                }
-              }
-            });
-          } else {
-            // save date and selected meal and whether completed or not
-
-            // TO DO: check which meal measurements completed
-            console.log('new phase two day');
-            if(!today) {
-              phaseTwoDayStatuses.push({
-                date: moment(new Date).format('MM-DD-YY'),
-                fullDate: new Date,
-                timestamp: Number(clientRef.timestamp),
-                [key]: value,
-                meal1measurementsCompleted: 3,
-                meal2measurementsCompleted: 3,
-                meal3measurementsCompleted: 3,
-                meal4measurementsCompleted: 3
-              }).then(resp => {}, reason => {
-                alert('Could not save measurement');
-              });
-            }
-          }
-        });
-      } else {
-        alert('could not get key')
-      }
-    });
   }
 
   async _onChangeGender(g) {
@@ -1446,11 +1097,6 @@ export default class LoginScreen extends React.Component {
     // passing new values from component actions:
     // this.props.onCheckboxChecked(newVal) - function passed in from parent, then you pass new value back from component
 
-    const dayStatusesLoaded = this.state.meal1measurementsCompleted < 4 &&
-      this.state.meal2measurementsCompleted < 4 &&
-      this.state.meal3measurementsCompleted < 4 &&
-      this.state.meal4measurementsCompleted < 4;
-
     return (
       <View style={[Styles.body, this.state.phase === null ? styles.loading : '']}>
         {this.state.phase !== null &&
@@ -1636,67 +1282,6 @@ export default class LoginScreen extends React.Component {
                   dinnerTime={mealTimes['dinnerTime']}
                   saveCurrentMeal={this._saveCurrentMeal} />
 
-                <View style={styles.progressSection}>
-                  {!viewAllMeals && phase === 1 &&
-                    <TouchableHighlight
-                      style={[Styles.buttonCircular, styles.progressButtonGood,
-                        (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButton :
-                        (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButton :
-                        (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButton :
-                        (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButton : styles.incompleteMealButton]}
-                      underlayColor={Colors.darkerPrimaryColor}
-                      onPress={() => { this.completeMeal(phase, currentMeal, 1) }}>
-                       <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                         (currentMeal === 0 && this.state.phase1meal1 === 1) ? styles.completedMealButtonText :
-                         (currentMeal === 1 && this.state.phase1meal2 === 1) ? styles.completedMealButtonText :
-                         (currentMeal === 2 && this.state.phase1meal3 === 1) ? styles.completedMealButtonText :
-                         (currentMeal === 3 && this.state.phase1meal4 === 1) ? styles.completedMealButtonText : styles.incompleteMealButtonText]}>
-                         <FontAwesome
-                           style={styles.progressButtonGoodIcon}
-                           name='check'
-                           size={16}
-                         />
-                       </Text>
-                  </TouchableHighlight>}
-
-                  {!viewAllMeals && phase === 1 &&
-                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonBad,
-                      (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
-                      (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonBad]}
-                      underlayColor={Colors.darkerRed}
-                      onPress={() => { this.completeMeal(phase, currentMeal, 2) }}>
-                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText,
-                        (currentMeal === 0 && this.state.phase1meal1 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 1 && this.state.phase1meal2 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 2 && this.state.phase1meal3 === 2) ? styles.completedMealButtonBad :
-                        (currentMeal === 3 && this.state.phase1meal4 === 2) ? styles.completedMealButtonBad : styles.incompleteMealButtonTextBad]}>
-                        <FontAwesome
-                          style={styles.progressButtonBadIcon}
-                          name='remove'
-                          size={16} />
-                    </Text>
-                  </TouchableHighlight>}
-
-                  {!viewAllMeals && phase === 2 && dayStatusesLoaded &&
-                    <TouchableHighlight style={[Styles.buttonCircular, styles.progressButtonGood,
-                      (currentMeal === 0 && this.state.meal1measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                      (currentMeal === 1 && this.state.meal2measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                      (currentMeal === 2 && this.state.meal3measurementsCompleted === 1) ? styles.completedPhaseTwoMeal :
-                      (currentMeal === 3 && this.state.meal4measurementsCompleted === 1) ? styles.completedPhaseTwoMeal : styles.incompletePhaseTwoMeal]}
-                      underlayColor={Colors.darkerPrimaryColor}
-                      onPress={() => { this.completePhaseTwoMeal(currentMeal) }}>
-                     <Text style={[Styles.buttonCircularIcon, styles.progressButtonText, this.state.phaseTwoMealComplete ? styles.completedPhaseTwoMealText : styles.incompletePhaseTwoMealText]}>
-                       <FontAwesome
-                         style={styles.progressButtonGoodIcon}
-                         name='check'
-                         size={16}
-                       />
-                     </Text>
-                  </TouchableHighlight>}
-                </View>
-
                 <View style={styles.mealPlanSection}>
                   {!viewAllMeals && <Meal
                     trainingIntensity={trainingIntensity}
@@ -1719,7 +1304,6 @@ export default class LoginScreen extends React.Component {
                     veggies={veggies}
                     viewAllMeals={viewAllMeals}
                     showInGrams={showInGrams}
-                    updateMeasurement={this.saveMeasurement}
                     phase1meal1={this.state.phase1meal1}
                     phase1meal2={this.state.phase1meal2}
                     phase1meal3={this.state.phase1meal3}

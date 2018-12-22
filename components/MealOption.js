@@ -74,7 +74,7 @@ class MealOption extends React.Component {
             Styles.uppercaseText,
             styles.mealOptionText,
             mealNumber === 0 ? styles.mealOptionTextSelected : null]}>
-              {label}
+              {label ? label.toUpperCase() : null}
           </Text>
         </TouchableHighlight>
 
@@ -92,7 +92,7 @@ MealOption.propTypes = { };
 
 const styles = StyleSheet.create({
   mealOption: {
-    alignSelf: 'center',
+    alignSelf: 'auto',
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: Colors.white

@@ -250,14 +250,5 @@ const styles = StyleSheet.create ({
     textAlign: 'left',
     fontSize: 16,
     marginTop: 10
-  },
-  phase2PickerLabel: {
-    fontSize: 16,
-    marginTop: 15,
-    marginBottom: 10,
-    textAlign: 'center'
-  },
-  phase2Measurement: {
-    marginBottom: 40
   }
 });
