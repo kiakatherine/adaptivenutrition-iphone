@@ -43,7 +43,7 @@ class MealCompletionButtons extends React.Component {
 
     return (
       <View style={styles.wrapper}>
-        <TouchableHighlight
+        <View style={styles.innerWrapper}><TouchableHighlight
            style={[Styles.buttonCircular, styles.progressButtonGood,
              (currentMeal === 0 && meal1 === 1) ? styles.completedMealButton :
              (currentMeal === 1 && meal2 === 1) ? styles.completedMealButton :
@@ -86,7 +86,7 @@ class MealCompletionButtons extends React.Component {
                 name='remove'
                 size={16} />
           </Text>
-        </TouchableHighlight>
+        </TouchableHighlight></View>
       </View>
      );
    }
@@ -98,9 +98,12 @@ MealCompletionButtons.propTypes = { };
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    marginBottom: 40
+  },
+  innerWrapper: {
+    flexDirection: 'row'
   },
 
   progressButtonText: {

@@ -85,7 +85,7 @@ class FoodOptions extends React.Component {
             renderItem={({item}) => (
               <View style={styles.foodOption} key={item.key}>
                 <Text style={styles.foodOptionAmount}>{item.amount}</Text>
-                <Text style={styles.foodOptionFood}>{item.food}</Text>
+                {item.food && <Text style={styles.foodOptionFood}>{item.food}</Text>}
               </View>)}
           />}
 
