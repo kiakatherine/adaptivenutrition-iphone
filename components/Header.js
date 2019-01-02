@@ -32,6 +32,8 @@ class Header extends React.Component {
     };
 
     this._closeModal = this._closeModal.bind(this);
+    this._saveTemplateType = this._saveTemplateType.bind(this);
+    this._clickGoal = this._clickGoal.bind(this);
   }
 
   _closeModal(page) {
@@ -43,6 +45,14 @@ class Header extends React.Component {
         this.props.logout()
       }
     });
+  }
+
+  _saveTemplateType() {
+    this.props.saveTemplateType();
+  }
+
+  _clickGoal(goal) {
+    this.props.clickGoal(goal);
   }
 
    render() {
@@ -219,6 +229,8 @@ class Header extends React.Component {
         {this.state.showUserInfo &&
           <ModalWindow
             currentModal="USER"
+            clickGoal={this._clickGoal}
+            saveTemplateType={this._saveTemplateType}
             onChangeGender={this.props.onChangeGender}
             onChangeBodyweight={this.props.onChangeBodyweight}
             onChangeHeight={this.props.onChangeHeight}

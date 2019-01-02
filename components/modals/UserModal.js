@@ -51,6 +51,10 @@ class UserModal extends React.Component {
     alert('Saved!');
   }
 
+  clickGoal(goal) {
+    this.props.clickGoal(goal);
+  }
+
   render() {
     const name = this.props.client ? this.props.client.firstName : null;
     const gender = this.props.client ? this.props.client.gender : 'Female';
@@ -58,14 +62,12 @@ class UserModal extends React.Component {
     const bodyweight = this.props.client && this.props.client.weight ? this.props.client.weight.toString() : null;
     const bodyfat = this.props.client && this.props.client.bodyfat ? this.props.client.bodyfat.toString() : null;
     const birthdate = this.props.client ? this.props.client.birthdate : new Date();
-    console.log(birthdate)
     const phase = this.props.client ? this.props.client.phase : 1;
+    const goal = this.props.client.goal ? true : false;
 
     // TO DO: not hardcoded dates; check what goal is to see what step 2 should be
     const template = convertTemplateToString(this.props.client.template);
-    const templateStartDate = 'October 1, 2018';
-    const nextTemplate = this.props.client.template + 1 < 5 ? convertTemplateToString(this.props.client.template + 1) : 0;
-    const nextTemplateStartDate = 'December 1, 2018';
+    const templateStartDate = this.props.client.templateStartDate ? this.props.client.templateStartDate : 'October 1, 2018';
 
     return (
       <View style={[Styles.modalContent, styles.modalContent]}>
@@ -89,19 +91,51 @@ class UserModal extends React.Component {
 
         <View style={styles.contentWrapper}>
           {this.state.showTemplateInfo && <View style={styles.templatesWrapper}>
-            <View style={styles.templatesWrapper}>
+            {!goal && <View style={styles.goalWrapper}>
               <View style={styles.templateWrapper}>
-                <Text style={[Styles.textCenter, Styles.h3]}>CURRENT</Text>
+                <Text style={[Styles.textCenter, Styles.h3]}>{"WHAT'S YOUR GOAL?"}</Text>
+              </View>
+
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={[Styles.button, Styles.buttonInverted]}
+                onPress={() => this.clickGoal(2)}>
+                <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>Lose weight</Text>
+              </TouchableHighlight>
+
+              <Text></Text>
+
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={[Styles.button, Styles.buttonInverted]}
+                onPress={() => this.clickGoal(1)}>
+                <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>Add lean muscle</Text>
+              </TouchableHighlight>
+
+              <Text></Text>
+
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={[Styles.button, Styles.buttonInverted]}
+                onPress={() => this.clickGoal(0)}>
+                <Text style={[Styles.buttonText, Styles.buttonInvertedText]}>Maintain current weight</Text>
+              </TouchableHighlight>
+            </View>}
+
+            {goal && <View style={styles.templatesWrapper}>
+              <View style={styles.templateWrapper}>
+                <Text style={[Styles.textCenter, Styles.h3]}>CURRENT PLAN</Text>
                 <Text style={[Styles.textCenter, styles.template]}>{phase === 3 ? template : 'Phase ' + phase}</Text>
                 <Text style={[Styles.textCenter, styles.templateStartDate]}>Started {templateStartDate}</Text>
               </View>
 
-              <View style={styles.templateWrapper}>
-                <Text style={[Styles.textCenter, Styles.h3]}>NEXT UP</Text>
-                <Text style={[Styles.textCenter, styles.template]}>{phase === 3 ? nextTemplate : phase === 2 ? 'Phase 3' : phase === 1 ? 'Phase 2' : null}</Text>
-                <Text style={[Styles.textCenter, styles.templateStartDate]}>Begins {nextTemplateStartDate}</Text>
-              </View>
-            </View>
+              <TouchableHighlight
+                underlayColor={Colors.white}
+                style={Styles.button}
+                onPress={this.props.clickTemplateType}>
+                <Text style={Styles.buttonText}>Change template</Text>
+              </TouchableHighlight>
+            </View>}
           </View>}
 
           {this.state.showBiometricSettings && <View style={styles.biometricSettingsWrapper}>

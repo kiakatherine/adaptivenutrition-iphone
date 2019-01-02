@@ -93,6 +93,7 @@ export default class LoginScreen extends React.Component {
     this.clickNavPhase = this.clickNavPhase.bind(this);
     this.showTemplatePicker = this.showTemplatePicker.bind(this);
     this.saveTemplateType = this.saveTemplateType.bind(this);
+    this.clickGoal = this.clickGoal.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
     this._showMacrosWarning = this._showMacrosWarning.bind(this);
@@ -395,6 +396,15 @@ export default class LoginScreen extends React.Component {
         });
       }
     });
+  }
+
+  async clickGoal(goal) {
+    let userData = await AsyncStorage.getItem("user")
+    let currentUser = JSON.parse(userData)
+    const clientId = currentUser.uid
+    const clientRef = firebase.database().ref('/clients/' + clientId);
+
+    clientRef.update({ goal: goal });
   }
 
   async saveTemplateType() {
@@ -771,7 +781,7 @@ export default class LoginScreen extends React.Component {
       dinnerTime: null
     };
 
-    let bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta, carbDelta,
+    let firstName, lastName, bodyweight, bodyfat, age, gender, height, leanMass, proteinDelta, carbDelta,
       template, phase, currentMeal, mealsBeforeWorkout, trainingIntensity, phase1TrainingIntensity,
       showInGrams, doNotShowMacroWarning, viewAllMeals, isPwoMeal, wakeTime,
       complete1, complete2, complete3, complete4, complete5, complete6,
@@ -784,6 +794,9 @@ export default class LoginScreen extends React.Component {
 
     if(this.state.client) {
       const client = this.state.client;
+
+      firstName = client.firstName;
+      lastName = client.lastName;
 
       bodyweight = client.weight;
       bodyfat = client.bodyfat;
@@ -1118,6 +1131,8 @@ export default class LoginScreen extends React.Component {
             phase3meal4={this.state.phase3meal4}
             phase3meal5={this.state.phase3meal5}
             phase3meal6={this.state.phase3meal6}
+            saveTemplateType={this.saveTemplateType}
+            clickGoal={this.clickGoal}
             onChangeGender={this._onChangeGender}
             onChangeBodyweight={this._onChangeBodyweight}
             onChangeHeight={this._onChangeHeight}
@@ -1133,6 +1148,7 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.loadingText}>adapt & thrive</Text>}
 
             {this.state.phase !== null && <ScrollView style={Styles.content}>
+              <View><Text style={styles.hello}>HI THERE!</Text></View>
               <View style={styles.optionWrapper}>
                 <Text style={styles.optionTitle}>WHAT TIME DID YOU WAKE UP?</Text>
                 <TouchableHighlight
@@ -1841,9 +1857,11 @@ const styles = StyleSheet.create({
   content: {
     padding: 0
   },
-  clientName: {
-    fontWeight: 'bold',
-    color: Colors.white
+  hello: {
+    textAlign: 'center',
+    fontFamily: 'Futura',
+    marginBottom: 20,
+    fontSize: 18
   },
   mealPlanTitle: {
     marginTop: 40,

@@ -233,6 +233,7 @@ Meal.propTypes = {
 
 const styles = StyleSheet.create ({
   foodOptionLabel: {
+    fontFamily: 'Futura',
     color: Colors.black,
     letterSpacing: 2,
     paddingTop: 10,

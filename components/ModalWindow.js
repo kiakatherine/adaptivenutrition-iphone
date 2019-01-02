@@ -123,6 +123,8 @@ class ModalWindow extends React.Component {
      } else if(this.props.currentModal === 'USER') {
        modal = <UserModal
          client={this.props.client}
+         clickTemplateType={this.props.clickTemplateType}
+         clickGoal={this.props.clickGoal}
          onChangeGender={this.props.onChangeGender}
          onChangeBodyweight={this.props.onChangeBodyweight}
          onChangeHeight={this.props.onChangeHeight}
@@ -157,6 +159,10 @@ class ModalWindow extends React.Component {
                  {modal}
 
                  {(this.props.currentModal === 'USER') && <View>
+                   <Text></Text>
+                   <Text></Text>
+                   <Text></Text>
+                 
                    <TouchableHighlight
                      style={styles.logoutButton}
                      underlayColor={Colors.white}

@@ -34,6 +34,7 @@ class MealCompletionModal extends React.Component {
 
   completeMeal(completion) {
     // 1 = complete; 2 = incomplete
+    alert(this.props.mealNumber)
     this.props.completeMeal(completion, this.props.date, this.props.mealNumber);
   }
 
@@ -46,29 +47,31 @@ class MealCompletionModal extends React.Component {
         {this.state.showError &&
           <Text>{"Make sure everything's filled out!"}</Text>}
 
-        <TouchableHighlight
-          style={[Styles.button, styles.completeButton]}
-          underlayColor={Colors.white}
-          onPress={() => { this.completeMeal(1) }}>
-          <Text style={styles.completeButtonText}>
-            <FontAwesome
-              name='check'
-              size={16}
-            />
-          </Text>
-        </TouchableHighlight>
+        <View style={Styles.flexRow}>
+          <TouchableHighlight
+            style={[Styles.button, Styles.flexCol, styles.completeButton]}
+            underlayColor={Colors.white}
+            onPress={() => { this.completeMeal(1) }}>
+            <Text style={styles.completeButtonText}>
+              <FontAwesome
+                name='check'
+                size={16}
+              />
+            </Text>
+          </TouchableHighlight>
 
-        {this.props.phase !== 2 && <TouchableHighlight
-          style={[Styles.button, styles.incompleteButton]}
-          underlayColor={Colors.white}
-          onPress={() => { this.completeMeal(2) }}>
-          <Text style={styles.incompleteButtonText}>
-            <FontAwesome
-              name='remove'
-              size={16}
-            />
-          </Text>
-        </TouchableHighlight>}
+          {this.props.phase !== 2 && <TouchableHighlight
+            style={[Styles.button, Styles.flexCol, styles.incompleteButton]}
+            underlayColor={Colors.white}
+            onPress={() => { this.completeMeal(2) }}>
+            <Text style={styles.incompleteButtonText}>
+              <FontAwesome
+                name='remove'
+                size={16}
+              />
+            </Text>
+          </TouchableHighlight>}
+        </View>
       </View>
     );
   }
