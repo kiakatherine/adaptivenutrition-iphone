@@ -24,6 +24,7 @@ import {
 
 import Colors from '../constants/Colors';
 import Styles from '../constants/Styles';
+import Chart from './Chart'
 
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from 'react-native-vector-icons';
 
@@ -95,14 +96,14 @@ class BodyweightGraph extends React.Component {
      let sortedData = [];
 
      if(data) {
-       data.map(dt => {
-         sortedData.push({
-           date: dt.record.date,
-           weight: dt.record.weight,
-           key: dt.key
-         })
-       })
-     }
+      data.map((dt, index) => {
+        sortedData.push({
+          x:dt.record.timestamp,
+          y:dt.record.weight,
+          date:dt.record.date
+        })
+      })
+    }
      sortedData = sortedData.reverse();
 
       return (
@@ -121,31 +122,10 @@ class BodyweightGraph extends React.Component {
             </TouchableHighlight>
           </View>}
 
-          {sortedData && <ScrollView
-            style={{ width: '100%' }}
-            horizontal={true}
-            alwaysBounceHorizontal={true}
-            showsHorizontalScrollIndicator={true}
-            ref={ref => this.scrollView = ref}
-            onContentSizeChange={(contentWidth, contentHeight)=>{
-                this.scrollView.scrollToEnd({animated: true});
-            }}
-            >
-            {sortedData && sortedData.map((rec, i) =>
-              <View style={styles.bodyweightLogWrapper} key={i}>
-                <Text style={{ fontSize: 16, marginBottom: 5, marginLeft: 5 }}>{rec.weight}</Text>
-                <View style={{ height: Number(rec.weight), width: 35, marginLeft: 10, marginRight: 10, backgroundColor: Colors.white }}>
-                  <TouchableHighlight
-                    underlayColor={Colors.white}
-                    onPress={() => { this.confirmDeleteEntry(rec.weight, rec.date) }}>
-                    <View style={{ backgroundColor: Colors.primaryColor, borderRadius: 100, width: 20, height: 20 }}></View>
-                  </TouchableHighlight>
-                </View>
-                <Text>{formatBodyweightLogDate(rec.date)}</Text>
-              </View>)}
-          </ScrollView>}
-
-          {!sortedData && <View>
+          <View style={{backgroundColor:"white", paddingLeft: -10}}>
+            <Chart data={sortedData} onClickPoint={(data) => this.confirmDeleteEntry(data.weight, data.date)} filter={this.props.filter} />
+          </View>
+         {!sortedData && <View>
               <Text style={Styles.loadingMessage}>No bodyweight data yet</Text>
             </View>}
 

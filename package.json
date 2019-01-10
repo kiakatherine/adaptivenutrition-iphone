@@ -11,6 +11,7 @@
     "date-fns": "~1.28.5",
     "expo": "^30.0.1",
     "firebase": "~4.4.0",
+    "lodash": "^4.17.11",
     "moment": "^2.20.1",
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
@@ -21,6 +22,8 @@
     "react-native-svg": "^6.2.1",
     "react-native-svg-charts": "^3.0.1",
     "react-native-swiper": "^1.5.13",
-    "react-navigation": "^1.0.0-beta.19"
+    "react-navigation": "^1.0.0-beta.19",
+    "victory-core": "^31.1.0",
+    "victory-native": "^31.0.0"
   }
 }

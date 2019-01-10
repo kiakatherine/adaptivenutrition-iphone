@@ -60,7 +60,8 @@ export default class ProgressScreen extends React.Component {
       monthlyView: false,
       yearlyView: false,
       allView: false,
-      clientId: null
+      clientId: null,
+      filter: "Week",
     }
 
     this._hideAll = this._hideAll.bind(this);
@@ -526,7 +527,8 @@ export default class ProgressScreen extends React.Component {
                         weeklyView: true,
                         monthlyView: false,
                         yearlyView: false,
-                        allView: false
+                        allView: false,
+                        filter: "Week"
                       }, () =>this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.weeklyView ? Styles.pillButtonTextSelected : null]}>WEEK</Text>
@@ -540,7 +542,8 @@ export default class ProgressScreen extends React.Component {
                         weeklyView: false,
                         monthlyView: true,
                         yearlyView: false,
-                        allView: false
+                        allView: false,
+                        filter: "Month"
                       }, () => this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.monthlyView ? Styles.pillButtonTextSelected : null]}>MONTH</Text>
@@ -554,7 +557,8 @@ export default class ProgressScreen extends React.Component {
                         weeklyView: false,
                         monthlyView: false,
                         yearlyView: true,
-                        allView: false
+                        allView: false,
+                        filter: "Year"
                       }, () => this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.yearlyView ? Styles.pillButtonTextSelected : null]}>YEAR</Text>
@@ -568,7 +572,8 @@ export default class ProgressScreen extends React.Component {
                         weeklyView: false,
                         monthlyView: false,
                         yearlyView: false,
-                        allView: true
+                        allView: true,
+                        filter: "All"
                       }, () => this.sortingWeightByDate())
                     }}>
                     <Text style={[Styles.pillButtonText, this.state.allView ? Styles.pillButtonTextSelected : null]}>ALL</Text>
@@ -579,6 +584,7 @@ export default class ProgressScreen extends React.Component {
                   data={this.state.sortedbodyweightData}
                   sortingWeightByDate={() => this.sortingWeightByDate()}
                   closeModal={this._closeModal}
+                  filter={this.state.filter}
                   />
               </View>}
 
