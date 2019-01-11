@@ -11,14 +11,10 @@ VictoryLabel,
 
 const Days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 export default class Chart extends Component {
-    changeData(index){
-    var tempData = this.state.data;
-    tempData.splice(-1,1);
-    console.log(tempData)
-    this.setState({ data: tempData });
-    }
-
-    convertMSToXAxis(ms, filter) {
+//   state = {
+//     allFilterData:[]
+//   }
+  convertMSToXAxis(ms, filter) {
         switch (filter) {
             case 'Week':
                 return moment(ms).format("ddd");
@@ -32,10 +28,41 @@ export default class Chart extends Component {
             break;
         }
     }
+
+    convertMSToUniqueMonth = ms => Number(moment(ms).format("YYYY")) * 12 + Number(moment(ms).format("M"))
+
+    convertMSToUniqueDate = ms => Number(moment(ms).format("YYYY")) * 365 + Number(moment(ms).format("M")) * 31 + Number(moment(ms).format("D"))
+
+    convertUmonthToAllticks = mm => mm%12?`${mm%12} ${parseInt(mm/12)}`:`${12} ${mm/12-1}`   
+
 render() {
   const data = this.props.data;
   var xTicks = data.map(item => item.x)
-  console.log(xTicks)
+  var graphData = data
+  if (this.props.filter === 'All') {
+    var xAllTicks = _.uniq(xTicks.map(item => this.convertMSToUniqueMonth(item)))
+    var allFilterData = [] 
+    xAllTicks.forEach(month=>{
+      var result = {}
+      var sum = 0;
+      var count = 0;
+      data.forEach(item=>{
+          let month_uniq = this.convertMSToUniqueMonth(item.x)
+  
+          if (month == month_uniq) {
+              sum += item.y;
+              count += 1;
+          }
+      })    
+      const weight = sum/count
+      result.x = month
+      result.y = weight
+      allFilterData.push(result)
+    })
+    graphData = allFilterData
+  }
+
+  
   return (
     <VictoryChart
       // theme={VictoryTheme.material}
@@ -51,22 +78,30 @@ render() {
             fill: "#c43a31", fillOpacity: 0.7, stroke: "#c43a31", strokeWidth: 3
           }
         }}
-        data={this.props.data}
+        data={graphData} //this.props.data
       />
 
         <VictoryAxis dependentAxis crossAxis
-            tickValues={[0, 100]}
+            tickValues={[0, 300]}
             tickFormat={(t) => `${Math.round(t)}lb`}
             tickLabelComponent={<VictoryLabel dx={0}/>}
         />
+        {this.props.filter !== 'All'?
         <VictoryAxis crossAxis
             offsetX={100}
             tickValues={xTicks}
             tickFormat={(t) => this.convertMSToXAxis(t, this.props.filter)}
             tickLabelComponent={<VictoryLabel dy={10}/>}
         />
+        :
+        <VictoryAxis crossAxis
+            offsetX={100}
+            tickValues={xAllTicks}
+            tickFormat={(t) => this.convertUmonthToAllticks(t)}
+            tickLabelComponent={<VictoryLabel dy={10}/>}
+        />}  
       <VictoryScatter
-        data={this.props.data}
+        data={graphData} //this.props.data
         size={5}
         symbol={"circle"}
         style={{
@@ -83,7 +118,7 @@ render() {
             const weight = data[evt.index].y
             const date = data[evt.index].date
             var pointData = { weight, date }
-
+            if (this.props.filter !== 'All')
             this.props.onClickPoint(pointData)
            }
         }
