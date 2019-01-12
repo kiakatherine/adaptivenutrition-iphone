@@ -40,7 +40,7 @@ render() {
   const data = this.props.data;
   var xTicks = data.map(item => item.x)
   var graphData = data
-  if (this.props.filter === 'All') {
+  if (this.props.filter === 'All' || this.props.filter === 'Year' ) {
     var xAllTicks = _.uniq(xTicks.map(item => this.convertMSToUniqueMonth(item)))
     var allFilterData = [] 
     xAllTicks.forEach(month=>{
@@ -87,7 +87,7 @@ render() {
             tickFormat={(t) => `${Math.round(t)}lb`}
             tickLabelComponent={<VictoryLabel dx={0}/>}
         />
-        {this.props.filter !== 'All'?
+        {(this.props.filter !== 'All' && this.props.filter !== 'Year') ?
         <VictoryAxis crossAxis
             offsetX={100}
             tickValues={xTicks}
@@ -101,6 +101,7 @@ render() {
             tickFormat={(t) => this.convertUmonthToAllticks(t)}
             tickLabelComponent={<VictoryLabel dy={10}/>}
         />}  
+      {(this.props.filter !== 'All' && this.props.filter !== 'Year') &&
       <VictoryScatter
         data={graphData} //this.props.data
         size={5}
@@ -119,12 +120,13 @@ render() {
             const weight = data[evt.index].y
             const date = data[evt.index].date
             var pointData = { weight, date }
-            if (this.props.filter !== 'All')
+            if ((this.props.filter !== 'All' && this.props.filter !== 'Year'))
             this.props.onClickPoint(pointData)
            }
         }
       }]}
-         />        
+     /> 
+    }   
     </VictoryChart>
   );
 }}
