@@ -36,6 +36,7 @@ export default class Chart extends Component {
     convertUmonthToAllticks = mm => mm%12?`${mm%12} ${parseInt(mm/12)}`:`${12} ${mm/12-1}`   
 
 render() {
+
   const data = this.props.data;
   var xTicks = data.map(item => item.x)
   var graphData = data
@@ -67,7 +68,7 @@ render() {
     <VictoryChart
       // theme={VictoryTheme.material}
       animate={{ duration: 500 }}
-      domain={{y: [0, 100]}}
+      domain={{y: [0, 300]}}
       // domainPadding={{x: [10, -10], y: 5}}
       //padding={{ top:50, left: 0, right: -10 }}
     >
@@ -82,7 +83,7 @@ render() {
       />
 
         <VictoryAxis dependentAxis crossAxis
-            tickValues={[0, 300]}
+            tickValues={[0,50,100,150,200,250,300]}
             tickFormat={(t) => `${Math.round(t)}lb`}
             tickLabelComponent={<VictoryLabel dx={0}/>}
         />
