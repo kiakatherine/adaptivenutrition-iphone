@@ -102,17 +102,19 @@ render() {
         />
         {(this.props.filter !== 'All' && this.props.filter !== 'Year') ?
         <VictoryAxis crossAxis
+            label="Time (ms)"
             offsetX={100}
             tickValues={xTicks}
             tickFormat={(t) => this.convertMSToXAxis(t, this.props.filter)}
-            tickLabelComponent={<VictoryLabel dy={10}/>}
+            tickLabelComponent={<VictoryLabel dy={0}/>}
         />
         :
         <VictoryAxis crossAxis
+            label="Time (ms)"
             offsetX={100}
             tickValues={xAllTicks}
             tickFormat={(t) => this.convertUmonthToAllticks(t)}
-            tickLabelComponent={<VictoryLabel dy={10}/>}
+            tickLabelComponent={<VictoryLabel dy={0}/>}
         />}  
       {(this.props.filter !== 'All' && this.props.filter !== 'Year') &&
       <VictoryScatter
