@@ -29,15 +29,27 @@ export default class Chart extends Component {
         }
     }
 
-    convertMSToUniqueMonth = ms => Number(moment(ms).format("YYYY")) * 12 + Number(moment(ms).format("M"))
+  convertMSToUniqueMonth = ms => Number(moment(ms).format("YYYY")) * 12 + Number(moment(ms).format("M"))
 
-    convertMSToUniqueDate = ms => Number(moment(ms).format("YYYY")) * 365 + Number(moment(ms).format("M")) * 31 + Number(moment(ms).format("D"))
+  convertMSToUniqueDate = ms => Number(moment(ms).format("YYYY")) * 365 + Number(moment(ms).format("M")) * 31 + Number(moment(ms).format("D"))
 
-    convertUmonthToAllticks = mm => mm%12?`${mm%12} ${parseInt(mm/12)}`:`${12} ${mm/12-1}`   
+  convertUmonthToAllticks = mm => mm%12?`${mm%12} ${parseInt(mm/12)}`:`${12} ${mm/12-1}`   
 
+  getMaxMinWeights = data => {
+    const firstItem = data[0].y
+    var max = min = data[0].y;
+    data.forEach( item => {
+      if (max < item.y)
+        max = item.y
+      if (min > item.y)
+        min = item.y
+    })
+    return [max, min, firstItem]
+  }
 render() {
 
   const data = this.props.data;
+  if (!data||!data.length) return null
   var xTicks = data.map(item => item.x)
   var graphData = data
   if (this.props.filter === 'All' || this.props.filter === 'Year' ) {
@@ -63,12 +75,13 @@ render() {
     graphData = allFilterData
   }
 
-  
+  const Ydomain = this.getMaxMinWeights(graphData)
+
   return (
     <VictoryChart
       // theme={VictoryTheme.material}
       animate={{ duration: 500 }}
-      domain={{y: [0, 300]}}
+      domain={{y: [Ydomain[1]-2, Ydomain[0]+2]}}
       // domainPadding={{x: [10, -10], y: 5}}
       //padding={{ top:50, left: 0, right: -10 }}
     >
@@ -83,7 +96,7 @@ render() {
       />
 
         <VictoryAxis dependentAxis crossAxis
-            tickValues={[0,50,100,150,200,250,300]}
+            tickValues={Ydomain}
             tickFormat={(t) => `${Math.round(t)}lb`}
             tickLabelComponent={<VictoryLabel dx={0}/>}
         />
